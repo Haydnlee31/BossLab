@@ -36,3 +36,6 @@ unreal/art-studio/*
 !unreal/art-studio/source/
 !unreal/art-studio/integration-test-2026-11-08/
 # Selected project-authored Blender sources/checkpoints are explicitly tracked.
+
+# Claude revamp: local image-to-3D client environment
+.venv-gen3d/
