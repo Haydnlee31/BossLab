@@ -375,6 +375,11 @@
       "path": "unreal/art-studio/revision-v13-2026-11-07/v13-attempt-04.blend",
       "bytes": 2607725,
       "sha256": "072fe5f756c54512772225e95118799f117edad0c3e1840cbf8622f9ea75c348"
+    },
+    {
+      "path": "artifacts/maintenance/handoff-prune-2026-11-09/clean-source-check.json",
+      "bytes": 3070,
+      "sha256": "24f82959913d93bf3155671c52d256f8bfd40806ca000b6e753e44b191c3c5e6"
     }
   ]
 }

@@ -3,7 +3,7 @@
 - [x] Scoped checkpoint/cache prune with hash manifest; active dependencies retained.
 - [x] HANDOFF/README/Unreal restore guide and source-safe publication selection.
 - [x] Browser24tests +doctor; bounded staged credential/largefile/exclusion audit.
-- [ ] Commit and verify remote push (see final handoff response for result).
+- [x] Initial handoff committed and pushed to main; remote hash matched dff9e01. Clean committed browser export24/24tests +doctor passed.
 
 ## Undead Warden planning —2026-11-08
 

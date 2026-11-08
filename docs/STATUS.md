@@ -4,7 +4,7 @@ Owner requested cleanup and push to public Haydnlee31/BossLab. Start at `HANDOFF
 
 Cleanup removed1113obsolete scene/cache files132,840,630bytes; exact deletion hashes in `artifacts/maintenance/handoff-prune-2026-11-09/manifest.json`. Latest current scene pairs and documented V10/V12/player dependencies remain. Older scene-preservation assertions below are historical. Newly checked browser tests24/24/doctor exit0; no new Unreal benchmark/build. Curated asset list in `docs/PUBLICATION_FILES.json`, bounded staging scan in `docs/PUBLICATION_AUDIT.json`. No license or deployment configured.
 
-Git commit/push verification is recorded in the final handoff message; do not infer push success from this pre-push document. Underlying focal art verdict and next modeling task follow below.
+Initial source handoff commit `dff9e01cffbcfc1dc82f6daf08241894fe5edb9f` pushed to GitHub main and verified by matching remote hash. A clean export of that committed browser source passed24/24tests anddoctor; receipt in `artifacts/maintenance/handoff-prune-2026-11-09/clean-source-check.json`. This follow-up records verification; no new Unreal build. Underlying focal art verdict and next modeling task follow below.
 
 ## Funeral Regent focal landmarks — local gains, construction failed (2026-11-09)
 

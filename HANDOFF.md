@@ -28,7 +28,7 @@ Unreal controls: Enter start, WASD move, mouse look, Tab target, Space direction
 
 ## Verified evidence and limits
 
-- New handoff checks: browser24/24 tests passed; browser doctor exit0; no model adapter connected. These do not test Unreal.
+- New handoff checks: browser24/24 tests passed; browser doctor exit0; no model adapter connected. Repeated from a clean export of initial committed source dff9e01:24/24 anddoctor exit0. Receipt: `artifacts/maintenance/handoff-prune-2026-11-09/clean-source-check.json`. These do not test Unreal.
 - Latest existing Unreal trial evidence:21 baseline native checks plus3 separate V13 transfer/fallback checks passed. Two actual gameplay clips each encoded/decoded180frames. No new Unreal rebuild, packaging or FPS run was performed for this handoff.
 - Historical matched720p editor runs: original58.55FPS/V1359.03FPS, one sequential run each, with stalls. Not locked60 or proof that a new boss fits the frame budget.
 - V13 player transfer is rigid attachment plus eight palette materials. Cape/leg clipping, approximate grip and missing Blender material fidelity remain. Default costume and old packaged local game remain preserved.
@@ -63,3 +63,7 @@ The requested cleanup removed1113obsolete scene/cache files totaling132,840,630b
 No installed tools, working package, original build kit, active source or required dependencies were removed. Public exclusions remain on the original workstation; excluded historical media may be unavailable to a clone. See `docs/PUBLICATION_SCOPE.md`.
 
 Single DCC writer/heavy job; single Unreal binary writer via editor.lock. Keep10GB allocated under unreal/ and24GiB free during heavy work. No paid calls, external model downloads, machine-wide modifications or persistent background jobs. Scope permission for this GitHub handoff does not authorize unrelated deployment or messaging.
+
+## Repository verification
+
+Initial source handoff commit `dff9e01cffbcfc1dc82f6daf08241894fe5edb9f` was pushed to `main` and matched `git ls-remote` on2026-11-09. The follow-up commit records this receipt; Git history is authoritative for the latest revision. No GitHub Pages/CI/deployment was enabled.
