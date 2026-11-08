@@ -1,0 +1,71 @@
+{
+  "verdict": "rejected construction and pose gate",
+  "images": [
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-01/idle-front.png",
+      "sha256": "1cd5c6f0f75a6933f229584b4f5a22ebc47062fe4c23b1268867acdbd7b6c030",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-01/idle-side.png",
+      "sha256": "52fecb4287a5ec99ccf3fbb2fb530da36328f347e07ca416be2796bd3f653d91",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-01/idle-back.png",
+      "sha256": "afbe82b006556abba68acccd51457fcaf6ac56ec461ae95a3b10a626a59f7ed3",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-02/idle-front.png",
+      "sha256": "deeed83996096de256b5011347f44d68850530cf4f4a845eafc4c1dd64c9595c",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-02/idle-side.png",
+      "sha256": "01ad6f30d4a1aa4a0776c1a9fc3f4bd4a7a948323ef3c94ce753b9465f7d7879",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-02/anticipation-threequarter.png",
+      "sha256": "74adab924f08d25bde224325eb2017ead961936e072db28fa3c7cbe20984c6c9",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-02/fullcast-threequarter.png",
+      "sha256": "2ecd8c1b42efeeb9637c6d0d3195c6a7d26686f02dea23f7c39c71f26564f999",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-02/reel-threequarter.png",
+      "sha256": "0c210b094f7ffe2dbe418127232f1f164551bad5344d62e8b935301eba291f79",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/idle-front.png",
+      "sha256": "a206027384b77e6da9ca4be98a832e3116c777b662ea45d12f50cf29a4c674af",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/idle-side.png",
+      "sha256": "56bd3094f44d2fe6cfc4e3942e74e9818dd1915abb4c0ccb6ebd34937e3a6e47",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/idle-back.png",
+      "sha256": "9a032178eabb93d5b0d7c05594860fe752a9a9c75550cbe0a04046c4f360ae0d",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/fullcast-threequarter.png",
+      "sha256": "bd23f98cce6c8734ae39196611ba2853bd2097cce008bfc89c5f84081e3ca972",
+      "review": "direct visual inspection"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/reel-threequarter.png",
+      "sha256": "4f565fd1aa5300ebc78c9bcf5b2492a992f75a52f99891dab2a7199e164dbece",
+      "review": "direct visual inspection"
+    }
+  ],
+  "scope": "13 directly inspected stills only; no animation/rig/runtime acceptance"
+}

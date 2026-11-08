@@ -1,0 +1,7162 @@
+{
+  "report": {
+    "version": "warden-core-1.0.0",
+    "config": {
+      "seed": 1001,
+      "controller": "adaptive",
+      "delay": 12,
+      "version": "warden-core-1.0.0"
+    },
+    "encounterId": "adaptive-switch-1001",
+    "ticks": 3033,
+    "outcome": "victory",
+    "playerHP": 86,
+    "bossHP": 0,
+    "metrics": {
+      "damageToPlayer": 124,
+      "damageToBoss": 420,
+      "attacks": {
+        "cut": 15,
+        "overhead": 13,
+        "thrust": 8
+      },
+      "fallbacks": 0,
+      "decisions": 41,
+      "meanDecisionMs": 0.0025173414634160627,
+      "maxDecisionMs": 0.003542000000010148
+    },
+    "summary": {
+      "n": 36,
+      "effective": 5.551169984208999,
+      "sufficient": true,
+      "scope": "pooled (sparse-context backoff)",
+      "recent": {
+        "early": 0.11903669466498057,
+        "late": 0.7392396153009619,
+        "none": 0.14172369003405735
+      },
+      "long": {
+        "early": 0.14863018183848578,
+        "late": 0.747635214029949,
+        "none": 0.10373460413156528
+      },
+      "directions": {
+        "inward": 0.7660162347444813,
+        "outward": 0.11699188262775936,
+        "lateral": 0.11699188262775936
+      },
+      "directionN": 33,
+      "censored": 0,
+      "evidence": [
+        "adaptive-switch-1001:29",
+        "adaptive-switch-1001:30",
+        "adaptive-switch-1001:31",
+        "adaptive-switch-1001:32",
+        "adaptive-switch-1001:33",
+        "adaptive-switch-1001:34",
+        "adaptive-switch-1001:35",
+        "adaptive-switch-1001:36"
+      ],
+      "contexts": {
+        "cut": 15,
+        "overhead": 13,
+        "thrust": 8
+      },
+      "families": {
+        "cut": {
+          "n": 15,
+          "recent": {
+            "early": 0.13956713056731376,
+            "late": 0.6621104985720442,
+            "none": 0.19832237086064208
+          },
+          "scope": "cut"
+        },
+        "overhead": {
+          "n": 13,
+          "recent": {
+            "early": 0.21078156075489143,
+            "late": 0.666285719724624,
+            "none": 0.12293271952048458
+          },
+          "scope": "overhead"
+        },
+        "thrust": {
+          "n": 8,
+          "recent": {
+            "early": 0.13477231086002064,
+            "late": 0.7304553782799587,
+            "none": 0.13477231086002064
+          },
+          "scope": "thrust"
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "type": "start",
+      "tick": 0,
+      "encounterId": "adaptive-switch-1001",
+      "config": {
+        "seed": 1001,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      }
+    },
+    {
+      "type": "decision",
+      "tick": 30,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 0.08,
+        "overhead": 1,
+        "thrust": 1.3,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.030534351145038167,
+        "overhead": 0.38167938931297707,
+        "thrust": 0.4961832061068702,
+        "approach": 0.030534351145038167,
+        "reposition": 0.03816793893129771,
+        "wait": 0.022900763358778622
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 18,
+      "window": 0,
+      "latencyMs": 0.003542000000010148,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 0,
+        "effective": 0,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.3333333333333333,
+          "late": 0.3333333333333333,
+          "none": 0.3333333333333333
+        },
+        "long": {
+          "early": 0.3333333333333333,
+          "late": 0.3333333333333333,
+          "none": 0.3333333333333333
+        },
+        "directions": {
+          "inward": 0.3333333333333333,
+          "outward": 0.3333333333333333,
+          "lateral": 0.3333333333333333
+        },
+        "directionN": 0,
+        "censored": 0,
+        "evidence": [],
+        "contexts": {
+          "cut": 0,
+          "overhead": 0,
+          "thrust": 0
+        },
+        "families": {
+          "cut": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 30,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 0,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 30,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:1",
+      "action": "overhead",
+      "availableTick": 30
+    },
+    {
+      "type": "dodge",
+      "tick": 39,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 51
+    },
+    {
+      "type": "observed",
+      "tick": 51,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 39,
+      "availableTick": 51
+    },
+    {
+      "type": "hit",
+      "tick": 80,
+      "encounterId": "adaptive-switch-1001",
+      "target": "player",
+      "damage": 24,
+      "source": "overhead",
+      "instance": "adaptive-switch-1001:1"
+    },
+    {
+      "type": "player-attack",
+      "tick": 86,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 96,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "sample",
+      "tick": 97,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:1",
+      "family": "overhead",
+      "spacing": 142.2999999999999,
+      "outcome": "hit",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 39,
+      "observedTick": 97
+    },
+    {
+      "type": "snapshot",
+      "tick": 120,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 120,
+        "boss": {
+          "x": 0,
+          "y": -60,
+          "facing": 1.386741825333116,
+          "state": "attack",
+          "hp": 390
+        },
+        "player": {
+          "x": 28.85423022370938,
+          "y": -12.786453697617908,
+          "facing": -2.119368976128718,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 96
+    },
+    {
+      "type": "decision",
+      "tick": 133,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [
+        "adaptive-switch-1001:1"
+      ],
+      "planVersion": null,
+      "observationTick": 121,
+      "window": 1,
+      "latencyMs": 0.002417000000008329,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 1,
+        "effective": 1,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5,
+          "late": 0.25,
+          "none": 0.25
+        },
+        "long": {
+          "early": 0.5,
+          "late": 0.25,
+          "none": 0.25
+        },
+        "directions": {
+          "inward": 0.5,
+          "outward": 0.25,
+          "lateral": 0.25
+        },
+        "directionN": 1,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:1"
+        ],
+        "contexts": {
+          "cut": 0,
+          "overhead": 1,
+          "thrust": 0
+        },
+        "families": {
+          "cut": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 1,
+            "recent": {
+              "early": 0.5,
+              "late": 0.25,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 133,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 1,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 133,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:2",
+      "action": "cut",
+      "availableTick": 133
+    },
+    {
+      "type": "dodge",
+      "tick": 142,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 154
+    },
+    {
+      "type": "observed",
+      "tick": 154,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 142,
+      "availableTick": 154
+    },
+    {
+      "type": "hit",
+      "tick": 158,
+      "encounterId": "adaptive-switch-1001",
+      "target": "player",
+      "damage": 16,
+      "source": "cut",
+      "instance": "adaptive-switch-1001:2"
+    },
+    {
+      "type": "player-attack",
+      "tick": 168,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "sample",
+      "tick": 171,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:2",
+      "family": "cut",
+      "spacing": 56.26000000000002,
+      "outcome": "hit",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 142,
+      "observedTick": 171
+    },
+    {
+      "type": "hit",
+      "tick": 178,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 195,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.6097560975609756,
+        "thrust": 0.24390243902439024,
+        "approach": 0.048780487804878044,
+        "reposition": 0.06097560975609756,
+        "wait": 0.036585365853658534
+      },
+      "reason": "spacing-only",
+      "evidence": [
+        "adaptive-switch-1001:1",
+        "adaptive-switch-1001:2"
+      ],
+      "planVersion": null,
+      "observationTick": 183,
+      "window": 2,
+      "latencyMs": 0.0026249999999947704,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 2,
+        "effective": 1.8199999999999998,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5850622406639003,
+          "late": 0.20746887966804978,
+          "none": 0.20746887966804978
+        },
+        "long": {
+          "early": 0.5975855130784709,
+          "late": 0.2012072434607646,
+          "none": 0.2012072434607646
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:1",
+          "adaptive-switch-1001:2"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 1,
+          "thrust": 0
+        },
+        "families": {
+          "cut": {
+            "n": 1,
+            "recent": {
+              "early": 0.5,
+              "late": 0.25,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 1,
+            "recent": {
+              "early": 0.5,
+              "late": 0.25,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 195,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 2,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 195,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:3",
+      "action": "overhead",
+      "availableTick": 195
+    },
+    {
+      "type": "dodge",
+      "tick": 204,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 216
+    },
+    {
+      "type": "observed",
+      "tick": 216,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 204,
+      "availableTick": 216
+    },
+    {
+      "type": "snapshot",
+      "tick": 240,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 240,
+        "boss": {
+          "x": 0,
+          "y": -60,
+          "facing": -0.4669637534170134,
+          "state": "attack",
+          "hp": 360
+        },
+        "player": {
+          "x": 16.083070650733188,
+          "y": -101.17275609785578,
+          "facing": 1.9431939895746837,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 80
+    },
+    {
+      "type": "heal-start",
+      "tick": 251,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "sample",
+      "tick": 262,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:3",
+      "family": "overhead",
+      "spacing": 34,
+      "outcome": "miss",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 204,
+      "observedTick": 262
+    },
+    {
+      "type": "decision",
+      "tick": 298,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [
+        "adaptive-switch-1001:1",
+        "adaptive-switch-1001:2",
+        "adaptive-switch-1001:3"
+      ],
+      "planVersion": null,
+      "observationTick": 286,
+      "window": 3,
+      "latencyMs": 0.002290999999999599,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 3,
+        "effective": 2.4924,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.6358604617289345,
+          "late": 0.18206976913553274,
+          "none": 0.18206976913553274
+        },
+        "long": {
+          "early": 0.661642051125886,
+          "late": 0.16917897443705696,
+          "none": 0.16917897443705696
+        },
+        "directions": {
+          "inward": 0.6358604617289345,
+          "outward": 0.18206976913553274,
+          "lateral": 0.18206976913553274
+        },
+        "directionN": 3,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:1",
+          "adaptive-switch-1001:2",
+          "adaptive-switch-1001:3"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 2,
+          "thrust": 0
+        },
+        "families": {
+          "cut": {
+            "n": 1,
+            "recent": {
+              "early": 0.5,
+              "late": 0.25,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 2,
+            "recent": {
+              "early": 0.5850622406639003,
+              "late": 0.20746887966804978,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 298,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 3,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 298,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:4",
+      "action": "cut",
+      "availableTick": 298
+    },
+    {
+      "type": "hit",
+      "tick": 320,
+      "encounterId": "adaptive-switch-1001",
+      "target": "player",
+      "damage": 16,
+      "source": "cut",
+      "instance": "adaptive-switch-1001:4"
+    },
+    {
+      "type": "heal-complete",
+      "tick": 322,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "sample",
+      "tick": 336,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:4",
+      "family": "cut",
+      "spacing": 53.47749999999991,
+      "outcome": "hit",
+      "response": "none",
+      "observedTick": 336
+    },
+    {
+      "type": "player-attack",
+      "tick": 345,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 355,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 360,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.6097560975609756,
+        "thrust": 0.24390243902439024,
+        "approach": 0.048780487804878044,
+        "reposition": 0.06097560975609756,
+        "wait": 0.036585365853658534
+      },
+      "reason": "spacing-only",
+      "evidence": [
+        "adaptive-switch-1001:1",
+        "adaptive-switch-1001:2",
+        "adaptive-switch-1001:3",
+        "adaptive-switch-1001:4"
+      ],
+      "planVersion": null,
+      "observationTick": 348,
+      "window": 4,
+      "latencyMs": 0.0026670000000024174,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 4,
+        "effective": 3.043768,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5036209199294215,
+          "late": 0.1654596933568595,
+          "none": 0.330919386713719
+        },
+        "long": {
+          "early": 0.5603476360551869,
+          "late": 0.14655078798160437,
+          "none": 0.29310157596320874
+        },
+        "directions": {
+          "inward": 0.6358604617289345,
+          "outward": 0.18206976913553274,
+          "lateral": 0.18206976913553274
+        },
+        "directionN": 3,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:1",
+          "adaptive-switch-1001:2",
+          "adaptive-switch-1001:3",
+          "adaptive-switch-1001:4"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 0
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 2,
+            "recent": {
+              "early": 0.5850622406639003,
+              "late": 0.20746887966804978,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 360,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "window": 4,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 360,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:5",
+      "action": "thrust",
+      "availableTick": 360
+    },
+    {
+      "type": "snapshot",
+      "tick": 360,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 360,
+        "boss": {
+          "x": 0,
+          "y": -60,
+          "facing": -1.1983986640151096,
+          "state": "attack",
+          "hp": 330
+        },
+        "player": {
+          "x": 20.80766026443761,
+          "y": -113.26773348444375,
+          "facing": 1.9431939895746837,
+          "state": "attack"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 109
+    },
+    {
+      "type": "dodge",
+      "tick": 378,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 390
+    },
+    {
+      "type": "observed",
+      "tick": 390,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 378,
+      "availableTick": 390
+    },
+    {
+      "type": "hit",
+      "tick": 394,
+      "encounterId": "adaptive-switch-1001",
+      "target": "player",
+      "damage": 20,
+      "source": "thrust",
+      "instance": "adaptive-switch-1001:5"
+    },
+    {
+      "type": "sample",
+      "tick": 410,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:5",
+      "family": "thrust",
+      "spacing": 57.187499999999886,
+      "outcome": "hit",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 378,
+      "observedTick": 410
+    },
+    {
+      "type": "decision",
+      "tick": 442,
+      "encounterId": "adaptive-switch-1001",
+      "action": "wait",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.49180327868852447,
+        "overhead": 0.40983606557377045,
+        "approach": 0.032786885245901634,
+        "reposition": 0.040983606557377046,
+        "wait": 0.024590163934426226
+      },
+      "reason": "spacing-only",
+      "evidence": [
+        "adaptive-switch-1001:1",
+        "adaptive-switch-1001:2",
+        "adaptive-switch-1001:3",
+        "adaptive-switch-1001:4",
+        "adaptive-switch-1001:5"
+      ],
+      "planVersion": null,
+      "observationTick": 430,
+      "window": 5,
+      "latencyMs": 0.0025420000000053733,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.4119358330982514,
+          "late": 0.30788699837787886,
+          "none": 0.28017716852386976
+        },
+        "long": {
+          "early": 0.48500854758036055,
+          "late": 0.2594415377428914,
+          "none": 0.25554991467674804
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:1",
+          "adaptive-switch-1001:2",
+          "adaptive-switch-1001:3",
+          "adaptive-switch-1001:4",
+          "adaptive-switch-1001:5"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 2,
+            "recent": {
+              "early": 0.5850622406639003,
+              "late": 0.20746887966804978,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 442,
+      "encounterId": "adaptive-switch-1001",
+      "action": "wait",
+      "window": 5,
+      "controller": "adaptive"
+    },
+    {
+      "type": "decision",
+      "tick": 459,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.49180327868852447,
+        "overhead": 0.40983606557377045,
+        "approach": 0.032786885245901634,
+        "reposition": 0.040983606557377046,
+        "wait": 0.024590163934426226
+      },
+      "reason": "spacing-only",
+      "evidence": [
+        "adaptive-switch-1001:1",
+        "adaptive-switch-1001:2",
+        "adaptive-switch-1001:3",
+        "adaptive-switch-1001:4",
+        "adaptive-switch-1001:5"
+      ],
+      "planVersion": null,
+      "observationTick": 447,
+      "window": 6,
+      "latencyMs": 0.002332999999993035,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.4119358330982514,
+          "late": 0.30788699837787886,
+          "none": 0.28017716852386976
+        },
+        "long": {
+          "early": 0.48500854758036055,
+          "late": 0.2594415377428914,
+          "none": 0.25554991467674804
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:1",
+          "adaptive-switch-1001:2",
+          "adaptive-switch-1001:3",
+          "adaptive-switch-1001:4",
+          "adaptive-switch-1001:5"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 2,
+            "recent": {
+              "early": 0.5850622406639003,
+              "late": 0.20746887966804978,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 459,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 6,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 459,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:6",
+      "action": "overhead",
+      "availableTick": 459
+    },
+    {
+      "type": "dodge",
+      "tick": 468,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 480
+    },
+    {
+      "type": "observed",
+      "tick": 480,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 468,
+      "availableTick": 480
+    },
+    {
+      "type": "snapshot",
+      "tick": 480,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 480,
+        "boss": {
+          "x": 6.622066304922671,
+          "y": -76.952528951552,
+          "facing": -2.740481209351432,
+          "state": "attack",
+          "hp": 330
+        },
+        "player": {
+          "x": -23.911945692930203,
+          "y": -61.99679054400499,
+          "facing": 0.4186111455615224,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 89
+    },
+    {
+      "type": "sample",
+      "tick": 526,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:6",
+      "family": "overhead",
+      "spacing": 57.18750000000004,
+      "outcome": "miss",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 468,
+      "observedTick": 526
+    },
+    {
+      "type": "player-attack",
+      "tick": 535,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 545,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 562,
+      "encounterId": "adaptive-switch-1001",
+      "action": "approach",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 0.9374419238616443,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": -0.2625580761383557,
+        "overhead": 0.5951316392469396,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.594279833495706,
+        "thrust": 0.2535751040651837,
+        "approach": 0.050715020813036735,
+        "reposition": 0.06339377601629592,
+        "wait": 0.03803626560977755
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:1",
+        "adaptive-switch-1001:2",
+        "adaptive-switch-1001:3",
+        "adaptive-switch-1001:4",
+        "adaptive-switch-1001:5",
+        "adaptive-switch-1001:6"
+      ],
+      "planVersion": null,
+      "observationTick": 550,
+      "window": 7,
+      "latencyMs": 0.002375000000000682,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.491395313011719,
+          "late": 0.26504997432100313,
+          "none": 0.24355471266727782
+        },
+        "long": {
+          "early": 0.543524432163157,
+          "late": 0.22993604250647695,
+          "none": 0.22653952533036606
+        },
+        "directions": {
+          "inward": 0.6921130016221211,
+          "outward": 0.15394349918893943,
+          "lateral": 0.15394349918893943
+        },
+        "directionN": 5,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:1",
+          "adaptive-switch-1001:2",
+          "adaptive-switch-1001:3",
+          "adaptive-switch-1001:4",
+          "adaptive-switch-1001:5",
+          "adaptive-switch-1001:6"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 3,
+            "recent": {
+              "early": 0.6358604617289345,
+              "late": 0.18206976913553274,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 562,
+      "encounterId": "adaptive-switch-1001",
+      "action": "approach",
+      "window": 7,
+      "controller": "adaptive"
+    },
+    {
+      "type": "decision",
+      "tick": 583,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 0.9374419238616443,
+        "overhead": 1.5951316392469397,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": -0.2625580761383557,
+        "overhead": 0.5951316392469396,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.2954831165342972,
+        "overhead": 0.5027879125626897,
+        "thrust": 0.12608060681438316,
+        "approach": 0.025216121362876633,
+        "reposition": 0.03152015170359579,
+        "wait": 0.018912091022157473
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:1",
+        "adaptive-switch-1001:2",
+        "adaptive-switch-1001:3",
+        "adaptive-switch-1001:4",
+        "adaptive-switch-1001:5",
+        "adaptive-switch-1001:6"
+      ],
+      "planVersion": null,
+      "observationTick": 571,
+      "window": 8,
+      "latencyMs": 0.0026249999999947704,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.491395313011719,
+          "late": 0.26504997432100313,
+          "none": 0.24355471266727782
+        },
+        "long": {
+          "early": 0.543524432163157,
+          "late": 0.22993604250647695,
+          "none": 0.22653952533036606
+        },
+        "directions": {
+          "inward": 0.6921130016221211,
+          "outward": 0.15394349918893943,
+          "lateral": 0.15394349918893943
+        },
+        "directionN": 5,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:1",
+          "adaptive-switch-1001:2",
+          "adaptive-switch-1001:3",
+          "adaptive-switch-1001:4",
+          "adaptive-switch-1001:5",
+          "adaptive-switch-1001:6"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 3,
+            "recent": {
+              "early": 0.6358604617289345,
+              "late": 0.18206976913553274,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 583,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 8,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 583,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:7",
+      "action": "overhead",
+      "availableTick": 583
+    },
+    {
+      "type": "dodge",
+      "tick": 592,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 604
+    },
+    {
+      "type": "snapshot",
+      "tick": 600,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 600,
+        "boss": {
+          "x": 6.622066304922671,
+          "y": -76.952528951552,
+          "facing": 2.5461998738666956,
+          "state": "attack",
+          "hp": 300
+        },
+        "player": {
+          "x": -11.335594102365762,
+          "y": -48.08174038080968,
+          "facing": -0.5953927797230978,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 89
+    },
+    {
+      "type": "observed",
+      "tick": 604,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 592,
+      "availableTick": 604
+    },
+    {
+      "type": "sample",
+      "tick": 650,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:7",
+      "family": "overhead",
+      "spacing": 57.187500000000014,
+      "outcome": "miss",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 592,
+      "observedTick": 650
+    },
+    {
+      "type": "player-attack",
+      "tick": 659,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 669,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 686,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 0.8031322941927189,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": -0.39686770580728103,
+        "overhead": 0.899566799829837,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.5565202146917425,
+        "thrust": 0.2771748658176609,
+        "approach": 0.05543497316353217,
+        "reposition": 0.06929371645441522,
+        "wait": 0.041576229872649126
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:1",
+        "adaptive-switch-1001:2",
+        "adaptive-switch-1001:3",
+        "adaptive-switch-1001:4",
+        "adaptive-switch-1001:5",
+        "adaptive-switch-1001:6",
+        "adaptive-switch-1001:7"
+      ],
+      "planVersion": null,
+      "observationTick": 674,
+      "window": 9,
+      "latencyMs": 0.002416000000010854,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 7,
+        "effective": 4.170636274624,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5504209282782173,
+          "late": 0.23322895430052948,
+          "none": 0.21635011742125318
+        },
+        "long": {
+          "early": 0.590070363236312,
+          "late": 0.20646616321908062,
+          "none": 0.20346347354460742
+        },
+        "directions": {
+          "inward": 0.7087362919549416,
+          "outward": 0.1456318540225292,
+          "lateral": 0.1456318540225292
+        },
+        "directionN": 6,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:1",
+          "adaptive-switch-1001:2",
+          "adaptive-switch-1001:3",
+          "adaptive-switch-1001:4",
+          "adaptive-switch-1001:5",
+          "adaptive-switch-1001:6",
+          "adaptive-switch-1001:7"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 4,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 4,
+            "recent": {
+              "early": 0.669080613286281,
+              "late": 0.1654596933568595,
+              "none": 0.1654596933568595
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 686,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 9,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 686,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:8",
+      "action": "cut",
+      "availableTick": 686
+    },
+    {
+      "type": "dodge",
+      "tick": 695,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 707
+    },
+    {
+      "type": "observed",
+      "tick": 707,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 695,
+      "availableTick": 707
+    },
+    {
+      "type": "hit",
+      "tick": 711,
+      "encounterId": "adaptive-switch-1001",
+      "target": "player",
+      "damage": 16,
+      "source": "cut",
+      "instance": "adaptive-switch-1001:8"
+    },
+    {
+      "type": "snapshot",
+      "tick": 720,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 720,
+        "boss": {
+          "x": 6.622066304922671,
+          "y": -76.952528951552,
+          "facing": 1.5321959485820795,
+          "state": "attack",
+          "hp": 270
+        },
+        "player": {
+          "x": 36.158413995517606,
+          "y": -60.11197774025587,
+          "facing": -1.6093967050077138,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 73
+    },
+    {
+      "type": "sample",
+      "tick": 724,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:8",
+      "family": "cut",
+      "spacing": 57.187500000000036,
+      "outcome": "hit",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 695,
+      "observedTick": 724
+    },
+    {
+      "type": "decision",
+      "tick": 748,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 2.1605356700762925,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": -0.44199217451916795,
+        "overhead": 1.1605356700762928,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.7714722912339963,
+        "thrust": 0.1428298179787523,
+        "approach": 0.028565963595750463,
+        "reposition": 0.035707454494688075,
+        "wait": 0.021424472696812843
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:1",
+        "adaptive-switch-1001:2",
+        "adaptive-switch-1001:3",
+        "adaptive-switch-1001:4",
+        "adaptive-switch-1001:5",
+        "adaptive-switch-1001:6",
+        "adaptive-switch-1001:7",
+        "adaptive-switch-1001:8"
+      ],
+      "planVersion": null,
+      "observationTick": 736,
+      "window": 10,
+      "latencyMs": 0.0024999999999977263,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 8,
+        "effective": 4.4199217451916795,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5952127444003912,
+          "late": 0.20908145035428852,
+          "none": 0.19570580524532027
+        },
+        "long": {
+          "early": 0.6279624366975298,
+          "late": 0.18735982310341692,
+          "none": 0.18467774019905328
+        },
+        "directions": {
+          "inward": 0.7210847233908999,
+          "outward": 0.13945763830455005,
+          "lateral": 0.13945763830455005
+        },
+        "directionN": 7,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:1",
+          "adaptive-switch-1001:2",
+          "adaptive-switch-1001:3",
+          "adaptive-switch-1001:4",
+          "adaptive-switch-1001:5",
+          "adaptive-switch-1001:6",
+          "adaptive-switch-1001:7",
+          "adaptive-switch-1001:8"
+        ],
+        "contexts": {
+          "cut": 3,
+          "overhead": 4,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 3,
+            "recent": {
+              "early": 0.48656325103779763,
+              "late": 0.18206976913553274,
+              "none": 0.33136697982666957
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 4,
+            "recent": {
+              "early": 0.669080613286281,
+              "late": 0.1654596933568595,
+              "none": 0.1654596933568595
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 748,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 10,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 748,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:9",
+      "action": "overhead",
+      "availableTick": 748
+    },
+    {
+      "type": "dodge",
+      "tick": 757,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 769
+    },
+    {
+      "type": "observed",
+      "tick": 769,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 757,
+      "availableTick": 769
+    },
+    {
+      "type": "heal-start",
+      "tick": 804,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "sample",
+      "tick": 815,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:9",
+      "family": "overhead",
+      "spacing": 48.83999999999995,
+      "outcome": "miss",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 757,
+      "observedTick": 815
+    },
+    {
+      "type": "snapshot",
+      "tick": 840,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 840,
+        "boss": {
+          "x": 6.622066304922671,
+          "y": -76.952528951552,
+          "facing": 0.1277527231443199,
+          "state": "attack",
+          "hp": 270
+        },
+        "player": {
+          "x": 53.65995232102525,
+          "y": -102.39423261671853,
+          "facing": 2.645780751602644,
+          "state": "heal"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 73
+    },
+    {
+      "type": "decision",
+      "tick": 851,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 0.7375664168942823,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": -0.4624335831057177,
+        "overhead": 1.3813925645962526,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.5354125999653233,
+        "thrust": 0.29036712502167283,
+        "approach": 0.058073425004334565,
+        "reposition": 0.07259178125541821,
+        "wait": 0.04355506875325092
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:2",
+        "adaptive-switch-1001:3",
+        "adaptive-switch-1001:4",
+        "adaptive-switch-1001:5",
+        "adaptive-switch-1001:6",
+        "adaptive-switch-1001:7",
+        "adaptive-switch-1001:8",
+        "adaptive-switch-1001:9"
+      ],
+      "planVersion": null,
+      "observationTick": 839,
+      "window": 11,
+      "latencyMs": 0.002334000000004721,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 9,
+        "effective": 4.624335831057177,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.6297563924583072,
+          "late": 0.19045878777858755,
+          "none": 0.17978481976310526
+        },
+        "long": {
+          "early": 0.6593954402960487,
+          "late": 0.17151034317920913,
+          "none": 0.16909421652474235
+        },
+        "directions": {
+          "inward": 0.7304553782799587,
+          "outward": 0.13477231086002064,
+          "lateral": 0.13477231086002064
+        },
+        "directionN": 8,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:2",
+          "adaptive-switch-1001:3",
+          "adaptive-switch-1001:4",
+          "adaptive-switch-1001:5",
+          "adaptive-switch-1001:6",
+          "adaptive-switch-1001:7",
+          "adaptive-switch-1001:8",
+          "adaptive-switch-1001:9"
+        ],
+        "contexts": {
+          "cut": 3,
+          "overhead": 5,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 3,
+            "recent": {
+              "early": 0.48656325103779763,
+              "late": 0.18206976913553274,
+              "none": 0.33136697982666957
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 5,
+            "recent": {
+              "early": 0.6921130016221211,
+              "late": 0.15394349918893943,
+              "none": 0.15394349918893943
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 851,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 11,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 851,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:10",
+      "action": "cut",
+      "availableTick": 851
+    },
+    {
+      "type": "hit",
+      "tick": 873,
+      "encounterId": "adaptive-switch-1001",
+      "target": "player",
+      "damage": 16,
+      "source": "cut",
+      "instance": "adaptive-switch-1001:10"
+    },
+    {
+      "type": "heal-complete",
+      "tick": 875,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "sample",
+      "tick": 889,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:10",
+      "family": "cut",
+      "spacing": 53.47750000000006,
+      "outcome": "hit",
+      "response": "none",
+      "observedTick": 889
+    },
+    {
+      "type": "decision",
+      "tick": 913,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 2.1485500537442754,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": -0.47919553814668847,
+        "overhead": 1.1485500537442754,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.7704900440497198,
+        "thrust": 0.1434437224689251,
+        "approach": 0.02868874449378502,
+        "reposition": 0.03586093061723127,
+        "wait": 0.02151655837033876
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:3",
+        "adaptive-switch-1001:4",
+        "adaptive-switch-1001:5",
+        "adaptive-switch-1001:6",
+        "adaptive-switch-1001:7",
+        "adaptive-switch-1001:8",
+        "adaptive-switch-1001:9",
+        "adaptive-switch-1001:10"
+      ],
+      "planVersion": null,
+      "observationTick": 901,
+      "window": 12,
+      "latencyMs": 0.0024590000000017653,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 10,
+        "effective": 4.7919553814668845,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5283922539694773,
+          "late": 0.17591731164943472,
+          "none": 0.2956904343810881
+        },
+        "long": {
+          "early": 0.6007917964456845,
+          "late": 0.15815608787950805,
+          "none": 0.24105211567480753
+        },
+        "directions": {
+          "inward": 0.7304553782799587,
+          "outward": 0.13477231086002064,
+          "lateral": 0.13477231086002064
+        },
+        "directionN": 8,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:3",
+          "adaptive-switch-1001:4",
+          "adaptive-switch-1001:5",
+          "adaptive-switch-1001:6",
+          "adaptive-switch-1001:7",
+          "adaptive-switch-1001:8",
+          "adaptive-switch-1001:9",
+          "adaptive-switch-1001:10"
+        ],
+        "contexts": {
+          "cut": 4,
+          "overhead": 5,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 4,
+            "recent": {
+              "early": 0.3923658221162692,
+              "late": 0.1654596933568595,
+              "none": 0.44217448452687125
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 5,
+            "recent": {
+              "early": 0.6921130016221211,
+              "late": 0.15394349918893943,
+              "none": 0.15394349918893943
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 913,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 12,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 913,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:11",
+      "action": "overhead",
+      "availableTick": 913
+    },
+    {
+      "type": "dodge",
+      "tick": 957,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 969
+    },
+    {
+      "type": "snapshot",
+      "tick": 960,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 960,
+        "boss": {
+          "x": 6.622066304922671,
+          "y": -76.952528951552,
+          "facing": -0.49581190198714925,
+          "state": "attack",
+          "hp": 270
+        },
+        "player": {
+          "x": 37.5320959799055,
+          "y": -97.82324828615573,
+          "facing": 2.645780751602644,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "observed",
+      "tick": 969,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 957,
+      "availableTick": 969
+    },
+    {
+      "type": "sample",
+      "tick": 980,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:11",
+      "family": "overhead",
+      "spacing": 57.18750000000008,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 957,
+      "observedTick": 980
+    },
+    {
+      "type": "player-attack",
+      "tick": 985,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 995,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 1016,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 0.9664844996242836,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": -0.23351550037571636,
+        "overhead": 0.9112085827189665,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.60161458131113,
+        "thrust": 0.24899088668054373,
+        "approach": 0.049798177336108744,
+        "reposition": 0.06224772167013593,
+        "wait": 0.037348633002081556
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:4",
+        "adaptive-switch-1001:5",
+        "adaptive-switch-1001:6",
+        "adaptive-switch-1001:7",
+        "adaptive-switch-1001:8",
+        "adaptive-switch-1001:9",
+        "adaptive-switch-1001:10",
+        "adaptive-switch-1001:11"
+      ],
+      "planVersion": null,
+      "observationTick": 1004,
+      "window": 13,
+      "latencyMs": 0.002417000000008329,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 11,
+        "effective": 4.929403412802845,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.4484714783295619,
+          "late": 0.2905649456179695,
+          "none": 0.26096357605246867
+        },
+        "long": {
+          "early": 0.5507625412035559,
+          "late": 0.22682006510915337,
+          "none": 0.2224173936872908
+        },
+        "directions": {
+          "inward": 0.7376820690592949,
+          "outward": 0.13115896547035255,
+          "lateral": 0.13115896547035255
+        },
+        "directionN": 9,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:4",
+          "adaptive-switch-1001:5",
+          "adaptive-switch-1001:6",
+          "adaptive-switch-1001:7",
+          "adaptive-switch-1001:8",
+          "adaptive-switch-1001:9",
+          "adaptive-switch-1001:10",
+          "adaptive-switch-1001:11"
+        ],
+        "contexts": {
+          "cut": 4,
+          "overhead": 6,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 4,
+            "recent": {
+              "early": 0.3923658221162692,
+              "late": 0.1654596933568595,
+              "none": 0.44217448452687125
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 6,
+            "recent": {
+              "early": 0.5631044379324124,
+              "late": 0.2912637080450584,
+              "none": 0.1456318540225292
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1016,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 13,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1016,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:12",
+      "action": "cut",
+      "availableTick": 1016
+    },
+    {
+      "type": "dodge",
+      "tick": 1032,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1044
+    },
+    {
+      "type": "observed",
+      "tick": 1044,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1032,
+      "availableTick": 1044
+    },
+    {
+      "type": "sample",
+      "tick": 1054,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:12",
+      "family": "cut",
+      "spacing": 35.85500000000001,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1032,
+      "observedTick": 1054
+    },
+    {
+      "type": "decision",
+      "tick": 1078,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 1.9242584816170036,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": -0.004984842692505487,
+        "overhead": 0.9242584816170035,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.7504151767116627,
+        "thrust": 0.15599051455521082,
+        "approach": 0.031198102911042164,
+        "reposition": 0.038997628638802705,
+        "wait": 0.02339857718328162
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:5",
+        "adaptive-switch-1001:6",
+        "adaptive-switch-1001:7",
+        "adaptive-switch-1001:8",
+        "adaptive-switch-1001:9",
+        "adaptive-switch-1001:10",
+        "adaptive-switch-1001:11",
+        "adaptive-switch-1001:12"
+      ],
+      "planVersion": null,
+      "observationTick": 1066,
+      "window": 14,
+      "latencyMs": 0.0030830000000037217,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 12,
+        "effective": 5.042110798498333,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.3849749549139835,
+          "late": 0.38165172645231316,
+          "none": 0.23337331863370328
+        },
+        "long": {
+          "early": 0.5075728272797024,
+          "late": 0.28609693259538216,
+          "none": 0.20633024012491555
+        },
+        "directions": {
+          "inward": 0.7433250189346583,
+          "outward": 0.12833749053267085,
+          "lateral": 0.12833749053267085
+        },
+        "directionN": 10,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:5",
+          "adaptive-switch-1001:6",
+          "adaptive-switch-1001:7",
+          "adaptive-switch-1001:8",
+          "adaptive-switch-1001:9",
+          "adaptive-switch-1001:10",
+          "adaptive-switch-1001:11",
+          "adaptive-switch-1001:12"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 6,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 5,
+            "recent": {
+              "early": 0.32705631383744416,
+              "late": 0.30788699837787886,
+              "none": 0.3650566877846769
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 6,
+            "recent": {
+              "early": 0.5631044379324124,
+              "late": 0.2912637080450584,
+              "none": 0.1456318540225292
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1078,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "window": 14,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1078,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:13",
+      "action": "thrust",
+      "availableTick": 1078
+    },
+    {
+      "type": "snapshot",
+      "tick": 1080,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1080,
+        "boss": {
+          "x": 6.622066304922671,
+          "y": -76.952528951552,
+          "facing": -2.6253652410135198,
+          "state": "attack",
+          "hp": 240
+        },
+        "player": {
+          "x": -41.499918584486146,
+          "y": -104.26479957399394,
+          "facing": 0.5162274125762727,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "dodge",
+      "tick": 1104,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1116
+    },
+    {
+      "type": "observed",
+      "tick": 1116,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1104,
+      "availableTick": 1116
+    },
+    {
+      "type": "sample",
+      "tick": 1128,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:13",
+      "family": "thrust",
+      "spacing": 42.347499999999975,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1104,
+      "observedTick": 1128
+    },
+    {
+      "type": "decision",
+      "tick": 1160,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.3803579490018214,
+        "overhead": 1.9242584816170036,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.18035794900182148,
+        "overhead": 0.9242584816170035,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.3894237856254692,
+        "overhead": 0.5428679010216807,
+        "approach": 0.022569437784283324,
+        "reposition": 0.028211797230354153,
+        "wait": 0.01692707833821249
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:6",
+        "adaptive-switch-1001:7",
+        "adaptive-switch-1001:8",
+        "adaptive-switch-1001:9",
+        "adaptive-switch-1001:10",
+        "adaptive-switch-1001:11",
+        "adaptive-switch-1001:12",
+        "adaptive-switch-1001:13"
+      ],
+      "planVersion": null,
+      "observationTick": 1148,
+      "window": 15,
+      "latencyMs": 0.0025830000000013342,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 13,
+        "effective": 5.134530854768633,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.3342207764691988,
+          "late": 0.4544594091370798,
+          "none": 0.21131981439372147
+        },
+        "long": {
+          "early": 0.46992618146216086,
+          "late": 0.33776606935701525,
+          "none": 0.19230774918082397
+        },
+        "directions": {
+          "inward": 0.7477742150474029,
+          "outward": 0.12611289247629856,
+          "lateral": 0.12611289247629856
+        },
+        "directionN": 11,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:6",
+          "adaptive-switch-1001:7",
+          "adaptive-switch-1001:8",
+          "adaptive-switch-1001:9",
+          "adaptive-switch-1001:10",
+          "adaptive-switch-1001:11",
+          "adaptive-switch-1001:12",
+          "adaptive-switch-1001:13"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 6,
+          "thrust": 2
+        },
+        "families": {
+          "cut": {
+            "n": 5,
+            "recent": {
+              "early": 0.32705631383744416,
+              "late": 0.30788699837787886,
+              "none": 0.3650566877846769
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 6,
+            "recent": {
+              "early": 0.5631044379324124,
+              "late": 0.2912637080450584,
+              "none": 0.1456318540225292
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 2,
+            "recent": {
+              "early": 0.20746887966804978,
+              "late": 0.5850622406639003,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1160,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 15,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1160,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:14",
+      "action": "overhead",
+      "availableTick": 1160
+    },
+    {
+      "type": "snapshot",
+      "tick": 1200,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1200,
+        "boss": {
+          "x": -9.206246621246237,
+          "y": -85.93609783653716,
+          "facing": 2.1748502223530557,
+          "state": "attack",
+          "hp": 240
+        },
+        "player": {
+          "x": -41.73780597833376,
+          "y": -38.796062404738834,
+          "facing": -0.9667424312367376,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "dodge",
+      "tick": 1204,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1216
+    },
+    {
+      "type": "observed",
+      "tick": 1216,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1204,
+      "availableTick": 1216
+    },
+    {
+      "type": "sample",
+      "tick": 1227,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:14",
+      "family": "overhead",
+      "spacing": 51.710520903042976,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1204,
+      "observedTick": 1227
+    },
+    {
+      "type": "player-attack",
+      "tick": 1240,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 1250,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 1263,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.529225405821864,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.329225405821864,
+        "overhead": 0.25160435763647815,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.7049638095320387,
+        "thrust": 0.18439761904247579,
+        "approach": 0.03687952380849516,
+        "reposition": 0.046099404760618946,
+        "wait": 0.027659642856371364
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:7",
+        "adaptive-switch-1001:8",
+        "adaptive-switch-1001:9",
+        "adaptive-switch-1001:10",
+        "adaptive-switch-1001:11",
+        "adaptive-switch-1001:12",
+        "adaptive-switch-1001:13",
+        "adaptive-switch-1001:14"
+      ],
+      "planVersion": null,
+      "observationTick": 1251,
+      "window": 16,
+      "latencyMs": 0.0024590000000017653,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 14,
+        "effective": 5.2103153009102785,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.2934549856931177,
+          "late": 0.5129385895743603,
+          "none": 0.19360642473252213
+        },
+        "long": {
+          "early": 0.43683426329068203,
+          "late": 0.3831839494516666,
+          "none": 0.17998178725765138
+        },
+        "directions": {
+          "inward": 0.7513090716962703,
+          "outward": 0.12434546415186491,
+          "lateral": 0.12434546415186491
+        },
+        "directionN": 12,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:7",
+          "adaptive-switch-1001:8",
+          "adaptive-switch-1001:9",
+          "adaptive-switch-1001:10",
+          "adaptive-switch-1001:11",
+          "adaptive-switch-1001:12",
+          "adaptive-switch-1001:13",
+          "adaptive-switch-1001:14"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 7,
+          "thrust": 2
+        },
+        "families": {
+          "cut": {
+            "n": 5,
+            "recent": {
+              "early": 0.32705631383744416,
+              "late": 0.30788699837787886,
+              "none": 0.3650566877846769
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 7,
+            "recent": {
+              "early": 0.4672718216766188,
+              "late": 0.3932705400188311,
+              "none": 0.13945763830455005
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 2,
+            "recent": {
+              "early": 0.20746887966804978,
+              "late": 0.5850622406639003,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1263,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 16,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1263,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:15",
+      "action": "cut",
+      "availableTick": 1263
+    },
+    {
+      "type": "dodge",
+      "tick": 1279,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1291
+    },
+    {
+      "type": "observed",
+      "tick": 1291,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1279,
+      "availableTick": 1291
+    },
+    {
+      "type": "sample",
+      "tick": 1301,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:15",
+      "family": "cut",
+      "spacing": 43.27500000000003,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1279,
+      "observedTick": 1301
+    },
+    {
+      "type": "snapshot",
+      "tick": 1320,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1320,
+        "boss": {
+          "x": -9.206246621246237,
+          "y": -85.93609783653716,
+          "facing": 1.1619188541472747,
+          "state": "ready",
+          "hp": 210
+        },
+        "player": {
+          "x": 39.5812567333749,
+          "y": -83.6722258386472,
+          "facing": -3.095223213184274,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "decision",
+      "tick": 1325,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 1.2516043576364781,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.19614254926060726,
+        "overhead": 0.25160435763647815,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.661662864427069,
+        "thrust": 0.21146070973308181,
+        "approach": 0.04229214194661636,
+        "reposition": 0.052865177433270454,
+        "wait": 0.03171910645996227
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:8",
+        "adaptive-switch-1001:9",
+        "adaptive-switch-1001:10",
+        "adaptive-switch-1001:11",
+        "adaptive-switch-1001:12",
+        "adaptive-switch-1001:13",
+        "adaptive-switch-1001:14",
+        "adaptive-switch-1001:15"
+      ],
+      "planVersion": null,
+      "observationTick": 1313,
+      "window": 17,
+      "latencyMs": 0.0024169999999941183,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 15,
+        "effective": 5.272458546746428,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.26058438544401175,
+          "late": 0.5600919926227081,
+          "none": 0.17932362193328
+        },
+        "long": {
+          "early": 0.4075304532067325,
+          "late": 0.4234027402093551,
+          "none": 0.16906680658391238
+        },
+        "directions": {
+          "inward": 0.7541345609590309,
+          "outward": 0.12293271952048458,
+          "lateral": 0.12293271952048458
+        },
+        "directionN": 13,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:8",
+          "adaptive-switch-1001:9",
+          "adaptive-switch-1001:10",
+          "adaptive-switch-1001:11",
+          "adaptive-switch-1001:12",
+          "adaptive-switch-1001:13",
+          "adaptive-switch-1001:14",
+          "adaptive-switch-1001:15"
+        ],
+        "contexts": {
+          "cut": 6,
+          "overhead": 7,
+          "thrust": 2
+        },
+        "families": {
+          "cut": {
+            "n": 6,
+            "recent": {
+              "early": 0.27992012883646084,
+              "late": 0.41068182834353234,
+              "none": 0.3093980428200068
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 7,
+            "recent": {
+              "early": 0.4672718216766188,
+              "late": 0.3932705400188311,
+              "none": 0.13945763830455005
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 2,
+            "recent": {
+              "early": 0.20746887966804978,
+              "late": 0.5850622406639003,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1325,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 17,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1325,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:16",
+      "action": "overhead",
+      "availableTick": 1325
+    },
+    {
+      "type": "dodge",
+      "tick": 1369,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1381
+    },
+    {
+      "type": "observed",
+      "tick": 1381,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1369,
+      "availableTick": 1381
+    },
+    {
+      "type": "sample",
+      "tick": 1392,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:16",
+      "family": "overhead",
+      "spacing": 42.3475,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1369,
+      "observedTick": 1392
+    },
+    {
+      "type": "decision",
+      "tick": 1428,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.3961425492606072,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.19614254926060726,
+        "overhead": -0.2588418223673159,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6856801601477234,
+        "thrust": 0.19644989990767275,
+        "approach": 0.03928997998153455,
+        "reposition": 0.04911247497691819,
+        "wait": 0.029467484986150913
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:9",
+        "adaptive-switch-1001:10",
+        "adaptive-switch-1001:11",
+        "adaptive-switch-1001:12",
+        "adaptive-switch-1001:13",
+        "adaptive-switch-1001:14",
+        "adaptive-switch-1001:15",
+        "adaptive-switch-1001:16"
+      ],
+      "planVersion": null,
+      "observationTick": 1416,
+      "window": 18,
+      "latencyMs": 0.00245800000000429,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 16,
+        "effective": 5.32341600833207,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.23399674962690878,
+          "late": 0.5982323824630382,
+          "none": 0.16777086791005294
+        },
+        "long": {
+          "early": 0.38141097607295377,
+          "late": 0.45925110881856407,
+          "none": 0.15933791510848222
+        },
+        "directions": {
+          "inward": 0.7564039958638057,
+          "outward": 0.1217980020680972,
+          "lateral": 0.1217980020680972
+        },
+        "directionN": 14,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:9",
+          "adaptive-switch-1001:10",
+          "adaptive-switch-1001:11",
+          "adaptive-switch-1001:12",
+          "adaptive-switch-1001:13",
+          "adaptive-switch-1001:14",
+          "adaptive-switch-1001:15",
+          "adaptive-switch-1001:16"
+        ],
+        "contexts": {
+          "cut": 6,
+          "overhead": 8,
+          "thrust": 2
+        },
+        "families": {
+          "cut": {
+            "n": 6,
+            "recent": {
+              "early": 0.27992012883646084,
+              "late": 0.41068182834353234,
+              "none": 0.3093980428200068
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 8,
+            "recent": {
+              "early": 0.3945488706924432,
+              "late": 0.4706788184475361,
+              "none": 0.13477231086002064
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 2,
+            "recent": {
+              "early": 0.20746887966804978,
+              "late": 0.5850622406639003,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1428,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "window": 18,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1428,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:17",
+      "action": "thrust",
+      "availableTick": 1428
+    },
+    {
+      "type": "snapshot",
+      "tick": 1440,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1440,
+        "boss": {
+          "x": -9.206246621246237,
+          "y": -85.93609783653716,
+          "facing": -0.9676344848790916,
+          "state": "attack",
+          "hp": 210
+        },
+        "player": {
+          "x": 23.233318568217282,
+          "y": -133.03264512578693,
+          "facing": 2.1739581687107017,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "dodge",
+      "tick": 1454,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1466
+    },
+    {
+      "type": "observed",
+      "tick": 1466,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1454,
+      "availableTick": 1466
+    },
+    {
+      "type": "sample",
+      "tick": 1478,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:17",
+      "family": "thrust",
+      "spacing": 54.40499999999992,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1454,
+      "observedTick": 1478
+    },
+    {
+      "type": "player-attack",
+      "tick": 1494,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 1504,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 1510,
+      "encounterId": "adaptive-switch-1001",
+      "action": "reposition",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.3961425492606072,
+        "overhead": 0.7411581776326841,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.19614254926060726,
+        "overhead": -0.2588418223673159,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.5872805798049441,
+        "overhead": 0.31176458630088666,
+        "approach": 0.03365161129805641,
+        "reposition": 0.042064514122570514,
+        "wait": 0.025238708473542308
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:10",
+        "adaptive-switch-1001:11",
+        "adaptive-switch-1001:12",
+        "adaptive-switch-1001:13",
+        "adaptive-switch-1001:14",
+        "adaptive-switch-1001:15",
+        "adaptive-switch-1001:16",
+        "adaptive-switch-1001:17"
+      ],
+      "planVersion": null,
+      "observationTick": 1498,
+      "window": 19,
+      "latencyMs": 0.002375000000000682,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 17,
+        "effective": 5.365201126832297,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.21243659922634867,
+          "late": 0.6291607638712321,
+          "none": 0.1584026369024194
+        },
+        "long": {
+          "early": 0.3579938397107954,
+          "late": 0.4913905782184751,
+          "none": 0.15061558207072934
+        },
+        "directions": {
+          "inward": 0.7582339048665764,
+          "outward": 0.1208830475667118,
+          "lateral": 0.1208830475667118
+        },
+        "directionN": 15,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:10",
+          "adaptive-switch-1001:11",
+          "adaptive-switch-1001:12",
+          "adaptive-switch-1001:13",
+          "adaptive-switch-1001:14",
+          "adaptive-switch-1001:15",
+          "adaptive-switch-1001:16",
+          "adaptive-switch-1001:17"
+        ],
+        "contexts": {
+          "cut": 6,
+          "overhead": 8,
+          "thrust": 3
+        },
+        "families": {
+          "cut": {
+            "n": 6,
+            "recent": {
+              "early": 0.27992012883646084,
+              "late": 0.41068182834353234,
+              "none": 0.3093980428200068
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 8,
+            "recent": {
+              "early": 0.3945488706924432,
+              "late": 0.4706788184475361,
+              "none": 0.13477231086002064
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 3,
+            "recent": {
+              "early": 0.18206976913553274,
+              "late": 0.6358604617289345,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1510,
+      "encounterId": "adaptive-switch-1001",
+      "action": "reposition",
+      "window": 19,
+      "controller": "adaptive"
+    },
+    {
+      "type": "decision",
+      "tick": 1531,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.3961425492606072,
+        "overhead": 0.7411581776326841,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.19614254926060726,
+        "overhead": -0.2588418223673159,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.5026976501829322,
+        "overhead": 0.26686277451190854,
+        "thrust": 0.1440247345657245,
+        "approach": 0.0288049469131449,
+        "reposition": 0.03600618364143113,
+        "wait": 0.021603710184858675
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:10",
+        "adaptive-switch-1001:11",
+        "adaptive-switch-1001:12",
+        "adaptive-switch-1001:13",
+        "adaptive-switch-1001:14",
+        "adaptive-switch-1001:15",
+        "adaptive-switch-1001:16",
+        "adaptive-switch-1001:17"
+      ],
+      "planVersion": null,
+      "observationTick": 1519,
+      "window": 20,
+      "latencyMs": 0.0025840000000130203,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 17,
+        "effective": 5.365201126832297,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.21243659922634867,
+          "late": 0.6291607638712321,
+          "none": 0.1584026369024194
+        },
+        "long": {
+          "early": 0.3579938397107954,
+          "late": 0.4913905782184751,
+          "none": 0.15061558207072934
+        },
+        "directions": {
+          "inward": 0.7582339048665764,
+          "outward": 0.1208830475667118,
+          "lateral": 0.1208830475667118
+        },
+        "directionN": 15,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:10",
+          "adaptive-switch-1001:11",
+          "adaptive-switch-1001:12",
+          "adaptive-switch-1001:13",
+          "adaptive-switch-1001:14",
+          "adaptive-switch-1001:15",
+          "adaptive-switch-1001:16",
+          "adaptive-switch-1001:17"
+        ],
+        "contexts": {
+          "cut": 6,
+          "overhead": 8,
+          "thrust": 3
+        },
+        "families": {
+          "cut": {
+            "n": 6,
+            "recent": {
+              "early": 0.27992012883646084,
+              "late": 0.41068182834353234,
+              "none": 0.3093980428200068
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 8,
+            "recent": {
+              "early": 0.3945488706924432,
+              "late": 0.4706788184475361,
+              "none": 0.13477231086002064
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 3,
+            "recent": {
+              "early": 0.18206976913553274,
+              "late": 0.6358604617289345,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1531,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 20,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1531,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:18",
+      "action": "overhead",
+      "availableTick": 1531
+    },
+    {
+      "type": "snapshot",
+      "tick": 1560,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1560,
+        "boss": {
+          "x": 12.39934874550303,
+          "y": -129.7159954743521,
+          "facing": -3.110386363754742,
+          "state": "attack",
+          "hp": 180
+        },
+        "player": {
+          "x": -45.334038652430905,
+          "y": -131.51822535599476,
+          "facing": 0.03120628983505145,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "dodge",
+      "tick": 1575,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1587
+    },
+    {
+      "type": "observed",
+      "tick": 1587,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1575,
+      "availableTick": 1587
+    },
+    {
+      "type": "sample",
+      "tick": 1598,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:18",
+      "family": "overhead",
+      "spacing": 47.57225343557241,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1575,
+      "observedTick": 1598
+    },
+    {
+      "type": "player-attack",
+      "tick": 1619,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 1629,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 1634,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.3961425492606072,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.19614254926060726,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6856801601477234,
+        "thrust": 0.19644989990767275,
+        "approach": 0.03928997998153455,
+        "reposition": 0.04911247497691819,
+        "wait": 0.029467484986150913
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:11",
+        "adaptive-switch-1001:12",
+        "adaptive-switch-1001:13",
+        "adaptive-switch-1001:14",
+        "adaptive-switch-1001:15",
+        "adaptive-switch-1001:16",
+        "adaptive-switch-1001:17",
+        "adaptive-switch-1001:18"
+      ],
+      "planVersion": null,
+      "observationTick": 1622,
+      "window": 21,
+      "latencyMs": 0.002375000000000682,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 18,
+        "effective": 5.399464924002484,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1949173448285987,
+          "late": 0.6542924151785767,
+          "none": 0.15079023999282465
+        },
+        "long": {
+          "early": 0.3368896014458757,
+          "late": 0.5203556493285325,
+          "none": 0.14275474922559186
+        },
+        "directions": {
+          "inward": 0.7597140407258366,
+          "outward": 0.12014297963708172,
+          "lateral": 0.12014297963708172
+        },
+        "directionN": 16,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:11",
+          "adaptive-switch-1001:12",
+          "adaptive-switch-1001:13",
+          "adaptive-switch-1001:14",
+          "adaptive-switch-1001:15",
+          "adaptive-switch-1001:16",
+          "adaptive-switch-1001:17",
+          "adaptive-switch-1001:18"
+        ],
+        "contexts": {
+          "cut": 6,
+          "overhead": 9,
+          "thrust": 3
+        },
+        "families": {
+          "cut": {
+            "n": 6,
+            "recent": {
+              "early": 0.27992012883646084,
+              "late": 0.41068182834353234,
+              "none": 0.3093980428200068
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 9,
+            "recent": {
+              "early": 0.33846460704753084,
+              "late": 0.5303764274821166,
+              "none": 0.13115896547035255
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 3,
+            "recent": {
+              "early": 0.18206976913553274,
+              "late": 0.6358604617289345,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1634,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 21,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1634,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:19",
+      "action": "cut",
+      "availableTick": 1634
+    },
+    {
+      "type": "dodge",
+      "tick": 1652,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1664
+    },
+    {
+      "type": "observed",
+      "tick": 1664,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1652,
+      "availableTick": 1664
+    },
+    {
+      "type": "sample",
+      "tick": 1672,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:19",
+      "family": "cut",
+      "spacing": 50.6950000000001,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1652,
+      "observedTick": 1672
+    },
+    {
+      "type": "snapshot",
+      "tick": 1680,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1680,
+        "boss": {
+          "x": 12.39934874550303,
+          "y": -129.7159954743521,
+          "facing": 2.16570222158255,
+          "state": "attack",
+          "hp": 150
+        },
+        "player": {
+          "x": 29.96897836757723,
+          "y": -97.40097696603102,
+          "facing": -2.0687887245993837,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "decision",
+      "tick": 1696,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 0.35,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.3632044986134184,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.35353535353535354,
+        "thrust": 0.4040404040404041,
+        "approach": 0.08080808080808081,
+        "reposition": 0.10101010101010102,
+        "wait": 0.06060606060606061
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:12",
+        "adaptive-switch-1001:13",
+        "adaptive-switch-1001:14",
+        "adaptive-switch-1001:15",
+        "adaptive-switch-1001:16",
+        "adaptive-switch-1001:17",
+        "adaptive-switch-1001:18",
+        "adaptive-switch-1001:19"
+      ],
+      "planVersion": null,
+      "observationTick": 1684,
+      "window": 22,
+      "latencyMs": 0.0030000000000001137,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 19,
+        "effective": 5.427561237682037,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.18065785650845273,
+          "late": 0.6747478797860824,
+          "none": 0.1445942637054649
+        },
+        "long": {
+          "early": 0.31778016977147067,
+          "late": 0.5465828952671825,
+          "none": 0.13563693496134677
+        },
+        "directions": {
+          "inward": 0.7609142960610019,
+          "outward": 0.11954285196949904,
+          "lateral": 0.11954285196949904
+        },
+        "directionN": 17,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:12",
+          "adaptive-switch-1001:13",
+          "adaptive-switch-1001:14",
+          "adaptive-switch-1001:15",
+          "adaptive-switch-1001:16",
+          "adaptive-switch-1001:17",
+          "adaptive-switch-1001:18",
+          "adaptive-switch-1001:19"
+        ],
+        "contexts": {
+          "cut": 7,
+          "overhead": 9,
+          "thrust": 3
+        },
+        "families": {
+          "cut": {
+            "n": 7,
+            "recent": {
+              "early": 0.24490552360586498,
+              "late": 0.4870418560148106,
+              "none": 0.26805262037932437
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 9,
+            "recent": {
+              "early": 0.33846460704753084,
+              "late": 0.5303764274821166,
+              "none": 0.13115896547035255
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 3,
+            "recent": {
+              "early": 0.18206976913553274,
+              "late": 0.6358604617289345,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1696,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 22,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1696,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:20",
+      "action": "overhead",
+      "availableTick": 1696
+    },
+    {
+      "type": "dodge",
+      "tick": 1740,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1752
+    },
+    {
+      "type": "observed",
+      "tick": 1752,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1740,
+      "availableTick": 1752
+    },
+    {
+      "type": "sample",
+      "tick": 1763,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:20",
+      "family": "overhead",
+      "spacing": 40.49250000000002,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1740,
+      "observedTick": 1763
+    },
+    {
+      "type": "decision",
+      "tick": 1799,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.5632044986134184,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.3632044986134184,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.709514028133665,
+        "thrust": 0.18155373241645933,
+        "approach": 0.03631074648329186,
+        "reposition": 0.045388433104114834,
+        "wait": 0.027233059862468895
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:13",
+        "adaptive-switch-1001:14",
+        "adaptive-switch-1001:15",
+        "adaptive-switch-1001:16",
+        "adaptive-switch-1001:17",
+        "adaptive-switch-1001:18",
+        "adaptive-switch-1001:19",
+        "adaptive-switch-1001:20"
+      ],
+      "planVersion": null,
+      "observationTick": 1787,
+      "window": 23,
+      "latencyMs": 0.002334000000004721,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 20,
+        "effective": 5.4506002148992705,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1690358300812816,
+          "late": 0.6914198630235607,
+          "none": 0.13954430689515746
+        },
+        "long": {
+          "early": 0.30040317737196837,
+          "late": 0.5704324090099816,
+          "none": 0.12916441361805006
+        },
+        "directions": {
+          "inward": 0.7618895943853806,
+          "outward": 0.11905520280730972,
+          "lateral": 0.11905520280730972
+        },
+        "directionN": 18,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:13",
+          "adaptive-switch-1001:14",
+          "adaptive-switch-1001:15",
+          "adaptive-switch-1001:16",
+          "adaptive-switch-1001:17",
+          "adaptive-switch-1001:18",
+          "adaptive-switch-1001:19",
+          "adaptive-switch-1001:20"
+        ],
+        "contexts": {
+          "cut": 7,
+          "overhead": 10,
+          "thrust": 3
+        },
+        "families": {
+          "cut": {
+            "n": 7,
+            "recent": {
+              "early": 0.24490552360586498,
+              "late": 0.4870418560148106,
+              "none": 0.26805262037932437
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 10,
+            "recent": {
+              "early": 0.2946712999573974,
+              "late": 0.5769912095099318,
+              "none": 0.12833749053267085
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 3,
+            "recent": {
+              "early": 0.18206976913553274,
+              "late": 0.6358604617289345,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1799,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 23,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1799,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:21",
+      "action": "cut",
+      "availableTick": 1799
+    },
+    {
+      "type": "snapshot",
+      "tick": 1800,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1800,
+        "boss": {
+          "x": 12.39934874550303,
+          "y": -129.7159954743521,
+          "facing": 0.05880000370580151,
+          "state": "attack",
+          "hp": 150
+        },
+        "player": {
+          "x": 69.48801603864825,
+          "y": -126.35530760687995,
+          "facing": -3.0827926498839915,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "dodge",
+      "tick": 1815,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1827
+    },
+    {
+      "type": "observed",
+      "tick": 1827,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1815,
+      "availableTick": 1827
+    },
+    {
+      "type": "sample",
+      "tick": 1837,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:21",
+      "family": "cut",
+      "spacing": 54.40500000000004,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1815,
+      "observedTick": 1837
+    },
+    {
+      "type": "decision",
+      "tick": 1861,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 0.35,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.48998010413040566,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.35353535353535354,
+        "thrust": 0.4040404040404041,
+        "approach": 0.08080808080808081,
+        "reposition": 0.10101010101010102,
+        "wait": 0.06060606060606061
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:14",
+        "adaptive-switch-1001:15",
+        "adaptive-switch-1001:16",
+        "adaptive-switch-1001:17",
+        "adaptive-switch-1001:18",
+        "adaptive-switch-1001:19",
+        "adaptive-switch-1001:20",
+        "adaptive-switch-1001:21"
+      ],
+      "planVersion": null,
+      "observationTick": 1849,
+      "window": 24,
+      "latencyMs": 0.0024999999999977263,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 21,
+        "effective": 5.4694921762174005,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.15955295003911085,
+          "late": 0.7050232064763406,
+          "none": 0.13542384348454856
+        },
+        "long": {
+          "early": 0.28454028888445193,
+          "late": 0.5922038507120767,
+          "none": 0.12325586040347153
+        },
+        "directions": {
+          "inward": 0.7626834212657598,
+          "outward": 0.11865828936712011,
+          "lateral": 0.11865828936712011
+        },
+        "directionN": 19,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:14",
+          "adaptive-switch-1001:15",
+          "adaptive-switch-1001:16",
+          "adaptive-switch-1001:17",
+          "adaptive-switch-1001:18",
+          "adaptive-switch-1001:19",
+          "adaptive-switch-1001:20",
+          "adaptive-switch-1001:21"
+        ],
+        "contexts": {
+          "cut": 8,
+          "overhead": 10,
+          "thrust": 3
+        },
+        "families": {
+          "cut": {
+            "n": 8,
+            "recent": {
+              "early": 0.21833455518820025,
+              "late": 0.544987957941804,
+              "none": 0.23667748686999576
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 10,
+            "recent": {
+              "early": 0.2946712999573974,
+              "late": 0.5769912095099318,
+              "none": 0.12833749053267085
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 3,
+            "recent": {
+              "early": 0.18206976913553274,
+              "late": 0.6358604617289345,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1861,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "window": 24,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1861,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:22",
+      "action": "thrust",
+      "availableTick": 1861
+    },
+    {
+      "type": "dodge",
+      "tick": 1887,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1899
+    },
+    {
+      "type": "observed",
+      "tick": 1899,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1887,
+      "availableTick": 1899
+    },
+    {
+      "type": "sample",
+      "tick": 1911,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:22",
+      "family": "thrust",
+      "spacing": 42.3475,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1887,
+      "observedTick": 1911
+    },
+    {
+      "type": "snapshot",
+      "tick": 1920,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1920,
+        "boss": {
+          "x": 22.908798275488778,
+          "y": -144.57504896293878,
+          "facing": -0.955203921578817,
+          "state": "attack",
+          "hp": 150
+        },
+        "player": {
+          "x": -8.746680099126664,
+          "y": -171.42363343515456,
+          "facing": 0.7034188881979634,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "decision",
+      "tick": 1943,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.6899801041304057,
+        "overhead": 0.35,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.48998010413040566,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.741225812044957,
+        "overhead": 0.1535101114987543,
+        "approach": 0.03508802548542955,
+        "reposition": 0.04386003185678694,
+        "wait": 0.026316019114072164
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:15",
+        "adaptive-switch-1001:16",
+        "adaptive-switch-1001:17",
+        "adaptive-switch-1001:18",
+        "adaptive-switch-1001:19",
+        "adaptive-switch-1001:20",
+        "adaptive-switch-1001:21",
+        "adaptive-switch-1001:22"
+      ],
+      "planVersion": null,
+      "observationTick": 1931,
+      "window": 25,
+      "latencyMs": 0.002333000000007246,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 22,
+        "effective": 5.484983584498269,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.15180849863200577,
+          "late": 0.7161327461811259,
+          "none": 0.1320587551868682
+        },
+        "long": {
+          "early": 0.2700083340964775,
+          "late": 0.612148617185903,
+          "none": 0.11784304871761954
+        },
+        "directions": {
+          "inward": 0.7633304204269661,
+          "outward": 0.11833478978651694,
+          "lateral": 0.11833478978651694
+        },
+        "directionN": 20,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:15",
+          "adaptive-switch-1001:16",
+          "adaptive-switch-1001:17",
+          "adaptive-switch-1001:18",
+          "adaptive-switch-1001:19",
+          "adaptive-switch-1001:20",
+          "adaptive-switch-1001:21",
+          "adaptive-switch-1001:22"
+        ],
+        "contexts": {
+          "cut": 8,
+          "overhead": 10,
+          "thrust": 4
+        },
+        "families": {
+          "cut": {
+            "n": 8,
+            "recent": {
+              "early": 0.21833455518820025,
+              "late": 0.544987957941804,
+              "none": 0.23667748686999576
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 10,
+            "recent": {
+              "early": 0.2946712999573974,
+              "late": 0.5769912095099318,
+              "none": 0.12833749053267085
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 4,
+            "recent": {
+              "early": 0.1654596933568595,
+              "late": 0.669080613286281,
+              "none": 0.1654596933568595
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1943,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 25,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 1943,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:23",
+      "action": "cut",
+      "availableTick": 1943
+    },
+    {
+      "type": "dodge",
+      "tick": 1959,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 1971
+    },
+    {
+      "type": "observed",
+      "tick": 1971,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1959,
+      "availableTick": 1971
+    },
+    {
+      "type": "sample",
+      "tick": 1981,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:23",
+      "family": "cut",
+      "spacing": 51.71052090304289,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1959,
+      "observedTick": 1981
+    },
+    {
+      "type": "decision",
+      "tick": 2005,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 0.35,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.587750015655383,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.35353535353535354,
+        "thrust": 0.4040404040404041,
+        "approach": 0.08080808080808081,
+        "reposition": 0.10101010101010102,
+        "wait": 0.06060606060606061
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:16",
+        "adaptive-switch-1001:17",
+        "adaptive-switch-1001:18",
+        "adaptive-switch-1001:19",
+        "adaptive-switch-1001:20",
+        "adaptive-switch-1001:21",
+        "adaptive-switch-1001:22",
+        "adaptive-switch-1001:23"
+      ],
+      "planVersion": null,
+      "observationTick": 1993,
+      "window": 26,
+      "latencyMs": 0.0024169999999941183,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 23,
+        "effective": 5.49768653928858,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1454791185537202,
+          "late": 0.7252123433778855,
+          "none": 0.12930853806839426
+        },
+        "long": {
+          "early": 0.256652500857743,
+          "late": 0.6304791844699661,
+          "none": 0.11286831467229093
+        },
+        "directions": {
+          "inward": 0.7638583331340617,
+          "outward": 0.11807083343296913,
+          "lateral": 0.11807083343296913
+        },
+        "directionN": 21,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:16",
+          "adaptive-switch-1001:17",
+          "adaptive-switch-1001:18",
+          "adaptive-switch-1001:19",
+          "adaptive-switch-1001:20",
+          "adaptive-switch-1001:21",
+          "adaptive-switch-1001:22",
+          "adaptive-switch-1001:23"
+        ],
+        "contexts": {
+          "cut": 9,
+          "overhead": 10,
+          "thrust": 4
+        },
+        "families": {
+          "cut": {
+            "n": 9,
+            "recent": {
+              "early": 0.19784290602009627,
+              "late": 0.5896762497903516,
+              "none": 0.2124808441895522
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 10,
+            "recent": {
+              "early": 0.2946712999573974,
+              "late": 0.5769912095099318,
+              "none": 0.12833749053267085
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 4,
+            "recent": {
+              "early": 0.1654596933568595,
+              "late": 0.669080613286281,
+              "none": 0.1654596933568595
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2005,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "window": 26,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2005,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:24",
+      "action": "thrust",
+      "availableTick": 2005
+    },
+    {
+      "type": "dodge",
+      "tick": 2031,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 2043
+    },
+    {
+      "type": "snapshot",
+      "tick": 2040,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2040,
+        "boss": {
+          "x": 13.002983615026732,
+          "y": -141.4072680499691,
+          "facing": 2.832080173581967,
+          "state": "attack",
+          "hp": 150
+        },
+        "player": {
+          "x": -5.0805979979909885,
+          "y": -112.61518448442409,
+          "facing": -0.3095124800078262,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "observed",
+      "tick": 2043,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2031,
+      "availableTick": 2043
+    },
+    {
+      "type": "sample",
+      "tick": 2055,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:24",
+      "family": "thrust",
+      "spacing": 42.34750000000001,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2031,
+      "observedTick": 2055
+    },
+    {
+      "type": "player-attack",
+      "tick": 2069,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 2079,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 2087,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.787750015655383,
+        "overhead": 0.35,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.587750015655383,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.7518662617536026,
+        "overhead": 0.14719798031565942,
+        "approach": 0.0336452526435793,
+        "reposition": 0.04205656580447413,
+        "wait": 0.025233939482684476
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:17",
+        "adaptive-switch-1001:18",
+        "adaptive-switch-1001:19",
+        "adaptive-switch-1001:20",
+        "adaptive-switch-1001:21",
+        "adaptive-switch-1001:22",
+        "adaptive-switch-1001:23",
+        "adaptive-switch-1001:24"
+      ],
+      "planVersion": null,
+      "observationTick": 2075,
+      "window": 27,
+      "latencyMs": 0.002416000000010854,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 24,
+        "effective": 5.508102962216635,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.14030313011442938,
+          "late": 0.7326373817769974,
+          "none": 0.12705948810857318
+        },
+        "long": {
+          "early": 0.24434105030768916,
+          "late": 0.6473763610547765,
+          "none": 0.10828258863753432
+        },
+        "directions": {
+          "inward": 0.7642894673769409,
+          "outward": 0.11785526631152955,
+          "lateral": 0.11785526631152955
+        },
+        "directionN": 22,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:17",
+          "adaptive-switch-1001:18",
+          "adaptive-switch-1001:19",
+          "adaptive-switch-1001:20",
+          "adaptive-switch-1001:21",
+          "adaptive-switch-1001:22",
+          "adaptive-switch-1001:23",
+          "adaptive-switch-1001:24"
+        ],
+        "contexts": {
+          "cut": 9,
+          "overhead": 10,
+          "thrust": 5
+        },
+        "families": {
+          "cut": {
+            "n": 9,
+            "recent": {
+              "early": 0.19784290602009627,
+              "late": 0.5896762497903516,
+              "none": 0.2124808441895522
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 10,
+            "recent": {
+              "early": 0.2946712999573974,
+              "late": 0.5769912095099318,
+              "none": 0.12833749053267085
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 5,
+            "recent": {
+              "early": 0.15394349918893943,
+              "late": 0.6921130016221211,
+              "none": 0.15394349918893943
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2087,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 27,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2087,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:25",
+      "action": "overhead",
+      "availableTick": 2087
+    },
+    {
+      "type": "dodge",
+      "tick": 2131,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 2143
+    },
+    {
+      "type": "observed",
+      "tick": 2143,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2131,
+      "availableTick": 2143
+    },
+    {
+      "type": "sample",
+      "tick": 2154,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:25",
+      "family": "overhead",
+      "spacing": 45.21802090304298,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2131,
+      "observedTick": 2154
+    },
+    {
+      "type": "snapshot",
+      "tick": 2160,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2160,
+        "boss": {
+          "x": 5.5736226196801955,
+          "y": -139.03143236524187,
+          "facing": 1.3491103297689557,
+          "state": "attack",
+          "hp": 120
+        },
+        "player": {
+          "x": 41.172694018323085,
+          "y": -126.5915683967603,
+          "facing": -2.8054136920266206,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "decision",
+      "tick": 2190,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.787750015655383,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.587750015655383,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.7363814248283593,
+        "thrust": 0.1647616094822753,
+        "approach": 0.03295232189645506,
+        "reposition": 0.04119040237056883,
+        "wait": 0.024714241422341295
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:18",
+        "adaptive-switch-1001:19",
+        "adaptive-switch-1001:20",
+        "adaptive-switch-1001:21",
+        "adaptive-switch-1001:22",
+        "adaptive-switch-1001:23",
+        "adaptive-switch-1001:24",
+        "adaptive-switch-1001:25"
+      ],
+      "planVersion": null,
+      "observationTick": 2178,
+      "window": 28,
+      "latencyMs": 0.002375000000000682,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 25,
+        "effective": 5.516644429017641,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.13606826734930846,
+          "late": 0.7387123603081125,
+          "none": 0.12521937234257888
+        },
+        "long": {
+          "early": 0.2329611715052464,
+          "late": 0.6629949773061147,
+          "none": 0.10404385118863893
+        },
+        "directions": {
+          "inward": 0.7646418244832742,
+          "outward": 0.11767908775836292,
+          "lateral": 0.11767908775836292
+        },
+        "directionN": 23,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:18",
+          "adaptive-switch-1001:19",
+          "adaptive-switch-1001:20",
+          "adaptive-switch-1001:21",
+          "adaptive-switch-1001:22",
+          "adaptive-switch-1001:23",
+          "adaptive-switch-1001:24",
+          "adaptive-switch-1001:25"
+        ],
+        "contexts": {
+          "cut": 9,
+          "overhead": 11,
+          "thrust": 5
+        },
+        "families": {
+          "cut": {
+            "n": 9,
+            "recent": {
+              "early": 0.19784290602009627,
+              "late": 0.5896762497903516,
+              "none": 0.2124808441895522
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.26014237165336845,
+              "late": 0.613744735870333,
+              "none": 0.12611289247629853
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 5,
+            "recent": {
+              "early": 0.15394349918893943,
+              "late": 0.6921130016221211,
+              "none": 0.15394349918893943
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2190,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 28,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2190,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:26",
+      "action": "cut",
+      "availableTick": 2190
+    },
+    {
+      "type": "dodge",
+      "tick": 2206,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 2218
+    },
+    {
+      "type": "observed",
+      "tick": 2218,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2206,
+      "availableTick": 2218
+    },
+    {
+      "type": "sample",
+      "tick": 2228,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:26",
+      "family": "cut",
+      "spacing": 54.40500000000003,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2206,
+      "observedTick": 2228
+    },
+    {
+      "type": "decision",
+      "tick": 2252,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 0.35,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.6640934938669747,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.35353535353535354,
+        "thrust": 0.4040404040404041,
+        "approach": 0.08080808080808081,
+        "reposition": 0.10101010101010102,
+        "wait": 0.06060606060606061
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:19",
+        "adaptive-switch-1001:20",
+        "adaptive-switch-1001:21",
+        "adaptive-switch-1001:22",
+        "adaptive-switch-1001:23",
+        "adaptive-switch-1001:24",
+        "adaptive-switch-1001:25",
+        "adaptive-switch-1001:26"
+      ],
+      "planVersion": null,
+      "observationTick": 2240,
+      "window": 29,
+      "latencyMs": 0.00245800000000429,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 26,
+        "effective": 5.523648431794465,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.13260201320305262,
+          "late": 0.7436847574529095,
+          "none": 0.12371322934403799
+        },
+        "long": {
+          "early": 0.22241569880383902,
+          "late": 0.677468390790702,
+          "none": 0.10011591040545903
+        },
+        "directions": {
+          "inward": 0.7649299721827842,
+          "outward": 0.11753501390860785,
+          "lateral": 0.11753501390860785
+        },
+        "directionN": 24,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:19",
+          "adaptive-switch-1001:20",
+          "adaptive-switch-1001:21",
+          "adaptive-switch-1001:22",
+          "adaptive-switch-1001:23",
+          "adaptive-switch-1001:24",
+          "adaptive-switch-1001:25",
+          "adaptive-switch-1001:26"
+        ],
+        "contexts": {
+          "cut": 10,
+          "overhead": 11,
+          "thrust": 5
+        },
+        "families": {
+          "cut": {
+            "n": 10,
+            "recent": {
+              "early": 0.18184203471537932,
+              "late": 0.6245710306266957,
+              "none": 0.19358693465792506
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.26014237165336845,
+              "late": 0.613744735870333,
+              "none": 0.12611289247629853
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 5,
+            "recent": {
+              "early": 0.15394349918893943,
+              "late": 0.6921130016221211,
+              "none": 0.15394349918893943
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2252,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "window": 29,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2252,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:27",
+      "action": "thrust",
+      "availableTick": 2252
+    },
+    {
+      "type": "dodge",
+      "tick": 2278,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 2290
+    },
+    {
+      "type": "snapshot",
+      "tick": 2280,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2280,
+        "boss": {
+          "x": 5.5736226196801955,
+          "y": -139.03143236524187,
+          "facing": -0.6778249637214494,
+          "state": "attack",
+          "hp": 120
+        },
+        "player": {
+          "x": 36.67623380438847,
+          "y": -167.58774097812858,
+          "facing": 2.4637676898683436,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 102
+    },
+    {
+      "type": "observed",
+      "tick": 2290,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2278,
+      "availableTick": 2290
+    },
+    {
+      "type": "sample",
+      "tick": 2302,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:27",
+      "family": "thrust",
+      "spacing": 42.347499999999926,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2278,
+      "observedTick": 2302
+    },
+    {
+      "type": "player-attack",
+      "tick": 2323,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 2333,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 2334,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.8640934938669746,
+        "overhead": 0.35,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.6640934938669747,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.7595853615705884,
+        "overhead": 0.1426188533055831,
+        "approach": 0.03259859504127614,
+        "reposition": 0.040748243801595176,
+        "wait": 0.024448946280957104
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:20",
+        "adaptive-switch-1001:21",
+        "adaptive-switch-1001:22",
+        "adaptive-switch-1001:23",
+        "adaptive-switch-1001:24",
+        "adaptive-switch-1001:25",
+        "adaptive-switch-1001:26",
+        "adaptive-switch-1001:27"
+      ],
+      "planVersion": null,
+      "observationTick": 2322,
+      "window": 30,
+      "latencyMs": 0.0023749999999864713,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 27,
+        "effective": 5.529391714071461,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12976393269928524,
+          "late": 0.7477560294364941,
+          "none": 0.12248003786422053
+        },
+        "long": {
+          "early": 0.21262048951215443,
+          "late": 0.6909120853751752,
+          "none": 0.09646742511267026
+        },
+        "directions": {
+          "inward": 0.765165727339084,
+          "outward": 0.11741713633045801,
+          "lateral": 0.11741713633045801
+        },
+        "directionN": 25,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:20",
+          "adaptive-switch-1001:21",
+          "adaptive-switch-1001:22",
+          "adaptive-switch-1001:23",
+          "adaptive-switch-1001:24",
+          "adaptive-switch-1001:25",
+          "adaptive-switch-1001:26",
+          "adaptive-switch-1001:27"
+        ],
+        "contexts": {
+          "cut": 10,
+          "overhead": 11,
+          "thrust": 6
+        },
+        "families": {
+          "cut": {
+            "n": 10,
+            "recent": {
+              "early": 0.18184203471537932,
+              "late": 0.6245710306266957,
+              "none": 0.19358693465792506
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.26014237165336845,
+              "late": 0.613744735870333,
+              "none": 0.12611289247629853
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 6,
+            "recent": {
+              "early": 0.1456318540225292,
+              "late": 0.7087362919549416,
+              "none": 0.1456318540225292
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2334,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 30,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2334,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:28",
+      "action": "cut",
+      "availableTick": 2334
+    },
+    {
+      "type": "hit",
+      "tick": 2356,
+      "encounterId": "adaptive-switch-1001",
+      "target": "player",
+      "damage": 16,
+      "source": "cut",
+      "instance": "adaptive-switch-1001:28"
+    },
+    {
+      "type": "sample",
+      "tick": 2372,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:28",
+      "family": "cut",
+      "spacing": 51.71052090304298,
+      "outcome": "hit",
+      "response": "none",
+      "observedTick": 2372
+    },
+    {
+      "type": "player-attack",
+      "tick": 2383,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 2393,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 2396,
+      "encounterId": "adaptive-switch-1001",
+      "action": "approach",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 0.35,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.5351173367321415,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.35353535353535354,
+        "thrust": 0.4040404040404041,
+        "approach": 0.08080808080808081,
+        "reposition": 0.10101010101010102,
+        "wait": 0.06060606060606061
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:21",
+        "adaptive-switch-1001:22",
+        "adaptive-switch-1001:23",
+        "adaptive-switch-1001:24",
+        "adaptive-switch-1001:25",
+        "adaptive-switch-1001:26",
+        "adaptive-switch-1001:27",
+        "adaptive-switch-1001:28"
+      ],
+      "planVersion": null,
+      "observationTick": 2384,
+      "window": 31,
+      "latencyMs": 0.0024999999999977263,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 28,
+        "effective": 5.534101205538597,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12743955712895275,
+          "late": 0.633913427628389,
+          "none": 0.2386470152426583
+        },
+        "long": {
+          "early": 0.20350231191811488,
+          "late": 0.6582325606705084,
+          "none": 0.13826512741137653
+        },
+        "directions": {
+          "inward": 0.765165727339084,
+          "outward": 0.11741713633045801,
+          "lateral": 0.11741713633045801
+        },
+        "directionN": 25,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:21",
+          "adaptive-switch-1001:22",
+          "adaptive-switch-1001:23",
+          "adaptive-switch-1001:24",
+          "adaptive-switch-1001:25",
+          "adaptive-switch-1001:26",
+          "adaptive-switch-1001:27",
+          "adaptive-switch-1001:28"
+        ],
+        "contexts": {
+          "cut": 11,
+          "overhead": 11,
+          "thrust": 6
+        },
+        "families": {
+          "cut": {
+            "n": 11,
+            "recent": {
+              "early": 0.1692261129046458,
+              "late": 0.5259710040594068,
+              "none": 0.3048028830359474
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.26014237165336845,
+              "late": 0.613744735870333,
+              "none": 0.12611289247629853
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 6,
+            "recent": {
+              "early": 0.1456318540225292,
+              "late": 0.7087362919549416,
+              "none": 0.1456318540225292
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2396,
+      "encounterId": "adaptive-switch-1001",
+      "action": "approach",
+      "window": 31,
+      "controller": "adaptive"
+    },
+    {
+      "type": "snapshot",
+      "tick": 2400,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2400,
+        "boss": {
+          "x": 19.75030379376154,
+          "y": -150.44465762756136,
+          "facing": -2.160794807534466,
+          "state": "approach",
+          "hp": 60
+        },
+        "player": {
+          "x": -12.115491298187633,
+          "y": -198.03726627504798,
+          "facing": 0.9807978460553273,
+          "state": "attack"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 86
+    },
+    {
+      "type": "decision",
+      "tick": 2417,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.7351173367321415,
+        "overhead": 0.35,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.5351173367321415,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6367128906136676,
+        "overhead": 0.1284348366517336,
+        "thrust": 0.14678267045912416,
+        "approach": 0.02935653409182483,
+        "reposition": 0.03669566761478104,
+        "wait": 0.022017400568868622
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:21",
+        "adaptive-switch-1001:22",
+        "adaptive-switch-1001:23",
+        "adaptive-switch-1001:24",
+        "adaptive-switch-1001:25",
+        "adaptive-switch-1001:26",
+        "adaptive-switch-1001:27",
+        "adaptive-switch-1001:28"
+      ],
+      "planVersion": null,
+      "observationTick": 2405,
+      "window": 32,
+      "latencyMs": 0.0026249999999947704,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 28,
+        "effective": 5.534101205538597,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12743955712895275,
+          "late": 0.633913427628389,
+          "none": 0.2386470152426583
+        },
+        "long": {
+          "early": 0.20350231191811488,
+          "late": 0.6582325606705084,
+          "none": 0.13826512741137653
+        },
+        "directions": {
+          "inward": 0.765165727339084,
+          "outward": 0.11741713633045801,
+          "lateral": 0.11741713633045801
+        },
+        "directionN": 25,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:21",
+          "adaptive-switch-1001:22",
+          "adaptive-switch-1001:23",
+          "adaptive-switch-1001:24",
+          "adaptive-switch-1001:25",
+          "adaptive-switch-1001:26",
+          "adaptive-switch-1001:27",
+          "adaptive-switch-1001:28"
+        ],
+        "contexts": {
+          "cut": 11,
+          "overhead": 11,
+          "thrust": 6
+        },
+        "families": {
+          "cut": {
+            "n": 11,
+            "recent": {
+              "early": 0.1692261129046458,
+              "late": 0.5259710040594068,
+              "none": 0.3048028830359474
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.26014237165336845,
+              "late": 0.613744735870333,
+              "none": 0.12611289247629853
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 6,
+            "recent": {
+              "early": 0.1456318540225292,
+              "late": 0.7087362919549416,
+              "none": 0.1456318540225292
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2417,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "window": 32,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2417,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:29",
+      "action": "thrust",
+      "availableTick": 2417
+    },
+    {
+      "type": "dodge",
+      "tick": 2443,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 2455
+    },
+    {
+      "type": "observed",
+      "tick": 2455,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2443,
+      "availableTick": 2455
+    },
+    {
+      "type": "sample",
+      "tick": 2467,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:29",
+      "family": "thrust",
+      "spacing": 57.27552090304296,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2443,
+      "observedTick": 2467
+    },
+    {
+      "type": "decision",
+      "tick": 2499,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.7351173367321415,
+        "overhead": 0.35,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.5351173367321415,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.7462493652775298,
+        "overhead": 0.15053003754722796,
+        "approach": 0.03440686572508068,
+        "reposition": 0.04300858215635085,
+        "wait": 0.025805149293810507
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:22",
+        "adaptive-switch-1001:23",
+        "adaptive-switch-1001:24",
+        "adaptive-switch-1001:25",
+        "adaptive-switch-1001:26",
+        "adaptive-switch-1001:27",
+        "adaptive-switch-1001:28",
+        "adaptive-switch-1001:29"
+      ],
+      "planVersion": null,
+      "observationTick": 2487,
+      "window": 33,
+      "latencyMs": 0.002332999999993035,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 29,
+        "effective": 5.537962988541651,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.125535482585598,
+          "late": 0.6577801651307363,
+          "none": 0.21668435228366564
+        },
+        "long": {
+          "early": 0.19499713143515593,
+          "late": 0.6720899724635993,
+          "none": 0.13291289610124482
+        },
+        "directions": {
+          "inward": 0.765358693990744,
+          "outward": 0.117320653004628,
+          "lateral": 0.117320653004628
+        },
+        "directionN": 26,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:22",
+          "adaptive-switch-1001:23",
+          "adaptive-switch-1001:24",
+          "adaptive-switch-1001:25",
+          "adaptive-switch-1001:26",
+          "adaptive-switch-1001:27",
+          "adaptive-switch-1001:28",
+          "adaptive-switch-1001:29"
+        ],
+        "contexts": {
+          "cut": 11,
+          "overhead": 11,
+          "thrust": 7
+        },
+        "families": {
+          "cut": {
+            "n": 11,
+            "recent": {
+              "early": 0.1692261129046458,
+              "late": 0.5259710040594068,
+              "none": 0.3048028830359474
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.26014237165336845,
+              "late": 0.613744735870333,
+              "none": 0.12611289247629853
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 7,
+            "recent": {
+              "early": 0.13945763830455005,
+              "late": 0.7210847233908999,
+              "none": 0.13945763830455005
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2499,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 33,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2499,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:30",
+      "action": "cut",
+      "availableTick": 2499
+    },
+    {
+      "type": "dodge",
+      "tick": 2515,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 2527
+    },
+    {
+      "type": "snapshot",
+      "tick": 2520,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2520,
+        "boss": {
+          "x": 9.624556152718908,
+          "y": -165.56779337084947,
+          "facing": 2.6406849739410747,
+          "state": "attack",
+          "hp": 60
+        },
+        "player": {
+          "x": -16.446930129615534,
+          "y": -143.74400811187007,
+          "facing": -0.5009076796487187,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 86
+    },
+    {
+      "type": "observed",
+      "tick": 2527,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2515,
+      "availableTick": 2527
+    },
+    {
+      "type": "sample",
+      "tick": 2537,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:30",
+      "family": "cut",
+      "spacing": 51.7040108346224,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2515,
+      "observedTick": 2537
+    },
+    {
+      "type": "decision",
+      "tick": 2561,
+      "encounterId": "adaptive-switch-1001",
+      "action": "approach",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 0.35,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.61916483599797,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.35353535353535354,
+        "thrust": 0.4040404040404041,
+        "approach": 0.08080808080808081,
+        "reposition": 0.10101010101010102,
+        "wait": 0.06060606060606061
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:23",
+        "adaptive-switch-1001:24",
+        "adaptive-switch-1001:25",
+        "adaptive-switch-1001:26",
+        "adaptive-switch-1001:27",
+        "adaptive-switch-1001:28",
+        "adaptive-switch-1001:29",
+        "adaptive-switch-1001:30"
+      ],
+      "planVersion": null,
+      "observationTick": 2549,
+      "window": 34,
+      "latencyMs": 0.002540999999993687,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 30,
+        "effective": 5.5411296506041525,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1239754262784234,
+          "late": 0.677334785249031,
+          "none": 0.19868978847254573
+        },
+        "long": {
+          "early": 0.18704870998132475,
+          "late": 0.6850402619267637,
+          "none": 0.12791102809191157
+        },
+        "directions": {
+          "inward": 0.7655166901643785,
+          "outward": 0.11724165491781068,
+          "lateral": 0.11724165491781068
+        },
+        "directionN": 27,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:23",
+          "adaptive-switch-1001:24",
+          "adaptive-switch-1001:25",
+          "adaptive-switch-1001:26",
+          "adaptive-switch-1001:27",
+          "adaptive-switch-1001:28",
+          "adaptive-switch-1001:29",
+          "adaptive-switch-1001:30"
+        ],
+        "contexts": {
+          "cut": 12,
+          "overhead": 11,
+          "thrust": 7
+        },
+        "families": {
+          "cut": {
+            "n": 12,
+            "recent": {
+              "early": 0.1592028471361356,
+              "late": 0.5719794044681157,
+              "none": 0.2688177483957486
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.26014237165336845,
+              "late": 0.613744735870333,
+              "none": 0.12611289247629853
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 7,
+            "recent": {
+              "early": 0.13945763830455005,
+              "late": 0.7210847233908999,
+              "none": 0.13945763830455005
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2561,
+      "encounterId": "adaptive-switch-1001",
+      "action": "approach",
+      "window": 34,
+      "controller": "adaptive"
+    },
+    {
+      "type": "decision",
+      "tick": 2582,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.81916483599797,
+        "overhead": 0.35,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.61916483599797,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6475820901238437,
+        "overhead": 0.12459219036025727,
+        "thrust": 0.1423910746974369,
+        "approach": 0.02847821493948738,
+        "reposition": 0.03559776867435922,
+        "wait": 0.021358661204615534
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:23",
+        "adaptive-switch-1001:24",
+        "adaptive-switch-1001:25",
+        "adaptive-switch-1001:26",
+        "adaptive-switch-1001:27",
+        "adaptive-switch-1001:28",
+        "adaptive-switch-1001:29",
+        "adaptive-switch-1001:30"
+      ],
+      "planVersion": null,
+      "observationTick": 2570,
+      "window": 35,
+      "latencyMs": 0.0028339999999928978,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 30,
+        "effective": 5.5411296506041525,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1239754262784234,
+          "late": 0.677334785249031,
+          "none": 0.19868978847254573
+        },
+        "long": {
+          "early": 0.18704870998132475,
+          "late": 0.6850402619267637,
+          "none": 0.12791102809191157
+        },
+        "directions": {
+          "inward": 0.7655166901643785,
+          "outward": 0.11724165491781068,
+          "lateral": 0.11724165491781068
+        },
+        "directionN": 27,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:23",
+          "adaptive-switch-1001:24",
+          "adaptive-switch-1001:25",
+          "adaptive-switch-1001:26",
+          "adaptive-switch-1001:27",
+          "adaptive-switch-1001:28",
+          "adaptive-switch-1001:29",
+          "adaptive-switch-1001:30"
+        ],
+        "contexts": {
+          "cut": 12,
+          "overhead": 11,
+          "thrust": 7
+        },
+        "families": {
+          "cut": {
+            "n": 12,
+            "recent": {
+              "early": 0.1592028471361356,
+              "late": 0.5719794044681157,
+              "none": 0.2688177483957486
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.26014237165336845,
+              "late": 0.613744735870333,
+              "none": 0.12611289247629853
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 7,
+            "recent": {
+              "early": 0.13945763830455005,
+              "late": 0.7210847233908999,
+              "none": 0.13945763830455005
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2582,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 35,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2582,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:31",
+      "action": "cut",
+      "availableTick": 2582
+    },
+    {
+      "type": "dodge",
+      "tick": 2598,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 2610
+    },
+    {
+      "type": "observed",
+      "tick": 2610,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2598,
+      "availableTick": 2610
+    },
+    {
+      "type": "sample",
+      "tick": 2620,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:31",
+      "family": "cut",
+      "spacing": 57.187499999999964,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2598,
+      "observedTick": 2620
+    },
+    {
+      "type": "snapshot",
+      "tick": 2640,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2640,
+        "boss": {
+          "x": 9.624556152718908,
+          "y": -165.56779337084947,
+          "facing": 1.6276744469481272,
+          "state": "ready",
+          "hp": 60
+        },
+        "player": {
+          "x": 50.3114670893054,
+          "y": -136.90807713554315,
+          "facing": -2.527922131926279,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 86
+    },
+    {
+      "type": "decision",
+      "tick": 2644,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 0.35,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.6863458649128418,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.35353535353535354,
+        "thrust": 0.4040404040404041,
+        "approach": 0.08080808080808081,
+        "reposition": 0.10101010101010102,
+        "wait": 0.06060606060606061
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:24",
+        "adaptive-switch-1001:25",
+        "adaptive-switch-1001:26",
+        "adaptive-switch-1001:27",
+        "adaptive-switch-1001:28",
+        "adaptive-switch-1001:29",
+        "adaptive-switch-1001:30",
+        "adaptive-switch-1001:31"
+      ],
+      "planVersion": null,
+      "observationTick": 2632,
+      "window": 36,
+      "latencyMs": 0.0025420000000053733,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 31,
+        "effective": 5.543726313495405,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12269704304515903,
+          "late": 0.6933587571897335,
+          "none": 0.18394419976510748
+        },
+        "long": {
+          "early": 0.17960745377650508,
+          "late": 0.6971642317466495,
+          "none": 0.12322831447684533
+        },
+        "directions": {
+          "inward": 0.7656460883423778,
+          "outward": 0.11717695582881113,
+          "lateral": 0.11717695582881113
+        },
+        "directionN": 28,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:24",
+          "adaptive-switch-1001:25",
+          "adaptive-switch-1001:26",
+          "adaptive-switch-1001:27",
+          "adaptive-switch-1001:28",
+          "adaptive-switch-1001:29",
+          "adaptive-switch-1001:30",
+          "adaptive-switch-1001:31"
+        ],
+        "contexts": {
+          "cut": 13,
+          "overhead": 11,
+          "thrust": 7
+        },
+        "families": {
+          "cut": {
+            "n": 13,
+            "recent": {
+              "early": 0.15119102866089518,
+              "late": 0.6087549386027897,
+              "none": 0.24005403273631523
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.26014237165336845,
+              "late": 0.613744735870333,
+              "none": 0.12611289247629853
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 7,
+            "recent": {
+              "early": 0.13945763830455005,
+              "late": 0.7210847233908999,
+              "none": 0.13945763830455005
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2644,
+      "encounterId": "adaptive-switch-1001",
+      "action": "thrust",
+      "window": 36,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2644,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:32",
+      "action": "thrust",
+      "availableTick": 2644
+    },
+    {
+      "type": "dodge",
+      "tick": 2670,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 2682
+    },
+    {
+      "type": "observed",
+      "tick": 2682,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2670,
+      "availableTick": 2682
+    },
+    {
+      "type": "sample",
+      "tick": 2694,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:32",
+      "family": "thrust",
+      "spacing": 42.34750000000001,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2670,
+      "observedTick": 2694
+    },
+    {
+      "type": "player-attack",
+      "tick": 2703,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 2713,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 2726,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.8863458649128417,
+        "overhead": 0.35,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.6863458649128418,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.7617457204344248,
+        "overhead": 0.141337284488053,
+        "approach": 0.03230566502584069,
+        "reposition": 0.040382081282300857,
+        "wait": 0.024229248769380513
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:25",
+        "adaptive-switch-1001:26",
+        "adaptive-switch-1001:27",
+        "adaptive-switch-1001:28",
+        "adaptive-switch-1001:29",
+        "adaptive-switch-1001:30",
+        "adaptive-switch-1001:31",
+        "adaptive-switch-1001:32"
+      ],
+      "planVersion": null,
+      "observationTick": 2714,
+      "window": 37,
+      "latencyMs": 0.002375000000000682,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 32,
+        "effective": 5.5458555770662326,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12164934849792465,
+          "late": 0.7064911478457359,
+          "none": 0.17185950365633948
+        },
+        "long": {
+          "early": 0.17262945963047463,
+          "late": 0.708533412984492,
+          "none": 0.11883712738503344
+        },
+        "directions": {
+          "inward": 0.7657520883278488,
+          "outward": 0.11712395583607556,
+          "lateral": 0.11712395583607556
+        },
+        "directionN": 29,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:25",
+          "adaptive-switch-1001:26",
+          "adaptive-switch-1001:27",
+          "adaptive-switch-1001:28",
+          "adaptive-switch-1001:29",
+          "adaptive-switch-1001:30",
+          "adaptive-switch-1001:31",
+          "adaptive-switch-1001:32"
+        ],
+        "contexts": {
+          "cut": 13,
+          "overhead": 11,
+          "thrust": 8
+        },
+        "families": {
+          "cut": {
+            "n": 13,
+            "recent": {
+              "early": 0.15119102866089518,
+              "late": 0.6087549386027897,
+              "none": 0.24005403273631523
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.26014237165336845,
+              "late": 0.613744735870333,
+              "none": 0.12611289247629853
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 8,
+            "recent": {
+              "early": 0.13477231086002064,
+              "late": 0.7304553782799587,
+              "none": 0.13477231086002064
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2726,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 37,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2726,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:33",
+      "action": "cut",
+      "availableTick": 2726
+    },
+    {
+      "type": "dodge",
+      "tick": 2742,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 2754
+    },
+    {
+      "type": "observed",
+      "tick": 2754,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2742,
+      "availableTick": 2754
+    },
+    {
+      "type": "snapshot",
+      "tick": 2760,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2760,
+        "boss": {
+          "x": 24.503780125107994,
+          "y": -155.0869206028266,
+          "facing": -0.869299322149511,
+          "state": "attack",
+          "hp": 30
+        },
+        "player": {
+          "x": 10.070031618628132,
+          "y": -185.87111953753484,
+          "facing": 2.272293331440282,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 86
+    },
+    {
+      "type": "sample",
+      "tick": 2764,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:33",
+      "family": "cut",
+      "spacing": 40.58052090304316,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2742,
+      "observedTick": 2764
+    },
+    {
+      "type": "decision",
+      "tick": 2788,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 0.35,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.7403057132008977,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.35353535353535354,
+        "thrust": 0.4040404040404041,
+        "approach": 0.08080808080808081,
+        "reposition": 0.10101010101010102,
+        "wait": 0.06060606060606061
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:26",
+        "adaptive-switch-1001:27",
+        "adaptive-switch-1001:28",
+        "adaptive-switch-1001:29",
+        "adaptive-switch-1001:30",
+        "adaptive-switch-1001:31",
+        "adaptive-switch-1001:32",
+        "adaptive-switch-1001:33"
+      ],
+      "planVersion": null,
+      "observationTick": 2776,
+      "window": 38,
+      "latencyMs": 0.0024590000000017653,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 33,
+        "effective": 5.54760157319431,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12079062846705393,
+          "late": 0.7172548259991601,
+          "none": 0.1619545455337859
+        },
+        "long": {
+          "early": 0.16607572094232098,
+          "late": 0.719211358733911,
+          "none": 0.11471292032376786
+        },
+        "directions": {
+          "inward": 0.7658389367899912,
+          "outward": 0.11708053160500445,
+          "lateral": 0.11708053160500445
+        },
+        "directionN": 30,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:26",
+          "adaptive-switch-1001:27",
+          "adaptive-switch-1001:28",
+          "adaptive-switch-1001:29",
+          "adaptive-switch-1001:30",
+          "adaptive-switch-1001:31",
+          "adaptive-switch-1001:32",
+          "adaptive-switch-1001:33"
+        ],
+        "contexts": {
+          "cut": 14,
+          "overhead": 11,
+          "thrust": 8
+        },
+        "families": {
+          "cut": {
+            "n": 14,
+            "recent": {
+              "early": 0.1447559305920158,
+              "late": 0.6382930727259476,
+              "none": 0.21695099668203663
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.26014237165336845,
+              "late": 0.613744735870333,
+              "none": 0.12611289247629853
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 8,
+            "recent": {
+              "early": 0.13477231086002064,
+              "late": 0.7304553782799587,
+              "none": 0.13477231086002064
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2788,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 38,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2788,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:34",
+      "action": "overhead",
+      "availableTick": 2788
+    },
+    {
+      "type": "dodge",
+      "tick": 2832,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 2844
+    },
+    {
+      "type": "observed",
+      "tick": 2844,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2832,
+      "availableTick": 2844
+    },
+    {
+      "type": "sample",
+      "tick": 2855,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:34",
+      "family": "overhead",
+      "spacing": 42.347499999999975,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2832,
+      "observedTick": 2855
+    },
+    {
+      "type": "snapshot",
+      "tick": 2880,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2880,
+        "boss": {
+          "x": 24.503780125107994,
+          "y": -155.0869206028266,
+          "facing": -2.0092302303018137,
+          "state": "attack",
+          "hp": 30
+        },
+        "player": {
+          "x": -30.44160297135369,
+          "y": -161.62071219982892,
+          "facing": 0.11835849800335531,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 86
+    },
+    {
+      "type": "decision",
+      "tick": 2891,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "cut": 1.9403057132008976,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.7403057132008977,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.7519673747472065,
+        "thrust": 0.15502039078299584,
+        "approach": 0.03100407815659917,
+        "reposition": 0.03875509769574896,
+        "wait": 0.023253058617449376
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:27",
+        "adaptive-switch-1001:28",
+        "adaptive-switch-1001:29",
+        "adaptive-switch-1001:30",
+        "adaptive-switch-1001:31",
+        "adaptive-switch-1001:32",
+        "adaptive-switch-1001:33",
+        "adaptive-switch-1001:34"
+      ],
+      "planVersion": null,
+      "observationTick": 2879,
+      "window": 39,
+      "latencyMs": 0.002417000000008329,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 34,
+        "effective": 5.5490332900193335,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12008673977752359,
+          "late": 0.726077761341961,
+          "none": 0.15383549888051531
+        },
+        "long": {
+          "early": 0.15991146305535753,
+          "late": 0.7292547270209934,
+          "none": 0.1108338099236492
+        },
+        "directions": {
+          "inward": 0.7659101044890844,
+          "outward": 0.11704494775545783,
+          "lateral": 0.11704494775545783
+        },
+        "directionN": 31,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:27",
+          "adaptive-switch-1001:28",
+          "adaptive-switch-1001:29",
+          "adaptive-switch-1001:30",
+          "adaptive-switch-1001:31",
+          "adaptive-switch-1001:32",
+          "adaptive-switch-1001:33",
+          "adaptive-switch-1001:34"
+        ],
+        "contexts": {
+          "cut": 14,
+          "overhead": 12,
+          "thrust": 8
+        },
+        "families": {
+          "cut": {
+            "n": 14,
+            "recent": {
+              "early": 0.1447559305920158,
+              "late": 0.6382930727259476,
+              "none": 0.21695099668203663
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 12,
+            "recent": {
+              "early": 0.23270936831954434,
+              "late": 0.6429451675285908,
+              "none": 0.12434546415186488
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 8,
+            "recent": {
+              "early": 0.13477231086002064,
+              "late": 0.7304553782799587,
+              "none": 0.13477231086002064
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2891,
+      "encounterId": "adaptive-switch-1001",
+      "action": "cut",
+      "window": 39,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2891,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:35",
+      "action": "cut",
+      "availableTick": 2891
+    },
+    {
+      "type": "dodge",
+      "tick": 2907,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 2919
+    },
+    {
+      "type": "observed",
+      "tick": 2919,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2907,
+      "availableTick": 2919
+    },
+    {
+      "type": "sample",
+      "tick": 2929,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:35",
+      "family": "cut",
+      "spacing": 54.40499999999996,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2907,
+      "observedTick": 2929
+    },
+    {
+      "type": "decision",
+      "tick": 2953,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "controller": "adaptive",
+      "version": "adaptive-1",
+      "scores": {
+        "overhead": 0.35,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0.7838150520070957,
+        "overhead": -0.65,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.35353535353535354,
+        "thrust": 0.4040404040404041,
+        "approach": 0.08080808080808081,
+        "reposition": 0.10101010101010102,
+        "wait": 0.06060606060606061
+      },
+      "reason": "observed-response-utility",
+      "evidence": [
+        "adaptive-switch-1001:28",
+        "adaptive-switch-1001:29",
+        "adaptive-switch-1001:30",
+        "adaptive-switch-1001:31",
+        "adaptive-switch-1001:32",
+        "adaptive-switch-1001:33",
+        "adaptive-switch-1001:34",
+        "adaptive-switch-1001:35"
+      ],
+      "planVersion": null,
+      "observationTick": 2941,
+      "window": 40,
+      "latencyMs": 0.002500000000011937,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 35,
+        "effective": 5.550207297815853,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.11950972695367704,
+          "late": 0.7333103634742132,
+          "none": 0.14717990957210988
+        },
+        "long": {
+          "early": 0.15410558403122743,
+          "late": 0.7387141919458631,
+          "none": 0.10718022402290944
+        },
+        "directions": {
+          "inward": 0.7659684297301694,
+          "outward": 0.11701578513491534,
+          "lateral": 0.11701578513491534
+        },
+        "directionN": 32,
+        "censored": 0,
+        "evidence": [
+          "adaptive-switch-1001:28",
+          "adaptive-switch-1001:29",
+          "adaptive-switch-1001:30",
+          "adaptive-switch-1001:31",
+          "adaptive-switch-1001:32",
+          "adaptive-switch-1001:33",
+          "adaptive-switch-1001:34",
+          "adaptive-switch-1001:35"
+        ],
+        "contexts": {
+          "cut": 15,
+          "overhead": 12,
+          "thrust": 8
+        },
+        "families": {
+          "cut": {
+            "n": 15,
+            "recent": {
+              "early": 0.13956713056731376,
+              "late": 0.6621104985720442,
+              "none": 0.19832237086064208
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 12,
+            "recent": {
+              "early": 0.23270936831954434,
+              "late": 0.6429451675285908,
+              "none": 0.12434546415186488
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 8,
+            "recent": {
+              "early": 0.13477231086002064,
+              "late": 0.7304553782799587,
+              "none": 0.13477231086002064
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2953,
+      "encounterId": "adaptive-switch-1001",
+      "action": "overhead",
+      "window": 40,
+      "controller": "adaptive"
+    },
+    {
+      "type": "cue",
+      "tick": 2953,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:36",
+      "action": "overhead",
+      "availableTick": 2953
+    },
+    {
+      "type": "dodge",
+      "tick": 2997,
+      "encounterId": "adaptive-switch-1001",
+      "direction": "inward",
+      "availableTick": 3009
+    },
+    {
+      "type": "snapshot",
+      "tick": 3000,
+      "encounterId": "adaptive-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 3000,
+        "boss": {
+          "x": 24.503780125107994,
+          "y": -155.0869206028266,
+          "facing": 2.245947226308535,
+          "state": "attack",
+          "hp": 30
+        },
+        "player": {
+          "x": 4.155994653707852,
+          "y": -123.83016954866244,
+          "facing": -0.8956454272812582,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 86
+    },
+    {
+      "type": "observed",
+      "tick": 3009,
+      "encounterId": "adaptive-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2997,
+      "availableTick": 3009
+    },
+    {
+      "type": "sample",
+      "tick": 3020,
+      "encounterId": "adaptive-switch-1001",
+      "instance": "adaptive-switch-1001:36",
+      "family": "overhead",
+      "spacing": 42.3475,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2997,
+      "observedTick": 3020
+    },
+    {
+      "type": "player-attack",
+      "tick": 3023,
+      "encounterId": "adaptive-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 3033,
+      "encounterId": "adaptive-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "end",
+      "tick": 3033,
+      "encounterId": "adaptive-switch-1001",
+      "outcome": "victory"
+    }
+  ]
+}

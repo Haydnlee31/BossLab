@@ -1,0 +1,57 @@
+{
+  "review": "Final v3 independent art-direction review; needs work",
+  "files": [
+    {
+      "path": "artifacts/art/last-vigil-v3/head.png",
+      "sha256": "e49d80c503d8b0cba46d28e10b2d91f8e6c15893e5a9ef111ad0fc32afc51544"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v3/headside.png",
+      "sha256": "78c9b8fcca655c29fe2ea9423af46a7f316574ca6a438777e5ffa9726d871ed8"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v3/palm.png",
+      "sha256": "aa1645c9a69cb81ff54056953af0dd9f2ef0dac9fb248f05d72b5ff671c6db98"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v3/hand.png",
+      "sha256": "461fb3a9ade94f8f57cedf55a9863b60bd486d5a482f54b1e0139d3cec259931"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v3/hero.png",
+      "sha256": "e00189d461fbcdf81a2488c96e1ee8c4bbc4d47f8e78c4719c65d753385d5c41"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v3/clay_head.png",
+      "sha256": "011d4de0c5d05de9436dcc6ae20ace0e12d58780beac695432ac19f3ee9e9b94"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v3/clay_headside.png",
+      "sha256": "fb12a2d78cdaaf98689855a81e423161ff44d2c4f972b372b8feea1abec59e49"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v3/clay_palm.png",
+      "sha256": "4154529c51f59d62c2cd73256521c7f47c3a17e6127378a25470f8d3c969fca3"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v3/clay_hand.png",
+      "sha256": "90f60be94dabceceb665bacbad2f06cd4b7a6d50d9ae3b55753d574bac7c63db"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v3/mask_head.png",
+      "sha256": "b885878d4779a8579824e58c5b057e556a932d66a3fc89607a16a7cdcc74d03a"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v3/mask_palm.png",
+      "sha256": "56f96359836afda4c18e3684a2907dc06d8ee7e857e5557c1d33107fd3c4fac4"
+    },
+    {
+      "path": "unreal/art-studio/revision-v3-2026-11-07/textures/steel-placement-mask.png",
+      "sha256": "c0696b20e805d45266790dcbacbb46102de65e43965cf93fa0fe8cc7cabe47d8"
+    },
+    {
+      "path": "unreal/art-studio/revision-v3-2026-11-07/textures/leather-placement-mask.png",
+      "sha256": "3ecd28d2245eb58c80795e0f0cee0f17476f50147b550baef7df50a20a8ccc54"
+    }
+  ]
+}

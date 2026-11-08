@@ -1,0 +1,29 @@
+{
+  "verdict": "Local collar/static-drape/material hierarchy gains; reference-level art and believable forged surface remain unmet.",
+  "scope": "Five final candidate images independently inspected. Earlier iterations reviewed separately; no all-output or runtime claim.",
+  "reviewed_images": [
+    {
+      "path": "artifacts/art/last-vigil-v10/hero.png",
+      "sha256": "5100d39918c0671efcdddb51305494b90c803fa1e3cc555f5a2c104d98bc86cc"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/head.png",
+      "sha256": "aaf9aedcce2763b04683800ca37a16205502a6c4bc11a76b9cc80b764a2daf91"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/garment.png",
+      "sha256": "1d2b6be4ff020ec368a3753db053418119c0cf8740d5f29bb69326e478992228"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/shoulder-detail.png",
+      "sha256": "935e0aa3fb5b9d6a7355bf5baec93e4beb10b4fe724ac905ddb50272ebc9eda0"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/garment-detail.png",
+      "sha256": "d46125b4f36c5cae96ac9f6509f1a95e6407298f490af64103344a51703ad211"
+    }
+  ],
+  "artist_frozen_source_sha256": "f49bfcc8136e9f4fb85c5bda86e864f6069b616d006c855df9acba32af0c71ec",
+  "artist_frozen_scene_sha256": "c91477d262097a45fc5198c3bc0a808783594505f89f8fd6e5a3027454c9cf66",
+  "freeze_verification": "All five reviewed image hashes unchanged after artist freeze."
+}

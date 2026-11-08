@@ -1,0 +1,220 @@
+{
+  "scope": "V13 context13 interim integrity: freeze retracted after check for targeted cape correction",
+  "time_unix": 1794048387.8436549,
+  "v10_v12_sha256": {
+    "checked": 376,
+    "mismatches": []
+  },
+  "game_sha256": {
+    "checked": 28,
+    "mismatches": []
+  },
+  "manifest_sha256": "e4b5d58b82fd18bb8b7b076a4e429fdf7ba6f767024100f80365ce08870c8150",
+  "manifest_checks": [
+    {
+      "path": "artifacts/art/last-vigil-v13/final-hero.png",
+      "sha256": "c23a56c6ccaa94ffb084cea67a91843d8387ca5692c21ec854a18a3a87238c5e",
+      "matches": true,
+      "dimensions": [
+        720,
+        920
+      ],
+      "dimensions_match": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-front.png",
+      "sha256": "6b4c4b1ec73ddf68b6b6906bcb00483adafcb0eb6a462726320e72b1dbf090da",
+      "matches": true,
+      "dimensions": [
+        720,
+        920
+      ],
+      "dimensions_match": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-side.png",
+      "sha256": "d8b1cf546688e27c2809ddcd1b958484cc377c0b8db32cc6dc86127514cbd64d",
+      "matches": true,
+      "dimensions": [
+        720,
+        920
+      ],
+      "dimensions_match": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-back.png",
+      "sha256": "925f3cd2e858e90679aa2438e75c00f79d950acd03e506c152abd7f0b0c5bf80",
+      "matches": true,
+      "dimensions": [
+        720,
+        920
+      ],
+      "dimensions_match": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-garment.png",
+      "sha256": "41d766a6d55b45a7b8e0431f6a1530e7b0b6f72aa44ec894f6f0d321c964744f",
+      "matches": true,
+      "dimensions": [
+        720,
+        920
+      ],
+      "dimensions_match": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-hand.png",
+      "sha256": "a84f43a40387b7931a64568151ed2b8c65ad6069832a82970f00ec74f171809f",
+      "matches": true,
+      "dimensions": [
+        720,
+        920
+      ],
+      "dimensions_match": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-palm.png",
+      "sha256": "e07db8b42ef7ea097d56876cfa86a1318191df295fcc5923dcac87b01a544f42",
+      "matches": true,
+      "dimensions": [
+        720,
+        920
+      ],
+      "dimensions_match": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-head.png",
+      "sha256": "27696d7a39161fa5705718988431fa9d7fe55bb3842ca876a3ad8f8657487207",
+      "matches": true,
+      "dimensions": [
+        720,
+        920
+      ],
+      "dimensions_match": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-hilt.png",
+      "sha256": "5f1b60c0a5dbb4b7bd42bd255c767920b942d4b1d666b23d4412ef3790729be6",
+      "matches": true,
+      "dimensions": [
+        720,
+        920
+      ],
+      "dimensions_match": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-clay-front.png",
+      "sha256": "942752d322e20e7605a6ccddf9ab136361c140a16240a918714ca825c940307e",
+      "matches": true,
+      "dimensions": [
+        720,
+        920
+      ],
+      "dimensions_match": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-clay-side.png",
+      "sha256": "9a7aefb3d807ef7a58bc6451e3bab504e4d804d43a19c918741332b5258a9f09",
+      "matches": true,
+      "dimensions": [
+        720,
+        920
+      ],
+      "dimensions_match": true
+    },
+    {
+      "path": "unreal/art-studio/source/last_vigil_v13.py",
+      "sha256": "f731799d34fc1ae9c9c70fbc798e6c84521fd561f842bcb922b1722fd7a1a866",
+      "matches": true
+    },
+    {
+      "path": "scripts/bosslab-art-v13",
+      "sha256": "4cb0a2ef6455595b078e2ae2f581f9f660d0d68bd0a6c45f8c8e494cc5a6cf32",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v13-2026-11-07/last-vigil-v13-context.blend",
+      "sha256": "8c07abf17315b3ba3523d44700299dc9196b80306230c8573e0af2b6b80df8f4",
+      "matches": true
+    },
+    {
+      "path": "docs/art/character-v13-techart.md",
+      "sha256": "2f549b003434808822a60d7bad39a999b0b7bfaed8191ba03913dc220cd77491",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-reload-audit.json",
+      "sha256": "bd05f9e7e75adcf4eff1f92be2af5c972070683068064dadfbfc6517a3e02eee",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-13-garment.json",
+      "sha256": "4ad82aea505d5613f3cff64111ab9fc9b0eb9f19c46f60df0cd43c845c36bd5b",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-13-gauntlet.json",
+      "sha256": "c2deb45edb5165a86ce07e401f0f11463e936afd8a88feabf70822c6721ad79e",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-13-helmet.json",
+      "sha256": "927d497945c16b3e14e66386818aab3e298b68e67c71904cf4004c098b14f3c2",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-13-sword.json",
+      "sha256": "227333af9f4450f4b66a787535e9f75532daca2dbcac449c7d7ec500344b5538",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-13-collar.json",
+      "sha256": "9b4735f318d9e8f15414f4aaef9ee6e4127a0ae3dd387fc80f3cbb8e98a8585e",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-final-process.json",
+      "sha256": "9b7d86b0336ac79d2d4b14f3f7743b62ad16c2f651ba3bced5ed220ecb4e43a4",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-audit-process.json",
+      "sha256": "4d3202ec18a819dfc7b13b49445167a103023c24bd63125eec920a51f1a3fc56",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/last-vigil-v10.blend",
+      "sha256": "c91477d262097a45fc5198c3bc0a808783594505f89f8fd6e5a3027454c9cf66",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v13-2026-11-07/v13-attempt-04.blend",
+      "sha256": "072fe5f756c54512772225e95118799f117edad0c3e1840cbf8622f9ea75c348",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/texture-study/generated-aged-steel-albedo.png",
+      "sha256": "3a7f67eb9b7e205ef8795bcbdcbeeb9e0e328d972d500070c9d64d2fe066f184",
+      "matches": true
+    }
+  ],
+  "manifest_entries": 26,
+  "free_bytes": 25994252288,
+  "reserve_bytes": 25769803776,
+  "unreal_allocated_bytes": 4227735552,
+  "budget_bytes": 10000000000,
+  "inspected_images": [
+    "artifacts/art/last-vigil-v13/final-hero.png",
+    "artifacts/art/last-vigil-v13/final-front.png",
+    "artifacts/art/last-vigil-v13/final-side.png",
+    "artifacts/art/last-vigil-v13/final-back.png",
+    "artifacts/art/last-vigil-v13/final-garment.png",
+    "artifacts/art/last-vigil-v13/final-hand.png",
+    "artifacts/art/last-vigil-v13/final-palm.png",
+    "artifacts/art/last-vigil-v13/final-head.png",
+    "artifacts/art/last-vigil-v13/final-hilt.png",
+    "artifacts/art/last-vigil-v13/final-clay-front.png",
+    "artifacts/art/last-vigil-v13/final-clay-side.png"
+  ],
+  "verdict": "Local form/material improvements, overall needs work; no reference realism, rig, runtime, clean UV, global collision or physics certification.",
+  "freeze_retracted": true
+}

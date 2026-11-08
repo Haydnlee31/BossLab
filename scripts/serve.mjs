@@ -1,0 +1,10 @@
+import http from 'node:http';
+import {readFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import path from 'node:path';
+const root=fileURLToPath(new URL('../',import.meta.url));
+const port=Number(process.env.PORT||5173);
+const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg'};
+const server=http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://localhost');const name=decodeURIComponent(url.pathname==='/'?'/index.html':url.pathname);const file=path.resolve(root,'.'+name);if(!file.startsWith(root)||name.includes('/.')||!['/game/','/artifacts/'].some(p=>name.startsWith(p))&&!['/index.html','/style.css'].includes(name)){res.writeHead(404);res.end();return;}const body=await readFile(file);res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});res.end(body);}catch{res.writeHead(404);res.end('Not found');}});
+server.listen(port,'127.0.0.1',()=>console.log(`BossLab: http://127.0.0.1:${port}${process.argv.includes('--demo')?'/?demo=1':''}\nStop: Ctrl-C`));
+server.on('error',e=>{console.error(`Cannot start loopback server: ${e.message}. Set PORT to another free port.`);process.exit(1);});

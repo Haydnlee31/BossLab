@@ -1,0 +1,57 @@
+{
+  "verdict": "neutral B visual gate failed; connected cage retained as technical resource only",
+  "reviewed_images": [
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-01/front.png",
+      "sha256": "01c923d0d4bb5c1cd17e3ebab2618d3de287d2dba1eba201ceed49db987fe377"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-01/side.png",
+      "sha256": "8f0f82d0ea49c070148d296988ee25353f1bea86e453863a94a21a65b6c924b6"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-01/back.png",
+      "sha256": "f885076e3558f4917860b084a62ebbd270c6bdaa157bd4cc88ad55639ec0bb42"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-02/front.png",
+      "sha256": "9491717e97de005171e749cad70ce3f45e86d418c1e7d92a2eedf3d2d973c1c6"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-02/body-front.png",
+      "sha256": "c59b1e17d23459bd763edae358490db008d8a9e9fa990b8bd95e03e3c0928477"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-02/body-side.png",
+      "sha256": "f94c6c7b36217a0c5478188bebeb75ecb699386f084072e2a4e130f213084700"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-02/side.png",
+      "sha256": "60f213f06a0b11d2862bfaab9a388aecf47d1704d2b27947a04cb6a83df17a49"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/front.png",
+      "sha256": "4456253b14c8c8f9c5eb1a6574b50fe12d3408ae150f3802dc041dd131fe49ef"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/side.png",
+      "sha256": "d53529abc1dee0cdfd58c137b9e5d2867a0c782f2df24788b6998e8b7ea15fa8"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/body-front.png",
+      "sha256": "7efde9309d234a9cd938d5f5f67744702fc5dbe655893fdc79f14871eca10b44"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/body-side.png",
+      "sha256": "eaaeb7d9ce8571bc45bfa57abb3105f3c249676a299b422474e96538e3dbbe6c"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/head.png",
+      "sha256": "08f47e03de2443a4fc05aa41eae273d8e55d31aef13c08b47c29554bab99913d"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/back.png",
+      "sha256": "9ddea156fb33ccd8461eb9a04e01848d07d08f016ab18066037d689488e3bcc7"
+    }
+  ]
+}

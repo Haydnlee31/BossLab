@@ -1,0 +1,11 @@
+{
+  "scope": "Independent export data integrity; not fitting/rig/runtime proof",
+  "runtime_sha256": "f7e7067e4c5e5ade6173dbbd2fe9d4d98fa5554bdf53e679d77196d33b2504de",
+  "matches_export_audit": true,
+  "source_scene_sha256": "2457b527d43ceea7bf94f16d3fb15fcda230a302253956c36d9c2cbd4ed00839",
+  "parts": 18,
+  "materials": 8,
+  "vertices": 60240,
+  "triangles": 104012,
+  "errors": []
+}

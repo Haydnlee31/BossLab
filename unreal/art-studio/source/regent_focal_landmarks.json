@@ -1,0 +1,711 @@
+{
+  "schema": "bosslab.regent.focal-landmarks.v1",
+  "status": "authored design constraints; not reconstructed anatomy or passing 3D evidence",
+  "reference": "artifacts/art/funeral-regent-construction-2026-11-08/construction-corrected.png",
+  "coordinates": {
+    "axes": [
+      "x lateral, positive wearer left",
+      "y forward, positive toward face viewer",
+      "z up"
+    ],
+    "units": "normalized; 0.075 metre per unit recommended",
+    "origin": "mask chin at z=0; mask midline x=0; y=0 nominal cheek field",
+    "mask_height": 3.2,
+    "maximum_mask_width": 2.0,
+    "world_transform": "artist must apply one common orthonormal transform to every landmark; do not independently scale features"
+  },
+  "surface_rules": [
+    "Create one continuous mask shell; feature curves are surface landmarks, not separate decorative mesh strips.",
+    "Use a face patch network with explicit eye-boundary loops. Do not delete rectangular grid cells or cut axis-aligned boxes for eye apertures.",
+    "Mirror positive-x eye/cheek landmarks for opposite side. Keep quiet closed mouth, hollow eyes and narrow long face; no grin or barred visor.",
+    "Bridge brow/cheek/nose/mouth rings with continuous quads where practical; place topology poles away from eyelid corners and nose silhouette.",
+    "Outer side returns curve backward around temples/jaw. Nose projects locally, not the entire mask as a wedge.",
+    "Small shell thickness is physical; cavity behind eye loops must remain dark/open without a rear head surface filling the aperture.",
+    "Fit mask and hood to a real head volume, preserving space for back skull. Never replace hidden depth with a front cutout extrusion."
+  ],
+  "curves": {
+    "outer_boundary_positive": {
+      "points_xyz": [
+        [
+          0,
+          0.06,
+          3.2
+        ],
+        [
+          0.52,
+          -0.015,
+          3.15
+        ],
+        [
+          0.85,
+          -0.16,
+          2.93
+        ],
+        [
+          0.98,
+          -0.26,
+          2.51
+        ],
+        [
+          1,
+          -0.28,
+          2.02
+        ],
+        [
+          0.87,
+          -0.28,
+          1.46
+        ],
+        [
+          0.7,
+          -0.24,
+          0.78
+        ],
+        [
+          0.42,
+          -0.12,
+          0.22
+        ],
+        [
+          0,
+          0.08,
+          0
+        ]
+      ],
+      "closed": false,
+      "interpolation": "shape-preserving cubic; retain extrema; no overshoot",
+      "note": "Mirror and reverse to close; round local corner tangents without inflating face."
+    },
+    "eye_positive": {
+      "points_xyz": [
+        [
+          0.22,
+          0.21,
+          2.15
+        ],
+        [
+          0.34,
+          0.2,
+          2.28
+        ],
+        [
+          0.54,
+          0.17,
+          2.31
+        ],
+        [
+          0.74,
+          0.09,
+          2.24
+        ],
+        [
+          0.82,
+          0.015,
+          2.15
+        ],
+        [
+          0.69,
+          0.065,
+          2.04
+        ],
+        [
+          0.48,
+          0.15,
+          2.0
+        ],
+        [
+          0.3,
+          0.2,
+          2.05
+        ]
+      ],
+      "closed": true,
+      "interpolation": "shape-preserving cubic; retain extrema; no overshoot",
+      "note": "Inner corner begins loop; outer corner does not form square cutout. Depth bends around orbital field."
+    },
+    "brow_positive": {
+      "points_xyz": [
+        [
+          0.12,
+          0.27,
+          2.39
+        ],
+        [
+          0.34,
+          0.3,
+          2.47
+        ],
+        [
+          0.61,
+          0.22,
+          2.48
+        ],
+        [
+          0.86,
+          0.02,
+          2.37
+        ],
+        [
+          0.95,
+          -0.16,
+          2.26
+        ]
+      ],
+      "closed": false,
+      "interpolation": "shape-preserving cubic; retain extrema; no overshoot",
+      "note": ""
+    },
+    "lower_orbit_positive": {
+      "points_xyz": [
+        [
+          0.22,
+          0.18,
+          2.01
+        ],
+        [
+          0.43,
+          0.18,
+          1.87
+        ],
+        [
+          0.65,
+          0.15,
+          1.84
+        ],
+        [
+          0.84,
+          0.04,
+          1.94
+        ],
+        [
+          0.94,
+          -0.15,
+          2.1
+        ]
+      ],
+      "closed": false,
+      "interpolation": "shape-preserving cubic; retain extrema; no overshoot",
+      "note": ""
+    },
+    "nose_side_positive": {
+      "points_xyz": [
+        [
+          0.1,
+          0.27,
+          2.25
+        ],
+        [
+          0.13,
+          0.4,
+          1.96
+        ],
+        [
+          0.17,
+          0.54,
+          1.69
+        ],
+        [
+          0.24,
+          0.39,
+          1.47
+        ],
+        [
+          0.18,
+          0.26,
+          1.35
+        ]
+      ],
+      "closed": false,
+      "interpolation": "shape-preserving cubic; retain extrema; no overshoot",
+      "note": "Narrow bridge; alar transition returns toward cheek before mouth."
+    },
+    "cheek_to_jaw_positive": {
+      "points_xyz": [
+        [
+          0.91,
+          -0.14,
+          1.93
+        ],
+        [
+          0.77,
+          0.14,
+          1.75
+        ],
+        [
+          0.64,
+          -0.015,
+          1.29
+        ],
+        [
+          0.61,
+          -0.08,
+          0.91
+        ],
+        [
+          0.54,
+          -0.08,
+          0.55
+        ],
+        [
+          0.3,
+          0.16,
+          0.25
+        ]
+      ],
+      "closed": false,
+      "interpolation": "shape-preserving cubic; retain extrema; no overshoot",
+      "note": ""
+    },
+    "mouth_upper": {
+      "points_xyz": [
+        [
+          -0.34,
+          0.13,
+          0.92
+        ],
+        [
+          -0.18,
+          0.24,
+          0.98
+        ],
+        [
+          0,
+          0.29,
+          1.0
+        ],
+        [
+          0.18,
+          0.24,
+          0.98
+        ],
+        [
+          0.34,
+          0.13,
+          0.92
+        ]
+      ],
+      "closed": false,
+      "interpolation": "shape-preserving cubic; retain extrema; no overshoot",
+      "note": ""
+    },
+    "mouth_slit": {
+      "points_xyz": [
+        [
+          -0.34,
+          0.135,
+          0.9
+        ],
+        [
+          -0.17,
+          0.25,
+          0.92
+        ],
+        [
+          0,
+          0.25,
+          0.91
+        ],
+        [
+          0.17,
+          0.25,
+          0.92
+        ],
+        [
+          0.34,
+          0.135,
+          0.9
+        ]
+      ],
+      "closed": false,
+      "interpolation": "shape-preserving cubic; retain extrema; no overshoot",
+      "note": "Shallow continuous recessed seam, not open smile or black rectangle; no separate tube lip."
+    },
+    "mouth_lower": {
+      "points_xyz": [
+        [
+          -0.3,
+          0.14,
+          0.85
+        ],
+        [
+          -0.15,
+          0.26,
+          0.79
+        ],
+        [
+          0,
+          0.29,
+          0.8
+        ],
+        [
+          0.15,
+          0.26,
+          0.79
+        ],
+        [
+          0.3,
+          0.14,
+          0.85
+        ]
+      ],
+      "closed": false,
+      "interpolation": "shape-preserving cubic; retain extrema; no overshoot",
+      "note": ""
+    },
+    "midline_profile": {
+      "points_xyz": [
+        [
+          0,
+          0.06,
+          3.2
+        ],
+        [
+          0,
+          0.17,
+          2.85
+        ],
+        [
+          0,
+          0.26,
+          2.48
+        ],
+        [
+          0,
+          0.3,
+          2.2
+        ],
+        [
+          0,
+          0.47,
+          1.94
+        ],
+        [
+          0,
+          0.66,
+          1.58
+        ],
+        [
+          0,
+          0.49,
+          1.4
+        ],
+        [
+          0,
+          0.25,
+          1.2
+        ],
+        [
+          0,
+          0.29,
+          1.0
+        ],
+        [
+          0,
+          0.25,
+          0.91
+        ],
+        [
+          0,
+          0.29,
+          0.8
+        ],
+        [
+          0,
+          0.14,
+          0.59
+        ],
+        [
+          0,
+          0.25,
+          0.34
+        ],
+        [
+          0,
+          0.08,
+          0
+        ]
+      ],
+      "closed": false,
+      "interpolation": "shape-preserving cubic; retain extrema; no overshoot",
+      "note": ""
+    },
+    "hood_opening_positive": {
+      "points_xyz": [
+        [
+          0,
+          -0.05,
+          3.38
+        ],
+        [
+          0.62,
+          -0.05,
+          3.27
+        ],
+        [
+          1.07,
+          -0.2,
+          2.86
+        ],
+        [
+          1.15,
+          -0.31,
+          2.22
+        ],
+        [
+          1.04,
+          -0.32,
+          1.41
+        ],
+        [
+          0.87,
+          -0.22,
+          0.66
+        ],
+        [
+          0.74,
+          -0.04,
+          0.12
+        ],
+        [
+          1.06,
+          0.07,
+          -0.39
+        ],
+        [
+          1.7,
+          -0.08,
+          -0.78
+        ]
+      ],
+      "closed": false,
+      "interpolation": "shape-preserving cubic; retain extrema; no overshoot",
+      "note": "Mirror; the rim frames temples but drops clear of jaw and turns over shoulder, not a straight tube."
+    }
+  },
+  "landmarks": {
+    "glabella": [
+      0,
+      0.26,
+      2.48
+    ],
+    "nose_root": [
+      0,
+      0.3,
+      2.2
+    ],
+    "nose_bridge": [
+      0,
+      0.47,
+      1.94
+    ],
+    "nose_tip": [
+      0,
+      0.66,
+      1.58
+    ],
+    "columella": [
+      0,
+      0.49,
+      1.4
+    ],
+    "philtrum": [
+      0,
+      0.25,
+      1.2
+    ],
+    "upper_lip_peak": [
+      0,
+      0.29,
+      1.0
+    ],
+    "mouth_centre": [
+      0,
+      0.25,
+      0.91
+    ],
+    "lower_lip": [
+      0,
+      0.29,
+      0.8
+    ],
+    "chin_front": [
+      0,
+      0.25,
+      0.34
+    ],
+    "cheek_peak_positive": [
+      0.77,
+      0.14,
+      1.75
+    ],
+    "cheek_hollow_positive": [
+      0.64,
+      -0.015,
+      1.29
+    ],
+    "jaw_angle_positive": [
+      0.66,
+      -0.22,
+      0.64
+    ],
+    "temple_positive": [
+      0.95,
+      -0.23,
+      2.37
+    ],
+    "nose_alar_positive": [
+      0.22,
+      0.37,
+      1.46
+    ]
+  },
+  "hood": {
+    "construction": "one crown/nape shell with separate face opening and shoulder-supported cowl; no long vertical tube or horizontal nape shelf",
+    "crown_back_profile": [
+      [
+        0,
+        -0.55,
+        3.34
+      ],
+      [
+        0,
+        -1.05,
+        3.1
+      ],
+      [
+        0,
+        -1.22,
+        2.56
+      ],
+      [
+        0,
+        -1.18,
+        1.86
+      ],
+      [
+        0,
+        -1.03,
+        1.05
+      ],
+      [
+        0,
+        -0.96,
+        0.34
+      ],
+      [
+        0,
+        -1.02,
+        -0.35
+      ]
+    ],
+    "opening_clearance_units": 0.1,
+    "hem_rule": "face opening turns into cowl; do not run two straight edges to shoulder as separate ribbons"
+  },
+  "shoulder_yoke": {
+    "coordinates": "same normalized frame, z below mask chin negative; scale together with head",
+    "rear_support_arc": [
+      [
+        -2.55,
+        -0.55,
+        -1.02
+      ],
+      [
+        -1.7,
+        -1.05,
+        -0.69
+      ],
+      [
+        0,
+        -1.19,
+        -0.47
+      ],
+      [
+        1.7,
+        -1.05,
+        -0.69
+      ],
+      [
+        2.55,
+        -0.55,
+        -1.02
+      ]
+    ],
+    "front_support_arc": [
+      [
+        -2.55,
+        -0.55,
+        -1.02
+      ],
+      [
+        -1.65,
+        0.15,
+        -0.91
+      ],
+      [
+        -0.75,
+        0.43,
+        -1.03
+      ],
+      [
+        0,
+        0.46,
+        -1.22
+      ],
+      [
+        0.75,
+        0.43,
+        -1.03
+      ],
+      [
+        1.65,
+        0.15,
+        -0.91
+      ],
+      [
+        2.55,
+        -0.55,
+        -1.02
+      ]
+    ],
+    "outer_drape_arc": [
+      [
+        -2.8,
+        -0.48,
+        -1.5
+      ],
+      [
+        -1.8,
+        -1.27,
+        -1.15
+      ],
+      [
+        0,
+        -1.46,
+        -1.05
+      ],
+      [
+        1.8,
+        -1.27,
+        -1.15
+      ],
+      [
+        2.8,
+        -0.48,
+        -1.5
+      ]
+    ],
+    "fold_constraints": [
+      "Load at actual shoulder support; valley depths 0.08\u20130.16 units across broad spans, not repeated ripples.",
+      "Rear centre continues into cloak gores; no exposed rectangular top tab.",
+      "Front left casting-arm boundary stays medial to deltoid; keep an actual arm opening.",
+      "Fit against measured body envelope; these targets do not override no-intersection constraints."
+    ]
+  },
+  "review_gates": [
+    "Front: elongated face, slanted almond eye apertures, visible cheek and narrow quiet mouth; no blank oval.",
+    "Side: distinct forehead\u2013nose bridge\u2013tip\u2013lip\u2013chin rhythm and backward temple return, not a beak slab.",
+    "Three-quarter: cheek plane joins nose and jaw; eye openings remain continuous and shell does not intersect hood.",
+    "Rear/shoulder: hood carries skull depth and settles into curved yoke; no floating ledge or flat cape root.",
+    "Neutral clay first. No noise/ornament/material to conceal surface or silhouette failure."
+  ]
+}

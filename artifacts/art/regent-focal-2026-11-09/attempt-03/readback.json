@@ -1,0 +1,12 @@
+{
+  "landmark_sha256": "398a055b9eb6feb8f75a8ba1c8057886ab81c26b4ee5d7193dc013859874ccf6",
+  "source_sha256": "3e8efd60880b2f6b77add29abeab64afe8acca0a2cee67928c60c2e030543401",
+  "scene_sha256": "9943f65c99f500ca38f82d13dba287768363ad2c601303293f7992ada9ecebe8",
+  "mask_vertices": 665,
+  "mask_faces": 974,
+  "mask_boundary_edges_before_solidify": 96,
+  "zero_area_faces": 0,
+  "rigs": 0,
+  "method": "explicit director feature curves form constrained triangulation; genuine eye-loop holes, physical solidify rim, shared uniform transform",
+  "limits": "neutral focal construction only; no production retopology, global collision or artistic pass"
+}

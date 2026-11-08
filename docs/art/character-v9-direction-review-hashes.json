@@ -1,0 +1,54 @@
+{
+  "verdict": "Replacement unaccepted; V8 preserved. Stable iteration04 partial evidence remains below artistic target; subsequent tailored/closed-proxy solves failed.",
+  "review_scope": "Images inspected during the successive trials and preserved copies; root final failure images also inspected. This is not an all-output or dynamic-motion review.",
+  "reviewed_images": [
+    {
+      "path": "artifacts/art/last-vigil-v9/iteration-01-unstable-tasset-contact/garment.png",
+      "sha256": "58b0608a37a1b69c0a61d660a7e7134a0647d294ec38c18b9d5beebc9f50eaf4"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9/iteration-01-unstable-tasset-contact/frame-100/clay_front.png",
+      "sha256": "a6287efd482711c3056968f98eb8cc3e6f969f065ab48fa0f00156efa9b38a82"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9/iteration-01-unstable-tasset-contact/frame-100/clay_side.png",
+      "sha256": "1792097f2675acbd9e76d493d9994d439df4366f09370287ba18bd9ccf431862"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9/iteration-02-stable-body-only/garment.png",
+      "sha256": "8858459009ed3ac4fcfb2fc01e2f1a44b92f0624a7ce44169e9819702f780238"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9/iteration-02-stable-body-only/frame-100/clay_front.png",
+      "sha256": "530c8a63a89e7f2aacf56834489ee1d6c34e0699b14c070c7feeb97277411332"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9/iteration-02-stable-body-only/frame-100/clay_side.png",
+      "sha256": "b51ec8d770bdb806ecb1facee8c9d6dd3583681020bb2442644ec7a97d1d2345"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9/iteration-04-stable-mail-and-ease/garment.png",
+      "sha256": "16c1556180e66cc747964c54de7e0c3f235fb4bda0372b041a91eb5bf7efaafc"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9/iteration-04-stable-mail-and-ease/frame-100/clay_front.png",
+      "sha256": "cbe8651f17383d856f05f339384bef9c00b02dcbcfe094f25103152ae1bd1604"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9/iteration-04-stable-mail-and-ease/frame-100/clay_side.png",
+      "sha256": "484c089a4be39d3a3d316661ce3a502df79352a26afd3de85ca3ffc092969a2d"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9/iteration-03-mail-layer-breakthrough/garment.png",
+      "sha256": "43b343b6b7fe281c072fad1dedc932b916a338efb12c297b3cf4ef3e12ddf57c"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9/garment.png",
+      "sha256": "4ea43d06003db3b4c496adf3ec58dff2368fd283517eb992ea4f554b963b76f0"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9/frame-200/clay_side.png",
+      "sha256": "9c9f4de9259700f59180f3f6290905ebad548b3ea9a9a677c79a6b92765dd547"
+    }
+  ]
+}

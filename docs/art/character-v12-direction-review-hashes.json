@@ -1,0 +1,69 @@
+{
+  "verdict": "Coherent coarse structural base and useful mapped texture-method gain; overall reference art and production UV readiness unmet.",
+  "scope": "Five final clay stills, six turntable samples and four final material views independently inspected. No all-frame playback claim.",
+  "reviewed_images": [
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-front.png",
+      "sha256": "f26c109e0275bb674be4235eb50d72712c28187c2549bdac0391eca60c830888"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-side.png",
+      "sha256": "e7f1610e837c6cc5371738a21f3ac4241a84431593cf2be4309da8d499bd67a6"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-back.png",
+      "sha256": "c34181d1723d29339de0b252bff5793a39aa3d0c8085a95e4d0b0f3fb8a78c89"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-three-quarter.png",
+      "sha256": "90a13a2d1c01fc5f39bb4ff7376b518eeda11ee413ec012b77ab1298711f7699"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-neck.png",
+      "sha256": "779c7503dee928b7e23e200883bd81672b89d08b0e862b91aea47db353aa3dde"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/003.png",
+      "sha256": "124aa5cd1e9b6056efffb8493f415c1863ffe71150d9968ecdb69cc1d01a0c69"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/009.png",
+      "sha256": "b7008fb44d617c36b6053ab6cb5fd52d1b95e2ea67c337b82d31fb4bb922379b"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/015.png",
+      "sha256": "99fe0f3e7e7320d8242e97a2d3f5d39f74600943b54dcb3f2a1a70b362560121"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/021.png",
+      "sha256": "df03ffb3f69fc41949515437f9f4b4b46b12b19abcc3d555c040c7753561b7c4"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/027.png",
+      "sha256": "c5e659b9dff3ccaec3ef8308034d2c4545006e1dc19ef34985238e3fe862dbf9"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/033.png",
+      "sha256": "4ce119ed5fef6a7fec832f32b5f512eceac40eedfb1d1a99a5dbfa94b6a55ca5"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-three-quarter.png",
+      "sha256": "a283e40450cb639e7f2859ad6a445b8d7dd1a2952580c6393bfa25d4073596e8"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-three-quarter-light-B.png",
+      "sha256": "5d0b01cef6376983ee22c3e394c0cc8f6908fdc5f8969e771de2d62ea786154e"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-back.png",
+      "sha256": "613e505eb6b17b5410554781cc05d7ea9789676b053c18f139ed188f93c1dcc7"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-detail.png",
+      "sha256": "743502080e5592591d7f65c79cdf65c5d50ad8bd73f700ddbbf01188cd3c15ab"
+    }
+  ],
+  "frozen_source_sha256": "526ae1220670127234e7714b8f084221fa26deef1b8a182d1d39172098009000",
+  "frozen_material_scene_sha256": "e33596c9d5faaba16393a66bc25d5e3bcac010cf8769a13ea370a384c5e009c3",
+  "freeze_verification": "All15 reviewed image hashes unchanged after artist freeze."
+}

@@ -1,0 +1,32 @@
+{
+  "mode": "3",
+  "start": 1794159153.4033222,
+  "before": {
+    "free_bytes": 26650460160,
+    "project_bytes": 2743185408
+  },
+  "command": [
+    "/Users/haydn/Documents/BossLab/unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender",
+    "-b",
+    "-t",
+    "2",
+    "--factory-startup",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "/Users/haydn/Documents/BossLab/unreal/art-studio/source/funeral_regent_focal.py",
+    "--",
+    "3"
+  ],
+  "child_pid": 85812,
+  "child_process_group": 85812,
+  "signal_attempts": [],
+  "exit_code": 0,
+  "reason": null,
+  "seconds": 37.95803380012512,
+  "after": {
+    "free_bytes": 26648326144,
+    "project_bytes": 2743902208
+  },
+  "log": "artifacts/art/regent-focal-2026-11-09/3-1794159153.log"
+}

@@ -1,0 +1,69 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "Lees-Laptop.local",
+			"instance": "B12ADA597445B1836A0182B4DB3456FA",
+			"instanceName": "Lees-Laptop.local-28846",
+			"platform": "MacEditor",
+			"oSVersion": "macOS 26.6.2 25G83",
+			"model": "Default",
+			"gPU": "Apple M3",
+			"cPUModel": "Apple M3",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.07-18.21.31",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.12150241434574127,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "AssetFailureFallback",
+			"fullTestPath": "V13Trial.AssetFailureFallback",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"B12ADA597445B1836A0182B4DB3456FA"
+			],
+			"duration": 0.12150241434574127,
+			"dateTime": "2026.11.07-18.21.31",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Fallback verified for deliberately invalid fixture /Users/haydn/Documents/BossLab/artifacts/unreal/v13-trial-2026-11-08/malformed-index.json",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.07-18.21.31"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Suppressed expected ('Warning') level log message or higher matching 'V13 trial unavailable' 1 times.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "Unknown",
+					"lineNumber": 0,
+					"timestamp": "2026.11.07-18.21.31"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

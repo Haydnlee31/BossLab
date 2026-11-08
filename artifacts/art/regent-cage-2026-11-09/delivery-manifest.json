@@ -1,0 +1,91 @@
+{
+  "status": "REJECTED neutral art gate; retain technical cage only; no rig",
+  "files": [
+    {
+      "path": "unreal/art-studio/source/funeral_regent_cage.py",
+      "bytes": 11812,
+      "sha256": "ff9a1deb340094f333eedffff6a550b3dba214b52ae424c3d29ebf0953452b62"
+    },
+    {
+      "path": "unreal/art-studio/source/funeral_regent_cage_audit.py",
+      "bytes": 2293,
+      "sha256": "1bbb4f7bdc904110065f14f9a95d52c54734980214d10e735a4a00ba02899c8b"
+    },
+    {
+      "path": "scripts/bosslab-regent-cage",
+      "bytes": 3258,
+      "sha256": "09ec8e367fa6cb1e222963abca7a3a9a5a11040f26bd0822240aa1a6210fb610"
+    },
+    {
+      "path": "scripts/bosslab-regent-cage-audit",
+      "bytes": 3264,
+      "sha256": "05d868fbca4749b8281add2176eee5cafdf0c5d85f19b730871261614b3ce02b"
+    },
+    {
+      "path": "docs/art/funeral-regent-cage-techart.md",
+      "bytes": 4651,
+      "sha256": "93188bc42605336fd5c6511e4b906167dccd6f7ae1a5bf8a16e0ec11285dc0e0"
+    },
+    {
+      "path": "unreal/art-studio/regent-cage-2026-11-09/regent-cage-02.blend",
+      "bytes": 940493,
+      "sha256": "4d6d284cd9e25520a8305a45806035797ebd72f4f2bef58404fecf999e0727c5"
+    },
+    {
+      "path": "unreal/art-studio/regent-cage-2026-11-09/regent-cage-03.blend",
+      "bytes": 943520,
+      "sha256": "c6835fb31ea11875423d8a7f4a113b97aad0fe4f657b97b5bd87f938a26e7947"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/body-front.png",
+      "bytes": 485578,
+      "sha256": "7efde9309d234a9cd938d5f5f67744702fc5dbe655893fdc79f14871eca10b44"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/saved-scene-audit.json",
+      "bytes": 1483,
+      "sha256": "526a4673b3390c4751cf492dec0aa70dddd8f1065a91c7d5e4c856ed5a56feba"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/side.png",
+      "bytes": 489571,
+      "sha256": "d53529abc1dee0cdfd58c137b9e5d2867a0c782f2df24788b6998e8b7ea15fa8"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/threequarter.png",
+      "bytes": 538840,
+      "sha256": "80d601be4cca340804b5b52df8c8b92d5888ccceeb0e2f41da053e6c67329248"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/readback.json",
+      "bytes": 657,
+      "sha256": "ed683aadfd62266d4c601dc8feb0e56f14f5eb3f0cdc045d1b171960acedfc76"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/head.png",
+      "bytes": 555885,
+      "sha256": "08f47e03de2443a4fc05aa41eae273d8e55d31aef13c08b47c29554bab99913d"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/body-topology.json",
+      "bytes": 418,
+      "sha256": "13c6c048cb800838144a43706635c306a7e4aed8d7e9152ce53fcbfd8ac44ccc"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/body-side.png",
+      "bytes": 474558,
+      "sha256": "eaaeb7d9ce8571bc45bfa57abb3105f3c249676a299b422474e96538e3dbbe6c"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/back.png",
+      "bytes": 496148,
+      "sha256": "9ddea156fb33ccd8461eb9a04e01848d07d08f016ab18066037d689488e3bcc7"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/front.png",
+      "bytes": 511554,
+      "sha256": "4456253b14c8c8f9c5eb1a6574b50fe12d3408ae150f3802dc041dd131fe49ef"
+    }
+  ],
+  "root_note": "Technical-report wording clarified; source/assets unchanged."
+}

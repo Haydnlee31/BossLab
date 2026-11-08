@@ -1,0 +1,32 @@
+{
+  "scope": "Independent review of specified actual v4 views. Design gate unmet.",
+  "files": [
+    {
+      "path": "artifacts/art/last-vigil-v4/hero.png",
+      "sha256": "0db46aa811a08a3f22c257258b4c8ac9875a7e63cde3aa6f9729025b0edfa02b"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v4/head.png",
+      "sha256": "fa5cec6a61d29dffc5442b34ec22133468a1821801232002962c65c028342d54"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v4/headside.png",
+      "sha256": "8bb6294504a00985bf3d854bd0c04b6ed850d2f538615d1d00225b8acf602fe8"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v4/clay_hero.png",
+      "sha256": "d6963ae4830b607c9be752dad07bc48c0c05b1c6f92e4a0a5d117e5690a8d71a"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v4/clay_headside.png",
+      "sha256": "99a99b9c9cf1db352ee9fa68392f9f38dd52bbb5923b07af88ed8377c4cfafe6"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v4/palm.png",
+      "sha256": "fa9cd3fa8ae927fa25632bc2aec3bf804b50a9b7dea2b09eece93fa4c0b4d727"
+    }
+  ],
+  "frozen_source_sha256": "d773d38db8503c18bb734d3ef961524aa99e688b57e95eda7a6f1c600b50ef62",
+  "frozen_scene_sha256": "506d06ed68b754e6b5b6756177a0b55f69756a403055c927bb374f31bec03d77",
+  "freeze_note": "Artist freeze confirmed; all six independently reviewed image hashes rechecked unchanged."
+}

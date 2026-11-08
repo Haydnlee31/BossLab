@@ -1,0 +1,62 @@
+{
+  "verdict": "STOP after initial attempt plus two corrections. Multiangle gate failed; attempt02 better source-angle look study only. No proper-material conversion or integration.",
+  "reviewed_images": [
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-reference.png",
+      "sha256": "8dc025d53552dff194d378feeabc19cf3cdfd52e08455cb309411c66749102fa"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-three-quarter.png",
+      "sha256": "03d65b73128ee58a1b2e744d9a8815c04943802a5b8e44195a4bf608cd8a9972"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-side.png",
+      "sha256": "30550a407012ad2a6b9209a7f7f2e8bb028ffbc7e22e89a98c31ae04929b3388"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-clay-side.png",
+      "sha256": "3136fced77510a1a5818fb0ca5382b7d3e51369802a983e93513f97eac289e9e"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-uv-reference.png",
+      "sha256": "f5f96fbacacbefa69cdbb2540c5ff86b521b5564ae6da3dd2ed389bd1bd8a287"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-reference.png",
+      "sha256": "80adf23649bc3bc6304dcad15687129e0f5c9991e3583c6604352b7f4612f589"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-three-quarter.png",
+      "sha256": "4dda977f8807fa673341e589f3cb6852c239cca3d504ecda7431d1836df2dcc2"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-side.png",
+      "sha256": "01214d8bd2ba068c38bfded9b0e823f68d69569da7e087ae1d0ca5b2913210fc"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-clay-side.png",
+      "sha256": "7c15321d0be134d4e07eddee79cd10b49feec076ea32658a20b844b2aae412cc"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-reference.png",
+      "sha256": "564d8f2941fafb2d076412568d5ba101b7731168fa10646ad7941b341e5a5d45"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-three-quarter.png",
+      "sha256": "4407abab3bbce957b2f923bdf9a1f71dbe84b4c43e0d898290e18d2cdf3424f8"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-side.png",
+      "sha256": "56798d4d0c5dfcd189442731f1f9e8f9355400914f475a86310264fd0175f2a7"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-clay-side.png",
+      "sha256": "d296a118fedf77ba235b7b759c75d9e8baa06f82376d1270d703c8b485c97710"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-uv-reference.png",
+      "sha256": "0af7bb31c285fba76be1ae979b8e98b8466c64fe73c2263fc1060009d0b9fefb"
+    }
+  ],
+  "scope": "Fourteen listed actual images independently inspected; no claim that unlisted clay-reference views were reviewed."
+}

@@ -1,0 +1,16 @@
+{
+  "components": 1,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "zero_area_faces": 0,
+  "signed_volume_m3": 0.057443465739780604,
+  "vertices": 429,
+  "faces": 417,
+  "method": "explicit shared torso rings, omitted side patches bridged to arms, shared crotch partition bridged to legs; no voxel union",
+  "no_rig": true,
+  "evaluated_min_z": 0.0,
+  "evaluated_sole_by_side": {
+    "-1": 0.0,
+    "1": 0.0
+  }
+}

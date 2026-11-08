@@ -1,0 +1,43 @@
+{
+  "scope": "Frozen V5 independent art review; reference-quality gate unmet; UV study isolated/unintegrated",
+  "source_sha256": "d604904951bb29f5bdbe410c05efabd4431c4ad36afbc8779edc99b30522c3bc",
+  "scene_sha256": "8f187e663f03ce4e8e07c100265665c22df940651d2800ace27e385fc01ff866",
+  "reviewed_files": [
+    {
+      "path": "artifacts/art/last-vigil-v5/hero.png",
+      "sha256": "bcefcf09cacfe127ac3077e9adac386fd12758058b939cd5c7ad97fab0eece15"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v5/back.png",
+      "sha256": "cf36177637cfb9789f37c76c393e97f7689b8391099626f2bbdabca1e1862bec"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v5/headside.png",
+      "sha256": "9b54a5d4f68b99527f3d27a191c7467b865562f0e6500f3f505ff3fb214c4bff"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v5/garment.png",
+      "sha256": "edba80bee30733ffb9947ca4e13c52b05708c33274358fadf754ef46268a234c"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v5/cape_detail.png",
+      "sha256": "7cecbe5be7cc577a2ffd1874061e54b61e3038ab0801f8fb3c9cc8c07856540f"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v5/head-detail.png",
+      "sha256": "f6991230ffb4f0434fbf7e6008bae74c2fed0d2335f61c5ec72d1d477aebad3a"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v5/garment-detail.png",
+      "sha256": "857dcfac2a63a67dea6edf2cc3a1c73d99da5b48f57ba7e4d379171e1b06fc32"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v5/glove-uv/palm-checker.png",
+      "sha256": "0775660c1f627b9077928177917a9c01e33e59fe8c700822867ab562752909f2"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v5/glove-uv/side-checker.png",
+      "sha256": "2c1e370850c1c9cdaef3bf8c30c8ce9f0de842b27f59d7ee6bfa8bddbf1ccdf5"
+    }
+  ]
+}

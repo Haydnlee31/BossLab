@@ -1,0 +1,26 @@
+{
+  "status": "Generated concepts only; not models or gameplay",
+  "review": "Outfit sheet inspected; corrected attack panel4 shows release and escape. Initial storyboard superseded. Pose/hand details are illustrative, not rig instructions.",
+  "files": [
+    {
+      "path": "artifacts/art/warden-undead-concepts-2026-11-08/attack-study-concept-only.png",
+      "bytes": 2630932,
+      "sha256": "d8c683332dec076f256a630560c6a5b8802ac6ec9ec37f9e051242a1a9e72371"
+    },
+    {
+      "path": "artifacts/art/warden-undead-concepts-2026-11-08/attack-study-initial-superseded.png",
+      "bytes": 2926845,
+      "sha256": "22c93dbb0684b085a47f872aed93677f5bddab574c0967a2780a0f2231a405d6"
+    },
+    {
+      "path": "artifacts/art/warden-undead-concepts-2026-11-08/outfit-options-concept-only.png",
+      "bytes": 3023851,
+      "sha256": "6ba42bb4db25775d9613ec0437086c207e41a54ddae62643bffe0f4e1a8ca73d"
+    },
+    {
+      "path": "artifacts/art/warden-undead-concepts-2026-11-08/prompts.md",
+      "bytes": 3498,
+      "sha256": "b6885a819a6ff8d85d133c3c90e310a241c400990219d82c62998f1e2f5570cd"
+    }
+  ]
+}

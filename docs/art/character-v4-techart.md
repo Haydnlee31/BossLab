@@ -1,0 +1,31 @@
+# V4 — silhouette and construction revision
+
+Date: 2026-11-07. Separate source `unreal/art-studio/source/last_vigil_v4.py`, guarded launcher `scripts/bosslab-art-v4`, master `unreal/art-studio/revision-v4-2026-11-07/last-vigil-v4.blend`, evidence `artifacts/art/last-vigil-v4/`. V3, previous scenes and the game remain preserved. No rig, cloth simulation, engine integration or AI work.
+
+## Actual changes and failed constructions
+
+This pass follows the approved concept's large forms: narrower integrated brow/cheek protection, shallow V eye line, seated head, three actual overlapping gorget lames, flatter shoulder protection, fitted waist, and an open-front asymmetric shoulder mantle. The lower visor is reauthored as deliberate central/cheek fields rather than only scaling the old rounded mask. The palm's distal boundary is curved/staggered instead of a straight loft cap, but anatomical quality remains reviewable.
+
+The first mantle implementation failed visibly: broad smooth pads and isolated thick fur locks read as tan rubber boards with claws. Its neck simultaneously exposed black underclothing with white steel fragments. Read-only ray tests against the saved failed scene identified `Padded arming doublet` ahead of new lames at x 0.025–0.09 m, z 1.56–1.60 m. Compressing that hidden underlayer to fit inside the collar and increasing plate depth corrected the observed breakthrough. This was an actual fit error, not a lighting or physics restriction.
+
+The second mantle used matte neutral wool and narrower fibers, but strands crossed inside the descending cloth and rendered as sparse pale flecks. The third explicitly evaluates strand paths above the same cloth function, bends outer drape down 25 mm, reduces edge thickness to 4 mm and builds 9,360 curved strands over the drape. This covers the previous hard boards but still needed grouping/color hierarchy. The next pass organizes neighboring roots into 20 coherent guide groups per shoulder, varies clump lift/length and darkens undercoat/tips rather than increasing random crossing straw.
+
+A bounded material hierarchy pass reduces blue saturation and broad cloudy color/bump contrast across major plates under unchanged studio lights. Exposed edge piping is quieter. Existing gate plaque shoulders become a curved pointed arch with the same seven studs and restrained aged-brass border; no new symbols or ornament family. One 2.49-second draft failed before scene save when the arch endpoint produced a tiny negative floating-point base raised to a fractional power. The failed receipt/log are retained; clamping the endpoint domain fixes the implementation error.
+
+## Scope and evidence boundaries
+
+Actual clay/material images determine quality; counts and source labels do not. First rejected iterations and their scenes/source are preserved. The current palm UV sample is still the inherited projected layout with front/back overlap and side degeneracies; a separate production unwrap was not smuggled into a silhouette-quality claim. Authored maps and explicit UV wiring remain inspectable, but no production atlas, rig, animation or runtime performance claim follows.
+
+The old 1-million-triangle studio comparison was a heuristic, not an owner storage budget. Parent explicitly permits modest studio geometry growth for actual fur construction; the real 10 GB Unreal ceiling, 24 GiB free reserve and 20-minute foreground guard remain unchanged. CPU rendering only this pass. No external assets, paid calls, personal-file changes or persistent jobs.
+
+## Final shoulder replacement and verified evidence
+
+The final bounded pass deletes the rounded shoulder bowl meshes, their old rolled edges/repair attachments and matching shoulder rivets. It authors new sloping quad plate surfaces with cut outer corners, 2.5 mm thickness, narrow folded lips and four descending overlaps. This is a different plate silhouette, not merely a Z-scale or shader change. Final front/back/side views were inspected by technical art, root and independent reviewers. Side view exposes underlying arm armor through open lames; no clear new penetrating surface was identified. Sheet-like styling and articulated fit remain unvalidated in motion. Back cape has no observed breakthrough in the final view.
+
+Final scene audit: 323 renderable objects, 751,071 evaluated vertices and 1,385,762 evaluated triangles, finite positions. The increase over v3 is mostly the actual fitted fur fibers; this is studio geometry, not runtime optimization. Ten packed images remain (two original plus eight authored focal sample maps). Both glove base meshes are closed connected components: 20,698 left / 20,702 right vertices, zero non-two-face edges. Projected UV limitations remain: 934/932 degenerate projected glove triangles, approximately 51.14% union coverage, front/back overlap. No production UV claim.
+
+Final coherent set: thirteen actual 720×920 images — hero, head, headside, palm, clay_hero, clay_head, clay_headside, clay_palm, front, back, side, mask_head and mask_palm — plus actual UV wire sheets and source masks. Final CPU draft exited 0 after 71.79 seconds. Independent saved-scene probe/reload exited 0 after 49.23 seconds. Afterward the guard recorded 2,954,199,040 bytes under Unreal and 29,024,260,096 free bytes. No heavy or persistent job remains at handoff.
+
+The unchanged static cape was rechecked against the revised body envelope: 25,547 vertex-ray hits, minimum 31.7648 mm clearance, zero negative samples. Attachment region above 1.515 m, mantle/curves and arbitrary triangle intersections are excluded. This is neither cloth motion nor arbitrary-pose collision evidence.
+
+Independent review identifies real advances in angular descending shoulders, deliberate face planes, visible layered gorget, darker neutral hierarchy and readable pointed gate. Overall reference/approved-concept realism remains **needs work**. Mantle still reads as coarse repeated fur clumps over a visible backing, helmet/cuirass remain broadly smooth, glove anatomy and UVs are simplified, and a small pale neck insert/edge remains visible in some angles. No claim of final character acceptance, production rig, deformation, gameplay integration or boss AI.

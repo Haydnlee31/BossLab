@@ -1,0 +1,38 @@
+{
+  "kind": "2D generated concept sheets; not built models or gameplay",
+  "primary": [
+    "construction-corrected.png",
+    "motion-concept.png"
+  ],
+  "superseded": [
+    "construction-initial.png"
+  ],
+  "known_limits": [
+    "Corrected front/back main views show only two visible skulls; design contract remains exactly three.",
+    "Cast anticipation and miss recovery need stronger distinct actual clay poses.",
+    "Release and stab windup require separate actual poses.",
+    "Drawings do not prove geometry consistency, cloth clearance, skinning or frame timings."
+  ],
+  "files": [
+    {
+      "path": "construction-corrected.png",
+      "bytes": 2685696,
+      "sha256": "bfb851fc3571bfe5ac816b8fd0fb3388e302a2f4ba8f78aed76a6eee1e8023a1"
+    },
+    {
+      "path": "construction-initial.png",
+      "bytes": 2969701,
+      "sha256": "8da1198b6b9354589b2f440e8de15d16b2b5d39ac7f09550587867bc6ce8e47f"
+    },
+    {
+      "path": "motion-concept.png",
+      "bytes": 3126534,
+      "sha256": "90d29ffb1232134761d9294e5dac413604ab60cd21afdd4404a00c54feb5ab85"
+    },
+    {
+      "path": "prompts.md",
+      "bytes": 4974,
+      "sha256": "f95da544e6b620fe6aa159633659a6e2dbf9d03e2fb7cf8526ca82012f93b993"
+    }
+  ]
+}

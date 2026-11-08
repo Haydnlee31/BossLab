@@ -1,0 +1,43 @@
+{
+  "scene_sha256": "c6835fb31ea11875423d8a7f4a113b97aad0fe4f657b97b5bd87f938a26e7947",
+  "components": 1,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "zero_area_control_faces": 0,
+  "signed_volume_m3": 0.057443465739780604,
+  "rig_count": 0,
+  "scope": "reload recomputation; no self-intersection/full contact or deformation certificate",
+  "evaluated_triangles": 3376,
+  "evaluated_zero_area_triangles_lt_1e_12": 0,
+  "evaluated_min_triangle_area_m2": 4.190047296872549e-06,
+  "evaluated_sole_min_z_m": {
+    "-1": 0.0,
+    "1": 0.0
+  },
+  "local_arm_slab_samples": {
+    "-1elbow": {
+      "vertices": 12,
+      "cross_axis_extent_m": 0.098059072624892,
+      "y_extent_m": 0.0653361901640892,
+      "scope": "finite nearby evaluated-vertex slab bounds, not exact plane intersection"
+    },
+    "-1wrist": {
+      "vertices": 12,
+      "cross_axis_extent_m": 0.06379299354739487,
+      "y_extent_m": 0.043369218707084656,
+      "scope": "finite nearby evaluated-vertex slab bounds, not exact plane intersection"
+    },
+    "1elbow": {
+      "vertices": 12,
+      "cross_axis_extent_m": 0.098059072624892,
+      "y_extent_m": 0.0653361901640892,
+      "scope": "finite nearby evaluated-vertex slab bounds, not exact plane intersection"
+    },
+    "1wrist": {
+      "vertices": 12,
+      "cross_axis_extent_m": 0.06379299354739487,
+      "y_extent_m": 0.043369218707084656,
+      "scope": "finite nearby evaluated-vertex slab bounds, not exact plane intersection"
+    }
+  }
+}

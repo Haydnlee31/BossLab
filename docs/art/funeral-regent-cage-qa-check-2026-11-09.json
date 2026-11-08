@@ -1,0 +1,20 @@
+{
+  "scope": "Frozen cage03 technical-only retention; B visual gate rejected, unrigged",
+  "time_unix": 1794158239.6514099,
+  "baseline_count": 32,
+  "baseline_mismatches": [],
+  "manifest_entries": 17,
+  "manifest_mismatches": [],
+  "source_sha256": "ff9a1deb340094f333eedffff6a550b3dba214b52ae424c3d29ebf0953452b62",
+  "images_inspected": {
+    "artifacts/art/regent-cage-2026-11-09/attempt-03/body-front.png": "7efde9309d234a9cd938d5f5f67744702fc5dbe655893fdc79f14871eca10b44",
+    "artifacts/art/regent-cage-2026-11-09/attempt-03/side.png": "d53529abc1dee0cdfd58c137b9e5d2867a0c782f2df24788b6998e8b7ea15fa8",
+    "artifacts/art/regent-cage-2026-11-09/attempt-03/threequarter.png": "80d601be4cca340804b5b52df8c8b92d5888ccceeb0e2f41da053e6c67329248",
+    "artifacts/art/regent-cage-2026-11-09/attempt-03/head.png": "08f47e03de2443a4fc05aa41eae273d8e55d31aef13c08b47c29554bab99913d",
+    "artifacts/art/regent-cage-2026-11-09/attempt-03/body-side.png": "eaaeb7d9ce8571bc45bfa57abb3105f3c249676a299b422474e96538e3dbbe6c",
+    "artifacts/art/regent-cage-2026-11-09/attempt-03/back.png": "9ddea156fb33ccd8461eb9a04e01848d07d08f016ab18066037d689488e3bcc7",
+    "artifacts/art/regent-cage-2026-11-09/attempt-03/front.png": "4456253b14c8c8f9c5eb1a6574b50fe12d3408ae150f3802dc041dd131fe49ef"
+  },
+  "free_bytes": 26697138176,
+  "unreal_allocated_bytes": 2741780480
+}

@@ -1,0 +1,65 @@
+{
+  "status": "REJECTED focal gate; cap reached, no rig/fullbody",
+  "files": [
+    {
+      "path": "unreal/art-studio/source/funeral_regent_focal.py",
+      "bytes": 11090,
+      "sha256": "3e8efd60880b2f6b77add29abeab64afe8acca0a2cee67928c60c2e030543401"
+    },
+    {
+      "path": "unreal/art-studio/source/regent_focal_landmarks.json",
+      "bytes": 13196,
+      "sha256": "398a055b9eb6feb8f75a8ba1c8057886ab81c26b4ee5d7193dc013859874ccf6"
+    },
+    {
+      "path": "scripts/bosslab-regent-focal",
+      "bytes": 3260,
+      "sha256": "450a778dadda0befcd66fd66f2ae24cc69f470a3801202a1c3863b370466b72a"
+    },
+    {
+      "path": "docs/art/funeral-regent-focal-techart.md",
+      "bytes": 5266,
+      "sha256": "9c450938f9747eec7e3623315b5f8719a7fbc4c1764be9db92207558579ee5a8"
+    },
+    {
+      "path": "unreal/art-studio/regent-focal-2026-11-09/regent-focal-03.blend",
+      "bytes": 713075,
+      "sha256": "9943f65c99f500ca38f82d13dba287768363ad2c601303293f7992ada9ecebe8"
+    },
+    {
+      "path": "unreal/art-studio/regent-focal-2026-11-09/regent-focal-02.blend",
+      "bytes": 698227,
+      "sha256": "fe8c7472b98359cc82e4edcea721346f61e3660176236ea8ad5993711c67a2ac"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/bust-back.png",
+      "bytes": 593868,
+      "sha256": "0587fb48ac3290785b09e1ac5f83298a1b23ebd44df9c5e09fa945b417305595"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/head-threequarter.png",
+      "bytes": 643883,
+      "sha256": "97926098e864af4e7df0fbe06fb57b2ae5773773cc47374f183826e7c7048393"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/readback.json",
+      "bytes": 651,
+      "sha256": "7c7023f8b781555e29d0f49ce0f5710c15b54478e4276b16158ddccae12efcdf"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/head-side.png",
+      "bytes": 615122,
+      "sha256": "d86db15571261f650cd14bd69fca956c650fd0575ffe4e5a0efcf0a4bd25dba8"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/bust-front.png",
+      "bytes": 613366,
+      "sha256": "fbfac212623707e04d97a4c332fa777a3a6a47e59ac98a38d399ce2b0b267d77"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/head-front.png",
+      "bytes": 651592,
+      "sha256": "22993ba201736d9bd85e983add904aa921ed0d6e89d3c16aa3f4b31497ddd4cb"
+    }
+  ]
+}

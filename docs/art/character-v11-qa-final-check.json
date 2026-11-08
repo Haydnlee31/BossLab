@@ -1,0 +1,191 @@
+{
+  "scope": "Independent frozen V11 rejected-study integrity, not art acceptance",
+  "time_unix": 1794032168.747766,
+  "v10_sha256": {
+    "checked": 160,
+    "mismatches": []
+  },
+  "game_sha256": {
+    "checked": 28,
+    "mismatches": []
+  },
+  "manifest_files": [
+    {
+      "path": "unreal/art-studio/revision-v11-2026-11-07/v11-attempt-01.blend",
+      "sha256": "6d650043d2d0fc48f0e45b40a74e0663fafc470efa4cfd7e0a5c30cf9aaae477",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-source.py",
+      "sha256": "ed85cceab6b13ec835bd48fe4ebd8bb0012ab9c23bbe2caf2a3dbe6c460d0e19",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-construction.json",
+      "sha256": "ebf0dec1f5f4dfd34fb7e9fce001a2920bd3b65daabe1b703ea9b1d28b71c848",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-reference.png",
+      "sha256": "8dc025d53552dff194d378feeabc19cf3cdfd52e08455cb309411c66749102fa",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-three-quarter.png",
+      "sha256": "03d65b73128ee58a1b2e744d9a8815c04943802a5b8e44195a4bf608cd8a9972",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-side.png",
+      "sha256": "30550a407012ad2a6b9209a7f7f2e8bb028ffbc7e22e89a98c31ae04929b3388",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-clay-reference.png",
+      "sha256": "a599feea7a6454db7bd72176e1e041fda33bdd969dc1bf3a2cfb3ca1a1f4425c",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-clay-side.png",
+      "sha256": "3136fced77510a1a5818fb0ca5382b7d3e51369802a983e93513f97eac289e9e",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-01-uv-reference.png",
+      "sha256": "f5f96fbacacbefa69cdbb2540c5ff86b521b5564ae6da3dd2ed389bd1bd8a287",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v11-2026-11-07/v11-attempt-02.blend",
+      "sha256": "82e3980d27ae89cb757081eab30a06af528248edc24eacfe168796835c088088",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-source.py",
+      "sha256": "708a89395fbf5f166e19dd62eedc0ede92ebbfb839847dce0c038c439520351c",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-construction.json",
+      "sha256": "629f015950d4370a995769474200428c90808a520ab37659fe2dae67a42d9991",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-reference.png",
+      "sha256": "80adf23649bc3bc6304dcad15687129e0f5c9991e3583c6604352b7f4612f589",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-three-quarter.png",
+      "sha256": "4dda977f8807fa673341e589f3cb6852c239cca3d504ecda7431d1836df2dcc2",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-side.png",
+      "sha256": "01214d8bd2ba068c38bfded9b0e823f68d69569da7e087ae1d0ca5b2913210fc",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-clay-reference.png",
+      "sha256": "d77ec4c37c8545cf2dddbf5d5ed008041bc9046433893069fda1636ef48d321b",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-clay-side.png",
+      "sha256": "7c15321d0be134d4e07eddee79cd10b49feec076ea32658a20b844b2aae412cc",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-02-uv-reference.png",
+      "sha256": "61df4af25790109b39cafd564c83991a33bc2c823ad3eca6d9a53af038061081",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v11-2026-11-07/v11-attempt-03.blend",
+      "sha256": "ab54fa322ce2537ba485f0f2ebaef6a72aecacbb6f72b94c6552187252a673bc",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-source.py",
+      "sha256": "b88ac36347e4c246256368592654dfbf458be0b657df86e081b7ad7306108ba9",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-construction.json",
+      "sha256": "dfc2452dad4b0cfd1105c1d86e5fe1c2f1ebe91658f973b856e4b16f2dbd0982",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-reference.png",
+      "sha256": "564d8f2941fafb2d076412568d5ba101b7731168fa10646ad7941b341e5a5d45",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-three-quarter.png",
+      "sha256": "4407abab3bbce957b2f923bdf9a1f71dbe84b4c43e0d898290e18d2cdf3424f8",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-side.png",
+      "sha256": "56798d4d0c5dfcd189442731f1f9e8f9355400914f475a86310264fd0175f2a7",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-clay-reference.png",
+      "sha256": "0c1324a708fffe91d9344e2d3f938d746ee744c146ab3061369e2e0894b05272",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-clay-side.png",
+      "sha256": "d296a118fedf77ba235b7b759c75d9e8baa06f82376d1270d703c8b485c97710",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-uv-reference.png",
+      "sha256": "0af7bb31c285fba76be1ae979b8e98b8466c64fe73c2263fc1060009d0b9fefb",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/source/last_vigil_v11.py",
+      "sha256": "b88ac36347e4c246256368592654dfbf458be0b657df86e081b7ad7306108ba9",
+      "matches": true
+    },
+    {
+      "path": "scripts/bosslab-art-v11",
+      "sha256": "457145bb8926d97fb5c7096c082aacad73a69c63686ae69c48987861e3c9010d",
+      "matches": true
+    },
+    {
+      "path": "docs/art/character-v11-techart.md",
+      "sha256": "43a5ea6116335a77893bf9bef2d1fa83443a34a4c19467b56f2099a1203d8867",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v11-2026-11-07/README-STATUS.md",
+      "sha256": "37cf516a3a0ffd39b3bdf66391ca5e97395c22a796e38df1afafa5379ec607bc",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-concept-2026-11-07/concept-target-not-built.png",
+      "sha256": "27703ee41d6c90bd942b13648e4fc309c205d2307a708c7de6ba74e8d5690343",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v11/attempt-03-reload-audit.json",
+      "sha256": "9ca1d602ecb8fe9585eb5524838404b7ec65dd844aa74ea0176b6a377fb87ef4",
+      "matches": true
+    }
+  ],
+  "candidates_used": 3,
+  "corrections_used": 2,
+  "all_18_images_inspected": true,
+  "verdict": "Rejected multiview asset; V10 authoritative",
+  "storage": {
+    "unreal_allocated_bytes": 4135428096,
+    "free_bytes": 28311195648,
+    "limit_bytes": 10000000000,
+    "reserve_bytes": 25769803776
+  },
+  "new_gameplay_tests_run": false,
+  "boss_AI_gate": "closed"
+}

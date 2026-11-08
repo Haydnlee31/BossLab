@@ -1,0 +1,38 @@
+# Local environment and credentials
+node_modules/
+.venv/
+__pycache__/
+.DS_Store
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pt
+*.pth
+*.safetensors
+editor.lock
+
+# Generated evidence is curated explicitly for the handoff, not bulk-published.
+/artifacts/
+/archive/
+*.tar.gz
+*.zip
+*.blend
+*.blend1
+
+# Unreal-generated files and locally installed/third-party dependencies
+unreal/**/Binaries/
+unreal/**/Intermediate/
+unreal/**/Saved/
+unreal/**/DerivedDataCache/
+unreal/.cache/
+unreal/Package/
+unreal/**/*.xcodeproj/
+unreal/**/*.xcworkspace/
+unreal/BossLabWarden/Content/Characters/
+unreal/art-studio/*
+!unreal/art-studio/source/
+!unreal/art-studio/integration-test-2026-11-08/
+# Selected project-authored Blender sources/checkpoints are explicitly tracked.

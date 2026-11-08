@@ -1,0 +1,25 @@
+# Funeral Regent focal face/hood/mantle — independent QA
+
+New authorized focal stage,2026-11-09. Final focal03 reviewed and rejected; actual source/scenes/renders retained. Retain connected cage03 body unchanged; art director supplies common landmarks, technical artist builds separate focal meshes. No rig, gameplay or AI changes. [34-file baseline](regent-focal-qa-baseline-2026-11-09.json) includes original32 protected game/V13 files plus cage03 source/scene; original32 match at capture. QA owns only reports/light checks, no DCC launch or edits.
+
+Require actual head front/side/three-quarter and bust front/back before full-character context. Review real eye apertures and rims, brow/nose bridge/cheek/lip/chin depth, hood rim thickness and attachment/negative space; no flat grid or dark decal substituting geometry. Omitted mouth opening can be a deliberate closed death-mask design, but must retain shaped lip/nasolabial planes instead of a blank slab. Verify shared section/landmark data actually informs source geometry. Numerical coordinates and closed topology do not prove likeness.
+
+Check mask/hood/head shell interference in profile and oblique views, plus neckline/yoke support. Mantle needs curved sewn surfaces/load folds, clear arm openings and side/rear transitions, not long boards with surface noise. Preserve selected B's narrow crown and long mourning proportions. Distinguish actual mesh clearance sampling from visual inspection and avoid global collision claims. Body mesh exact preservation is separate from deliberate garment changes.
+
+Only accepted focal shapes proceed to full context. No skin, pose, production UV/material, collision/physics or runtime results inferred. Await first actual candidate and source/readback audit.
+
+## Focal01 actual review
+
+All5 actual images independently inspected: head-front/side/threequarter and bust-front/back. Source reads director JSON feature curves/landmarks, builds constrained triangulation and omits eye-loop interiors; physical Solidify supplies rim thickness. Actual eye apertures and nose/lip depth are meaningful improvements over the cage slab. These are source/visual observations, not a finished-face pass.
+
+Structural defects remain: radial pinching around eyelids and mouth, crumpled chin surface; side mask stands well in front of cranial lining without a clear temple return/attachment. Hood side/back reads as a rectangular extruded sheet with a flat top termination, while an oval nape protrudes below it. Bust rear has a large horizontal dark gap separating yoke surfaces; front remains a broad board-like bib. Routed correction of mask edge flow/seating, curved hood crown/nape and supported yoke transitions before full-body context. No full-character acceptance, weights, collision or material pass.
+
+## Final03 — rejected focal gate
+
+All5 final head-front/side/three-quarter and bust-front/back views independently inspected. Radial wrinkles are reduced, but smoothing has washed out lip/brow/cheek structure, leaving a near-blank lower face. Side/back explicitly show cranial and nape surfaces breaking through the hood. Yoke remains two hovering shelf-like layers with a large dark gap rather than a supported sewn shoulder garment. No full-body expansion or rigging acceptance; end the bounded focal stage without another cosmetic correction.
+
+Actual director landmarks and eye holes are implemented. Readback reports665 mask vertices/974 faces,96 boundary edges before Solidify,0 zero-area control faces and0 rigs. Open boundaries are expected for eye/outer edges at that pre-thickness stage; these numbers do not certify evaluated shell closure, support/attachment, collision freedom, likeness or production retopology. No quantitative contact or pose tests were run.
+
+[Final independent integrity](regent-focal-qa-check-2026-11-09.json) verifies34/34 protected originalgame/V13/cage03 files unchanged and all12 delivery-manifest hashes matching. Source `3e8efd60880b2f6b77add29abeab64afe8acca0a2cee67928c60c2e030543401`; final scene `9943f65c99f500ca38f82d13dba287768363ad2c601303293f7992ada9ecebe8`; shared landmarks `398a055b9eb6feb8f75a8ba1c8057886ab81c26b4ee5d7193dc013859874ccf6`. Scenes02/03 retained; scene01 alone pruned under authorized latest-two policy with receipt, actual01 images/source/log retained. No QA heavy process or gameplay tests.
+
+Next method must preserve explicit eyelid/lip edge loops and anatomical feature planes rather than globally smoothing triangulated landmark surfaces. Fit a complete hood crown/side/nape control surface outside a measured cranial envelope before adding thickness; inspect side/back contact with the lining visible. Build the shoulder yoke as joined pattern surfaces seated to a torso reference with declared seam paths, not overlapping floating strips. Resolve these in focal geometry before full-character fit, weights or ornament. This is a proposed new authoring method, not implemented success or authorization to bypass the failed gate. No AI, runtime or physics work.

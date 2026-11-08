@@ -1,0 +1,17 @@
+# Warden concept generation provenance
+
+2026-11-08. Built-in image generation, no CLI/API-key workflow. Original concept illustrations only: not built meshes, gameplay, animation or performance evidence.
+
+## Outfit exploration prompt
+
+Use case: stylized-concept. Create a high quality landscape dark fantasy game art director concept exploration sheet: THREE distinct full-body original boss outfit sketches side by side, labeled A THE OSSUARY GAOLER, B THE FUNERAL REGENT, C THE CHAINBOUND PENITENT. Small header 'BOSSLAB / THE WARDEN — CONCEPT ONLY'. These are concept illustrations, not screenshots or actual 3D models. Realistic anatomical proportions, meticulous painterly pencil and material rendering, neutral warm-gray studio backdrop, readable silhouette including feet, restrained aged steel, ivory bone, soot-black cloth, oxidized bronze, ice-blue spectral fire. Same equipment identity: a grounded undead humanoid guardian, right hand a long narrow execution sword that can stab, left forearm chain reel and hooked manacle, three floating human skulls behind the upper shoulders burning with small blue flames. Boss about 2.4m tall, lean imposing rather than broad bulky armor. A: practical late-medieval prison knight, closed skull-like visor inside iron barred faceguard, fitted blackened steel cuirass, articulated shoulder plates, numbered funerary brass tags, split knee-length coat, chain bolted onto left bracer, a single small reliquary on chest. B: gaunt royal tomb custodian with narrow broken crown, layered ribbed silver cuirass, charcoal mourning tabard, dark indigo split back mantle with aged embroidered grave seals, asymmetrical ceremonial pauldron, old ivory death mask. C: emaciated armored penitent, wrapped burial linen between carefully fitted black plates, weathered iron funerary collar, shackled wrists, short torn shoulder mantle, exposed skeletal lower jaw under helmet. No giant spikes, no huge shoulder masses, no full-body blue glow, no floating boss body, no katana, no copied existing game character. Give each a small rear silhouette inset and enlarged weapon/chain detail under their figure. Attention to joints, believable garment attachment, distinct roughness of metal cloth bone; visual clarity before ornament. Excellent premium realistic game concept art, varied designs not mere color swaps.
+
+## Initial attack storyboard prompt
+
+undefined
+
+The combat team's subsequent release-before-stab contract supersedes any implied guaranteed paired stab in this initial illustration. The final proposed first skull attack is a single lane; the three-lane fan and expanding ring are later candidates, not initial scope.
+
+## Attack storyboard correction prompt
+
+Edit this attack concept storyboard, keeping its visual style and other five panels. Correct ONLY panel 4 CHAIN: SENTENCE to match fair gameplay: show chain slack and manacle OPEN on floor, player fully RELEASED and actively sidestepping outside the sword thrust, boss right-handed thrust passing beside player. Replace the panel subtitle with 'Release, then a separately telegraphed stab'. Replace all caught/chain-holds/execution text in panel 4 with 'Movement restored before stab wind-up' and 'Sidestep or roll; hit only on real contact'. Use a small inset silhouette in panel4 to show a successful stab can still hit if player fails to evade, no gore. No guaranteed captured execution. Other panels, title, original character and layout unchanged. This remains concept art not gameplay.

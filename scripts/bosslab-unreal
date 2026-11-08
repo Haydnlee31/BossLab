@@ -1,0 +1,234 @@
+#!/usr/bin/env python3
+"""Project-local, bounded Unreal launcher. No auto-start or persistent service."""
+import json
+import os
+import plistlib
+from pathlib import Path
+import shutil
+import signal
+import subprocess
+import sys
+import time
+
+ROOT = Path(__file__).resolve().parents[1]
+PROJECT = ROOT / 'unreal/BossLabWarden/BossLabWarden.uproject'
+ENGINE = Path(os.environ.get('BOSSLAB_UE_ROOT', '/Users/Shared/Epic Games/UE_5.8/UE_5.8'))
+EVIDENCE = ROOT / 'artifacts/unreal'
+CACHE = ROOT / 'unreal/.cache'
+GIB = 1024 ** 3
+RESERVE = 24 * GIB
+LIMIT = 10_000_000_000  # Owner-approved total work budget, decimal 10 GB
+
+def storage():
+    # du measures allocated blocks, including sparse binaries, without opening assets.
+    used = int(subprocess.check_output(['du', '-sk', str(ROOT / 'unreal')], text=True).split()[0]) * 1024
+    return {'free_bytes': shutil.disk_usage(ROOT).free, 'unreal_bytes': used,
+            'reserve_bytes': RESERVE, 'limit_bytes': LIMIT}
+
+def guard():
+    value = storage()
+    if value['free_bytes'] < RESERVE or value['unreal_bytes'] >= LIMIT:
+        raise RuntimeError('Storage budget reached; stopping owned work. ' + json.dumps(value))
+    return value
+
+def main():
+    mode = sys.argv[1] if len(sys.argv) > 1 else 'doctor'
+    EVIDENCE.mkdir(parents=True, exist_ok=True)
+    editor = ENGINE / 'Engine/Binaries/Mac/UnrealEditor.app/Contents/MacOS/UnrealEditor'
+    if mode == 'doctor':
+        report = {'project': str(PROJECT), 'editor_exists': editor.is_file(),
+                  'engine': json.loads((ENGINE / 'Engine/Build/Build.version').read_text()),
+                  'storage': storage()}
+        print(json.dumps(report, indent=2))
+        return 0
+    if mode not in ('build', 'editor', 'test', 'play', 'evaluate', 'benchmark', 'capture', 'package', 'package-play', 'package-benchmark', 'package-test', 'package-capture'):
+        raise RuntimeError('Usage: scripts/bosslab-unreal doctor|build|editor|test|play|evaluate|benchmark|capture|package|package-play|package-benchmark|package-test|package-capture')
+    if mode == 'evaluate':
+        raise RuntimeError('Adaptive evaluation is deferred in the fundamentals revision; historical unarmed reports remain in artifacts/unreal.')
+    if os.environ.get('BOSSLAB_OUTFIT', 'original') == 'v13' and mode.startswith('package'):
+        raise RuntimeError('V13 trial uses editor play/capture/benchmark (or dedicated native tests). The original packaged app is unchanged; do not use BOSSLAB_OUTFIT=v13 with package modes.')
+    guard()
+    CACHE.mkdir(parents=True, exist_ok=True)
+    env = dict(os.environ)
+    env.update(DOTNET_CLI_HOME=str(CACHE / 'dotnet'), DOTNET_CLI_TELEMETRY_OPTOUT='1',
+               DOTNET_SKIP_FIRST_TIME_EXPERIENCE='1', NUGET_PACKAGES=str(CACHE / 'nuget'),
+               CLANG_MODULE_CACHE_PATH=str(CACHE / 'clang'), TMPDIR=str(CACHE / 'tmp'))
+    (CACHE / 'tmp').mkdir(exist_ok=True)
+    package_runtime = None
+    if mode in ('package-play', 'package-benchmark', 'package-test', 'package-capture'):
+        candidates = list((ROOT / 'unreal/Package').glob('**/BossLabWarden.app/Contents/MacOS/BossLabWarden'))
+        if len(candidates) != 1:
+            raise RuntimeError('Expected exactly one staged local app, found ' + str(len(candidates)))
+        bundle = plistlib.loads((candidates[0].parents[1] / 'Info.plist').read_bytes())['CFBundleIdentifier']
+        package_runtime = Path.home() / 'Library/Containers' / bundle / 'Data/Library/Caches/BossLabVerification'
+        package_runtime.mkdir(parents=True, exist_ok=True)
+        benchmark_720 = mode == 'package-benchmark' and '720p' in sys.argv[2:]
+        cmd = [str(candidates[0]), '-windowed', '-ResX=' + ('1920' if mode == 'package-benchmark' and not benchmark_720 else '1280'),
+               '-ResY=' + ('1080' if mode == 'package-benchmark' and not benchmark_720 else '720'),
+               '-UserDir=' + str(package_runtime), '-NoCrashDialog',
+               '-abslog=' + str(package_runtime / (mode + '.log'))]
+        if mode == 'package-test':
+            # Runtime-generated mesh resources require rendering in cooked UE builds.
+            # Keep this independent package test graphical; native tests remain NullRHI.
+            cmd += ['-NoSound', '-unattended', '-ExecCmds=Automation RunTests ' + os.environ.get('BOSSLAB_TEST_FILTER', 'BossLab'),
+                    '-TestExit=Automation Test Queue Empty', '-ReportExportPath=' + str(package_runtime / 'automation')]
+        if mode == 'package-benchmark':
+            cmd += ['-BossLabBenchmark', '-ForceRes']
+            if 'profile' in sys.argv[2:]:
+                cmd += ['-csvCaptureFrames=1200']
+        if mode == 'package-capture':
+            cmd += ['-BossLabCapture', '-UseFixedTimeStep', '-FPS=30', '-NoSound']
+            if 'exchange' in sys.argv[2:]:
+                cmd += ['-BossLabCaptureSeconds=24']
+            if 'outfit' in sys.argv[2:]:
+                cmd += ['-BossLabOutfitStudy', '-BossLabExportOutfit']
+            if 'motion' in sys.argv[2:]:
+                cmd += ['-BossLabMotionStudy']
+            for name, group in [('rolls-cardinal', 0), ('rolls-diagonal', 1)]:
+                if name in sys.argv[2:]:
+                    cmd += ['-BossLabRollStudy=' + str(group)]
+        deadline = 300 if mode in ('package-test', 'package-capture') else 1800
+    elif mode == 'package':
+        env.update(uebp_LogFolder=str(EVIDENCE / 'package-logs'), uebp_FinalLogFolder=str(EVIDENCE / 'package-logs'))
+        cmd = [str(ENGINE / 'Engine/Build/BatchFiles/RunUAT.sh'), 'BuildCookRun',
+               '-project=' + str(PROJECT), '-platform=Mac', '-clientconfig=Development',
+               '-build', '-cook', '-stage', '-pak', '-package', '-unattended', '-nop4',
+               '-nocompileuat', '-nocompileeditor', '-skipbuildeditor', '-nodebuginfo',
+               '-stagingdirectory=' + str(ROOT / 'unreal/Package'), '-ddc=BossLab',
+               '-AdditionalCookerOptions=-NoZen -NoZenAutoLaunch -NoSound',
+               '-UbtArgs=-architecture=arm64 -MaxParallelActions=2 -NoEngineChanges -NoHotReloadFromIDE -UBADisableRemote -UBAStoreCapacityGb=1 -UBARootDir=' + str(CACHE / 'uba')]
+        deadline = 1200
+    elif mode == 'build':
+        dotnet = ENGINE / 'Engine/Binaries/ThirdParty/DotNet/10.0/mac-arm64/dotnet'
+        cmd = [str(dotnet), str(ENGINE / 'Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool.dll'),
+               'BossLabWardenEditor', 'Mac', 'Development', '-Project=' + str(PROJECT),
+               '-architecture=arm64', '-NoHotReloadFromIDE', '-NoUBA', '-MaxParallelActions=' + os.environ.get('BOSSLAB_BUILD_JOBS', '2'),
+               '-UBADisableRemote', '-UBAStoreCapacityGb=1', '-UBARootDir=' + str(CACHE / 'uba'),
+               '-NoEngineChanges', '-Log=' + str(EVIDENCE / 'build.log')]
+        deadline = 1200
+    else:
+        cmd = [str(editor), str(PROJECT), '-ddc=BossLab', '-NoZen', '-NoZenAutoLaunch',
+               '-UserDir=' + str(CACHE / 'unreal-user'), '-NoSplash',
+               '-NoLiveCoding', '-NoAutoSave', '-NoCrashDialog',
+               '-abslog=' + str(EVIDENCE / (mode + '.log'))]
+        if mode == 'editor':
+            cmd += ['-ModelContextProtocolStartServer']
+            if len(sys.argv) > 2:
+                script = (ROOT / sys.argv[2]).resolve()
+                if not script.is_relative_to(ROOT) or script.suffix != '.py':
+                    raise RuntimeError('Editor startup script must be a project-local Python file')
+                cmd += ['-ExecutePythonScript=' + str(script)]
+        elif mode in ('test', 'evaluate'):
+            cmd += ['-NoSound', '-unattended', '-NullRHI', '-ExecCmds=Automation RunTests ' + ('WardenEvaluation' if mode == 'evaluate' else os.environ.get('BOSSLAB_TEST_FILTER', 'BossLab')),
+                    '-TestExit=Automation Test Queue Empty',
+                    '-ReportExportPath=' + str(EVIDENCE / ('evaluation-automation' if mode == 'evaluate' else 'automation'))]
+        else:
+            cmd += ['-game', '-windowed', '-ResX=' + ('1920' if mode == 'benchmark' and '720p' not in sys.argv[2:] else '1280'), '-ResY=' + ('1080' if mode == 'benchmark' and '720p' not in sys.argv[2:] else '720'),
+                    '-DisablePlugins=ModelContextProtocol,EditorToolset,AutomationTestToolset,PythonScriptPlugin']
+        if mode == 'capture':
+            cmd += ['-BossLabCapture', '-UseFixedTimeStep', '-FPS=30', '-NoSound']
+            if 'exchange' in sys.argv[2:]:
+                cmd += ['-BossLabCaptureSeconds=24']
+            if 'outfit' in sys.argv[2:]:
+                cmd += ['-BossLabOutfitStudy', '-BossLabExportOutfit']
+            if 'motion' in sys.argv[2:]:
+                cmd += ['-BossLabMotionStudy']
+            for name, group in [('rolls-cardinal', 0), ('rolls-diagonal', 1)]:
+                if name in sys.argv[2:]:
+                    cmd += ['-BossLabRollStudy=' + str(group)]
+        if mode == 'benchmark':
+            cmd += ['-BossLabBenchmark', '-ForceRes']
+        deadline = 300 if mode in ('test', 'evaluate') else 1800
+    # Installed UE ShaderCompiler.cpp reads these Engine INI values before spawning
+    # local workers. Eight virtual cores minus seven reserved => one worker here.
+    # Launch-scoped only: no engine/user config mutation. Restore via env=default.
+    if mode in ('play', 'benchmark', 'capture') and os.environ.get('BOSSLAB_SHADER_WORKERS', '1') == '1':
+        cmd += ['-ini:Engine:[DevOptions.Shaders]:NumUnusedShaderCompilingThreads=7,[DevOptions.Shaders]:NumUnusedShaderCompilingThreadsDuringGame=7,[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999']
+    outfit = os.environ.get('BOSSLAB_OUTFIT', 'original')
+    if outfit not in ('original', 'v13'):
+        raise RuntimeError('BOSSLAB_OUTFIT must be original or v13')
+    if outfit == 'v13' and mode not in ('build', 'package', 'editor'):
+        cmd += ['-BossLabV13=' + os.environ.get('BOSSLAB_V13_DATA', str(PROJECT.parent / 'Content/BossLab/V13/v13-runtime.json'))]
+    quality = os.environ.get('BOSSLAB_QUALITY', 'balanced')
+    if quality not in ('original', 'balanced', 'performance', 'minimal'):
+        raise RuntimeError('BOSSLAB_QUALITY must be original, balanced, performance or minimal')
+    if quality != 'original' and mode in ('play', 'benchmark', 'capture', 'package-play', 'package-benchmark', 'package-capture'):
+        preset = 'r.ShadowQuality 3,r.Shadow.MaxResolution 1024,r.Shadow.MaxCSMResolution 1024,r.Shadow.CSM.MaxCascades 2,r.Shadow.DistanceScale 0.2'
+        if quality == 'performance':
+            # Launch-local fallback: lower raster/shadow cost, no combat changes.
+            preset = 'r.ShadowQuality 2,r.Shadow.MaxResolution 512,r.Shadow.MaxCSMResolution 512,r.Shadow.CSM.MaxCascades 1,r.Shadow.DistanceScale 0.2,r.ScreenPercentage 75,r.AmbientOcclusionLevels 0,r.PostProcessAAQuality 2,t.MaxFPS 60'
+        if quality == 'minimal':
+            # Diagnostic fallback to separate raster/shadow cost from frame stalls.
+            preset = 'r.ShadowQuality 0,r.ScreenPercentage 50,r.AmbientOcclusionLevels 0,r.PostProcessAAQuality 0,r.BloomQuality 0,t.MaxFPS 60'
+        cmd += ['-ExecCmds=' + preset]
+    if mode in ('capture', 'package-capture'):
+        # Fixed-time capture can outrun asynchronous PSO warm-up. Always create
+        # proxies so rendering waits for their PSOs instead of recording empty world frames.
+        cmd += ['-ini:Engine:[ConsoleVariables]:r.PSOPrecache.ProxyCreationStrategy=0']
+    print('Starting bounded', mode, '— Ctrl-C stops this owned process group.', flush=True)
+    start = time.monotonic()
+    started_epoch = time.time()
+    process = subprocess.Popen(cmd, env=env, cwd=PROJECT.parent, start_new_session=True)
+    (EVIDENCE / (mode + '-active.json')).write_text(json.dumps({
+        'launcher_pid': os.getpid(), 'process_group': process.pid, 'mode': mode}) + '\n')
+    reason = None
+    try:
+        while process.poll() is None:
+            guard()
+            if time.monotonic() - start > deadline:
+                raise RuntimeError('Bounded command time limit reached')
+            time.sleep(2)
+    except (KeyboardInterrupt, RuntimeError) as exc:
+        reason = str(exc) or 'Interrupted (SIGINT)'
+    finally:
+        if process.poll() is None:
+            # Let Unreal close its workers first. Killing the whole group together can
+            # turn an ordinary stop into an unexpected shader-worker crash.
+            os.kill(process.pid, signal.SIGTERM)
+            try:
+                process.wait(timeout=20)
+            except subprocess.TimeoutExpired:
+                os.killpg(process.pid, signal.SIGKILL)
+                process.wait()
+        # Child helpers may outlive a completed parent. Never leave this owned group running.
+        try:
+            os.killpg(process.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+        # Unreal's crash reporter creates a new process group and inherits sockets.
+        # Close only reporters explicitly identifying this exact owned editor PID.
+        if mode != 'build':
+            rows = subprocess.check_output(['ps', '-axo', 'pid=,command='], text=True)
+            for row in rows.splitlines():
+                parts = row.strip().split(None, 1)
+                if len(parts) == 2 and parts[1].startswith('CrashReportClient ') and ('-pid-' + str(process.pid) + '-') in parts[1]:
+                    try:
+                        os.kill(int(parts[0]), signal.SIGTERM)
+                    except ProcessLookupError:
+                        pass
+        (EVIDENCE / (mode + '-active.json')).unlink(missing_ok=True)
+        if package_runtime is not None:
+            shutil.copytree(package_runtime, EVIDENCE / 'packaged-runtime', dirs_exist_ok=True)
+        test_summary = None
+        if mode in ('test', 'evaluate', 'package-test') and reason is None:
+            report_path = (EVIDENCE / 'packaged-runtime/automation/index.json' if mode == 'package-test' else
+                           EVIDENCE / ('evaluation-automation/index.json' if mode == 'evaluate' else 'automation/index.json'))
+            try:
+                result = json.loads(report_path.read_text(encoding='utf-8-sig'))
+                test_summary = {key: result.get(key, 0) for key in ('succeeded', 'succeededWithWarnings', 'failed', 'notRun')}
+                if report_path.stat().st_mtime < started_epoch - 2 or result.get('failed', 0) or result.get('notRun', 0) or not result.get('succeeded', 0):
+                    reason = 'Automation report missing fresh passing results: ' + json.dumps(test_summary)
+            except (OSError, ValueError) as error:
+                reason = 'Automation report could not be verified: ' + str(error)
+        report = {'mode': mode, 'quality': quality, 'tests': test_summary, 'exit_code': process.returncode, 'reason': reason,
+                  'seconds': time.monotonic() - start, 'storage': storage()}
+        (EVIDENCE / (mode + '-process.json')).write_text(json.dumps(report, indent=2) + '\n')
+        print(json.dumps(report, indent=2))
+    return 1 if reason else process.returncode
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main())
+    except (OSError, RuntimeError) as error:
+        print(str(error), file=sys.stderr)
+        sys.exit(1)

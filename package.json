@@ -1,0 +1,13 @@
+{
+  "name": "bosslab-the-warden",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "evaluate": "node scripts/evaluate.mjs",
+    "doctor": "node scripts/doctor.mjs"
+  }
+}

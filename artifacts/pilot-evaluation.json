@@ -1,0 +1,2431 @@
+{
+  "version": "warden-core-1.0.0",
+  "generatedAt": "2026-10-03T17:36:28.731Z",
+  "seeds": [
+    101,
+    203,
+    307,
+    409,
+    503,
+    607
+  ],
+  "split": "held-out; development uses 1–20",
+  "maxTicks": 7200,
+  "switchTick": 2400,
+  "groups": [
+    {
+      "scenario": "early",
+      "controller": "static",
+      "encounters": 6,
+      "bossWins": 6,
+      "playerWins": 0,
+      "timeouts": 0,
+      "meanDamageToPlayer": 120,
+      "meanDamageToBoss": 235
+    },
+    {
+      "scenario": "early",
+      "controller": "adaptive",
+      "encounters": 6,
+      "bossWins": 6,
+      "playerWins": 0,
+      "timeouts": 0,
+      "meanDamageToPlayer": 120,
+      "meanDamageToBoss": 235
+    },
+    {
+      "scenario": "late",
+      "controller": "static",
+      "encounters": 6,
+      "bossWins": 0,
+      "playerWins": 6,
+      "timeouts": 0,
+      "meanDamageToPlayer": 108,
+      "meanDamageToBoss": 420
+    },
+    {
+      "scenario": "late",
+      "controller": "adaptive",
+      "encounters": 6,
+      "bossWins": 2,
+      "playerWins": 4,
+      "timeouts": 0,
+      "meanDamageToPlayer": 112.66666666666667,
+      "meanDamageToBoss": 405
+    },
+    {
+      "scenario": "switch",
+      "controller": "static",
+      "encounters": 6,
+      "bossWins": 6,
+      "playerWins": 0,
+      "timeouts": 0,
+      "meanDamageToPlayer": 120,
+      "meanDamageToBoss": 235
+    },
+    {
+      "scenario": "switch",
+      "controller": "adaptive",
+      "encounters": 6,
+      "bossWins": 6,
+      "playerWins": 0,
+      "timeouts": 0,
+      "meanDamageToPlayer": 120,
+      "meanDamageToBoss": 235
+    }
+  ],
+  "reports": [
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 101,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-early-101",
+      "ticks": 515,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 180,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 240,
+        "attacks": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 6,
+        "meanDecisionMs": 0.05381233333333313,
+        "maxDecisionMs": 0.2569999999999908
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.2235447049828013,
+          "late": 0.23882301844974657,
+          "none": 0.537632276567452
+        },
+        "long": {
+          "early": 0.24456163286100838,
+          "late": 0.24811341215965463,
+          "none": 0.5073249549793369
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "static-early-101:1",
+          "static-early-101:2",
+          "static-early-101:3",
+          "static-early-101:4",
+          "static-early-101:5"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 1
+        }
+      },
+      "scenario": "early",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 101,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-early-101",
+      "ticks": 515,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 180,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 240,
+        "attacks": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 6,
+        "meanDecisionMs": 0.012583333333331836,
+        "maxDecisionMs": 0.015791000000007216
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.2235447049828013,
+          "late": 0.23882301844974657,
+          "none": 0.537632276567452
+        },
+        "long": {
+          "early": 0.24456163286100838,
+          "late": 0.24811341215965463,
+          "none": 0.5073249549793369
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "adaptive-early-101:1",
+          "adaptive-early-101:2",
+          "adaptive-early-101:3",
+          "adaptive-early-101:4",
+          "adaptive-early-101:5"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 1
+        }
+      },
+      "scenario": "early",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 203,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-early-203",
+      "ticks": 633,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 150,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 270,
+        "attacks": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 10,
+        "meanDecisionMs": 0.004604400000000908,
+        "maxDecisionMs": 0.006000000000000227
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.27992012883646084,
+          "late": 0.1456318540225292,
+          "none": 0.5744480171410099
+        },
+        "long": {
+          "early": 0.32347531150462133,
+          "late": 0.11671880330278017,
+          "none": 0.5598058851925986
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "static-early-203:1",
+          "static-early-203:2",
+          "static-early-203:3",
+          "static-early-203:4",
+          "static-early-203:5",
+          "static-early-203:6"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 2
+        }
+      },
+      "scenario": "early",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 203,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-early-203",
+      "ticks": 633,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 150,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 270,
+        "attacks": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 10,
+        "meanDecisionMs": 0.006079199999996376,
+        "maxDecisionMs": 0.015166999999991049
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.27992012883646084,
+          "late": 0.1456318540225292,
+          "none": 0.5744480171410099
+        },
+        "long": {
+          "early": 0.32347531150462133,
+          "late": 0.11671880330278017,
+          "none": 0.5598058851925986
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "adaptive-early-203:1",
+          "adaptive-early-203:2",
+          "adaptive-early-203:3",
+          "adaptive-early-203:4",
+          "adaptive-early-203:5",
+          "adaptive-early-203:6"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 2
+        }
+      },
+      "scenario": "early",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 307,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-early-307",
+      "ticks": 634,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 210,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 210,
+        "attacks": {
+          "cut": 3,
+          "overhead": 4,
+          "thrust": 0
+        },
+        "fallbacks": 0,
+        "decisions": 10,
+        "meanDecisionMs": 0.004412699999997471,
+        "maxDecisionMs": 0.006541999999996051
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.4828076938437185,
+          "late": 0.1456318540225292,
+          "none": 0.3715604521337523
+        },
+        "long": {
+          "early": 0.5433174897249012,
+          "late": 0.11671880330278017,
+          "none": 0.33996370697231865
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 1,
+        "evidence": [
+          "static-early-307:1",
+          "static-early-307:2",
+          "static-early-307:3",
+          "static-early-307:4",
+          "static-early-307:5",
+          "static-early-307:6"
+        ],
+        "contexts": {
+          "cut": 3,
+          "overhead": 3,
+          "thrust": 0
+        }
+      },
+      "scenario": "early",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 307,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-early-307",
+      "ticks": 634,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 210,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 210,
+        "attacks": {
+          "cut": 3,
+          "overhead": 4,
+          "thrust": 0
+        },
+        "fallbacks": 0,
+        "decisions": 10,
+        "meanDecisionMs": 0.004187600000000203,
+        "maxDecisionMs": 0.004541999999986501
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.4828076938437185,
+          "late": 0.1456318540225292,
+          "none": 0.3715604521337523
+        },
+        "long": {
+          "early": 0.5433174897249012,
+          "late": 0.11671880330278017,
+          "none": 0.33996370697231865
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 1,
+        "evidence": [
+          "adaptive-early-307:1",
+          "adaptive-early-307:2",
+          "adaptive-early-307:3",
+          "adaptive-early-307:4",
+          "adaptive-early-307:5",
+          "adaptive-early-307:6"
+        ],
+        "contexts": {
+          "cut": 3,
+          "overhead": 3,
+          "thrust": 0
+        }
+      },
+      "scenario": "early",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 409,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-early-409",
+      "ticks": 597,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 150,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 270,
+        "attacks": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 3
+        },
+        "fallbacks": 0,
+        "decisions": 7,
+        "meanDecisionMs": 0.0049704285714256,
+        "maxDecisionMs": 0.009084000000001424
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.26546671490049595,
+          "late": 0.1456318540225292,
+          "none": 0.5889014310769749
+        },
+        "long": {
+          "early": 0.32027952849361857,
+          "late": 0.11671880330278017,
+          "none": 0.5630016682036012
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "static-early-409:1",
+          "static-early-409:2",
+          "static-early-409:3",
+          "static-early-409:4",
+          "static-early-409:5",
+          "static-early-409:6"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 2
+        }
+      },
+      "scenario": "early",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 409,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-early-409",
+      "ticks": 597,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 150,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 270,
+        "attacks": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 3
+        },
+        "fallbacks": 0,
+        "decisions": 7,
+        "meanDecisionMs": 0.00397028571429457,
+        "maxDecisionMs": 0.004500000000007276
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.26546671490049595,
+          "late": 0.1456318540225292,
+          "none": 0.5889014310769749
+        },
+        "long": {
+          "early": 0.32027952849361857,
+          "late": 0.11671880330278017,
+          "none": 0.5630016682036012
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "adaptive-early-409:1",
+          "adaptive-early-409:2",
+          "adaptive-early-409:3",
+          "adaptive-early-409:4",
+          "adaptive-early-409:5",
+          "adaptive-early-409:6"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 2
+        }
+      },
+      "scenario": "early",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 503,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-early-503",
+      "ticks": 526,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 180,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 240,
+        "attacks": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 1
+        },
+        "fallbacks": 0,
+        "decisions": 7,
+        "meanDecisionMs": 0.004255714285717106,
+        "maxDecisionMs": 0.005791000000016311
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.2235447049828013,
+          "late": 0.23882301844974657,
+          "none": 0.537632276567452
+        },
+        "long": {
+          "early": 0.24456163286100838,
+          "late": 0.24811341215965463,
+          "none": 0.5073249549793369
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "static-early-503:1",
+          "static-early-503:2",
+          "static-early-503:3",
+          "static-early-503:4",
+          "static-early-503:5"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 1
+        }
+      },
+      "scenario": "early",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 503,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-early-503",
+      "ticks": 526,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 180,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 240,
+        "attacks": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 1
+        },
+        "fallbacks": 0,
+        "decisions": 7,
+        "meanDecisionMs": 0.02461285714286175,
+        "maxDecisionMs": 0.1254160000000013
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.2235447049828013,
+          "late": 0.23882301844974657,
+          "none": 0.537632276567452
+        },
+        "long": {
+          "early": 0.24456163286100838,
+          "late": 0.24811341215965463,
+          "none": 0.5073249549793369
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "adaptive-early-503:1",
+          "adaptive-early-503:2",
+          "adaptive-early-503:3",
+          "adaptive-early-503:4",
+          "adaptive-early-503:5"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 1
+        }
+      },
+      "scenario": "early",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 607,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-early-607",
+      "ticks": 568,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 240,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 180,
+        "attacks": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 11,
+        "meanDecisionMs": 0.0058107272727299505,
+        "maxDecisionMs": 0.026250000000004547
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5381695024331816,
+          "late": 0.15394349918893943,
+          "none": 0.30788699837787886
+        },
+        "long": {
+          "early": 0.6108376933856628,
+          "late": 0.1297207688714457,
+          "none": 0.2594415377428914
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 1,
+        "evidence": [
+          "static-early-607:1",
+          "static-early-607:2",
+          "static-early-607:3",
+          "static-early-607:4",
+          "static-early-607:5"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 1,
+          "thrust": 2
+        }
+      },
+      "scenario": "early",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 607,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-early-607",
+      "ticks": 568,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 240,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 180,
+        "attacks": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 11,
+        "meanDecisionMs": 0.006818272727271465,
+        "maxDecisionMs": 0.01779200000001424
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5381695024331816,
+          "late": 0.15394349918893943,
+          "none": 0.30788699837787886
+        },
+        "long": {
+          "early": 0.6108376933856628,
+          "late": 0.1297207688714457,
+          "none": 0.2594415377428914
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 1,
+        "evidence": [
+          "adaptive-early-607:1",
+          "adaptive-early-607:2",
+          "adaptive-early-607:3",
+          "adaptive-early-607:4",
+          "adaptive-early-607:5"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 1,
+          "thrust": 2
+        }
+      },
+      "scenario": "early",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 101,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-late-101",
+      "ticks": 1386,
+      "outcome": "victory",
+      "playerHP": 4,
+      "bossHP": 0,
+      "metrics": {
+        "damageToPlayer": 116,
+        "damageToBoss": 420,
+        "attacks": {
+          "cut": 6,
+          "overhead": 7,
+          "thrust": 3
+        },
+        "fallbacks": 0,
+        "decisions": 18,
+        "meanDecisionMs": 0.003222277777775654,
+        "maxDecisionMs": 0.004124999999987722
+      },
+      "summary": {
+        "n": 15,
+        "effective": 5.272458546746428,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1208830475667118,
+          "late": 0.6181684515948442,
+          "none": 0.260948500838444
+        },
+        "long": {
+          "early": 0.06568161599217508,
+          "late": 0.6143748682506875,
+          "none": 0.31994351575713725
+        },
+        "directions": {
+          "inward": 0.7433250189346583,
+          "outward": 0.12833749053267085,
+          "lateral": 0.12833749053267085
+        },
+        "directionN": 10,
+        "censored": 1,
+        "evidence": [
+          "static-late-101:8",
+          "static-late-101:9",
+          "static-late-101:10",
+          "static-late-101:11",
+          "static-late-101:12",
+          "static-late-101:13",
+          "static-late-101:14",
+          "static-late-101:15"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 7,
+          "thrust": 3
+        }
+      },
+      "scenario": "late",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 101,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-late-101",
+      "ticks": 1189,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 60,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 360,
+        "attacks": {
+          "cut": 5,
+          "overhead": 6,
+          "thrust": 3
+        },
+        "fallbacks": 0,
+        "decisions": 16,
+        "meanDecisionMs": 0.008992249999998592,
+        "maxDecisionMs": 0.08979200000001697
+      },
+      "summary": {
+        "n": 13,
+        "effective": 5.134530854768633,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12293271952048458,
+          "late": 0.5092721437943741,
+          "none": 0.3677951366851412
+        },
+        "long": {
+          "early": 0.07194712004651008,
+          "late": 0.5559705513807977,
+          "none": 0.3720823285726923
+        },
+        "directions": {
+          "inward": 0.7304553782799587,
+          "outward": 0.13477231086002064,
+          "lateral": 0.13477231086002064
+        },
+        "directionN": 8,
+        "censored": 1,
+        "evidence": [
+          "adaptive-late-101:6",
+          "adaptive-late-101:7",
+          "adaptive-late-101:8",
+          "adaptive-late-101:9",
+          "adaptive-late-101:10",
+          "adaptive-late-101:11",
+          "adaptive-late-101:12",
+          "adaptive-late-101:13"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 5,
+          "thrust": 3
+        }
+      },
+      "scenario": "late",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 203,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-late-203",
+      "ticks": 1254,
+      "outcome": "victory",
+      "playerHP": 12,
+      "bossHP": 0,
+      "metrics": {
+        "damageToPlayer": 108,
+        "damageToBoss": 420,
+        "attacks": {
+          "cut": 4,
+          "overhead": 5,
+          "thrust": 5
+        },
+        "fallbacks": 0,
+        "decisions": 18,
+        "meanDecisionMs": 0.0035301666666656376,
+        "maxDecisionMs": 0.005334000000004835
+      },
+      "summary": {
+        "n": 13,
+        "effective": 5.134530854768633,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12293271952048458,
+          "late": 0.44722621666137885,
+          "none": 0.42984106381813664
+        },
+        "long": {
+          "early": 0.07194712004651008,
+          "late": 0.5416848137241019,
+          "none": 0.3863680662293881
+        },
+        "directions": {
+          "inward": 0.7304553782799587,
+          "outward": 0.13477231086002064,
+          "lateral": 0.13477231086002064
+        },
+        "directionN": 8,
+        "censored": 1,
+        "evidence": [
+          "static-late-203:6",
+          "static-late-203:7",
+          "static-late-203:8",
+          "static-late-203:9",
+          "static-late-203:10",
+          "static-late-203:11",
+          "static-late-203:12",
+          "static-late-203:13"
+        ],
+        "contexts": {
+          "cut": 3,
+          "overhead": 5,
+          "thrust": 5
+        }
+      },
+      "scenario": "late",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 203,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-late-203",
+      "ticks": 1258,
+      "outcome": "victory",
+      "playerHP": 12,
+      "bossHP": 0,
+      "metrics": {
+        "damageToPlayer": 108,
+        "damageToBoss": 420,
+        "attacks": {
+          "cut": 4,
+          "overhead": 5,
+          "thrust": 5
+        },
+        "fallbacks": 0,
+        "decisions": 18,
+        "meanDecisionMs": 0.0032732777777779473,
+        "maxDecisionMs": 0.0036249999999995453
+      },
+      "summary": {
+        "n": 13,
+        "effective": 5.134530854768633,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12293271952048458,
+          "late": 0.44722621666137885,
+          "none": 0.42984106381813664
+        },
+        "long": {
+          "early": 0.07194712004651008,
+          "late": 0.5416848137241019,
+          "none": 0.3863680662293881
+        },
+        "directions": {
+          "inward": 0.7304553782799587,
+          "outward": 0.13477231086002064,
+          "lateral": 0.13477231086002064
+        },
+        "directionN": 8,
+        "censored": 1,
+        "evidence": [
+          "adaptive-late-203:6",
+          "adaptive-late-203:7",
+          "adaptive-late-203:8",
+          "adaptive-late-203:9",
+          "adaptive-late-203:10",
+          "adaptive-late-203:11",
+          "adaptive-late-203:12",
+          "adaptive-late-203:13"
+        ],
+        "contexts": {
+          "cut": 3,
+          "overhead": 5,
+          "thrust": 5
+        }
+      },
+      "scenario": "late",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 307,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-late-307",
+      "ticks": 1160,
+      "outcome": "victory",
+      "playerHP": 16,
+      "bossHP": 0,
+      "metrics": {
+        "damageToPlayer": 104,
+        "damageToBoss": 420,
+        "attacks": {
+          "cut": 5,
+          "overhead": 6,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 16,
+        "meanDecisionMs": 0.0031900625000016447,
+        "maxDecisionMs": 0.005832999999995536
+      },
+      "summary": {
+        "n": 13,
+        "effective": 5.134530854768633,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12293271952048458,
+          "late": 0.3998430650439156,
+          "none": 0.4772242154355999
+        },
+        "long": {
+          "early": 0.07194712004651008,
+          "late": 0.4797983055843746,
+          "none": 0.44825457436911537
+        },
+        "directions": {
+          "inward": 0.7210847233908999,
+          "outward": 0.13945763830455005,
+          "lateral": 0.13945763830455005
+        },
+        "directionN": 7,
+        "censored": 0,
+        "evidence": [
+          "static-late-307:6",
+          "static-late-307:7",
+          "static-late-307:8",
+          "static-late-307:9",
+          "static-late-307:10",
+          "static-late-307:11",
+          "static-late-307:12",
+          "static-late-307:13"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 6,
+          "thrust": 2
+        }
+      },
+      "scenario": "late",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 307,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-late-307",
+      "ticks": 1160,
+      "outcome": "victory",
+      "playerHP": 16,
+      "bossHP": 0,
+      "metrics": {
+        "damageToPlayer": 104,
+        "damageToBoss": 420,
+        "attacks": {
+          "cut": 5,
+          "overhead": 6,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 16,
+        "meanDecisionMs": 0.0031664375000044487,
+        "maxDecisionMs": 0.003542000000010148
+      },
+      "summary": {
+        "n": 13,
+        "effective": 5.134530854768633,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12293271952048458,
+          "late": 0.42197095455760286,
+          "none": 0.4550963259219126
+        },
+        "long": {
+          "early": 0.07194712004651008,
+          "late": 0.4819567191857699,
+          "none": 0.44609616076772013
+        },
+        "directions": {
+          "inward": 0.7210847233908999,
+          "outward": 0.13945763830455005,
+          "lateral": 0.13945763830455005
+        },
+        "directionN": 7,
+        "censored": 0,
+        "evidence": [
+          "adaptive-late-307:6",
+          "adaptive-late-307:7",
+          "adaptive-late-307:8",
+          "adaptive-late-307:9",
+          "adaptive-late-307:10",
+          "adaptive-late-307:11",
+          "adaptive-late-307:12",
+          "adaptive-late-307:13"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 6,
+          "thrust": 2
+        }
+      },
+      "scenario": "late",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 409,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-late-409",
+      "ticks": 1235,
+      "outcome": "victory",
+      "playerHP": 12,
+      "bossHP": 0,
+      "metrics": {
+        "damageToPlayer": 108,
+        "damageToBoss": 420,
+        "attacks": {
+          "cut": 4,
+          "overhead": 6,
+          "thrust": 4
+        },
+        "fallbacks": 0,
+        "decisions": 16,
+        "meanDecisionMs": 0.00309118750000259,
+        "maxDecisionMs": 0.004291999999992413
+      },
+      "summary": {
+        "n": 14,
+        "effective": 5.210315300910278,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1217980020680972,
+          "late": 0.4098358863435886,
+          "none": 0.4683661115883143
+        },
+        "long": {
+          "early": 0.06862417545933659,
+          "late": 0.5040270947198658,
+          "none": 0.42734872982079747
+        },
+        "directions": {
+          "inward": 0.7304553782799587,
+          "outward": 0.13477231086002064,
+          "lateral": 0.13477231086002064
+        },
+        "directionN": 8,
+        "censored": 0,
+        "evidence": [
+          "static-late-409:7",
+          "static-late-409:8",
+          "static-late-409:9",
+          "static-late-409:10",
+          "static-late-409:11",
+          "static-late-409:12",
+          "static-late-409:13",
+          "static-late-409:14"
+        ],
+        "contexts": {
+          "cut": 4,
+          "overhead": 6,
+          "thrust": 4
+        }
+      },
+      "scenario": "late",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 409,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-late-409",
+      "ticks": 1235,
+      "outcome": "victory",
+      "playerHP": 12,
+      "bossHP": 0,
+      "metrics": {
+        "damageToPlayer": 108,
+        "damageToBoss": 420,
+        "attacks": {
+          "cut": 5,
+          "overhead": 5,
+          "thrust": 4
+        },
+        "fallbacks": 0,
+        "decisions": 18,
+        "meanDecisionMs": 0.003122722222218815,
+        "maxDecisionMs": 0.003500000000002501
+      },
+      "summary": {
+        "n": 14,
+        "effective": 5.210315300910279,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12179800206809717,
+          "late": 0.468501131117635,
+          "none": 0.4097008668142678
+        },
+        "long": {
+          "early": 0.06862417545933659,
+          "late": 0.5117243922207965,
+          "none": 0.41965143231986685
+        },
+        "directions": {
+          "inward": 0.7304553782799587,
+          "outward": 0.13477231086002064,
+          "lateral": 0.13477231086002064
+        },
+        "directionN": 8,
+        "censored": 0,
+        "evidence": [
+          "adaptive-late-409:7",
+          "adaptive-late-409:8",
+          "adaptive-late-409:9",
+          "adaptive-late-409:10",
+          "adaptive-late-409:11",
+          "adaptive-late-409:12",
+          "adaptive-late-409:13",
+          "adaptive-late-409:14"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 5,
+          "thrust": 4
+        }
+      },
+      "scenario": "late",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 503,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-late-503",
+      "ticks": 1319,
+      "outcome": "victory",
+      "playerHP": 24,
+      "bossHP": 0,
+      "metrics": {
+        "damageToPlayer": 96,
+        "damageToBoss": 420,
+        "attacks": {
+          "cut": 5,
+          "overhead": 6,
+          "thrust": 3
+        },
+        "fallbacks": 0,
+        "decisions": 20,
+        "meanDecisionMs": 0.0030436999999992054,
+        "maxDecisionMs": 0.003500000000002501
+      },
+      "summary": {
+        "n": 14,
+        "effective": 5.2103153009102785,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1217980020680972,
+          "late": 0.5340275285031622,
+          "none": 0.3441744694287408
+        },
+        "long": {
+          "early": 0.06862417545933659,
+          "late": 0.5814062813744796,
+          "none": 0.3499695431661837
+        },
+        "directions": {
+          "inward": 0.7376820690592949,
+          "outward": 0.13115896547035255,
+          "lateral": 0.13115896547035255
+        },
+        "directionN": 9,
+        "censored": 0,
+        "evidence": [
+          "static-late-503:7",
+          "static-late-503:8",
+          "static-late-503:9",
+          "static-late-503:10",
+          "static-late-503:11",
+          "static-late-503:12",
+          "static-late-503:13",
+          "static-late-503:14"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 6,
+          "thrust": 3
+        }
+      },
+      "scenario": "late",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 503,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-late-503",
+      "ticks": 1368,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 30,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 390,
+        "attacks": {
+          "cut": 7,
+          "overhead": 4,
+          "thrust": 5
+        },
+        "fallbacks": 0,
+        "decisions": 22,
+        "meanDecisionMs": 0.0031458181818183302,
+        "maxDecisionMs": 0.0038749999999936335
+      },
+      "summary": {
+        "n": 15,
+        "effective": 5.272458546746429,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1208830475667118,
+          "late": 0.5870927110513154,
+          "none": 0.29202424138197286
+        },
+        "long": {
+          "early": 0.06568161599217509,
+          "late": 0.6091781722395736,
+          "none": 0.32514021176825125
+        },
+        "directions": {
+          "inward": 0.7433250189346583,
+          "outward": 0.12833749053267085,
+          "lateral": 0.12833749053267085
+        },
+        "directionN": 10,
+        "censored": 1,
+        "evidence": [
+          "adaptive-late-503:8",
+          "adaptive-late-503:9",
+          "adaptive-late-503:10",
+          "adaptive-late-503:11",
+          "adaptive-late-503:12",
+          "adaptive-late-503:13",
+          "adaptive-late-503:14",
+          "adaptive-late-503:15"
+        ],
+        "contexts": {
+          "cut": 6,
+          "overhead": 4,
+          "thrust": 5
+        }
+      },
+      "scenario": "late",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 607,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-late-607",
+      "ticks": 1170,
+      "outcome": "victory",
+      "playerHP": 4,
+      "bossHP": 0,
+      "metrics": {
+        "damageToPlayer": 116,
+        "damageToBoss": 420,
+        "attacks": {
+          "cut": 5,
+          "overhead": 4,
+          "thrust": 4
+        },
+        "fallbacks": 0,
+        "decisions": 18,
+        "meanDecisionMs": 0.0028749444444460754,
+        "maxDecisionMs": 0.003333999999995285
+      },
+      "summary": {
+        "n": 13,
+        "effective": 5.134530854768633,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12293271952048458,
+          "late": 0.3671669482728766,
+          "none": 0.5099003322066388
+        },
+        "long": {
+          "early": 0.07194712004651008,
+          "late": 0.4709539851164416,
+          "none": 0.45709889483704824
+        },
+        "directions": {
+          "inward": 0.7210847233908999,
+          "outward": 0.13945763830455005,
+          "lateral": 0.13945763830455005
+        },
+        "directionN": 7,
+        "censored": 0,
+        "evidence": [
+          "static-late-607:6",
+          "static-late-607:7",
+          "static-late-607:8",
+          "static-late-607:9",
+          "static-late-607:10",
+          "static-late-607:11",
+          "static-late-607:12",
+          "static-late-607:13"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 4,
+          "thrust": 4
+        }
+      },
+      "scenario": "late",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 607,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-late-607",
+      "ticks": 1170,
+      "outcome": "victory",
+      "playerHP": 4,
+      "bossHP": 0,
+      "metrics": {
+        "damageToPlayer": 116,
+        "damageToBoss": 420,
+        "attacks": {
+          "cut": 5,
+          "overhead": 4,
+          "thrust": 4
+        },
+        "fallbacks": 0,
+        "decisions": 18,
+        "meanDecisionMs": 0.0029769444444427665,
+        "maxDecisionMs": 0.003417000000013104
+      },
+      "summary": {
+        "n": 13,
+        "effective": 5.134530854768633,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12293271952048458,
+          "late": 0.3892948377865638,
+          "none": 0.48777244269295156
+        },
+        "long": {
+          "early": 0.07194712004651008,
+          "late": 0.4731123987178369,
+          "none": 0.45494048123565295
+        },
+        "directions": {
+          "inward": 0.7210847233908999,
+          "outward": 0.13945763830455005,
+          "lateral": 0.13945763830455005
+        },
+        "directionN": 7,
+        "censored": 0,
+        "evidence": [
+          "adaptive-late-607:6",
+          "adaptive-late-607:7",
+          "adaptive-late-607:8",
+          "adaptive-late-607:9",
+          "adaptive-late-607:10",
+          "adaptive-late-607:11",
+          "adaptive-late-607:12",
+          "adaptive-late-607:13"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 4,
+          "thrust": 4
+        }
+      },
+      "scenario": "late",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 101,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-switch-101",
+      "ticks": 515,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 180,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 240,
+        "attacks": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 6,
+        "meanDecisionMs": 0.0030696666666661563,
+        "maxDecisionMs": 0.003208999999998241
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.2235447049828013,
+          "late": 0.23882301844974657,
+          "none": 0.537632276567452
+        },
+        "long": {
+          "early": 0.24456163286100838,
+          "late": 0.24811341215965463,
+          "none": 0.5073249549793369
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "static-switch-101:1",
+          "static-switch-101:2",
+          "static-switch-101:3",
+          "static-switch-101:4",
+          "static-switch-101:5"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 1
+        }
+      },
+      "scenario": "switch",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 101,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-switch-101",
+      "ticks": 515,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 180,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 240,
+        "attacks": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 6,
+        "meanDecisionMs": 0.004249666666661748,
+        "maxDecisionMs": 0.007499999999993179
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.2235447049828013,
+          "late": 0.23882301844974657,
+          "none": 0.537632276567452
+        },
+        "long": {
+          "early": 0.24456163286100838,
+          "late": 0.24811341215965463,
+          "none": 0.5073249549793369
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "adaptive-switch-101:1",
+          "adaptive-switch-101:2",
+          "adaptive-switch-101:3",
+          "adaptive-switch-101:4",
+          "adaptive-switch-101:5"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 1
+        }
+      },
+      "scenario": "switch",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 203,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-switch-203",
+      "ticks": 633,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 150,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 270,
+        "attacks": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 10,
+        "meanDecisionMs": 0.003141899999999964,
+        "maxDecisionMs": 0.004041999999998325
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.27992012883646084,
+          "late": 0.1456318540225292,
+          "none": 0.5744480171410099
+        },
+        "long": {
+          "early": 0.32347531150462133,
+          "late": 0.11671880330278017,
+          "none": 0.5598058851925986
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "static-switch-203:1",
+          "static-switch-203:2",
+          "static-switch-203:3",
+          "static-switch-203:4",
+          "static-switch-203:5",
+          "static-switch-203:6"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 2
+        }
+      },
+      "scenario": "switch",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 203,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-switch-203",
+      "ticks": 633,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 150,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 270,
+        "attacks": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 10,
+        "meanDecisionMs": 0.0030623999999988883,
+        "maxDecisionMs": 0.003249999999979991
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.27992012883646084,
+          "late": 0.1456318540225292,
+          "none": 0.5744480171410099
+        },
+        "long": {
+          "early": 0.32347531150462133,
+          "late": 0.11671880330278017,
+          "none": 0.5598058851925986
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "adaptive-switch-203:1",
+          "adaptive-switch-203:2",
+          "adaptive-switch-203:3",
+          "adaptive-switch-203:4",
+          "adaptive-switch-203:5",
+          "adaptive-switch-203:6"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 2
+        }
+      },
+      "scenario": "switch",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 307,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-switch-307",
+      "ticks": 634,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 210,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 210,
+        "attacks": {
+          "cut": 3,
+          "overhead": 4,
+          "thrust": 0
+        },
+        "fallbacks": 0,
+        "decisions": 10,
+        "meanDecisionMs": 0.003008400000004485,
+        "maxDecisionMs": 0.0036249999999995453
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.4828076938437185,
+          "late": 0.1456318540225292,
+          "none": 0.3715604521337523
+        },
+        "long": {
+          "early": 0.5433174897249012,
+          "late": 0.11671880330278017,
+          "none": 0.33996370697231865
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 1,
+        "evidence": [
+          "static-switch-307:1",
+          "static-switch-307:2",
+          "static-switch-307:3",
+          "static-switch-307:4",
+          "static-switch-307:5",
+          "static-switch-307:6"
+        ],
+        "contexts": {
+          "cut": 3,
+          "overhead": 3,
+          "thrust": 0
+        }
+      },
+      "scenario": "switch",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 307,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-switch-307",
+      "ticks": 634,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 210,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 210,
+        "attacks": {
+          "cut": 3,
+          "overhead": 4,
+          "thrust": 0
+        },
+        "fallbacks": 0,
+        "decisions": 10,
+        "meanDecisionMs": 0.0030498999999991837,
+        "maxDecisionMs": 0.003291999999987638
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.4828076938437185,
+          "late": 0.1456318540225292,
+          "none": 0.3715604521337523
+        },
+        "long": {
+          "early": 0.5433174897249012,
+          "late": 0.11671880330278017,
+          "none": 0.33996370697231865
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 1,
+        "evidence": [
+          "adaptive-switch-307:1",
+          "adaptive-switch-307:2",
+          "adaptive-switch-307:3",
+          "adaptive-switch-307:4",
+          "adaptive-switch-307:5",
+          "adaptive-switch-307:6"
+        ],
+        "contexts": {
+          "cut": 3,
+          "overhead": 3,
+          "thrust": 0
+        }
+      },
+      "scenario": "switch",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 409,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-switch-409",
+      "ticks": 597,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 150,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 270,
+        "attacks": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 3
+        },
+        "fallbacks": 0,
+        "decisions": 7,
+        "meanDecisionMs": 0.0029405714285774464,
+        "maxDecisionMs": 0.003375000000005457
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.26546671490049595,
+          "late": 0.1456318540225292,
+          "none": 0.5889014310769749
+        },
+        "long": {
+          "early": 0.32027952849361857,
+          "late": 0.11671880330278017,
+          "none": 0.5630016682036012
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "static-switch-409:1",
+          "static-switch-409:2",
+          "static-switch-409:3",
+          "static-switch-409:4",
+          "static-switch-409:5",
+          "static-switch-409:6"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 2
+        }
+      },
+      "scenario": "switch",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 409,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-switch-409",
+      "ticks": 597,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 150,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 270,
+        "attacks": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 3
+        },
+        "fallbacks": 0,
+        "decisions": 7,
+        "meanDecisionMs": 0.003023857142847776,
+        "maxDecisionMs": 0.0034999999999740794
+      },
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.26546671490049595,
+          "late": 0.1456318540225292,
+          "none": 0.5889014310769749
+        },
+        "long": {
+          "early": 0.32027952849361857,
+          "late": 0.11671880330278017,
+          "none": 0.5630016682036012
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "adaptive-switch-409:1",
+          "adaptive-switch-409:2",
+          "adaptive-switch-409:3",
+          "adaptive-switch-409:4",
+          "adaptive-switch-409:5",
+          "adaptive-switch-409:6"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 2
+        }
+      },
+      "scenario": "switch",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 503,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-switch-503",
+      "ticks": 526,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 180,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 240,
+        "attacks": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 1
+        },
+        "fallbacks": 0,
+        "decisions": 7,
+        "meanDecisionMs": 0.0031430000000065256,
+        "maxDecisionMs": 0.0036670000000071923
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.2235447049828013,
+          "late": 0.23882301844974657,
+          "none": 0.537632276567452
+        },
+        "long": {
+          "early": 0.24456163286100838,
+          "late": 0.24811341215965463,
+          "none": 0.5073249549793369
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "static-switch-503:1",
+          "static-switch-503:2",
+          "static-switch-503:3",
+          "static-switch-503:4",
+          "static-switch-503:5"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 1
+        }
+      },
+      "scenario": "switch",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 503,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-switch-503",
+      "ticks": 526,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 180,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 240,
+        "attacks": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 1
+        },
+        "fallbacks": 0,
+        "decisions": 7,
+        "meanDecisionMs": 0.0031488571428610612,
+        "maxDecisionMs": 0.004415999999991982
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.2235447049828013,
+          "late": 0.23882301844974657,
+          "none": 0.537632276567452
+        },
+        "long": {
+          "early": 0.24456163286100838,
+          "late": 0.24811341215965463,
+          "none": 0.5073249549793369
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 1,
+        "evidence": [
+          "adaptive-switch-503:1",
+          "adaptive-switch-503:2",
+          "adaptive-switch-503:3",
+          "adaptive-switch-503:4",
+          "adaptive-switch-503:5"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 3,
+          "thrust": 1
+        }
+      },
+      "scenario": "switch",
+      "offset": 1
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 607,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "static-switch-607",
+      "ticks": 568,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 240,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 180,
+        "attacks": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 11,
+        "meanDecisionMs": 0.0029241818181731105,
+        "maxDecisionMs": 0.003166999999990594
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5381695024331816,
+          "late": 0.15394349918893943,
+          "none": 0.30788699837787886
+        },
+        "long": {
+          "early": 0.6108376933856628,
+          "late": 0.1297207688714457,
+          "none": 0.2594415377428914
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 1,
+        "evidence": [
+          "static-switch-607:1",
+          "static-switch-607:2",
+          "static-switch-607:3",
+          "static-switch-607:4",
+          "static-switch-607:5"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 1,
+          "thrust": 2
+        }
+      },
+      "scenario": "switch",
+      "offset": 0
+    },
+    {
+      "version": "warden-core-1.0.0",
+      "config": {
+        "seed": 607,
+        "controller": "adaptive",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      },
+      "encounterId": "adaptive-switch-607",
+      "ticks": 568,
+      "outcome": "defeat",
+      "playerHP": 0,
+      "bossHP": 240,
+      "metrics": {
+        "damageToPlayer": 120,
+        "damageToBoss": 180,
+        "attacks": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 2
+        },
+        "fallbacks": 0,
+        "decisions": 11,
+        "meanDecisionMs": 0.009253727272729086,
+        "maxDecisionMs": 0.07179099999999039
+      },
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5381695024331816,
+          "late": 0.15394349918893943,
+          "none": 0.30788699837787886
+        },
+        "long": {
+          "early": 0.6108376933856628,
+          "late": 0.1297207688714457,
+          "none": 0.2594415377428914
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 1,
+        "evidence": [
+          "adaptive-switch-607:1",
+          "adaptive-switch-607:2",
+          "adaptive-switch-607:3",
+          "adaptive-switch-607:4",
+          "adaptive-switch-607:5"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 1,
+          "thrust": 2
+        }
+      },
+      "scenario": "switch",
+      "offset": 0
+    }
+  ]
+}

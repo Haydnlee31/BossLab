@@ -1,0 +1,21 @@
+{
+  "FileVersion": 3,
+  "EngineAssociation": "5.8",
+  "Category": "Games",
+  "DisableEnginePluginsByDefault": true,
+  "Description": "BossLab: The Warden — original third-person adaptive duel",
+  "Modules": [{"Name": "BossLabWarden", "Type": "Runtime", "LoadingPhase": "Default"}],
+  "Plugins": [
+    {"Name": "ACLPlugin", "Enabled": true},
+    {"Name": "AnimationData", "Enabled": true, "TargetAllowList": ["Editor"]},
+    {"Name": "ControlRig", "Enabled": true},
+    {"Name": "ModelContextProtocol", "Enabled": true, "TargetAllowList": ["Editor"]},
+    {"Name": "EditorToolset", "Enabled": true, "TargetAllowList": ["Editor"]},
+    {"Name": "AutomationTestToolset", "Enabled": true, "TargetAllowList": ["Editor"]},
+    {"Name": "PythonScriptPlugin", "Enabled": true, "TargetAllowList": ["Editor"]},
+    {"Name": "ContentBrowserAssetDataSource", "Enabled": true, "TargetAllowList": ["Editor"]},
+    {"Name": "ContentBrowserClassDataSource", "Enabled": true, "TargetAllowList": ["Editor"]},
+    {"Name": "UdpMessaging", "Enabled": false},
+    {"Name": "TcpMessaging", "Enabled": false}
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "scope": "Final frozen focal03 REJECTED; no rig/fullbody acceptance",
+  "time_unix": 1794159287.057203,
+  "baseline_count": 34,
+  "baseline_mismatches": [],
+  "manifest_entries": 12,
+  "manifest_mismatches": [],
+  "images_inspected": {
+    "artifacts/art/regent-focal-2026-11-09/attempt-03/bust-back.png": "0587fb48ac3290785b09e1ac5f83298a1b23ebd44df9c5e09fa945b417305595",
+    "artifacts/art/regent-focal-2026-11-09/attempt-03/head-threequarter.png": "97926098e864af4e7df0fbe06fb57b2ae5773773cc47374f183826e7c7048393",
+    "artifacts/art/regent-focal-2026-11-09/attempt-03/head-side.png": "d86db15571261f650cd14bd69fca956c650fd0575ffe4e5a0efcf0a4bd25dba8",
+    "artifacts/art/regent-focal-2026-11-09/attempt-03/bust-front.png": "fbfac212623707e04d97a4c332fa777a3a6a47e59ac98a38d399ce2b0b267d77",
+    "artifacts/art/regent-focal-2026-11-09/attempt-03/head-front.png": "22993ba201736d9bd85e983add904aa921ed0d6e89d3c16aa3f4b31497ddd4cb"
+  },
+  "free_bytes": 26641620992
+}

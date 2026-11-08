@@ -1,0 +1,32 @@
+{
+  "mode": "2",
+  "start": 1794158020.445804,
+  "before": {
+    "free_bytes": 26717941760,
+    "project_bytes": 2740830208
+  },
+  "command": [
+    "/Users/haydn/Documents/BossLab/unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender",
+    "-b",
+    "-t",
+    "2",
+    "--factory-startup",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "/Users/haydn/Documents/BossLab/unreal/art-studio/source/funeral_regent_cage.py",
+    "--",
+    "2"
+  ],
+  "child_pid": 80251,
+  "child_process_group": 80251,
+  "signal_attempts": [],
+  "exit_code": 0,
+  "reason": null,
+  "seconds": 37.79543089866638,
+  "after": {
+    "free_bytes": 26711044096,
+    "project_bytes": 2741772288
+  },
+  "log": "artifacts/art/regent-cage-2026-11-09/2-1794158020.log"
+}

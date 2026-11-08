@@ -1,0 +1,151 @@
+{
+  "scope": "Independent frozen V8 preservation and evidence check; not artistic acceptance or runtime testing",
+  "time_unix": 1794021727.4133089,
+  "v7_sha256": {
+    "checked": 125,
+    "mismatches": []
+  },
+  "game_sha256": {
+    "checked": 28,
+    "mismatches": []
+  },
+  "delivery_files": [
+    {
+      "path": "unreal/art-studio/source/last_vigil_v8.py",
+      "sha256": "8251f9acff26b39d0859eb0960dadea13f29d63c78ab03b35b6f9cffb479275f",
+      "matches": true
+    },
+    {
+      "path": "scripts/bosslab-art-v8",
+      "sha256": "65d2c25ee61dad2329400e22c292e6090695a369b332fd6147a062563e0f391b",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v8-2026-11-07/last-vigil-v8.blend",
+      "sha256": "2491ed67d9c248214b2a9b8df5f9712fe8ade8f202da4161531d896a1ff6ba23",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/hero.png",
+      "sha256": "32bab653b2663b2cbca2f7711ba2e2e0527e065102d8053ec7e2d8d952edc39c",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/front.png",
+      "sha256": "be6f93eff8c5ed7685035564c68f57014b2fe840bc4c7066c76df1ea68ad49b6",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/side.png",
+      "sha256": "61e9b4d8bdf857d5fa304a3ecaec73eeb395c6e9731b92b3504e9218be6d5ea4",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/back.png",
+      "sha256": "a59c8d48ec0b16ec3cb077d8c6834ec5adf2f7fd9e1243efd15a9b946afa3601",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/clay_hero.png",
+      "sha256": "c12d8e3fbc791d2d7f1862a50d5b0e99fe25c9e3b68889128a05c0c12e93075f",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/clay_front.png",
+      "sha256": "a5546c19e614b1ba8a8bf700afe1d6b377421fec6b3602f54d6d35a4ff25c7f8",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/clay_side.png",
+      "sha256": "c4f843779297be0f7531f7ff7362ff99e3348df35756d06bf2e58cf600751f74",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/torso.png",
+      "sha256": "a1651fef5671708cc48c5bdd653818cd552bac94ea86a1799dcb59c526ca2a96",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/shoulder.png",
+      "sha256": "2d421154dd3705a740cbfa2de9d8768c3d087f4f177e5cbc8c30c5ecd4de73fa",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/hero-detail.png",
+      "sha256": "e4d830c4f18d154973c7e1b84c743dcb26ae288ae0250b9af65a7223d52cd738",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/head.png",
+      "sha256": "99e2be453800197c2a424d7a3e42d67d705565aece5fc1223f489a4b5f126728",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/headside.png",
+      "sha256": "0d63b5ed8b68a56763035112252c13f7f27564ed53da5ebb5c40bdf7407a2b46",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/baseline-v7/clay_hero.png",
+      "sha256": "c7288ba229639b39378a306b2463f2c223fe346f58adb2c74f55bb0a75109fd9",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/baseline-v7/clay_front.png",
+      "sha256": "fabe512dd807a4bd9c379293573483c7e1077c464deff77b046659ff9e73cbbd",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/baseline-v7/clay_side.png",
+      "sha256": "c6173cf4d3b86a42afd89e786358ff194ce082f105783e70df370265d22e0022",
+      "matches": true
+    }
+  ],
+  "protected_state_equal": true,
+  "distinct_camera_matrices": 6,
+  "protected_state_evidence_sha256": "ab36a757e0a8405243ea8f1274a8391aee95a6d3a00f57a6f963511a94fbdf71",
+  "geometry_producer_report": {
+    "kind": "Editable studio geometry validation, not a game-performance or artistic-quality test",
+    "renderable_objects": 354,
+    "evaluated_vertices": 1064128,
+    "evaluated_triangles": 1933572,
+    "finite_vertices": true,
+    "packed_authored_images": 25,
+    "bounds_m": [
+      [
+        -0.433866411447525,
+        -0.2727108299732208,
+        0.01000000536441803
+      ],
+      [
+        0.9089999794960022,
+        0.46217280626296997,
+        1.8742388486862183
+      ]
+    ],
+    "production_body_rig": false,
+    "runtime_lods": false,
+    "blender": "4.5.15 LTS"
+  },
+  "static_cape_producer_report": {
+    "kind": "Static sampled cape-vs-body back-envelope check, not simulated cloth or motion validation",
+    "evaluated_cape_vertices_with_body_ray_hit": 24144,
+    "min_y_clearance_m": 0.03722876310348511,
+    "vertices_behind_body_surface": 24144,
+    "vertices_in_front_of_body_back_surface": 0,
+    "excluded": "Top attachment zone z>1.515m; mantle including explicitly named V5 sewn horseshoe wool yoke and all curves; cape lies beneath this outer garment; checks vertex rays, not arbitrary triangle intersections",
+    "passes_sampled_static_clearance": true,
+    "diagnostic_include_outer_yoke": false,
+    "negative_counts_by_hit_object": {},
+    "worst_samples": []
+  },
+  "storage": {
+    "unreal_allocated_bytes": 2887725056,
+    "free_bytes": 29708701696,
+    "unreal_limit_bytes": 10000000000,
+    "free_reserve_bytes": 25769803776
+  },
+  "art_verdict": "needs work",
+  "new_gameplay_tests_run": false,
+  "boss_AI_gate": "closed"
+}

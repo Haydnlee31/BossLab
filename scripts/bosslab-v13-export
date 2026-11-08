@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+"""Bounded, foreground-only character studio. Keeps the existing Unreal build intact."""
+import os,signal,subprocess,sys,time,json,shutil
+from pathlib import Path
+R=Path(__file__).resolve().parents[1]; studio=R/'unreal/art-studio'; evidence=R/'artifacts/art/v13-unreal-test-2026-11-08'
+mode='export'
+evidence.mkdir(parents=True,exist_ok=True)
+def storage():
+ return {'free_bytes':shutil.disk_usage(R).free,'project_bytes':int(subprocess.check_output(['du','-sk',str(R/'unreal')],text=True).split()[0])*1024}
+def guard():
+ d=storage()
+ if d['free_bytes']<24*1024**3 or d['project_bytes']>=10_000_000_000:raise RuntimeError('Storage guard: '+str(d))
+ return d
+before=guard()
+if os.environ.get('BOSSLAB_ART_DEVICE')=='METAL' and before['free_bytes']<24*1024**3+3_500_000_000:raise RuntimeError('Metal rendering requires 3.5GB of extra headroom above the reserve')
+exe=studio/'tools/Blender.app/Contents/MacOS/Blender';assert exe.is_file()
+env=os.environ.copy();env.update(BLENDER_USER_CONFIG=str(studio/'user/config'),BLENDER_USER_SCRIPTS=str(studio/'user/scripts'),BLENDER_USER_DATAFILES=str(studio/'user/datafiles'),TMPDIR=str(studio/'tmp'))
+(studio/'tmp').mkdir(exist_ok=True)
+cmd=[str(exe),'-b','-t',('2' if mode=='support' else '4'),'--factory-startup','--python-exit-code','1','--python',str(studio/'integration-test-2026-11-08/export_runtime.py'),'--',mode]+sys.argv[2:]
+started=time.time();report={'mode':mode,'start':started,'before':before,'command':cmd};reason=None
+log=evidence/(mode+'-'+str(int(started))+'.log')
+shutil.copy2(cmd[cmd.index('--python')+1],evidence/(mode+'-'+str(int(started))+'.py'))
+with log.open('w') as f:
+ p=subprocess.Popen(cmd,env=env,cwd=R,stdout=f,stderr=subprocess.STDOUT,start_new_session=True)
+ report.update(child_pid=p.pid, child_process_group=p.pid, signal_attempts=[])
+ try:
+  while p.poll() is None:
+   time.sleep(2)
+   guard()
+   if time.time()-started>1200:raise RuntimeError('20-minute deadline')
+ except (BaseException,) as e:
+  reason=str(e)
+  for sig,timeout in [(signal.SIGTERM,10),(signal.SIGKILL,3)]:
+   if p.poll() is not None:break
+   attempt={'signal':sig.name,'pid':p.pid}
+   try:
+    os.killpg(p.pid,sig);attempt['sent']=True
+   except OSError as signal_error:
+    attempt.update(sent=False,error=repr(signal_error));report['signal_attempts'].append(attempt)
+    # Do not bypass denied process permissions or misreport termination.
+    break
+   report['signal_attempts'].append(attempt)
+   try:p.wait(timeout=timeout)
+   except subprocess.TimeoutExpired:continue
+  report['child_still_running_at_receipt']=p.poll() is None
+  if report['child_still_running_at_receipt']:
+   report['required_followup']='Explicitly inspect this owned PID/process group and stop it through permitted tools; receipt does not assert termination.'
+ # Catch a reserve crossing between the last periodic poll and child exit.
+ try:after=guard()
+ except RuntimeError as e:
+  after=storage();reason=reason or ('Post-exit reserve check: '+str(e))
+ report.update(exit_code=p.poll(),reason=reason,seconds=time.time()-started,after=after,log=str(log.relative_to(R)))
+(evidence/(mode+'-process.json')).write_text(json.dumps(report,indent=2)+'\n')
+print(json.dumps(report,indent=2));sys.exit(1 if reason or p.returncode else 0)

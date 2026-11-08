@@ -1,0 +1,30 @@
+{
+  "verdict": "Local overlapping-plate construction improved; global artistic target remains unmet. Static visual review only.",
+  "reviewed_images": [
+    {
+      "path": "artifacts/art/last-vigil-v9-armor/clay_shoulder.png",
+      "sha256": "a99a9f72e86f70f6482f0e3de3af415864fb40e61c6f8eb978c60c73454a60ee"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9-armor/clay_shoulder_side.png",
+      "sha256": "3c0038ea452031f64cd83064d1f0f64897d5e29bb1a47ba3f7260ed755163ccf"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9-armor/hero.png",
+      "sha256": "afef10568e9af5e05548f1fb0a319672ea12f66c34b2639ec90acfb5d787dd2d"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9-armor/shoulder-detail.png",
+      "sha256": "6e9bd2e78b612874dae43fbdd8e10624e0289afeee8a211463b3d80822d5bb85"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9-armor/baseline-v8/clay_shoulder.png",
+      "sha256": "337e1540566e5e8cede9d319ba119b9bff08c7bf81f16e40b1df0d1a67a4435c"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v9-armor/baseline-v8/clay_shoulder_side.png",
+      "sha256": "a9cfc2939d6dde846ed7a98bdc673af5147590fc311ed362a4e64723cf2c7ace"
+    }
+  ],
+  "scope": "Four current outputs and two matched V8 clay baselines independently viewed. No claim of reviewing all outputs or motion."
+}

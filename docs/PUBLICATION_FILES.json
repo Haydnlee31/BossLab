@@ -1,0 +1,380 @@
+{
+  "purpose": "Explicit curated project-owned ignored assets for Git handoff; not entire workstation",
+  "files": [
+    {
+      "path": "artifacts/adaptive-switch-events.json",
+      "bytes": 187637,
+      "sha256": "ca151dbb07998d8e326a4686ccdbdde1ac00ff4c0a773d75d9f791aeaf62cb50"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-construction-2026-11-08/construction-corrected.png",
+      "bytes": 2685696,
+      "sha256": "bfb851fc3571bfe5ac816b8fd0fb3388e302a2f4ba8f78aed76a6eee1e8023a1"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-construction-2026-11-08/manifest.json",
+      "bytes": 1225,
+      "sha256": "ebee213479d30e09cf98b8e1289597a62dd1c02dd408888108bc333687d8f6a3"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-construction-2026-11-08/motion-concept.png",
+      "bytes": 3126534,
+      "sha256": "90d29ffb1232134761d9294e5dac413604ab60cd21afdd4404a00c54feb5ab85"
+    },
+    {
+      "path": "artifacts/art/funeral-regent-construction-2026-11-08/prompts.md",
+      "bytes": 4974,
+      "sha256": "f95da544e6b620fe6aa159633659a6e2dbf9d03e2fb7cf8526ca82012f93b993"
+    },
+    {
+      "path": "artifacts/art/last-vigil-concept-2026-11-07/concept-target-not-built.png",
+      "bytes": 2048990,
+      "sha256": "27703ee41d6c90bd942b13648e4fc309c205d2307a708c7de6ba74e8d5690343"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/design/shared-landmarks.json",
+      "bytes": 1847,
+      "sha256": "caa17f69f73284f362cc1eb7caa8c8a064a37de6184e8cccd7163ac3a38c7e5e"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/texture-study/generated-aged-steel-albedo.png",
+      "bytes": 2136173,
+      "sha256": "3a7f67eb9b7e205ef8795bcbdcbeeb9e0e328d972d500070c9d64d2fe066f184"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/1-process.json",
+      "bytes": 751,
+      "sha256": "defa14addf36d7d86875e2d9e8fbfea05ff20f3745a3360d8ccde4831a7286ca"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/2-process.json",
+      "bytes": 750,
+      "sha256": "f63758792bb98160e407f696a61f63f68a835bdf82a259d6fe3f100e1d69a7a6"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/3-process.json",
+      "bytes": 751,
+      "sha256": "4a94f74808541aa690bfa25a80724444a45fd98ca8637e7d59d9e82686c3ea9f"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/back.png",
+      "bytes": 496148,
+      "sha256": "9ddea156fb33ccd8461eb9a04e01848d07d08f016ab18066037d689488e3bcc7"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/body-front.png",
+      "bytes": 485578,
+      "sha256": "7efde9309d234a9cd938d5f5f67744702fc5dbe655893fdc79f14871eca10b44"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/body-side.png",
+      "bytes": 474558,
+      "sha256": "eaaeb7d9ce8571bc45bfa57abb3105f3c249676a299b422474e96538e3dbbe6c"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/body-topology.json",
+      "bytes": 418,
+      "sha256": "13c6c048cb800838144a43706635c306a7e4aed8d7e9152ce53fcbfd8ac44ccc"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/front.png",
+      "bytes": 511554,
+      "sha256": "4456253b14c8c8f9c5eb1a6574b50fe12d3408ae150f3802dc041dd131fe49ef"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/head.png",
+      "bytes": 555885,
+      "sha256": "08f47e03de2443a4fc05aa41eae273d8e55d31aef13c08b47c29554bab99913d"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/readback.json",
+      "bytes": 657,
+      "sha256": "ed683aadfd62266d4c601dc8feb0e56f14f5eb3f0cdc045d1b171960acedfc76"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/saved-scene-audit.json",
+      "bytes": 1483,
+      "sha256": "526a4673b3390c4751cf492dec0aa70dddd8f1065a91c7d5e4c856ed5a56feba"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/side.png",
+      "bytes": 489571,
+      "sha256": "d53529abc1dee0cdfd58c137b9e5d2867a0c782f2df24788b6998e8b7ea15fa8"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/attempt-03/threequarter.png",
+      "bytes": 538840,
+      "sha256": "80d601be4cca340804b5b52df8c8b92d5888ccceeb0e2f41da053e6c67329248"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/audit-process.json",
+      "bytes": 769,
+      "sha256": "c5545a5aee1a77863e69a3f1807c54cbf44a81b0ee7d1e5acebcd76e5bed3670"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/delivery-manifest.json",
+      "bytes": 3418,
+      "sha256": "7b8d74a0085331221dcfb619bf42cbe06d3f899fbee85bc1173ce44b1c993331"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/preservation-before.json",
+      "bytes": 5360,
+      "sha256": "e674e85fc872cfdedd5b52fb3df2d734bee959958e69e1b991ab02c70cfaa704"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/root-final-audit.json",
+      "bytes": 263,
+      "sha256": "287f7d36ac2085ce34cf38e3cf2ddfe58c7e51730443f0a4d037b946526739d0"
+    },
+    {
+      "path": "artifacts/art/regent-cage-2026-11-09/scene01-prune.json",
+      "bytes": 254,
+      "sha256": "baa3d53dded334f41d81c2e0b895a27fac8a2c45f6af6ba308f49a4929803fba"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/1-process.json",
+      "bytes": 751,
+      "sha256": "20a1b8a7c2464d70c10b908fd90128bd0c93285fef554a7b62adca204310c3c9"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/2-process.json",
+      "bytes": 752,
+      "sha256": "c44fde3b281f0f8e5710584a8215417a38f44fba298665ee837b3aa7c6f7c038"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/3-process.json",
+      "bytes": 753,
+      "sha256": "663073fa6c258d43bc2b4f121037ffcff8d9b8631782f8cd8df3b5162525c822"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/bust-back.png",
+      "bytes": 593868,
+      "sha256": "0587fb48ac3290785b09e1ac5f83298a1b23ebd44df9c5e09fa945b417305595"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/bust-front.png",
+      "bytes": 613366,
+      "sha256": "fbfac212623707e04d97a4c332fa777a3a6a47e59ac98a38d399ce2b0b267d77"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/head-front.png",
+      "bytes": 651592,
+      "sha256": "22993ba201736d9bd85e983add904aa921ed0d6e89d3c16aa3f4b31497ddd4cb"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/head-side.png",
+      "bytes": 615122,
+      "sha256": "d86db15571261f650cd14bd69fca956c650fd0575ffe4e5a0efcf0a4bd25dba8"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/head-threequarter.png",
+      "bytes": 643883,
+      "sha256": "97926098e864af4e7df0fbe06fb57b2ae5773773cc47374f183826e7c7048393"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/attempt-03/readback.json",
+      "bytes": 651,
+      "sha256": "7c7023f8b781555e29d0f49ce0f5710c15b54478e4276b16158ddccae12efcdf"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/delivery-manifest.json",
+      "bytes": 2395,
+      "sha256": "7d1a812fdbfb10b3ff86cc7883ce6aefd7a9442f9eb040e5a35bf9cc92baa5a2"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/initial-script-error-process.json",
+      "bytes": 752,
+      "sha256": "ce6745d128d1127fcce4f3768273c603f53c2c3e7e132b2c60feb6075255c7f8"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/preservation-before.json",
+      "bytes": 5696,
+      "sha256": "77346b4d5ab90bbe4726c6fc863860db52966ebc252e3e643e498c44bbeb61c6"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/root-final-audit.json",
+      "bytes": 295,
+      "sha256": "d604dadc5ad1e01980698a02aa420a3231409c1dc662d8910ae96b6bd92b0b8f"
+    },
+    {
+      "path": "artifacts/art/regent-focal-2026-11-09/scene01-prune.json",
+      "bytes": 264,
+      "sha256": "ce2b26750e286be2e4b4ba4958f332ff8a6113172c9a815977df790df2a95d73"
+    },
+    {
+      "path": "artifacts/art/warden-undead-concepts-2026-11-08/attack-study-concept-only.png",
+      "bytes": 2630932,
+      "sha256": "d8c683332dec076f256a630560c6a5b8802ac6ec9ec37f9e051242a1a9e72371"
+    },
+    {
+      "path": "artifacts/art/warden-undead-concepts-2026-11-08/manifest.json",
+      "bytes": 1107,
+      "sha256": "e2e61bf13dafda402602fc55472898e3b8ec5596fa7bef012b38ab494cb6f16b"
+    },
+    {
+      "path": "artifacts/art/warden-undead-concepts-2026-11-08/outfit-options-concept-only.png",
+      "bytes": 3023851,
+      "sha256": "6ba42bb4db25775d9613ec0437086c207e41a54ddae62643bffe0f4e1a8ca73d"
+    },
+    {
+      "path": "artifacts/art/warden-undead-concepts-2026-11-08/prompts.md",
+      "bytes": 3498,
+      "sha256": "b6885a819a6ff8d85d133c3c90e310a241c400990219d82c62998f1e2f5570cd"
+    },
+    {
+      "path": "artifacts/demo-evidence.json",
+      "bytes": 387609,
+      "sha256": "99111f148c00d20e3492aaec04b9a621522d63c0c5343f1e848abb09dda2f88b"
+    },
+    {
+      "path": "artifacts/evaluation.json",
+      "bytes": 94085,
+      "sha256": "65e781f07fee64657678836c36e5da3771e7451f12fc3e50aa4a429d643b41af"
+    },
+    {
+      "path": "artifacts/maintenance/handoff-prune-2026-11-09/manifest.json",
+      "bytes": 363083,
+      "sha256": "c5af902f7fb71aa6c753e19f07107b824d75bff60970389374025d26e3bf65c6"
+    },
+    {
+      "path": "artifacts/manifest.json",
+      "bytes": 5774,
+      "sha256": "edab524b134b379cad5724c9762a6bee7b8baaeddf97b195f571182cb50b60ea"
+    },
+    {
+      "path": "artifacts/pilot-evaluation.json",
+      "bytes": 62657,
+      "sha256": "f247614cf74463a700201c4ad5bba7e940dc1421f0b8be42d59d424bd97c3f49"
+    },
+    {
+      "path": "artifacts/ppo-training.json",
+      "bytes": 104435,
+      "sha256": "cefc8319b56e6b909db65b230616e49d8341c6d7872ea56b32c4bb2e8fceec48"
+    },
+    {
+      "path": "artifacts/ppo-verification.json",
+      "bytes": 181,
+      "sha256": "21281f86900358e3bd8a7ea4f7e1aff16192d8ea9524e6d8b8ea409459465cd3"
+    },
+    {
+      "path": "artifacts/static-switch-events.json",
+      "bytes": 153431,
+      "sha256": "5007ca64df5a17f06c3c48fc8e5c2de278b82c88e9fda68ba87da7145f4911ab"
+    },
+    {
+      "path": "artifacts/unreal/asset-manifest.json",
+      "bytes": 11512,
+      "sha256": "7205efaf04dd6a9da4ffcaf5667ebec8be8f991d1b8d9e4385bf151263301fec"
+    },
+    {
+      "path": "artifacts/unreal/physics-asset-manifest.json",
+      "bytes": 452,
+      "sha256": "abc3d65b4597f9fe7a246a43ded610872e7a6a2d9174e5448359a655bee64173"
+    },
+    {
+      "path": "artifacts/unreal/v13-trial-2026-11-08/baseline-native.json",
+      "bytes": 16673,
+      "sha256": "ab68128bce9a7a9766a19f6e7b05630bba822c7f9ea3bc160308474ed4332935"
+    },
+    {
+      "path": "artifacts/unreal/v13-trial-2026-11-08/final-audit.json",
+      "bytes": 26435,
+      "sha256": "080a564e05b3db2899ea6b2f7eb1c8425ad9f6fd47b7ef7573e22ba35913c812"
+    },
+    {
+      "path": "artifacts/unreal/v13-trial-2026-11-08/malformed-fallback-pass-index.json",
+      "bytes": 1730,
+      "sha256": "a9b1b5f05bd4ab1d408827611757e7d0da959ecde56f1671469608026d1e05ed"
+    },
+    {
+      "path": "artifacts/unreal/v13-trial-2026-11-08/missing-fallback-pass-index.json",
+      "bytes": 1726,
+      "sha256": "307293e7d534d5f903abe1688881890fc8d27d7970538ea442b03184b13cb915"
+    },
+    {
+      "path": "artifacts/unreal/v13-trial-2026-11-08/original-benchmark.json",
+      "bytes": 203,
+      "sha256": "cd0a6e270a67b1ad588f2a38203f20a62ee442cf583979d5dd8069168ea3f3cf"
+    },
+    {
+      "path": "artifacts/unreal/v13-trial-2026-11-08/v13-benchmark.json",
+      "bytes": 201,
+      "sha256": "23c2b8007f74f8db6ba16562c0764472b8217e6b34c6273beb93b4b9f73503ab"
+    },
+    {
+      "path": "artifacts/unreal/v13-trial-2026-11-08/v13-motion.mp4",
+      "bytes": 2666968,
+      "sha256": "67cd32580434b4fa3885ac3133cee8bdc4d2e06d2f13483a65856927f2d76492"
+    },
+    {
+      "path": "artifacts/unreal/v13-trial-2026-11-08/v13-motion.png",
+      "bytes": 377609,
+      "sha256": "fbfb66cd3ccb12179bc4aa0d78ceede25551a1e3aabfdbf0ca4baffe709c51e3"
+    },
+    {
+      "path": "artifacts/unreal/v13-trial-2026-11-08/v13-outfit-final.mp4",
+      "bytes": 1894872,
+      "sha256": "8684b45302d6ae1311a3dd62bba78284446040c34d4fd4c0d59444ce63d24761"
+    },
+    {
+      "path": "artifacts/unreal/v13-trial-2026-11-08/v13-outfit-final.png",
+      "bytes": 349494,
+      "sha256": "e6874b42d65054253b65bc7ce074207980209ed98329df97a20b074c31072289"
+    },
+    {
+      "path": "artifacts/unreal/v13-trial-2026-11-08/valid-pass-index.json",
+      "bytes": 1670,
+      "sha256": "4e8ad7d0c0871401859035d78f5e51d217f7e9a84d60f898c4c9b4793d9255d8"
+    },
+    {
+      "path": "unreal/art-studio/regent-cage-2026-11-09/regent-cage-02.blend",
+      "bytes": 940493,
+      "sha256": "4d6d284cd9e25520a8305a45806035797ebd72f4f2bef58404fecf999e0727c5"
+    },
+    {
+      "path": "unreal/art-studio/regent-cage-2026-11-09/regent-cage-03.blend",
+      "bytes": 943520,
+      "sha256": "c6835fb31ea11875423d8a7f4a113b97aad0fe4f657b97b5bd87f938a26e7947"
+    },
+    {
+      "path": "unreal/art-studio/regent-focal-2026-11-09/regent-focal-02.blend",
+      "bytes": 698227,
+      "sha256": "fe8c7472b98359cc82e4edcea721346f61e3660176236ea8ad5993711c67a2ac"
+    },
+    {
+      "path": "unreal/art-studio/regent-focal-2026-11-09/regent-focal-03.blend",
+      "bytes": 713075,
+      "sha256": "9943f65c99f500ca38f82d13dba287768363ad2c601303293f7992ada9ecebe8"
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/last-vigil-v10.blend",
+      "bytes": 24778507,
+      "sha256": "c91477d262097a45fc5198c3bc0a808783594505f89f8fd6e5a3027454c9cf66"
+    },
+    {
+      "path": "unreal/art-studio/revision-v12-2026-11-07/v12-attempt-03.blend",
+      "bytes": 1672359,
+      "sha256": "03893e958bf99add1ce873f39d2e549e16405be3bb7b88d5d31b8f47f26853a9"
+    },
+    {
+      "path": "unreal/art-studio/revision-v12-2026-11-07/v12-material-study.blend",
+      "bytes": 4588874,
+      "sha256": "e33596c9d5faaba16393a66bc25d5e3bcac010cf8769a13ea370a384c5e009c3"
+    },
+    {
+      "path": "unreal/art-studio/revision-v12-2026-11-07/v12-uv-checker.blend",
+      "bytes": 2319357,
+      "sha256": "290c58535a54f3af199425201880802eb22b4750c504ac0e57901f22da0280ee"
+    },
+    {
+      "path": "unreal/art-studio/revision-v13-2026-11-07/last-vigil-v13-context.blend",
+      "bytes": 31762157,
+      "sha256": "2457b527d43ceea7bf94f16d3fb15fcda230a302253956c36d9c2cbd4ed00839"
+    },
+    {
+      "path": "unreal/art-studio/revision-v13-2026-11-07/v13-attempt-04.blend",
+      "bytes": 2607725,
+      "sha256": "072fe5f756c54512772225e95118799f117edad0c3e1840cbf8622f9ea75c348"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "scope": "Independent V13 opt-in editor-game QA; no cooked/production claim",
+  "performance": {
+    "original": {
+      "samples": 3213,
+      "mean_fps": 58.55335898679865,
+      "mean_ms": 17.078439517457205,
+      "p95_nearest_rank_ms": 17.04154164,
+      "p99_nearest_rank_ms": 25.53258464,
+      "gt33_3": 11,
+      "gt50": 5,
+      "max_ms": 343.48620847
+    },
+    "v13": {
+      "samples": 3244,
+      "mean_fps": 59.03183080233467,
+      "mean_ms": 16.940013318381627,
+      "p95_nearest_rank_ms": 16.80724695,
+      "p99_nearest_rank_ms": 17.60816574,
+      "gt33_3": 7,
+      "gt50": 7,
+      "max_ms": 263.37391511
+    }
+  },
+  "baseline_changed": [
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenPresentation.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenPrototype.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenPrototype.h"
+  ],
+  "baseline_unchanged": [
+    "unreal/BossLabWarden/Config/DefaultEditorPerProjectUserSettings.ini",
+    "unreal/BossLabWarden/Config/DefaultEngine.ini",
+    "unreal/BossLabWarden/Config/DefaultGame.ini",
+    "unreal/BossLabWarden/Config/DefaultInput.ini",
+    "unreal/BossLabWarden/Source/BossLabWarden/BossLabWarden.Build.cs",
+    "unreal/BossLabWarden/Source/BossLabWarden/BossLabWarden.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/FundamentalsTests.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/OutfitTests.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/PreflightTests.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenCombat.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenCombat.h",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenEncounter.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenInspector.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenMenu.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenOutfit.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenPolicy.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenPolicy.h",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenScript.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenScript.h",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenStatistics.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenStatistics.h",
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenSword.cpp",
+    "unreal/BossLabWarden/Source/BossLabWarden.Target.cs",
+    "unreal/BossLabWarden/Source/BossLabWardenEditor.Target.cs",
+    "unreal/art-studio/source/last_vigil_v13.py",
+    "unreal/art-studio/revision-v13-2026-11-07/last-vigil-v13-context.blend"
+  ],
+  "runtime_json_sha256": "53d5415d57f2a69df25c03dbfa35df98ffea0a957bfc5273ee78d4269c7dd7fa",
+  "motion_mp4_sha256": "67cd32580434b4fa3885ac3133cee8bdc4d2e06d2f13483a65856927f2d76492",
+  "motion_samples_inspected": [
+    0,
+    20,
+    44,
+    56,
+    64,
+    65,
+    76,
+    96,
+    110,
+    132,
+    144,
+    155,
+    176
+  ],
+  "free_bytes": 26354077696,
+  "verdict": "Ready for opt-in human technical review; needs work for production/art acceptance.",
+  "outfit_final_samples_inspected": [
+    0,
+    20,
+    44,
+    65,
+    88,
+    110,
+    132,
+    155,
+    176
+  ],
+  "outfit_final_mp4_sha256": "8684b45302d6ae1311a3dd62bba78284446040c34d4fd4c0d59444ce63d24761"
+}

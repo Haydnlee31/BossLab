@@ -1,0 +1,13 @@
+Read BOSSLAB_BUILD_BRIEF.md in this project root completely and execute it as an implementation assignment, not another planning response.
+
+Build BossLab: The Warden, an original, visually polished Soulslike duel whose boss models observable combat habits and changes its attack selection without reading player input or changing the combat rules.
+
+Inspect the workspace, applicable AGENTS.md instructions, and available tools first. Create the durable execution/status files from the brief, then implement, run, test, inspect, and refine the game milestone by milestone. Resolve routine ambiguity with a reversible decision and record it. Preserve existing work and respect all actual permissions.
+
+Prioritize a complete playable fight, genuine statistical adaptation, clear feedback, truthful inspector, controlled demonstration, and fairness/evaluation tests. The default game must run without an API key or model server. Only after that works should you attempt the bounded RL experiment and optional real local-model adapters.
+
+Keep statistical/rule-based adaptation, reinforcement learning, and actual Laya/LLM integration explicitly distinguished. Never fabricate learning curves, gameplay evidence, model connections, or passing test results. Missing models remain visibly unavailable.
+
+Do not stop after the plan, scaffolding, or first passing test. Continue through the brief's milestones and final audit within the current session and permitted capabilities. Do not bypass approvals or add persistence mechanisms. If interrupted or blocked, preserve the working build, update docs/STATUS.md with the exact next action, and state the limitation accurately.
+
+Finish with the verified launch command, current controls, implemented features, actual test/evaluation results, model/training status, artifact paths, and remaining limitations. Begin now.

@@ -1,0 +1,7 @@
+Resume the existing BossLab implementation in this workspace. Do not restart, re-scaffold, or replace the architecture merely because this is a new session.
+
+Read applicable AGENTS.md instructions, BOSSLAB_BUILD_BRIEF.md, docs/EXECPLAN.md, docs/STATUS.md, docs/DECISIONS.md, and docs/CLAIMS.md when present. Inspect the current diff and verify the recorded launch/test commands before relying on the previous status. Preserve all unrelated work.
+
+Continue from the first incomplete acceptance criterion. Prioritize the playable fight, observable adaptation, fairness tests, actual evaluation, and recording-ready presentation before optional model integrations. Maintain the distinction between the adaptive utility baseline, RL-trained policies, and real connected Laya/LLM models.
+
+Implement and validate changes rather than returning another plan. Update durable status after milestones. Respect permissions, resource caps, and the existing project's boundaries. Leave a verified runnable build and an accurate handoff; do not fabricate evidence or imply work continues after the session stops.

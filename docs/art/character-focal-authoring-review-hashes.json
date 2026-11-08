@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-07",
+  "review": "art-director corrected focal iteration7 actual material and clay crops; construction increment verified, overall art needs work",
+  "files": {
+    "artifacts/art/last-vigil-v2/iteration-07/head.png": "cc2c95b92cfd7c98a6ccfeb9e8f7794e8e8eb0fad0df2de0585512ed6e364029",
+    "artifacts/art/last-vigil-v2/iteration-07/headside.png": "c5cc52eeb09c4e2f21e4cae03c993194b4ca229991a50193b7ece2232aea6607",
+    "artifacts/art/last-vigil-v2/iteration-07/hand.png": "a692d9bb2478d51170450aab761042a40701a6e2ccc3721a7c1872340ea9cbc8",
+    "artifacts/art/last-vigil-v2/iteration-07/palm.png": "5040e5cd5d94792c6a8f1976ff2a1008e139572742dfb8f435b2827b9805b1a8",
+    "artifacts/art/last-vigil-v2/iteration-07/clay_head.png": "ba1eba7d60364f1ef7557ad82d6edfb187b26d62a2bb713d8450ebd142cb0384",
+    "artifacts/art/last-vigil-v2/iteration-07/clay_palm.png": "e081d4b25667b0794a6777eb462c282b1e36fac3a01fd4a1bb53cd203a6beb69"
+  },
+  "final_perimeter_bevel_review": {
+    "verdict": "Local visor square shading improved; overall art needs work",
+    "files": {
+      "artifacts/art/last-vigil-v2/head.png": "3fa13ce8f6b2db6512b14ba0c55c1f41cb9159af3d017008122d23ed1c8ea662",
+      "artifacts/art/last-vigil-v2/headside.png": "3ba4ef258f7db9bcb841be6809b5894a1289e9e48235d0f6046be279f9258814",
+      "artifacts/art/last-vigil-v2/clay_head.png": "fc24e705540519030ccca1ba4f9681792262879b22e773f61ad818a0d320a1f9"
+    }
+  }
+}

@@ -1,0 +1,420 @@
+{
+  "scope": "Independent frozen V12 integrity and scoped visual QA, not production acceptance",
+  "time_unix": 1794043637.001763,
+  "v10_v11_sha256": {
+    "checked": 206,
+    "mismatches": []
+  },
+  "game_sha256": {
+    "checked": 28,
+    "mismatches": []
+  },
+  "manifest_files": [
+    {
+      "path": "unreal/art-studio/source/last_vigil_v12.py",
+      "sha256": "526ae1220670127234e7714b8f084221fa26deef1b8a182d1d39172098009000",
+      "matches": true
+    },
+    {
+      "path": "scripts/bosslab-art-v12",
+      "sha256": "91e7d9eb8cfa59703a236277fe56052cef0fb4bbc61c8e807da209654a3ce57a",
+      "matches": true
+    },
+    {
+      "path": "docs/art/character-v12-techart.md",
+      "sha256": "a1697280cc57b5d910074b3cbbe653a0d2b4dc54a91512ccc0eb9da5c38be74d",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v12-2026-11-07/v12-attempt-03.blend",
+      "sha256": "03893e958bf99add1ce873f39d2e549e16405be3bb7b88d5d31b8f47f26853a9",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v12-2026-11-07/v12-uv-checker.blend",
+      "sha256": "290c58535a54f3af199425201880802eb22b4750c504ac0e57901f22da0280ee",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v12-2026-11-07/v12-material-study.blend",
+      "sha256": "e33596c9d5faaba16393a66bc25d5e3bcac010cf8769a13ea370a384c5e009c3",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-front.png",
+      "sha256": "f26c109e0275bb674be4235eb50d72712c28187c2549bdac0391eca60c830888",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-side.png",
+      "sha256": "e7f1610e837c6cc5371738a21f3ac4241a84431593cf2be4309da8d499bd67a6",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-back.png",
+      "sha256": "c34181d1723d29339de0b252bff5793a39aa3d0c8085a95e4d0b0f3fb8a78c89",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-three-quarter.png",
+      "sha256": "90a13a2d1c01fc5f39bb4ff7376b518eeda11ee413ec012b77ab1298711f7699",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-neck.png",
+      "sha256": "779c7503dee928b7e23e200883bd81672b89d08b0e862b91aea47db353aa3dde",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/uv-checker-front.png",
+      "sha256": "b6d9cfc70bfde0363fccbe49c9de31faad0c54c91348b79889bffe33644adfc0",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/uv-checker-side.png",
+      "sha256": "63d9dc615c2649274ec9df34ced85fef6de3aeafc4976eb20d7627ee45baeec9",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/uv-checker-back.png",
+      "sha256": "7df7a41df89fe07e24fe245d927eae7e4bf1fd43c23fd4e376d9c93a7b6ce8cc",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/uv-checker-three-quarter.png",
+      "sha256": "17f5735b2806fae361ecd9d0dca0f96b5245c90a2651a3b1aa4b0f093d7e7e4d",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-front.png",
+      "sha256": "938e0d76dd1ddc603ea00fc20837de267372a61392302082f077acf606fd8b83",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-side.png",
+      "sha256": "c6856f9d934cea942fa716425eac2bb76caf9f83a1698ecc5264fa1ea98dc5bf",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-back.png",
+      "sha256": "613e505eb6b17b5410554781cc05d7ea9789676b053c18f139ed188f93c1dcc7",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-three-quarter.png",
+      "sha256": "a283e40450cb639e7f2859ad6a445b8d7dd1a2952580c6393bfa25d4073596e8",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-three-quarter-light-B.png",
+      "sha256": "5d0b01cef6376983ee22c3e394c0cc8f6908fdc5f8969e771de2d62ea786154e",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-detail.png",
+      "sha256": "743502080e5592591d7f65c79cdf65c5d50ad8bd73f700ddbbf01188cd3c15ab",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable.mp4",
+      "sha256": "11b10fee833c298faa0ca710837d6a2adfed1484fbc7ff53d8d2ff76cb2c9ab9",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/000.png",
+      "sha256": "b15d385eacea3da5aa7b2ed7562b98ee3c58aadeb786de9dc76303791a2a13bd",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/001.png",
+      "sha256": "984593439c59d9c55632ff32400966475f623128bafca323f960c9e3a8bbdf7f",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/002.png",
+      "sha256": "ed2d2712a3ee4bbd8ddf0df00e6be4067881884168d9500cf4a0b42438ee24f9",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/003.png",
+      "sha256": "124aa5cd1e9b6056efffb8493f415c1863ffe71150d9968ecdb69cc1d01a0c69",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/004.png",
+      "sha256": "8bb1a8e9da8d22ee0a23b95996eb4e4928c45edc931ba00408c747ba7f1246a0",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/005.png",
+      "sha256": "1fa8d2a6614747367a69fc165a097e65d762856a03512b7a246c36c1cd09ee12",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/006.png",
+      "sha256": "cabe3ee34b7acb77cfa55f0ce51176b872dd7f4e19cdad0a594438aea73146f9",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/007.png",
+      "sha256": "dda3027a6b8a16311bb4cdffb5ed6b1819d1f49bf8893051e47a11aa567cd06b",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/008.png",
+      "sha256": "3cc3ff016e96b7c05467b87a350909d91a81b9e53054ab14dc70a3b11fbe4a0e",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/009.png",
+      "sha256": "b7008fb44d617c36b6053ab6cb5fd52d1b95e2ea67c337b82d31fb4bb922379b",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/010.png",
+      "sha256": "8a97a2a1100b964eecc1f7434e7e8d047e1ed3ae25b1e36aaea32d3b76dfe40c",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/011.png",
+      "sha256": "ab62aee07c838bb22a57db0c31ce73ddae11c2b34df799f66664a689ac0eefdb",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/012.png",
+      "sha256": "980620b2ff06f58b31ca44061f334cd74c937e0ae702594f872812a69254bd25",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/013.png",
+      "sha256": "54f50af4cc3ee39681fd6374c0e877d4eadff668d738e1853ff166ebeff4572a",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/014.png",
+      "sha256": "eb02917c4de3cd66e2b6d336014bb0fe65c2a4f1a146c02624b47bf8e170f520",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/015.png",
+      "sha256": "99fe0f3e7e7320d8242e97a2d3f5d39f74600943b54dcb3f2a1a70b362560121",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/016.png",
+      "sha256": "d278946e876886ef3c08b6527722f2d2e21ea2153ddfd7843c23288d71cf1eff",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/017.png",
+      "sha256": "44f1ab8e0c050f38302528d9b390c037c777d805d0e51e7daba3a65db1144348",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/018.png",
+      "sha256": "7891bc0e66476d4d0d6e724fb891af36ea6f1a02ce43dffe755080b452648943",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/019.png",
+      "sha256": "8fcf3384d49bc92525dbcd47b2be8a97f5113cbc819c838662adb994cbe22421",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/020.png",
+      "sha256": "af41ae1032460a73fc5746aa9f9f7fab8c630c545678a2dbfa0328ef02ca66dd",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/021.png",
+      "sha256": "df03ffb3f69fc41949515437f9f4b4b46b12b19abcc3d555c040c7753561b7c4",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/022.png",
+      "sha256": "46a4ed712819d2221afeac7a8048665854d5ab042cf20062f0838c6de9a14cb3",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/023.png",
+      "sha256": "41e7f326c3d380c782d9aac8869fdc049d4e28e5f62a58c4749d0c8b164322b9",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/024.png",
+      "sha256": "c07b513a480dbc5e05cab15c463449e6a56b0a6b1c6df69363f1484f00070fce",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/025.png",
+      "sha256": "52bb78f3b4c2c0b1dbe53c802e99691db5d1eb2ec7b34231d65514e2d865df3b",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/026.png",
+      "sha256": "689fa25f8390210086089952cce8dca8ab19f3933fc1a6b3794d95e5710372e4",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/027.png",
+      "sha256": "c5e659b9dff3ccaec3ef8308034d2c4545006e1dc19ef34985238e3fe862dbf9",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/028.png",
+      "sha256": "b515ba206db79e4a0c40af2637d9837a5e8b17c8cf68dd01771f56c2fcf4178e",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/029.png",
+      "sha256": "c8ee55813b2169393c3a5b6ed73eed0e82da2fecd0fe7879bb9b54cf002413fb",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/030.png",
+      "sha256": "31c648ca02d6fb25ed1a40a63eeecd407ce1753d27107485cf1069fbfa50852e",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/031.png",
+      "sha256": "6974fc5fb3b96eceb0d68254bd23f40486c0fee1aa4d55d531509eef2ecd4643",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/032.png",
+      "sha256": "fdfc0cd6c108f36fd3a73c0baf3feab7a88d6fc51786f663946f1e8678758915",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/033.png",
+      "sha256": "4ce119ed5fef6a7fec832f32b5f512eceac40eedfb1d1a99a5dbfa94b6a55ca5",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/034.png",
+      "sha256": "c4692cce6cd72ad4e4b56d81225cf66dc44c64caac4892454a570182aba21d73",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable/035.png",
+      "sha256": "b07184b520fe96c4197db006d50695a629fa37dec7e2318f53a189076a15b21c",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/texture-study/README.md",
+      "sha256": "d6a241c5340916238cc5993c0f8c369e4284bf9b7f3fe94e04db7e07fabd3ec2",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/texture-study/generated-aged-steel-albedo.png",
+      "sha256": "3a7f67eb9b7e205ef8795bcbdcbeeb9e0e328d972d500070c9d64d2fe066f184",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/texture-study/prompt.txt",
+      "sha256": "ecdbf0fedcbcd66d85f73dff8278eeca95fda4b36a372b0bcc32a8a0e80c6a0f",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/texture-study/provenance.json",
+      "sha256": "dd31baadd123f56458f220c661dc89ee6d65e7c09f3030d57ec4119304e0c7ff",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-geometry-audit.json",
+      "sha256": "200808564ac18e4e56dab24ada96bd7895650e5db570907017c3bf96376c1595",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/attempt-03-turntable-audit.json",
+      "sha256": "948249cb6a39f041f5d72ce2d513a2533be89f37561df1694daa866c00c1f63a",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/uv-topology-cleanup.json",
+      "sha256": "029485c1b09a16667777efc8e5a8d0a79e03003193437afaf023adbbfcd77c57",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/uv-audit.json",
+      "sha256": "e8e8c0f9f825c4666a6f5a783ac251170b043076234ea3e1e5e2ea3d9a57be91",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/uv-geometry-audit.json",
+      "sha256": "361a2683bdf1108f76e4f678da61747291d17d088cb13092f173386d3e2784a6",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-study.json",
+      "sha256": "21615b93f089913cb8d0f543a4bb4669a0dd48906cff45350d0774545dce32d0",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/material-reload-audit.json",
+      "sha256": "3017839d2fd672f852aed4cf84ff83f45e58a8467a4f52d69cfc647306b48004",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/draft-process.json",
+      "sha256": "a49f44cabdea99c730d872447236e9a179b3dae669c47af4b742f1a45c4fd186",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/turntable-process.json",
+      "sha256": "62fa765ddbf959c8f05e4113b44cdd77106c1e8ead8920cb40a814eef7b71506",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/uv-continuity-process.json",
+      "sha256": "0b2a381c65cee1eae76ab7763849742ebe698900c2a2f5613c26658f6506b66b",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/uv-audit-process.json",
+      "sha256": "1891f59dac720401d06f46dcd2d0fea9cde006f28509f1e7c4c41b4bec8c7dfc",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/sample-process.json",
+      "sha256": "fb34dfb78e55312dad3e4288b5987330e62a54bed4023de7370758fbd8b97b47",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/sample-audit-process.json",
+      "sha256": "d6391a06a994d0915a3061d4035eef975e694ada7a52be7a06db8cc411526aa0",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v12/process-stop-check.json",
+      "sha256": "f1d66eb75864767ae5496f9c7ef532b12b62b758e921a232fa041027bcc370db",
+      "matches": true
+    }
+  ],
+  "canonical_stills_reviewed": 15,
+  "orbit_frames_visually_sampled": [
+    "000",
+    "003",
+    "006",
+    "009",
+    "012",
+    "015",
+    "018",
+    "021",
+    "024",
+    "027",
+    "030",
+    "033"
+  ],
+  "geometry_candidates": 3,
+  "uv_continuity_corrections": 1,
+  "verdict": "Coarse static base passes; UV foldover fails; overall art needs work; V10 authoritative",
+  "storage": {
+    "unreal_allocated_bytes": 4159991808,
+    "free_bytes": 27006205952,
+    "limit_bytes": 10000000000,
+    "reserve_bytes": 25769803776
+  },
+  "new_game_tests_run": false,
+  "boss_AI_gate": "closed"
+}

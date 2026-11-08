@@ -1,0 +1,6033 @@
+{
+  "report": {
+    "version": "warden-core-1.0.0",
+    "config": {
+      "seed": 1001,
+      "controller": "static",
+      "delay": 12,
+      "version": "warden-core-1.0.0"
+    },
+    "encounterId": "static-switch-1001",
+    "ticks": 2903,
+    "outcome": "victory",
+    "playerHP": 90,
+    "bossHP": 0,
+    "metrics": {
+      "damageToPlayer": 120,
+      "damageToBoss": 420,
+      "attacks": {
+        "cut": 9,
+        "overhead": 15,
+        "thrust": 9
+      },
+      "fallbacks": 0,
+      "decisions": 35,
+      "meanDecisionMs": 0.0024976285714282246,
+      "maxDecisionMs": 0.003208000000000766
+    },
+    "summary": {
+      "n": 33,
+      "effective": 5.54760157319431,
+      "sufficient": true,
+      "scope": "pooled (sparse-context backoff)",
+      "recent": {
+        "early": 0.12019057164341122,
+        "late": 0.7616276605017005,
+        "none": 0.11818176785488821
+      },
+      "long": {
+        "early": 0.14734319791909722,
+        "late": 0.7747415922591243,
+        "none": 0.07791520982177849
+      },
+      "directions": {
+        "inward": 0.7659101044890844,
+        "outward": 0.11704494775545783,
+        "lateral": 0.11704494775545783
+      },
+      "directionN": 31,
+      "censored": 0,
+      "evidence": [
+        "static-switch-1001:26",
+        "static-switch-1001:27",
+        "static-switch-1001:28",
+        "static-switch-1001:29",
+        "static-switch-1001:30",
+        "static-switch-1001:31",
+        "static-switch-1001:32",
+        "static-switch-1001:33"
+      ],
+      "contexts": {
+        "cut": 9,
+        "overhead": 15,
+        "thrust": 9
+      },
+      "families": {
+        "cut": {
+          "n": 9,
+          "recent": {
+            "early": 0.15796970550003903,
+            "late": 0.6781753046031616,
+            "none": 0.16385498989679947
+          },
+          "scope": "cut"
+        },
+        "overhead": {
+          "n": 15,
+          "recent": {
+            "early": 0.16534332228500706,
+            "late": 0.7001492178821338,
+            "none": 0.13450745983285917
+          },
+          "scope": "overhead"
+        },
+        "thrust": {
+          "n": 9,
+          "recent": {
+            "early": 0.16385498989679947,
+            "late": 0.704986044632848,
+            "none": 0.13115896547035255
+          },
+          "scope": "thrust"
+        }
+      }
+    }
+  },
+  "events": [
+    {
+      "type": "start",
+      "tick": 0,
+      "encounterId": "static-switch-1001",
+      "config": {
+        "seed": 1001,
+        "controller": "static",
+        "delay": 12,
+        "version": "warden-core-1.0.0"
+      }
+    },
+    {
+      "type": "decision",
+      "tick": 30,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 0.08,
+        "overhead": 1,
+        "thrust": 1.3,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.030534351145038167,
+        "overhead": 0.38167938931297707,
+        "thrust": 0.4961832061068702,
+        "approach": 0.030534351145038167,
+        "reposition": 0.03816793893129771,
+        "wait": 0.022900763358778622
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 18,
+      "window": 0,
+      "latencyMs": 0.0028749999999888587,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 0,
+        "effective": 0,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.3333333333333333,
+          "late": 0.3333333333333333,
+          "none": 0.3333333333333333
+        },
+        "long": {
+          "early": 0.3333333333333333,
+          "late": 0.3333333333333333,
+          "none": 0.3333333333333333
+        },
+        "directions": {
+          "inward": 0.3333333333333333,
+          "outward": 0.3333333333333333,
+          "lateral": 0.3333333333333333
+        },
+        "directionN": 0,
+        "censored": 0,
+        "evidence": [],
+        "contexts": {
+          "cut": 0,
+          "overhead": 0,
+          "thrust": 0
+        },
+        "families": {
+          "cut": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 30,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 0,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 30,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:1",
+      "action": "overhead",
+      "availableTick": 30
+    },
+    {
+      "type": "dodge",
+      "tick": 39,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 51
+    },
+    {
+      "type": "observed",
+      "tick": 51,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 39,
+      "availableTick": 51
+    },
+    {
+      "type": "hit",
+      "tick": 80,
+      "encounterId": "static-switch-1001",
+      "target": "player",
+      "damage": 24,
+      "source": "overhead",
+      "instance": "static-switch-1001:1"
+    },
+    {
+      "type": "player-attack",
+      "tick": 86,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 96,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "sample",
+      "tick": 97,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:1",
+      "family": "overhead",
+      "spacing": 142.2999999999999,
+      "outcome": "hit",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 39,
+      "observedTick": 97
+    },
+    {
+      "type": "snapshot",
+      "tick": 120,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 120,
+        "boss": {
+          "x": 0,
+          "y": -60,
+          "facing": 1.386741825333116,
+          "state": "attack",
+          "hp": 390
+        },
+        "player": {
+          "x": 28.85423022370938,
+          "y": -12.786453697617908,
+          "facing": -2.119368976128718,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 96
+    },
+    {
+      "type": "decision",
+      "tick": 133,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 121,
+      "window": 1,
+      "latencyMs": 0.002375000000000682,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 1,
+        "effective": 1,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5,
+          "late": 0.25,
+          "none": 0.25
+        },
+        "long": {
+          "early": 0.5,
+          "late": 0.25,
+          "none": 0.25
+        },
+        "directions": {
+          "inward": 0.5,
+          "outward": 0.25,
+          "lateral": 0.25
+        },
+        "directionN": 1,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:1"
+        ],
+        "contexts": {
+          "cut": 0,
+          "overhead": 1,
+          "thrust": 0
+        },
+        "families": {
+          "cut": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 1,
+            "recent": {
+              "early": 0.5,
+              "late": 0.25,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 133,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "window": 1,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 133,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:2",
+      "action": "cut",
+      "availableTick": 133
+    },
+    {
+      "type": "dodge",
+      "tick": 142,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 154
+    },
+    {
+      "type": "observed",
+      "tick": 154,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 142,
+      "availableTick": 154
+    },
+    {
+      "type": "hit",
+      "tick": 158,
+      "encounterId": "static-switch-1001",
+      "target": "player",
+      "damage": 16,
+      "source": "cut",
+      "instance": "static-switch-1001:2"
+    },
+    {
+      "type": "player-attack",
+      "tick": 168,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "sample",
+      "tick": 171,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:2",
+      "family": "cut",
+      "spacing": 56.26000000000002,
+      "outcome": "hit",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 142,
+      "observedTick": 171
+    },
+    {
+      "type": "hit",
+      "tick": 178,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 195,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.6097560975609756,
+        "thrust": 0.24390243902439024,
+        "approach": 0.048780487804878044,
+        "reposition": 0.06097560975609756,
+        "wait": 0.036585365853658534
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 183,
+      "window": 2,
+      "latencyMs": 0.0025839999999988095,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 2,
+        "effective": 1.8199999999999998,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5850622406639003,
+          "late": 0.20746887966804978,
+          "none": 0.20746887966804978
+        },
+        "long": {
+          "early": 0.5975855130784709,
+          "late": 0.2012072434607646,
+          "none": 0.2012072434607646
+        },
+        "directions": {
+          "inward": 0.5850622406639003,
+          "outward": 0.20746887966804978,
+          "lateral": 0.20746887966804978
+        },
+        "directionN": 2,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:1",
+          "static-switch-1001:2"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 1,
+          "thrust": 0
+        },
+        "families": {
+          "cut": {
+            "n": 1,
+            "recent": {
+              "early": 0.5,
+              "late": 0.25,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 1,
+            "recent": {
+              "early": 0.5,
+              "late": 0.25,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 195,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 2,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 195,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:3",
+      "action": "overhead",
+      "availableTick": 195
+    },
+    {
+      "type": "dodge",
+      "tick": 204,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 216
+    },
+    {
+      "type": "observed",
+      "tick": 216,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 204,
+      "availableTick": 216
+    },
+    {
+      "type": "snapshot",
+      "tick": 240,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 240,
+        "boss": {
+          "x": 0,
+          "y": -60,
+          "facing": -0.4669637534170134,
+          "state": "attack",
+          "hp": 360
+        },
+        "player": {
+          "x": 16.083070650733188,
+          "y": -101.17275609785578,
+          "facing": 1.9431939895746837,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 80
+    },
+    {
+      "type": "heal-start",
+      "tick": 251,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "sample",
+      "tick": 262,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:3",
+      "family": "overhead",
+      "spacing": 34,
+      "outcome": "miss",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 204,
+      "observedTick": 262
+    },
+    {
+      "type": "decision",
+      "tick": 298,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 286,
+      "window": 3,
+      "latencyMs": 0.002375000000000682,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 3,
+        "effective": 2.4924,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.6358604617289345,
+          "late": 0.18206976913553274,
+          "none": 0.18206976913553274
+        },
+        "long": {
+          "early": 0.661642051125886,
+          "late": 0.16917897443705696,
+          "none": 0.16917897443705696
+        },
+        "directions": {
+          "inward": 0.6358604617289345,
+          "outward": 0.18206976913553274,
+          "lateral": 0.18206976913553274
+        },
+        "directionN": 3,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:1",
+          "static-switch-1001:2",
+          "static-switch-1001:3"
+        ],
+        "contexts": {
+          "cut": 1,
+          "overhead": 2,
+          "thrust": 0
+        },
+        "families": {
+          "cut": {
+            "n": 1,
+            "recent": {
+              "early": 0.5,
+              "late": 0.25,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 2,
+            "recent": {
+              "early": 0.5850622406639003,
+              "late": 0.20746887966804978,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 298,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "window": 3,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 298,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:4",
+      "action": "cut",
+      "availableTick": 298
+    },
+    {
+      "type": "hit",
+      "tick": 320,
+      "encounterId": "static-switch-1001",
+      "target": "player",
+      "damage": 16,
+      "source": "cut",
+      "instance": "static-switch-1001:4"
+    },
+    {
+      "type": "heal-complete",
+      "tick": 322,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "sample",
+      "tick": 336,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:4",
+      "family": "cut",
+      "spacing": 53.47749999999991,
+      "outcome": "hit",
+      "response": "none",
+      "observedTick": 336
+    },
+    {
+      "type": "player-attack",
+      "tick": 345,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 355,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 360,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.6097560975609756,
+        "thrust": 0.24390243902439024,
+        "approach": 0.048780487804878044,
+        "reposition": 0.06097560975609756,
+        "wait": 0.036585365853658534
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 348,
+      "window": 4,
+      "latencyMs": 0.002417000000008329,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 4,
+        "effective": 3.043768,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5036209199294215,
+          "late": 0.1654596933568595,
+          "none": 0.330919386713719
+        },
+        "long": {
+          "early": 0.5603476360551869,
+          "late": 0.14655078798160437,
+          "none": 0.29310157596320874
+        },
+        "directions": {
+          "inward": 0.6358604617289345,
+          "outward": 0.18206976913553274,
+          "lateral": 0.18206976913553274
+        },
+        "directionN": 3,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:1",
+          "static-switch-1001:2",
+          "static-switch-1001:3",
+          "static-switch-1001:4"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 0
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 2,
+            "recent": {
+              "early": 0.5850622406639003,
+              "late": 0.20746887966804978,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 0,
+            "recent": {
+              "early": 0.3333333333333333,
+              "late": 0.3333333333333333,
+              "none": 0.3333333333333333
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 360,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "window": 4,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 360,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:5",
+      "action": "thrust",
+      "availableTick": 360
+    },
+    {
+      "type": "snapshot",
+      "tick": 360,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 360,
+        "boss": {
+          "x": 0,
+          "y": -60,
+          "facing": -1.1983986640151096,
+          "state": "attack",
+          "hp": 330
+        },
+        "player": {
+          "x": 20.80766026443761,
+          "y": -113.26773348444375,
+          "facing": 1.9431939895746837,
+          "state": "attack"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 109
+    },
+    {
+      "type": "dodge",
+      "tick": 378,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 390
+    },
+    {
+      "type": "observed",
+      "tick": 390,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 378,
+      "availableTick": 390
+    },
+    {
+      "type": "hit",
+      "tick": 394,
+      "encounterId": "static-switch-1001",
+      "target": "player",
+      "damage": 20,
+      "source": "thrust",
+      "instance": "static-switch-1001:5"
+    },
+    {
+      "type": "sample",
+      "tick": 410,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:5",
+      "family": "thrust",
+      "spacing": 57.187499999999886,
+      "outcome": "hit",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 378,
+      "observedTick": 410
+    },
+    {
+      "type": "decision",
+      "tick": 442,
+      "encounterId": "static-switch-1001",
+      "action": "wait",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.49180327868852447,
+        "overhead": 0.40983606557377045,
+        "approach": 0.032786885245901634,
+        "reposition": 0.040983606557377046,
+        "wait": 0.024590163934426226
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 430,
+      "window": 5,
+      "latencyMs": 0.0027089999999958536,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.4119358330982514,
+          "late": 0.30788699837787886,
+          "none": 0.28017716852386976
+        },
+        "long": {
+          "early": 0.48500854758036055,
+          "late": 0.2594415377428914,
+          "none": 0.25554991467674804
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:1",
+          "static-switch-1001:2",
+          "static-switch-1001:3",
+          "static-switch-1001:4",
+          "static-switch-1001:5"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 2,
+            "recent": {
+              "early": 0.5850622406639003,
+              "late": 0.20746887966804978,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 442,
+      "encounterId": "static-switch-1001",
+      "action": "wait",
+      "window": 5,
+      "controller": "static"
+    },
+    {
+      "type": "decision",
+      "tick": 459,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.49180327868852447,
+        "overhead": 0.40983606557377045,
+        "approach": 0.032786885245901634,
+        "reposition": 0.040983606557377046,
+        "wait": 0.024590163934426226
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 447,
+      "window": 6,
+      "latencyMs": 0.003208000000000766,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 5,
+        "effective": 3.49588976,
+        "sufficient": false,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.4119358330982514,
+          "late": 0.30788699837787886,
+          "none": 0.28017716852386976
+        },
+        "long": {
+          "early": 0.48500854758036055,
+          "late": 0.2594415377428914,
+          "none": 0.25554991467674804
+        },
+        "directions": {
+          "inward": 0.669080613286281,
+          "outward": 0.1654596933568595,
+          "lateral": 0.1654596933568595
+        },
+        "directionN": 4,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:1",
+          "static-switch-1001:2",
+          "static-switch-1001:3",
+          "static-switch-1001:4",
+          "static-switch-1001:5"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 2,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 2,
+            "recent": {
+              "early": 0.5850622406639003,
+              "late": 0.20746887966804978,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 459,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 6,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 459,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:6",
+      "action": "overhead",
+      "availableTick": 459
+    },
+    {
+      "type": "dodge",
+      "tick": 468,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 480
+    },
+    {
+      "type": "observed",
+      "tick": 480,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 468,
+      "availableTick": 480
+    },
+    {
+      "type": "snapshot",
+      "tick": 480,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 480,
+        "boss": {
+          "x": 6.622066304922671,
+          "y": -76.952528951552,
+          "facing": -2.740481209351432,
+          "state": "attack",
+          "hp": 330
+        },
+        "player": {
+          "x": -23.911945692930203,
+          "y": -61.99679054400499,
+          "facing": 0.4186111455615224,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 89
+    },
+    {
+      "type": "sample",
+      "tick": 526,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:6",
+      "family": "overhead",
+      "spacing": 57.18750000000004,
+      "outcome": "miss",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 468,
+      "observedTick": 526
+    },
+    {
+      "type": "player-attack",
+      "tick": 535,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 545,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 562,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 550,
+      "window": 7,
+      "latencyMs": 0.0024169999999941183,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 6,
+        "effective": 3.8666296032,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.491395313011719,
+          "late": 0.26504997432100313,
+          "none": 0.24355471266727782
+        },
+        "long": {
+          "early": 0.543524432163157,
+          "late": 0.22993604250647695,
+          "none": 0.22653952533036606
+        },
+        "directions": {
+          "inward": 0.6921130016221211,
+          "outward": 0.15394349918893943,
+          "lateral": 0.15394349918893943
+        },
+        "directionN": 5,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:1",
+          "static-switch-1001:2",
+          "static-switch-1001:3",
+          "static-switch-1001:4",
+          "static-switch-1001:5",
+          "static-switch-1001:6"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 1
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 3,
+            "recent": {
+              "early": 0.6358604617289345,
+              "late": 0.18206976913553274,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 1,
+            "recent": {
+              "early": 0.25,
+              "late": 0.5,
+              "none": 0.25
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 562,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "window": 7,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 562,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:7",
+      "action": "thrust",
+      "availableTick": 562
+    },
+    {
+      "type": "dodge",
+      "tick": 571,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 583
+    },
+    {
+      "type": "observed",
+      "tick": 583,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 571,
+      "availableTick": 583
+    },
+    {
+      "type": "hit",
+      "tick": 594,
+      "encounterId": "static-switch-1001",
+      "target": "player",
+      "damage": 20,
+      "source": "thrust",
+      "instance": "static-switch-1001:7"
+    },
+    {
+      "type": "snapshot",
+      "tick": 600,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 600,
+        "boss": {
+          "x": -8.446228363598676,
+          "y": -66.7453503118587,
+          "facing": 2.5461998738666956,
+          "state": "attack",
+          "hp": 300
+        },
+        "player": {
+          "x": 9.800774365281557,
+          "y": -36.15291442680112,
+          "facing": -2.0361668983352885,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 69
+    },
+    {
+      "type": "heal-start",
+      "tick": 601,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "sample",
+      "tick": 612,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:7",
+      "family": "thrust",
+      "spacing": 57.187500000000014,
+      "outcome": "hit",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 571,
+      "observedTick": 612
+    },
+    {
+      "type": "decision",
+      "tick": 644,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.49180327868852447,
+        "overhead": 0.40983606557377045,
+        "approach": 0.032786885245901634,
+        "reposition": 0.040983606557377046,
+        "wait": 0.024590163934426226
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 632,
+      "window": 8,
+      "latencyMs": 0.002417000000008329,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 7,
+        "effective": 4.170636274624,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.5504209282782173,
+          "late": 0.23322895430052948,
+          "none": 0.21635011742125318
+        },
+        "long": {
+          "early": 0.590070363236312,
+          "late": 0.20646616321908062,
+          "none": 0.20346347354460742
+        },
+        "directions": {
+          "inward": 0.7087362919549416,
+          "outward": 0.1456318540225292,
+          "lateral": 0.1456318540225292
+        },
+        "directionN": 6,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:1",
+          "static-switch-1001:2",
+          "static-switch-1001:3",
+          "static-switch-1001:4",
+          "static-switch-1001:5",
+          "static-switch-1001:6",
+          "static-switch-1001:7"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 3,
+          "thrust": 2
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 3,
+            "recent": {
+              "early": 0.6358604617289345,
+              "late": 0.18206976913553274,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 2,
+            "recent": {
+              "early": 0.41493775933609955,
+              "late": 0.37759336099585056,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 644,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 8,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 644,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:8",
+      "action": "overhead",
+      "availableTick": 644
+    },
+    {
+      "type": "heal-complete",
+      "tick": 672,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 694,
+      "encounterId": "static-switch-1001",
+      "target": "player",
+      "damage": 24,
+      "source": "overhead",
+      "instance": "static-switch-1001:8"
+    },
+    {
+      "type": "sample",
+      "tick": 711,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:8",
+      "family": "overhead",
+      "spacing": 35.62092421553829,
+      "outcome": "hit",
+      "response": "none",
+      "observedTick": 711
+    },
+    {
+      "type": "snapshot",
+      "tick": 720,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 720,
+        "boss": {
+          "x": -8.446228363598676,
+          "y": -66.7453503118587,
+          "facing": 1.0329877290567544,
+          "state": "attack",
+          "hp": 300
+        },
+        "player": {
+          "x": 21.203574536527377,
+          "y": -17.035285173814856,
+          "facing": -2.108604924533039,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "player-attack",
+      "tick": 730,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 740,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 747,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 735,
+      "window": 9,
+      "latencyMs": 0.002332999999993035,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 8,
+        "effective": 4.4199217451916795,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.4604404335403705,
+          "late": 0.20908145035428852,
+          "none": 0.33047811610534095
+        },
+        "long": {
+          "early": 0.5300053770729014,
+          "late": 0.18735982310341692,
+          "none": 0.2826347998236817
+        },
+        "directions": {
+          "inward": 0.7087362919549416,
+          "outward": 0.1456318540225292,
+          "lateral": 0.1456318540225292
+        },
+        "directionN": 6,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:1",
+          "static-switch-1001:2",
+          "static-switch-1001:3",
+          "static-switch-1001:4",
+          "static-switch-1001:5",
+          "static-switch-1001:6",
+          "static-switch-1001:7",
+          "static-switch-1001:8"
+        ],
+        "contexts": {
+          "cut": 2,
+          "overhead": 4,
+          "thrust": 2
+        },
+        "families": {
+          "cut": {
+            "n": 2,
+            "recent": {
+              "early": 0.37759336099585056,
+              "late": 0.20746887966804978,
+              "none": 0.41493775933609955
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 4,
+            "recent": {
+              "early": 0.5036209199294215,
+              "late": 0.1654596933568595,
+              "none": 0.330919386713719
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 2,
+            "recent": {
+              "early": 0.41493775933609955,
+              "late": 0.37759336099585056,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 747,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "window": 9,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 747,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:9",
+      "action": "cut",
+      "availableTick": 747
+    },
+    {
+      "type": "dodge",
+      "tick": 763,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 775
+    },
+    {
+      "type": "observed",
+      "tick": 775,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 763,
+      "availableTick": 775
+    },
+    {
+      "type": "sample",
+      "tick": 785,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:9",
+      "family": "cut",
+      "spacing": 57.880924215538286,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 763,
+      "observedTick": 785
+    },
+    {
+      "type": "decision",
+      "tick": 809,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.6097560975609756,
+        "thrust": 0.24390243902439024,
+        "approach": 0.048780487804878044,
+        "reposition": 0.06097560975609756,
+        "wait": 0.036585365853658534
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 797,
+      "window": 10,
+      "latencyMs": 0.002417000000008329,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 9,
+        "effective": 4.624335831057177,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.3910470753022655,
+          "late": 0.3216177532489401,
+          "none": 0.28733517144879434
+        },
+        "long": {
+          "early": 0.4801790478763257,
+          "late": 0.2624831312095253,
+          "none": 0.25733782091414903
+        },
+        "directions": {
+          "inward": 0.7210847233908999,
+          "outward": 0.13945763830455005,
+          "lateral": 0.13945763830455005
+        },
+        "directionN": 7,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:2",
+          "static-switch-1001:3",
+          "static-switch-1001:4",
+          "static-switch-1001:5",
+          "static-switch-1001:6",
+          "static-switch-1001:7",
+          "static-switch-1001:8",
+          "static-switch-1001:9"
+        ],
+        "contexts": {
+          "cut": 3,
+          "overhead": 4,
+          "thrust": 2
+        },
+        "families": {
+          "cut": {
+            "n": 3,
+            "recent": {
+              "early": 0.30449348190226494,
+              "late": 0.3641395382710655,
+              "none": 0.33136697982666957
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 4,
+            "recent": {
+              "early": 0.5036209199294215,
+              "late": 0.1654596933568595,
+              "none": 0.330919386713719
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 2,
+            "recent": {
+              "early": 0.41493775933609955,
+              "late": 0.37759336099585056,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 809,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 10,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 809,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:10",
+      "action": "overhead",
+      "availableTick": 809
+    },
+    {
+      "type": "dodge",
+      "tick": 821,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 833
+    },
+    {
+      "type": "observed",
+      "tick": 833,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 821,
+      "availableTick": 833
+    },
+    {
+      "type": "snapshot",
+      "tick": 840,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 840,
+        "boss": {
+          "x": -8.446228363598676,
+          "y": -66.7453503118587,
+          "facing": -0.16914266056880842,
+          "state": "attack",
+          "hp": 270
+        },
+        "player": {
+          "x": 10.302885063815978,
+          "y": -95.10854381481143,
+          "facing": -3.1142902160807573,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "sample",
+      "tick": 876,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:10",
+      "family": "overhead",
+      "spacing": 42.34750000000001,
+      "outcome": "miss",
+      "response": "early",
+      "direction": "inward",
+      "responseTick": 821,
+      "observedTick": 876
+    },
+    {
+      "type": "decision",
+      "tick": 912,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 900,
+      "window": 11,
+      "latencyMs": 0.002291999999997074,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 10,
+        "effective": 4.7919553814668845,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.46519887363119017,
+          "late": 0.28115405388622483,
+          "none": 0.2536470724825851
+        },
+        "long": {
+          "early": 0.5232850749580906,
+          "late": 0.2406915142083762,
+          "none": 0.2360234108335332
+        },
+        "directions": {
+          "inward": 0.7304553782799587,
+          "outward": 0.13477231086002064,
+          "lateral": 0.13477231086002064
+        },
+        "directionN": 8,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:3",
+          "static-switch-1001:4",
+          "static-switch-1001:5",
+          "static-switch-1001:6",
+          "static-switch-1001:7",
+          "static-switch-1001:8",
+          "static-switch-1001:9",
+          "static-switch-1001:10"
+        ],
+        "contexts": {
+          "cut": 3,
+          "overhead": 5,
+          "thrust": 2
+        },
+        "families": {
+          "cut": {
+            "n": 3,
+            "recent": {
+              "early": 0.30449348190226494,
+              "late": 0.3641395382710655,
+              "none": 0.33136697982666957
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 5,
+            "recent": {
+              "early": 0.5658793322871908,
+              "late": 0.15394349918893943,
+              "none": 0.28017716852386976
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 2,
+            "recent": {
+              "early": 0.41493775933609955,
+              "late": 0.37759336099585056,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 912,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "window": 11,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 912,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:11",
+      "action": "cut",
+      "availableTick": 912
+    },
+    {
+      "type": "dodge",
+      "tick": 928,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 940
+    },
+    {
+      "type": "observed",
+      "tick": 940,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 928,
+      "availableTick": 940
+    },
+    {
+      "type": "sample",
+      "tick": 950,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:11",
+      "family": "cut",
+      "spacing": 57.187500000000036,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 928,
+      "observedTick": 950
+    },
+    {
+      "type": "snapshot",
+      "tick": 960,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 960,
+        "boss": {
+          "x": -8.446228363598676,
+          "y": -66.7453503118587,
+          "facing": -0.9867014877755788,
+          "state": "attack",
+          "hp": 270
+        },
+        "player": {
+          "x": -25.323023063413086,
+          "y": -103.55318041511683,
+          "facing": 1.1408872405295984,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "decision",
+      "tick": 974,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.6097560975609756,
+        "thrust": 0.24390243902439024,
+        "approach": 0.048780487804878044,
+        "reposition": 0.06097560975609756,
+        "wait": 0.036585365853658534
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 962,
+      "window": 12,
+      "latencyMs": 0.003082999999989511,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 11,
+        "effective": 4.929403412802845,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.3975511279601918,
+          "late": 0.3753632545190326,
+          "none": 0.22708561752077563
+        },
+        "long": {
+          "early": 0.4800198423558442,
+          "late": 0.30215261300934027,
+          "none": 0.21782754463481552
+        },
+        "directions": {
+          "inward": 0.7376820690592949,
+          "outward": 0.13115896547035255,
+          "lateral": 0.13115896547035255
+        },
+        "directionN": 9,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:4",
+          "static-switch-1001:5",
+          "static-switch-1001:6",
+          "static-switch-1001:7",
+          "static-switch-1001:8",
+          "static-switch-1001:9",
+          "static-switch-1001:10",
+          "static-switch-1001:11"
+        ],
+        "contexts": {
+          "cut": 4,
+          "overhead": 5,
+          "thrust": 2
+        },
+        "families": {
+          "cut": {
+            "n": 4,
+            "recent": {
+              "early": 0.2566888735636444,
+              "late": 0.4665963352663438,
+              "none": 0.27671479117001185
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 5,
+            "recent": {
+              "early": 0.5658793322871908,
+              "late": 0.15394349918893943,
+              "none": 0.28017716852386976
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 2,
+            "recent": {
+              "early": 0.41493775933609955,
+              "late": 0.37759336099585056,
+              "none": 0.20746887966804978
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 974,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "window": 12,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 974,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:12",
+      "action": "thrust",
+      "availableTick": 974
+    },
+    {
+      "type": "dodge",
+      "tick": 1000,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 1012
+    },
+    {
+      "type": "observed",
+      "tick": 1012,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1000,
+      "availableTick": 1012
+    },
+    {
+      "type": "sample",
+      "tick": 1024,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:12",
+      "family": "thrust",
+      "spacing": 42.34749999999998,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1000,
+      "observedTick": 1024
+    },
+    {
+      "type": "decision",
+      "tick": 1056,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.49180327868852447,
+        "overhead": 0.40983606557377045,
+        "approach": 0.032786885245901634,
+        "reposition": 0.040983606557377046,
+        "wait": 0.024590163934426226
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1044,
+      "window": 13,
+      "latencyMs": 0.002333000000007246,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 12,
+        "effective": 5.042110798498333,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.343805445030854,
+          "late": 0.45021183633079864,
+          "none": 0.20598271863834738
+        },
+        "long": {
+          "early": 0.44266943588074475,
+          "late": 0.35521131359987085,
+          "none": 0.2021192505193843
+        },
+        "directions": {
+          "inward": 0.7433250189346583,
+          "outward": 0.12833749053267085,
+          "lateral": 0.12833749053267085
+        },
+        "directionN": 10,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:5",
+          "static-switch-1001:6",
+          "static-switch-1001:7",
+          "static-switch-1001:8",
+          "static-switch-1001:9",
+          "static-switch-1001:10",
+          "static-switch-1001:11",
+          "static-switch-1001:12"
+        ],
+        "contexts": {
+          "cut": 4,
+          "overhead": 5,
+          "thrust": 3
+        },
+        "families": {
+          "cut": {
+            "n": 4,
+            "recent": {
+              "early": 0.2566888735636444,
+              "late": 0.4665963352663438,
+              "none": 0.27671479117001185
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 5,
+            "recent": {
+              "early": 0.5658793322871908,
+              "late": 0.15394349918893943,
+              "none": 0.28017716852386976
+            },
+            "scope": "pooled backoff"
+          },
+          "thrust": {
+            "n": 3,
+            "recent": {
+              "early": 0.33136697982666957,
+              "late": 0.48656325103779763,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1056,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 13,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 1056,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:13",
+      "action": "overhead",
+      "availableTick": 1056
+    },
+    {
+      "type": "snapshot",
+      "tick": 1080,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1080,
+        "boss": {
+          "x": -16.031772934485197,
+          "y": -83.28921665449737,
+          "facing": 2.79951005030638,
+          "state": "attack",
+          "hp": 270
+        },
+        "player": {
+          "x": -69.98864134684128,
+          "y": -64.07615740182733,
+          "facing": -0.34208260328341306,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "dodge",
+      "tick": 1100,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 1112
+    },
+    {
+      "type": "observed",
+      "tick": 1112,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1100,
+      "availableTick": 1112
+    },
+    {
+      "type": "sample",
+      "tick": 1123,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:13",
+      "family": "overhead",
+      "spacing": 51.71052090304303,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1100,
+      "observedTick": 1123
+    },
+    {
+      "type": "player-attack",
+      "tick": 1126,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 1136,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 1159,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1147,
+      "window": 14,
+      "latencyMs": 0.002333000000007246,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 13,
+        "effective": 5.1345308547686335,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.3008453294954074,
+          "late": 0.5100399666482676,
+          "none": 0.1891147038563249
+        },
+        "long": {
+          "early": 0.41011266724392625,
+          "late": 0.4014603374343974,
+          "none": 0.18842699532167625
+        },
+        "directions": {
+          "inward": 0.7477742150474029,
+          "outward": 0.12611289247629856,
+          "lateral": 0.12611289247629856
+        },
+        "directionN": 11,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:6",
+          "static-switch-1001:7",
+          "static-switch-1001:8",
+          "static-switch-1001:9",
+          "static-switch-1001:10",
+          "static-switch-1001:11",
+          "static-switch-1001:12",
+          "static-switch-1001:13"
+        ],
+        "contexts": {
+          "cut": 4,
+          "overhead": 6,
+          "thrust": 3
+        },
+        "families": {
+          "cut": {
+            "n": 4,
+            "recent": {
+              "early": 0.2566888735636444,
+              "late": 0.4665963352663438,
+              "none": 0.27671479117001185
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 6,
+            "recent": {
+              "early": 0.46518157928766374,
+              "late": 0.2912637080450584,
+              "none": 0.24355471266727782
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 3,
+            "recent": {
+              "early": 0.33136697982666957,
+              "late": 0.48656325103779763,
+              "none": 0.18206976913553274
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1159,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "window": 14,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 1159,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:14",
+      "action": "thrust",
+      "availableTick": 1159
+    },
+    {
+      "type": "dodge",
+      "tick": 1185,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 1197
+    },
+    {
+      "type": "observed",
+      "tick": 1197,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1185,
+      "availableTick": 1197
+    },
+    {
+      "type": "snapshot",
+      "tick": 1200,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1200,
+        "boss": {
+          "x": -19.928605976324025,
+          "y": -65.51128954687223,
+          "facing": 1.7865786821006011,
+          "state": "attack",
+          "hp": 240
+        },
+        "player": {
+          "x": 12.60035790091486,
+          "y": -55.320132686162744,
+          "facing": -1.3550139714891918,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "sample",
+      "tick": 1209,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:14",
+      "family": "thrust",
+      "spacing": 34,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1185,
+      "observedTick": 1209
+    },
+    {
+      "type": "decision",
+      "tick": 1241,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.49180327868852447,
+        "overhead": 0.40983606557377045,
+        "approach": 0.032786885245901634,
+        "reposition": 0.040983606557377046,
+        "wait": 0.024590163934426226
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1229,
+      "window": 15,
+      "latencyMs": 0.002375000000000682,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 14,
+        "effective": 5.210315300910279,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.266339735369014,
+          "late": 0.55809396176316,
+          "none": 0.17556630286782604
+        },
+        "long": {
+          "early": 0.38149482094550874,
+          "late": 0.44211386390420593,
+          "none": 0.17639131515028533
+        },
+        "directions": {
+          "inward": 0.7513090716962703,
+          "outward": 0.12434546415186491,
+          "lateral": 0.12434546415186491
+        },
+        "directionN": 12,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:7",
+          "static-switch-1001:8",
+          "static-switch-1001:9",
+          "static-switch-1001:10",
+          "static-switch-1001:11",
+          "static-switch-1001:12",
+          "static-switch-1001:13",
+          "static-switch-1001:14"
+        ],
+        "contexts": {
+          "cut": 4,
+          "overhead": 6,
+          "thrust": 4
+        },
+        "families": {
+          "cut": {
+            "n": 4,
+            "recent": {
+              "early": 0.2566888735636444,
+              "late": 0.4665963352663438,
+              "none": 0.27671479117001185
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 6,
+            "recent": {
+              "early": 0.46518157928766374,
+              "late": 0.2912637080450584,
+              "none": 0.24355471266727782
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 4,
+            "recent": {
+              "early": 0.2767147911700118,
+              "late": 0.5578255154731286,
+              "none": 0.1654596933568595
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1241,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 15,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 1241,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:15",
+      "action": "overhead",
+      "availableTick": 1241
+    },
+    {
+      "type": "dodge",
+      "tick": 1285,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 1297
+    },
+    {
+      "type": "observed",
+      "tick": 1297,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1285,
+      "availableTick": 1297
+    },
+    {
+      "type": "sample",
+      "tick": 1308,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:15",
+      "family": "overhead",
+      "spacing": 51.710520903043026,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1285,
+      "observedTick": 1308
+    },
+    {
+      "type": "player-attack",
+      "tick": 1311,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "snapshot",
+      "tick": 1320,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1320,
+        "boss": {
+          "x": -19.928605976324025,
+          "y": -65.51128954687223,
+          "facing": 0.3036088382875893,
+          "state": "attack",
+          "hp": 240
+        },
+        "player": {
+          "x": 5.870706217007304,
+          "y": -87.65616458266834,
+          "facing": 2.4322701236715973,
+          "state": "attack"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "hit",
+      "tick": 1321,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 1344,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1332,
+      "window": 16,
+      "latencyMs": 0.003124999999997158,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 15,
+        "effective": 5.272458546746428,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.23851690722576452,
+          "late": 0.5968412455450534,
+          "none": 0.16464184722918215
+        },
+        "long": {
+          "early": 0.3561529254230163,
+          "late": 0.4781136875693339,
+          "none": 0.16573338700764975
+        },
+        "directions": {
+          "inward": 0.7541345609590309,
+          "outward": 0.12293271952048458,
+          "lateral": 0.12293271952048458
+        },
+        "directionN": 13,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:8",
+          "static-switch-1001:9",
+          "static-switch-1001:10",
+          "static-switch-1001:11",
+          "static-switch-1001:12",
+          "static-switch-1001:13",
+          "static-switch-1001:14",
+          "static-switch-1001:15"
+        ],
+        "contexts": {
+          "cut": 4,
+          "overhead": 7,
+          "thrust": 4
+        },
+        "families": {
+          "cut": {
+            "n": 4,
+            "recent": {
+              "early": 0.2566888735636444,
+              "late": 0.4665963352663438,
+              "none": 0.27671479117001185
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 7,
+            "recent": {
+              "early": 0.3903793425599157,
+              "late": 0.39327054001883116,
+              "none": 0.2163501174212532
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 4,
+            "recent": {
+              "early": 0.2767147911700118,
+              "late": 0.5578255154731286,
+              "none": 0.1654596933568595
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1344,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "window": 16,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 1344,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:16",
+      "action": "cut",
+      "availableTick": 1344
+    },
+    {
+      "type": "dodge",
+      "tick": 1360,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 1372
+    },
+    {
+      "type": "observed",
+      "tick": 1372,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1360,
+      "availableTick": 1372
+    },
+    {
+      "type": "sample",
+      "tick": 1382,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:16",
+      "family": "cut",
+      "spacing": 34,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1360,
+      "observedTick": 1382
+    },
+    {
+      "type": "decision",
+      "tick": 1406,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.6097560975609756,
+        "thrust": 0.24390243902439024,
+        "approach": 0.048780487804878044,
+        "reposition": 0.06097560975609756,
+        "wait": 0.036585365853658534
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1394,
+      "window": 17,
+      "latencyMs": 0.0024999999999977263,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 16,
+        "effective": 5.323416008332071,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.21601220039143512,
+          "late": 0.6281822816772715,
+          "none": 0.15580551793129344
+        },
+        "long": {
+          "early": 0.33356483675024334,
+          "late": 0.5102015481017227,
+          "none": 0.1562336151480341
+        },
+        "directions": {
+          "inward": 0.7564039958638057,
+          "outward": 0.1217980020680972,
+          "lateral": 0.1217980020680972
+        },
+        "directionN": 14,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:9",
+          "static-switch-1001:10",
+          "static-switch-1001:11",
+          "static-switch-1001:12",
+          "static-switch-1001:13",
+          "static-switch-1001:14",
+          "static-switch-1001:15",
+          "static-switch-1001:16"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 7,
+          "thrust": 4
+        },
+        "families": {
+          "cut": {
+            "n": 5,
+            "recent": {
+              "early": 0.2235447049828013,
+              "late": 0.537632276567452,
+              "none": 0.23882301844974657
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 7,
+            "recent": {
+              "early": 0.3903793425599157,
+              "late": 0.39327054001883116,
+              "none": 0.2163501174212532
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 4,
+            "recent": {
+              "early": 0.2767147911700118,
+              "late": 0.5578255154731286,
+              "none": 0.1654596933568595
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1406,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 17,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 1406,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:17",
+      "action": "overhead",
+      "availableTick": 1406
+    },
+    {
+      "type": "snapshot",
+      "tick": 1440,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1440,
+        "boss": {
+          "x": -19.928605976324025,
+          "y": -65.51128954687223,
+          "facing": -1.8248719436599539,
+          "state": "attack",
+          "hp": 210
+        },
+        "player": {
+          "x": -34.30273038666078,
+          "y": -120.86284511386731,
+          "facing": 1.3167207099298395,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "dodge",
+      "tick": 1450,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 1462
+    },
+    {
+      "type": "observed",
+      "tick": 1462,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1450,
+      "availableTick": 1462
+    },
+    {
+      "type": "sample",
+      "tick": 1473,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:17",
+      "family": "overhead",
+      "spacing": 42.347499999999954,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1450,
+      "observedTick": 1473
+    },
+    {
+      "type": "player-attack",
+      "tick": 1494,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 1504,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 1509,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1497,
+      "window": 18,
+      "latencyMs": 0.002332999999993035,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 17,
+        "effective": 5.365201126832298,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.19776293342364634,
+          "late": 0.6535970066783316,
+          "none": 0.14864005989802198
+        },
+        "long": {
+          "early": 0.31331372873986163,
+          "late": 0.5389695744220164,
+          "none": 0.14771669683812183
+        },
+        "directions": {
+          "inward": 0.7582339048665764,
+          "outward": 0.1208830475667118,
+          "lateral": 0.1208830475667118
+        },
+        "directionN": 15,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:10",
+          "static-switch-1001:11",
+          "static-switch-1001:12",
+          "static-switch-1001:13",
+          "static-switch-1001:14",
+          "static-switch-1001:15",
+          "static-switch-1001:16",
+          "static-switch-1001:17"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 8,
+          "thrust": 4
+        },
+        "families": {
+          "cut": {
+            "n": 5,
+            "recent": {
+              "early": 0.2235447049828013,
+              "late": 0.537632276567452,
+              "none": 0.23882301844974657
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 8,
+            "recent": {
+              "early": 0.3336153763071436,
+              "late": 0.4706788184475361,
+              "none": 0.19570580524532027
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 4,
+            "recent": {
+              "early": 0.2767147911700118,
+              "late": 0.5578255154731286,
+              "none": 0.1654596933568595
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1509,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "window": 18,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 1509,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:18",
+      "action": "thrust",
+      "availableTick": 1509
+    },
+    {
+      "type": "dodge",
+      "tick": 1535,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 1547
+    },
+    {
+      "type": "observed",
+      "tick": 1547,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1535,
+      "availableTick": 1547
+    },
+    {
+      "type": "sample",
+      "tick": 1559,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:18",
+      "family": "thrust",
+      "spacing": 50.69500000000003,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1535,
+      "observedTick": 1559
+    },
+    {
+      "type": "snapshot",
+      "tick": 1560,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1560,
+        "boss": {
+          "x": -37.30105379132049,
+          "y": -70.93697447278021,
+          "facing": -2.838875868944573,
+          "state": "attack",
+          "hp": 180
+        },
+        "player": {
+          "x": -50.2780508350534,
+          "y": -39.415700437404595,
+          "facing": 0.30271678464522017,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "decision",
+      "tick": 1591,
+      "encounterId": "static-switch-1001",
+      "action": "reposition",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.49180327868852447,
+        "overhead": 0.40983606557377045,
+        "approach": 0.032786885245901634,
+        "reposition": 0.040983606557377046,
+        "wait": 0.024590163934426226
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1579,
+      "window": 19,
+      "latencyMs": 0.0027089999999958536,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 18,
+        "effective": 5.399464924002484,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.18293402246332024,
+          "late": 0.6742483947470747,
+          "none": 0.14281758278960524
+        },
+        "long": {
+          "early": 0.2950628118911916,
+          "late": 0.5648961980913425,
+          "none": 0.14004099001746603
+        },
+        "directions": {
+          "inward": 0.7597140407258366,
+          "outward": 0.12014297963708172,
+          "lateral": 0.12014297963708172
+        },
+        "directionN": 16,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:11",
+          "static-switch-1001:12",
+          "static-switch-1001:13",
+          "static-switch-1001:14",
+          "static-switch-1001:15",
+          "static-switch-1001:16",
+          "static-switch-1001:17",
+          "static-switch-1001:18"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 8,
+          "thrust": 5
+        },
+        "families": {
+          "cut": {
+            "n": 5,
+            "recent": {
+              "early": 0.2235447049828013,
+              "late": 0.537632276567452,
+              "none": 0.23882301844974657
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 8,
+            "recent": {
+              "early": 0.3336153763071436,
+              "late": 0.4706788184475361,
+              "none": 0.19570580524532027
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 5,
+            "recent": {
+              "early": 0.23882301844974657,
+              "late": 0.6072334823613139,
+              "none": 0.15394349918893943
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1591,
+      "encounterId": "static-switch-1001",
+      "action": "reposition",
+      "window": 19,
+      "controller": "static"
+    },
+    {
+      "type": "decision",
+      "tick": 1612,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.42253521126760557,
+        "overhead": 0.352112676056338,
+        "thrust": 0.14084507042253522,
+        "approach": 0.02816901408450704,
+        "reposition": 0.035211267605633804,
+        "wait": 0.021126760563380278
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1600,
+      "window": 20,
+      "latencyMs": 0.0025830000000013342,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 18,
+        "effective": 5.399464924002484,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.18293402246332024,
+          "late": 0.6742483947470747,
+          "none": 0.14281758278960524
+        },
+        "long": {
+          "early": 0.2950628118911916,
+          "late": 0.5648961980913425,
+          "none": 0.14004099001746603
+        },
+        "directions": {
+          "inward": 0.7597140407258366,
+          "outward": 0.12014297963708172,
+          "lateral": 0.12014297963708172
+        },
+        "directionN": 16,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:11",
+          "static-switch-1001:12",
+          "static-switch-1001:13",
+          "static-switch-1001:14",
+          "static-switch-1001:15",
+          "static-switch-1001:16",
+          "static-switch-1001:17",
+          "static-switch-1001:18"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 8,
+          "thrust": 5
+        },
+        "families": {
+          "cut": {
+            "n": 5,
+            "recent": {
+              "early": 0.2235447049828013,
+              "late": 0.537632276567452,
+              "none": 0.23882301844974657
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 8,
+            "recent": {
+              "early": 0.3336153763071436,
+              "late": 0.4706788184475361,
+              "none": 0.19570580524532027
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 5,
+            "recent": {
+              "early": 0.23882301844974657,
+              "late": 0.6072334823613139,
+              "none": 0.15394349918893943
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1612,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 20,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 1612,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:19",
+      "action": "overhead",
+      "availableTick": 1612
+    },
+    {
+      "type": "dodge",
+      "tick": 1656,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 1668
+    },
+    {
+      "type": "observed",
+      "tick": 1668,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1656,
+      "availableTick": 1668
+    },
+    {
+      "type": "sample",
+      "tick": 1679,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:19",
+      "family": "overhead",
+      "spacing": 57.663318421405286,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1656,
+      "observedTick": 1679
+    },
+    {
+      "type": "snapshot",
+      "tick": 1680,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1680,
+        "boss": {
+          "x": -68.15675519003427,
+          "y": -74.92264778439052,
+          "facing": 1.4131740285052083,
+          "state": "attack",
+          "hp": 180
+        },
+        "player": {
+          "x": -36.906070973795394,
+          "y": -61.528815770477614,
+          "facing": -1.728418625084585,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "player-attack",
+      "tick": 1684,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 1694,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 1715,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1703,
+      "window": 21,
+      "latencyMs": 0.002291999999997074,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 19,
+        "effective": 5.427561237682037,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.17086429176368426,
+          "late": 0.6910572280612858,
+          "none": 0.13807848017503
+        },
+        "long": {
+          "early": 0.27853700109731716,
+          "late": 0.5883721955349713,
+          "none": 0.13309080336771137
+        },
+        "directions": {
+          "inward": 0.7609142960610019,
+          "outward": 0.11954285196949904,
+          "lateral": 0.11954285196949904
+        },
+        "directionN": 17,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:12",
+          "static-switch-1001:13",
+          "static-switch-1001:14",
+          "static-switch-1001:15",
+          "static-switch-1001:16",
+          "static-switch-1001:17",
+          "static-switch-1001:18",
+          "static-switch-1001:19"
+        ],
+        "contexts": {
+          "cut": 5,
+          "overhead": 9,
+          "thrust": 5
+        },
+        "families": {
+          "cut": {
+            "n": 5,
+            "recent": {
+              "early": 0.2235447049828013,
+              "late": 0.537632276567452,
+              "none": 0.23882301844974657
+            },
+            "scope": "pooled backoff"
+          },
+          "overhead": {
+            "n": 9,
+            "recent": {
+              "early": 0.28983875275477816,
+              "late": 0.5303764274821166,
+              "none": 0.17978481976310526
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 5,
+            "recent": {
+              "early": 0.23882301844974657,
+              "late": 0.6072334823613139,
+              "none": 0.15394349918893943
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1715,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "window": 21,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 1715,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:20",
+      "action": "cut",
+      "availableTick": 1715
+    },
+    {
+      "type": "dodge",
+      "tick": 1731,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 1743
+    },
+    {
+      "type": "observed",
+      "tick": 1743,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1731,
+      "availableTick": 1743
+    },
+    {
+      "type": "sample",
+      "tick": 1753,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:20",
+      "family": "cut",
+      "spacing": 35.85500000000001,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1731,
+      "observedTick": 1753
+    },
+    {
+      "type": "decision",
+      "tick": 1777,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.6097560975609756,
+        "thrust": 0.24390243902439024,
+        "approach": 0.048780487804878044,
+        "reposition": 0.06097560975609756,
+        "wait": 0.036585365853658534
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1765,
+      "window": 22,
+      "latencyMs": 0.002415999999996643,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 20,
+        "effective": 5.4506002148992705,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.16102700125152564,
+          "late": 0.7047570678172242,
+          "none": 0.13421593093124998
+        },
+        "long": {
+          "early": 0.26350940145680035,
+          "late": 0.6097198858325888,
+          "none": 0.1267707127106108
+        },
+        "directions": {
+          "inward": 0.7618895943853806,
+          "outward": 0.11905520280730972,
+          "lateral": 0.11905520280730972
+        },
+        "directionN": 18,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:13",
+          "static-switch-1001:14",
+          "static-switch-1001:15",
+          "static-switch-1001:16",
+          "static-switch-1001:17",
+          "static-switch-1001:18",
+          "static-switch-1001:19",
+          "static-switch-1001:20"
+        ],
+        "contexts": {
+          "cut": 6,
+          "overhead": 9,
+          "thrust": 5
+        },
+        "families": {
+          "cut": {
+            "n": 6,
+            "recent": {
+              "early": 0.19962338474776697,
+              "late": 0.5889014310769749,
+              "none": 0.21147518417525815
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 9,
+            "recent": {
+              "early": 0.28983875275477816,
+              "late": 0.5303764274821166,
+              "none": 0.17978481976310526
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 5,
+            "recent": {
+              "early": 0.23882301844974657,
+              "late": 0.6072334823613139,
+              "none": 0.15394349918893943
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1777,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 22,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 1777,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:21",
+      "action": "overhead",
+      "availableTick": 1777
+    },
+    {
+      "type": "snapshot",
+      "tick": 1800,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1800,
+        "boss": {
+          "x": -68.15675519003427,
+          "y": -74.92264778439052,
+          "facing": -0.7106392003418174,
+          "state": "attack",
+          "hp": 150
+        },
+        "player": {
+          "x": -24.811771572323227,
+          "y": -112.22710531201535,
+          "facing": 2.4309534532479757,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "dodge",
+      "tick": 1821,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 1833
+    },
+    {
+      "type": "observed",
+      "tick": 1833,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1821,
+      "availableTick": 1833
+    },
+    {
+      "type": "sample",
+      "tick": 1844,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:21",
+      "family": "overhead",
+      "spacing": 42.347500000000025,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1821,
+      "observedTick": 1844
+    },
+    {
+      "type": "decision",
+      "tick": 1880,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1868,
+      "window": 23,
+      "latencyMs": 0.002375000000000682,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 21,
+        "effective": 5.469492176217401,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.15300035921527186,
+          "late": 0.7159353195460969,
+          "none": 0.13106432123863132
+        },
+        "long": {
+          "early": 0.24979119684163412,
+          "late": 0.6292074946702865,
+          "none": 0.12100130848807956
+        },
+        "directions": {
+          "inward": 0.7626834212657598,
+          "outward": 0.11865828936712011,
+          "lateral": 0.11865828936712011
+        },
+        "directionN": 19,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:14",
+          "static-switch-1001:15",
+          "static-switch-1001:16",
+          "static-switch-1001:17",
+          "static-switch-1001:18",
+          "static-switch-1001:19",
+          "static-switch-1001:20",
+          "static-switch-1001:21"
+        ],
+        "contexts": {
+          "cut": 6,
+          "overhead": 10,
+          "thrust": 5
+        },
+        "families": {
+          "cut": {
+            "n": 6,
+            "recent": {
+              "early": 0.19962338474776697,
+              "late": 0.5889014310769749,
+              "none": 0.21147518417525815
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 10,
+            "recent": {
+              "early": 0.25565584664165103,
+              "late": 0.5769912095099318,
+              "none": 0.1673529438484172
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 5,
+            "recent": {
+              "early": 0.23882301844974657,
+              "late": 0.6072334823613139,
+              "none": 0.15394349918893943
+            },
+            "scope": "pooled backoff"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1880,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "window": 23,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 1880,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:22",
+      "action": "thrust",
+      "availableTick": 1880
+    },
+    {
+      "type": "dodge",
+      "tick": 1906,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 1918
+    },
+    {
+      "type": "observed",
+      "tick": 1918,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 1906,
+      "availableTick": 1918
+    },
+    {
+      "type": "snapshot",
+      "tick": 1920,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 1920,
+        "boss": {
+          "x": -70.94573448930382,
+          "y": -92.90768585686193,
+          "facing": -1.7246431256264292,
+          "state": "attack",
+          "hp": 150
+        },
+        "player": {
+          "x": -104.95949294874117,
+          "y": -90.65881846429438,
+          "facing": 1.4169495279633642,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "sample",
+      "tick": 1930,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:22",
+      "family": "thrust",
+      "spacing": 54.40499999999997,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 1906,
+      "observedTick": 1930
+    },
+    {
+      "type": "player-attack",
+      "tick": 1939,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 1949,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 1962,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.49180327868852447,
+        "overhead": 0.40983606557377045,
+        "approach": 0.032786885245901634,
+        "reposition": 0.040983606557377046,
+        "wait": 0.024590163934426226
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 1950,
+      "window": 24,
+      "latencyMs": 0.002375000000000682,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 22,
+        "effective": 5.484983584498269,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1464451841064908,
+          "late": 0.7250643422634213,
+          "none": 0.12849047363008773
+        },
+        "long": {
+          "early": 0.23722398189861416,
+          "late": 0.6470600472352251,
+          "none": 0.11571597086616085
+        },
+        "directions": {
+          "inward": 0.7633304204269661,
+          "outward": 0.11833478978651694,
+          "lateral": 0.11833478978651694
+        },
+        "directionN": 20,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:15",
+          "static-switch-1001:16",
+          "static-switch-1001:17",
+          "static-switch-1001:18",
+          "static-switch-1001:19",
+          "static-switch-1001:20",
+          "static-switch-1001:21",
+          "static-switch-1001:22"
+        ],
+        "contexts": {
+          "cut": 6,
+          "overhead": 10,
+          "thrust": 6
+        },
+        "families": {
+          "cut": {
+            "n": 6,
+            "recent": {
+              "early": 0.19962338474776697,
+              "late": 0.5889014310769749,
+              "none": 0.21147518417525815
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 10,
+            "recent": {
+              "early": 0.25565584664165103,
+              "late": 0.5769912095099318,
+              "none": 0.1673529438484172
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 6,
+            "recent": {
+              "early": 0.21147518417525815,
+              "late": 0.6428929618022126,
+              "none": 0.1456318540225292
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 1962,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 24,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 1962,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:23",
+      "action": "overhead",
+      "availableTick": 1962
+    },
+    {
+      "type": "dodge",
+      "tick": 2006,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 2018
+    },
+    {
+      "type": "observed",
+      "tick": 2018,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2006,
+      "availableTick": 2018
+    },
+    {
+      "type": "sample",
+      "tick": 2029,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:23",
+      "family": "overhead",
+      "spacing": 40.580520903043016,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2006,
+      "observedTick": 2029
+    },
+    {
+      "type": "snapshot",
+      "tick": 2040,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2040,
+        "boss": {
+          "x": -70.94573448930382,
+          "y": -92.90768585686193,
+          "facing": 3.0755723377401396,
+          "state": "attack",
+          "hp": 120
+        },
+        "player": {
+          "x": -90.94445466287233,
+          "y": -55.57992209221475,
+          "facing": -1.0789516840554354,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "decision",
+      "tick": 2065,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 2053,
+      "window": 25,
+      "latencyMs": 0.0027919999999994616,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 23,
+        "effective": 5.49768653928858,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.14108777496771985,
+          "late": 0.7325253038582273,
+          "none": 0.12638692117405287
+        },
+        "long": {
+          "early": 0.22567387528851066,
+          "late": 0.6634677307452491,
+          "none": 0.11085839396624013
+        },
+        "directions": {
+          "inward": 0.7638583331340617,
+          "outward": 0.11807083343296913,
+          "lateral": 0.11807083343296913
+        },
+        "directionN": 21,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:16",
+          "static-switch-1001:17",
+          "static-switch-1001:18",
+          "static-switch-1001:19",
+          "static-switch-1001:20",
+          "static-switch-1001:21",
+          "static-switch-1001:22",
+          "static-switch-1001:23"
+        ],
+        "contexts": {
+          "cut": 6,
+          "overhead": 11,
+          "thrust": 6
+        },
+        "families": {
+          "cut": {
+            "n": 6,
+            "recent": {
+              "early": 0.19962338474776697,
+              "late": 0.5889014310769749,
+              "none": 0.21147518417525815
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.22870425990776314,
+              "late": 0.6137447358703331,
+              "none": 0.15755100422190385
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 6,
+            "recent": {
+              "early": 0.21147518417525815,
+              "late": 0.6428929618022126,
+              "none": 0.1456318540225292
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2065,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "window": 25,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 2065,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:24",
+      "action": "cut",
+      "availableTick": 2065
+    },
+    {
+      "type": "dodge",
+      "tick": 2081,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 2093
+    },
+    {
+      "type": "observed",
+      "tick": 2093,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2081,
+      "availableTick": 2093
+    },
+    {
+      "type": "sample",
+      "tick": 2103,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:24",
+      "family": "cut",
+      "spacing": 54.40500000000009,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2081,
+      "observedTick": 2103
+    },
+    {
+      "type": "decision",
+      "tick": 2127,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.6097560975609756,
+        "thrust": 0.24390243902439024,
+        "approach": 0.048780487804878044,
+        "reposition": 0.06097560975609756,
+        "wait": 0.036585365853658534
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 2115,
+      "window": 26,
+      "latencyMs": 0.00245800000000429,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 24,
+        "effective": 5.508102962216635,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1367066369377944,
+          "late": 0.7386266677332132,
+          "none": 0.1246666953289923
+        },
+        "long": {
+          "early": 0.21502694942201098,
+          "late": 0.6785923868085453,
+          "none": 0.10638066376944384
+        },
+        "directions": {
+          "inward": 0.7642894673769409,
+          "outward": 0.11785526631152955,
+          "lateral": 0.11785526631152955
+        },
+        "directionN": 22,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:17",
+          "static-switch-1001:18",
+          "static-switch-1001:19",
+          "static-switch-1001:20",
+          "static-switch-1001:21",
+          "static-switch-1001:22",
+          "static-switch-1001:23",
+          "static-switch-1001:24"
+        ],
+        "contexts": {
+          "cut": 7,
+          "overhead": 11,
+          "thrust": 6
+        },
+        "families": {
+          "cut": {
+            "n": 7,
+            "recent": {
+              "early": 0.18185369073016844,
+              "late": 0.6269861680072104,
+              "none": 0.19116014126262126
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 11,
+            "recent": {
+              "early": 0.22870425990776314,
+              "late": 0.6137447358703331,
+              "none": 0.15755100422190385
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 6,
+            "recent": {
+              "early": 0.21147518417525815,
+              "late": 0.6428929618022126,
+              "none": 0.1456318540225292
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2127,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 26,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 2127,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:25",
+      "action": "overhead",
+      "availableTick": 2127
+    },
+    {
+      "type": "snapshot",
+      "tick": 2160,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2160,
+        "boss": {
+          "x": -70.94573448930382,
+          "y": -92.90768585686193,
+          "facing": 1.048637044249738,
+          "state": "attack",
+          "hp": 120
+        },
+        "player": {
+          "x": -42.42330617484644,
+          "y": -43.34074889988794,
+          "facing": -2.0929556093400556,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "dodge",
+      "tick": 2171,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 2183
+    },
+    {
+      "type": "observed",
+      "tick": 2183,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2171,
+      "availableTick": 2183
+    },
+    {
+      "type": "sample",
+      "tick": 2194,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:25",
+      "family": "overhead",
+      "spacing": 42.347499999999975,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2171,
+      "observedTick": 2194
+    },
+    {
+      "type": "player-attack",
+      "tick": 2197,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 2207,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 2230,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 2218,
+      "window": 27,
+      "latencyMs": 0.002375000000000682,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 25,
+        "effective": 5.51664442901764,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.13312210066430757,
+          "late": 0.7436186492636381,
+          "none": 0.12325925007205434
+        },
+        "long": {
+          "early": 0.20518564554910304,
+          "late": 0.6925726040241508,
+          "none": 0.10224175042674623
+        },
+        "directions": {
+          "inward": 0.7646418244832742,
+          "outward": 0.11767908775836292,
+          "lateral": 0.11767908775836292
+        },
+        "directionN": 23,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:18",
+          "static-switch-1001:19",
+          "static-switch-1001:20",
+          "static-switch-1001:21",
+          "static-switch-1001:22",
+          "static-switch-1001:23",
+          "static-switch-1001:24",
+          "static-switch-1001:25"
+        ],
+        "contexts": {
+          "cut": 7,
+          "overhead": 12,
+          "thrust": 6
+        },
+        "families": {
+          "cut": {
+            "n": 7,
+            "recent": {
+              "early": 0.18185369073016844,
+              "late": 0.6269861680072104,
+              "none": 0.19116014126262126
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 12,
+            "recent": {
+              "early": 0.2072914039334199,
+              "late": 0.6429451675285908,
+              "none": 0.14976342853798932
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 6,
+            "recent": {
+              "early": 0.21147518417525815,
+              "late": 0.6428929618022126,
+              "none": 0.1456318540225292
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2230,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "window": 27,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 2230,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:26",
+      "action": "thrust",
+      "availableTick": 2230
+    },
+    {
+      "type": "dodge",
+      "tick": 2256,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 2268
+    },
+    {
+      "type": "observed",
+      "tick": 2268,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2256,
+      "availableTick": 2268
+    },
+    {
+      "type": "sample",
+      "tick": 2280,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:26",
+      "family": "thrust",
+      "spacing": 34,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2256,
+      "observedTick": 2280
+    },
+    {
+      "type": "snapshot",
+      "tick": 2280,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2280,
+        "boss": {
+          "x": -52.75664841999907,
+          "y": -92.27748909122113,
+          "facing": 0.034633118965124,
+          "state": "attack",
+          "hp": 90
+        },
+        "player": {
+          "x": -48.59266860574405,
+          "y": -126.11023123833024,
+          "facing": -3.1069595346246697,
+          "state": "dodge"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "decision",
+      "tick": 2312,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.49180327868852447,
+        "overhead": 0.40983606557377045,
+        "approach": 0.032786885245901634,
+        "reposition": 0.040983606557377046,
+        "wait": 0.024590163934426226
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 2300,
+      "window": 28,
+      "latencyMs": 0.0024169999999941183,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 26,
+        "effective": 5.523648431794465,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.13018814166504267,
+          "late": 0.7477046085113338,
+          "none": 0.12210724982362356
+        },
+        "long": {
+          "early": 0.19606593494939714,
+          "late": 0.7055277506971775,
+          "none": 0.0984063143534253
+        },
+        "directions": {
+          "inward": 0.7649299721827842,
+          "outward": 0.11753501390860785,
+          "lateral": 0.11753501390860785
+        },
+        "directionN": 24,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:19",
+          "static-switch-1001:20",
+          "static-switch-1001:21",
+          "static-switch-1001:22",
+          "static-switch-1001:23",
+          "static-switch-1001:24",
+          "static-switch-1001:25",
+          "static-switch-1001:26"
+        ],
+        "contexts": {
+          "cut": 7,
+          "overhead": 12,
+          "thrust": 7
+        },
+        "families": {
+          "cut": {
+            "n": 7,
+            "recent": {
+              "early": 0.18185369073016844,
+              "late": 0.6269861680072104,
+              "none": 0.19116014126262126
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 12,
+            "recent": {
+              "early": 0.2072914039334199,
+              "late": 0.6429451675285908,
+              "none": 0.14976342853798932
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 7,
+            "recent": {
+              "early": 0.19116014126262126,
+              "late": 0.6693822204328287,
+              "none": 0.13945763830455007
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2312,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 28,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 2312,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:27",
+      "action": "overhead",
+      "availableTick": 2312
+    },
+    {
+      "type": "dodge",
+      "tick": 2356,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 2368
+    },
+    {
+      "type": "observed",
+      "tick": 2368,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2356,
+      "availableTick": 2368
+    },
+    {
+      "type": "sample",
+      "tick": 2379,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:27",
+      "family": "overhead",
+      "spacing": 51.71052090304285,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2356,
+      "observedTick": 2379
+    },
+    {
+      "type": "player-attack",
+      "tick": 2383,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 2393,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "snapshot",
+      "tick": 2400,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2400,
+        "boss": {
+          "x": -52.75664841999907,
+          "y": -92.27748909122113,
+          "facing": -1.4483367248478836,
+          "state": "attack",
+          "hp": 60
+        },
+        "player": {
+          "x": -79.90819007072328,
+          "y": -114.24847091359285,
+          "facing": 0.6803245605361261,
+          "state": "attack"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "decision",
+      "tick": 2415,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 2403,
+      "window": 29,
+      "latencyMs": 0.002250000000003638,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 27,
+        "effective": 5.529391714071461,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12778589085384323,
+          "late": 0.7510500877493749,
+          "none": 0.12116402139678185
+        },
+        "long": {
+          "early": 0.18759505113668845,
+          "late": 0.7175611963908761,
+          "none": 0.09484375247243525
+        },
+        "directions": {
+          "inward": 0.765165727339084,
+          "outward": 0.11741713633045801,
+          "lateral": 0.11741713633045801
+        },
+        "directionN": 25,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:20",
+          "static-switch-1001:21",
+          "static-switch-1001:22",
+          "static-switch-1001:23",
+          "static-switch-1001:24",
+          "static-switch-1001:25",
+          "static-switch-1001:26",
+          "static-switch-1001:27"
+        ],
+        "contexts": {
+          "cut": 7,
+          "overhead": 13,
+          "thrust": 7
+        },
+        "families": {
+          "cut": {
+            "n": 7,
+            "recent": {
+              "early": 0.18185369073016844,
+              "late": 0.6269861680072104,
+              "none": 0.19116014126262126
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 13,
+            "recent": {
+              "early": 0.19017563357822503,
+              "late": 0.6662857197246239,
+              "none": 0.1435386466971509
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 7,
+            "recent": {
+              "early": 0.19116014126262126,
+              "late": 0.6693822204328287,
+              "none": 0.13945763830455007
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2415,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "window": 29,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 2415,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:28",
+      "action": "cut",
+      "availableTick": 2415
+    },
+    {
+      "type": "dodge",
+      "tick": 2431,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 2443
+    },
+    {
+      "type": "observed",
+      "tick": 2443,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2431,
+      "availableTick": 2443
+    },
+    {
+      "type": "sample",
+      "tick": 2453,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:28",
+      "family": "cut",
+      "spacing": 34.92750000000001,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2431,
+      "observedTick": 2453
+    },
+    {
+      "type": "decision",
+      "tick": 2477,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.6097560975609756,
+        "thrust": 0.24390243902439024,
+        "approach": 0.048780487804878044,
+        "reposition": 0.06097560975609756,
+        "wait": 0.036585365853658534
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 2465,
+      "window": 30,
+      "latencyMs": 0.00245800000000429,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 28,
+        "effective": 5.534101205538598,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1258184579033151,
+          "late": 0.7537900206729249,
+          "none": 0.12039152142376006
+        },
+        "long": {
+          "early": 0.17970966342492997,
+          "late": 0.7287629064958887,
+          "none": 0.09152743007918132
+        },
+        "directions": {
+          "inward": 0.765358693990744,
+          "outward": 0.117320653004628,
+          "lateral": 0.117320653004628
+        },
+        "directionN": 26,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:21",
+          "static-switch-1001:22",
+          "static-switch-1001:23",
+          "static-switch-1001:24",
+          "static-switch-1001:25",
+          "static-switch-1001:26",
+          "static-switch-1001:27",
+          "static-switch-1001:28"
+        ],
+        "contexts": {
+          "cut": 8,
+          "overhead": 13,
+          "thrust": 7
+        },
+        "families": {
+          "cut": {
+            "n": 8,
+            "recent": {
+              "early": 0.16836908979225454,
+              "late": 0.6558869177230493,
+              "none": 0.17574399248469613
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 13,
+            "recent": {
+              "early": 0.19017563357822503,
+              "late": 0.6662857197246239,
+              "none": 0.1435386466971509
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 7,
+            "recent": {
+              "early": 0.19116014126262126,
+              "late": 0.6693822204328287,
+              "none": 0.13945763830455007
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2477,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 30,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 2477,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:29",
+      "action": "overhead",
+      "availableTick": 2477
+    },
+    {
+      "type": "snapshot",
+      "tick": 2520,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2520,
+        "boss": {
+          "x": -52.75664841999907,
+          "y": -92.27748909122113,
+          "facing": 2.706367800384169,
+          "state": "attack",
+          "hp": 60
+        },
+        "player": {
+          "x": -104.61285882401145,
+          "y": -68.16642111850805,
+          "facing": -0.43522485320562415,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "dodge",
+      "tick": 2521,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 2533
+    },
+    {
+      "type": "observed",
+      "tick": 2533,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2521,
+      "availableTick": 2533
+    },
+    {
+      "type": "sample",
+      "tick": 2544,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:29",
+      "family": "overhead",
+      "spacing": 42.34749999999997,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2521,
+      "observedTick": 2544
+    },
+    {
+      "type": "decision",
+      "tick": 2580,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 2568,
+      "window": 31,
+      "latencyMs": 0.002333000000007246,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 29,
+        "effective": 5.537962988541651,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12420678247328894,
+          "late": 0.7560345101593999,
+          "none": 0.11975870736731105
+        },
+        "long": {
+          "early": 0.17235439478984066,
+          "late": 0.7392115477049827,
+          "none": 0.08843405750517692
+        },
+        "directions": {
+          "inward": 0.7655166901643785,
+          "outward": 0.11724165491781068,
+          "lateral": 0.11724165491781068
+        },
+        "directionN": 27,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:22",
+          "static-switch-1001:23",
+          "static-switch-1001:24",
+          "static-switch-1001:25",
+          "static-switch-1001:26",
+          "static-switch-1001:27",
+          "static-switch-1001:28",
+          "static-switch-1001:29"
+        ],
+        "contexts": {
+          "cut": 8,
+          "overhead": 14,
+          "thrust": 7
+        },
+        "families": {
+          "cut": {
+            "n": 8,
+            "recent": {
+              "early": 0.16836908979225454,
+              "late": 0.6558869177230493,
+              "none": 0.17574399248469613
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 14,
+            "recent": {
+              "early": 0.17642823514421455,
+              "late": 0.685032867182775,
+              "none": 0.13853889767301036
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 7,
+            "recent": {
+              "early": 0.19116014126262126,
+              "late": 0.6693822204328287,
+              "none": 0.13945763830455007
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2580,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "window": 31,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 2580,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:30",
+      "action": "thrust",
+      "availableTick": 2580
+    },
+    {
+      "type": "dodge",
+      "tick": 2606,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 2618
+    },
+    {
+      "type": "observed",
+      "tick": 2618,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2606,
+      "availableTick": 2618
+    },
+    {
+      "type": "sample",
+      "tick": 2630,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:30",
+      "family": "thrust",
+      "spacing": 54.404999999999944,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2606,
+      "observedTick": 2630
+    },
+    {
+      "type": "player-attack",
+      "tick": 2638,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "snapshot",
+      "tick": 2640,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2640,
+        "boss": {
+          "x": -54.963732118213194,
+          "y": -74.21180943201435,
+          "facing": 1.69236387509956,
+          "state": "attack",
+          "hp": 60
+        },
+        "player": {
+          "x": -16.176849956825013,
+          "y": -65.96924678828793,
+          "facing": -2.9321986223032463,
+          "state": "attack"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "hit",
+      "tick": 2648,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "decision",
+      "tick": 2662,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "overhead": 1,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.49180327868852447,
+        "overhead": 0.40983606557377045,
+        "approach": 0.032786885245901634,
+        "reposition": 0.040983606557377046,
+        "wait": 0.024590163934426226
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 2650,
+      "window": 32,
+      "latencyMs": 0.0023749999999864713,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 30,
+        "effective": 5.5411296506041525,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12288629613597325,
+          "late": 0.7578734770170701,
+          "none": 0.11924022684695676
+        },
+        "long": {
+          "early": 0.16548061061383498,
+          "late": 0.7489762086802721,
+          "none": 0.08554318070589287
+        },
+        "directions": {
+          "inward": 0.7656460883423778,
+          "outward": 0.11717695582881113,
+          "lateral": 0.11717695582881113
+        },
+        "directionN": 28,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:23",
+          "static-switch-1001:24",
+          "static-switch-1001:25",
+          "static-switch-1001:26",
+          "static-switch-1001:27",
+          "static-switch-1001:28",
+          "static-switch-1001:29",
+          "static-switch-1001:30"
+        ],
+        "contexts": {
+          "cut": 8,
+          "overhead": 14,
+          "thrust": 8
+        },
+        "families": {
+          "cut": {
+            "n": 8,
+            "recent": {
+              "early": 0.16836908979225454,
+              "late": 0.6558869177230493,
+              "none": 0.17574399248469613
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 14,
+            "recent": {
+              "early": 0.17642823514421455,
+              "late": 0.685032867182775,
+              "none": 0.13853889767301036
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 8,
+            "recent": {
+              "early": 0.17574399248469613,
+              "late": 0.6894836966552832,
+              "none": 0.13477231086002064
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2662,
+      "encounterId": "static-switch-1001",
+      "action": "overhead",
+      "window": 32,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 2662,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:31",
+      "action": "overhead",
+      "availableTick": 2662
+    },
+    {
+      "type": "dodge",
+      "tick": 2706,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 2718
+    },
+    {
+      "type": "observed",
+      "tick": 2718,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2706,
+      "availableTick": 2718
+    },
+    {
+      "type": "sample",
+      "tick": 2729,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:31",
+      "family": "overhead",
+      "spacing": 39.65302090304302,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2706,
+      "observedTick": 2729
+    },
+    {
+      "type": "snapshot",
+      "tick": 2760,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2760,
+        "boss": {
+          "x": -54.963732118213194,
+          "y": -74.21180943201435,
+          "facing": 0.20939403128654668,
+          "state": "ready",
+          "hp": 30
+        },
+        "player": {
+          "x": -15.266181154228136,
+          "y": -115.37629174033225,
+          "facing": 2.338055316670552,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "decision",
+      "tick": 2765,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "cut": 1.2,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "cut": 0.6521739130434782,
+        "thrust": 0.21739130434782605,
+        "approach": 0.04347826086956521,
+        "reposition": 0.05434782608695651,
+        "wait": 0.032608695652173905
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 2753,
+      "window": 33,
+      "latencyMs": 0.002290999999999599,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 31,
+        "effective": 5.543726313495405,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.1218042277608667,
+          "late": 0.7593804126235366,
+          "none": 0.11881535961559661
+        },
+        "long": {
+          "early": 0.15904542226261353,
+          "late": 0.7581178155379851,
+          "none": 0.08283676219940153
+        },
+        "directions": {
+          "inward": 0.7657520883278488,
+          "outward": 0.11712395583607556,
+          "lateral": 0.11712395583607556
+        },
+        "directionN": 29,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:24",
+          "static-switch-1001:25",
+          "static-switch-1001:26",
+          "static-switch-1001:27",
+          "static-switch-1001:28",
+          "static-switch-1001:29",
+          "static-switch-1001:30",
+          "static-switch-1001:31"
+        ],
+        "contexts": {
+          "cut": 8,
+          "overhead": 15,
+          "thrust": 8
+        },
+        "families": {
+          "cut": {
+            "n": 8,
+            "recent": {
+              "early": 0.16836908979225454,
+              "late": 0.6558869177230493,
+              "none": 0.17574399248469613
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 15,
+            "recent": {
+              "early": 0.16534332228500706,
+              "late": 0.7001492178821338,
+              "none": 0.13450745983285917
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 8,
+            "recent": {
+              "early": 0.17574399248469613,
+              "late": 0.6894836966552832,
+              "none": 0.13477231086002064
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2765,
+      "encounterId": "static-switch-1001",
+      "action": "cut",
+      "window": 33,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 2765,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:32",
+      "action": "cut",
+      "availableTick": 2765
+    },
+    {
+      "type": "dodge",
+      "tick": 2781,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 2793
+    },
+    {
+      "type": "observed",
+      "tick": 2793,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2781,
+      "availableTick": 2793
+    },
+    {
+      "type": "sample",
+      "tick": 2803,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:32",
+      "family": "cut",
+      "spacing": 54.405000000000065,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2781,
+      "observedTick": 2803
+    },
+    {
+      "type": "decision",
+      "tick": 2827,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "controller": "static",
+      "version": "static-1",
+      "scores": {
+        "overhead": 1,
+        "thrust": 0.4,
+        "approach": 0.08,
+        "reposition": 0.1,
+        "wait": 0.06
+      },
+      "contributions": {
+        "cut": 0,
+        "overhead": 0,
+        "thrust": 0,
+        "approach": 0,
+        "reposition": 0,
+        "wait": 0
+      },
+      "probabilities": {
+        "overhead": 0.6097560975609756,
+        "thrust": 0.24390243902439024,
+        "approach": 0.048780487804878044,
+        "reposition": 0.06097560975609756,
+        "wait": 0.036585365853658534
+      },
+      "reason": "spacing-only",
+      "evidence": [],
+      "planVersion": null,
+      "observationTick": 2815,
+      "window": 34,
+      "latencyMs": 0.002417000000008329,
+      "inputVersion": "observation-1",
+      "summary": {
+        "n": 32,
+        "effective": 5.545855577066232,
+        "sufficient": true,
+        "scope": "pooled (sparse-context backoff)",
+        "recent": {
+          "early": 0.12091742237509909,
+          "late": 0.7606154164759394,
+          "none": 0.11846716114896162
+        },
+        "long": {
+          "early": 0.15301086231635846,
+          "late": 0.7666903034866079,
+          "none": 0.08029883419703372
+        },
+        "directions": {
+          "inward": 0.7658389367899912,
+          "outward": 0.11708053160500445,
+          "lateral": 0.11708053160500445
+        },
+        "directionN": 30,
+        "censored": 0,
+        "evidence": [
+          "static-switch-1001:25",
+          "static-switch-1001:26",
+          "static-switch-1001:27",
+          "static-switch-1001:28",
+          "static-switch-1001:29",
+          "static-switch-1001:30",
+          "static-switch-1001:31",
+          "static-switch-1001:32"
+        ],
+        "contexts": {
+          "cut": 9,
+          "overhead": 15,
+          "thrust": 8
+        },
+        "families": {
+          "cut": {
+            "n": 9,
+            "recent": {
+              "early": 0.15796970550003903,
+              "late": 0.6781753046031616,
+              "none": 0.16385498989679947
+            },
+            "scope": "cut"
+          },
+          "overhead": {
+            "n": 15,
+            "recent": {
+              "early": 0.16534332228500706,
+              "late": 0.7001492178821338,
+              "none": 0.13450745983285917
+            },
+            "scope": "overhead"
+          },
+          "thrust": {
+            "n": 8,
+            "recent": {
+              "early": 0.17574399248469613,
+              "late": 0.6894836966552832,
+              "none": 0.13477231086002064
+            },
+            "scope": "thrust"
+          }
+        }
+      }
+    },
+    {
+      "type": "accepted",
+      "tick": 2827,
+      "encounterId": "static-switch-1001",
+      "action": "thrust",
+      "window": 34,
+      "controller": "static"
+    },
+    {
+      "type": "cue",
+      "tick": 2827,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:33",
+      "action": "thrust",
+      "availableTick": 2827
+    },
+    {
+      "type": "dodge",
+      "tick": 2853,
+      "encounterId": "static-switch-1001",
+      "direction": "inward",
+      "availableTick": 2865
+    },
+    {
+      "type": "observed",
+      "tick": 2865,
+      "encounterId": "static-switch-1001",
+      "sourceType": "dodge",
+      "sourceTick": 2853,
+      "availableTick": 2865
+    },
+    {
+      "type": "sample",
+      "tick": 2877,
+      "encounterId": "static-switch-1001",
+      "instance": "static-switch-1001:33",
+      "family": "thrust",
+      "spacing": 42.34749999999993,
+      "outcome": "miss",
+      "response": "late",
+      "direction": "inward",
+      "responseTick": 2853,
+      "observedTick": 2877
+    },
+    {
+      "type": "snapshot",
+      "tick": 2880,
+      "encounterId": "static-switch-1001",
+      "state": {
+        "version": "observation-1",
+        "tick": 2880,
+        "boss": {
+          "x": -59.40905994391215,
+          "y": -91.86057880900113,
+          "facing": -1.8175412622038545,
+          "state": "attack",
+          "hp": 30
+        },
+        "player": {
+          "x": -94.89916342138119,
+          "y": -86.17258207947269,
+          "facing": -0.1589184524270726,
+          "state": "ready"
+        },
+        "arena": {
+          "radius": 285
+        }
+      },
+      "playerHP": 90
+    },
+    {
+      "type": "player-attack",
+      "tick": 2893,
+      "encounterId": "static-switch-1001"
+    },
+    {
+      "type": "hit",
+      "tick": 2903,
+      "encounterId": "static-switch-1001",
+      "target": "boss",
+      "damage": 30,
+      "source": "player"
+    },
+    {
+      "type": "end",
+      "tick": 2903,
+      "encounterId": "static-switch-1001",
+      "outcome": "victory"
+    }
+  ]
+}

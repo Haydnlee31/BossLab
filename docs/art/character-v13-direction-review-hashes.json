@@ -1,0 +1,62 @@
+{
+  "context": 16,
+  "verdict": "meaningful full-character construction gains; overall reference target unmet",
+  "images": [
+    {
+      "path": "artifacts/art/last-vigil-v13/final-hero.png",
+      "sha256": "e620e208bc02acfa92b56f337234cff1e14deda31a4c0614630ef46451100fa0",
+      "review": "directly visually inspected final context16 image"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-front.png",
+      "sha256": "8e73911ac98dc5669ba3e77bb3bf361181281460228f1e0599c52e7f929fa962",
+      "review": "directly visually inspected final context16 image"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-side.png",
+      "sha256": "fee647c36ba18df2162171d02916ba473c9bff468bb9a58e84fc1709799c6a1a",
+      "review": "directly visually inspected final context16 image"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-back.png",
+      "sha256": "647831e2a71ac3fd60cc4d224b4c2f1a6df4d215cf273a3cb656e0c169b2c7db",
+      "review": "directly visually inspected final context16 image"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-garment.png",
+      "sha256": "4aca9eb180406ecb5d0724039ff516f12f987a8ec8ea2ecbe948686b70bfc6c5",
+      "review": "directly visually inspected final context16 image"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-hand.png",
+      "sha256": "c5e06a51eef5dccd1363fcde6c976708cde63a290ad89c3e24adb09dc33f9261",
+      "review": "directly visually inspected final context16 image"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-palm.png",
+      "sha256": "c06cd3ede1c840681615332df06e964b9c5fd672019de8b77be61c8a508cece9",
+      "review": "directly visually inspected final context16 image"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-head.png",
+      "sha256": "9be3d94b603dc9bc00d6fabb57e62995bd972427c6d0782f911acc744daae744",
+      "review": "directly visually inspected final context16 image"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-hilt.png",
+      "sha256": "bd6aa3ba0809fd46faabaa7d74c8a80ce3431fcaff9a17e336e5d6221049183d",
+      "review": "directly visually inspected final context16 image"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-clay-front.png",
+      "sha256": "5314041d85d2493f39e0c73d7bee5c83ea6cd87798aef6464f788f61e7536157",
+      "review": "directly visually inspected final context16 image"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/final-clay-side.png",
+      "sha256": "b867908687531be65ce6c375dd747ebed0db9c727521d8fc4d79833d667cd4cd",
+      "review": "directly visually inspected final context16 image"
+    }
+  ],
+  "scope": "Static 720x920 image review only; no rig, motion, collision completeness, runtime or production PBR acceptance"
+}

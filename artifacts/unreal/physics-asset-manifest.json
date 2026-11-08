@@ -1,0 +1,7 @@
+{
+  "source": "/Users/Shared/Epic Games/UE_5.8/UE_5.8/Templates/TemplateResources/High/Characters/Content/Mannequins/Rigs/PA_Mannequin.uasset",
+  "destination": "unreal/BossLabWarden/Content/Characters/Mannequins/Rigs/PA_Mannequin.uasset",
+  "bytes": 301538,
+  "sha256": "c0ceaf003947088ff076555b81a46e5ccb11149c94025eb2a9e74263fbaa0d67",
+  "reason": "Resolve installed skeletal mesh physics-asset dependency; gameplay uses explicit capsule queries."
+}

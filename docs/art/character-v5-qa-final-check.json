@@ -1,0 +1,280 @@
+{
+  "date": "2026-11-07",
+  "verdict": "needs work; actual mantle/garment increment and isolated UV progress, overall realism unmet",
+  "game_matches": {
+    "unreal/BossLabWarden/Config/DefaultEditorPerProjectUserSettings.ini": true,
+    "unreal/BossLabWarden/Config/DefaultEngine.ini": true,
+    "unreal/BossLabWarden/Config/DefaultGame.ini": true,
+    "unreal/BossLabWarden/Config/DefaultInput.ini": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/BossLabWarden.Build.cs": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/BossLabWarden.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/FundamentalsTests.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/OutfitTests.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/PreflightTests.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenCombat.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenCombat.h": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenEncounter.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenInspector.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenMenu.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenOutfit.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenPolicy.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenPolicy.h": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenPresentation.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenPrototype.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenPrototype.h": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenScript.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenScript.h": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenStatistics.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenStatistics.h": true,
+    "unreal/BossLabWarden/Source/BossLabWarden/WardenSword.cpp": true,
+    "unreal/BossLabWarden/Source/BossLabWarden.Target.cs": true,
+    "unreal/BossLabWarden/Source/BossLabWardenEditor.Target.cs": true,
+    "unreal/Package/Mac/BossLabWarden.app/Contents/MacOS/BossLabWarden": true
+  },
+  "preserved_v4_matches": {
+    "artifacts/art/last-vigil-v4/arch-domain-failure.json": true,
+    "artifacts/art/last-vigil-v4/asset-audit.json": true,
+    "artifacts/art/last-vigil-v4/audit-1793988155.log": true,
+    "artifacts/art/last-vigil-v4/audit-process.json": true,
+    "artifacts/art/last-vigil-v4/back.png": true,
+    "artifacts/art/last-vigil-v4/clay_head.png": true,
+    "artifacts/art/last-vigil-v4/clay_headside.png": true,
+    "artifacts/art/last-vigil-v4/clay_hero.png": true,
+    "artifacts/art/last-vigil-v4/clay_palm.png": true,
+    "artifacts/art/last-vigil-v4/draft-1793987998.log": true,
+    "artifacts/art/last-vigil-v4/draft-1793988268.log": true,
+    "artifacts/art/last-vigil-v4/draft-1793988383.log": true,
+    "artifacts/art/last-vigil-v4/draft-1793988551.log": true,
+    "artifacts/art/last-vigil-v4/draft-1793988579.log": true,
+    "artifacts/art/last-vigil-v4/draft-1793988791.log": true,
+    "artifacts/art/last-vigil-v4/draft-process.json": true,
+    "artifacts/art/last-vigil-v4/focal-topology-audit.json": true,
+    "artifacts/art/last-vigil-v4/front.png": true,
+    "artifacts/art/last-vigil-v4/head.png": true,
+    "artifacts/art/last-vigil-v4/headside.png": true,
+    "artifacts/art/last-vigil-v4/hero.png": true,
+    "artifacts/art/last-vigil-v4/index.html": true,
+    "artifacts/art/last-vigil-v4/iteration-01/asset-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-01/clay_head.png": true,
+    "artifacts/art/last-vigil-v4/iteration-01/clay_hero.png": true,
+    "artifacts/art/last-vigil-v4/iteration-01/clay_palm.png": true,
+    "artifacts/art/last-vigil-v4/iteration-01/draft-process.json": true,
+    "artifacts/art/last-vigil-v4/iteration-01/focal-topology-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-01/head.png": true,
+    "artifacts/art/last-vigil-v4/iteration-01/hero.png": true,
+    "artifacts/art/last-vigil-v4/iteration-01/last-vigil-v4.blend": true,
+    "artifacts/art/last-vigil-v4/iteration-01/last_vigil_v4.py": true,
+    "artifacts/art/last-vigil-v4/iteration-01/material-sample-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-01/palm.png": true,
+    "artifacts/art/last-vigil-v4/iteration-01/uv-glove.png": true,
+    "artifacts/art/last-vigil-v4/iteration-01/uv-map-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-01/uv-visor.png": true,
+    "artifacts/art/last-vigil-v4/iteration-02/asset-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-02/audit-process.json": true,
+    "artifacts/art/last-vigil-v4/iteration-02/clay_head.png": true,
+    "artifacts/art/last-vigil-v4/iteration-02/clay_headside.png": true,
+    "artifacts/art/last-vigil-v4/iteration-02/clay_hero.png": true,
+    "artifacts/art/last-vigil-v4/iteration-02/clay_palm.png": true,
+    "artifacts/art/last-vigil-v4/iteration-02/draft-process.json": true,
+    "artifacts/art/last-vigil-v4/iteration-02/focal-topology-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-02/head.png": true,
+    "artifacts/art/last-vigil-v4/iteration-02/headside.png": true,
+    "artifacts/art/last-vigil-v4/iteration-02/hero.png": true,
+    "artifacts/art/last-vigil-v4/iteration-02/last-vigil-v4.blend": true,
+    "artifacts/art/last-vigil-v4/iteration-02/last_vigil_v4.py": true,
+    "artifacts/art/last-vigil-v4/iteration-02/material-sample-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-02/palm.png": true,
+    "artifacts/art/last-vigil-v4/iteration-02/static-cape-clearance.json": true,
+    "artifacts/art/last-vigil-v4/iteration-02/uv-glove.png": true,
+    "artifacts/art/last-vigil-v4/iteration-02/uv-map-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-02/uv-visor.png": true,
+    "artifacts/art/last-vigil-v4/iteration-03/asset-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-03/audit-process.json": true,
+    "artifacts/art/last-vigil-v4/iteration-03/clay_head.png": true,
+    "artifacts/art/last-vigil-v4/iteration-03/clay_headside.png": true,
+    "artifacts/art/last-vigil-v4/iteration-03/clay_hero.png": true,
+    "artifacts/art/last-vigil-v4/iteration-03/clay_palm.png": true,
+    "artifacts/art/last-vigil-v4/iteration-03/draft-process.json": true,
+    "artifacts/art/last-vigil-v4/iteration-03/focal-topology-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-03/head.png": true,
+    "artifacts/art/last-vigil-v4/iteration-03/headside.png": true,
+    "artifacts/art/last-vigil-v4/iteration-03/hero.png": true,
+    "artifacts/art/last-vigil-v4/iteration-03/last-vigil-v4.blend": true,
+    "artifacts/art/last-vigil-v4/iteration-03/last_vigil_v4.py": true,
+    "artifacts/art/last-vigil-v4/iteration-03/material-sample-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-03/palm.png": true,
+    "artifacts/art/last-vigil-v4/iteration-03/static-cape-clearance.json": true,
+    "artifacts/art/last-vigil-v4/iteration-03/uv-glove.png": true,
+    "artifacts/art/last-vigil-v4/iteration-03/uv-map-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-03/uv-visor.png": true,
+    "artifacts/art/last-vigil-v4/iteration-04/arch-domain-failure.json": true,
+    "artifacts/art/last-vigil-v4/iteration-04/asset-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-04/audit-process.json": true,
+    "artifacts/art/last-vigil-v4/iteration-04/clay_head.png": true,
+    "artifacts/art/last-vigil-v4/iteration-04/clay_headside.png": true,
+    "artifacts/art/last-vigil-v4/iteration-04/clay_hero.png": true,
+    "artifacts/art/last-vigil-v4/iteration-04/clay_palm.png": true,
+    "artifacts/art/last-vigil-v4/iteration-04/draft-process.json": true,
+    "artifacts/art/last-vigil-v4/iteration-04/focal-topology-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-04/head.png": true,
+    "artifacts/art/last-vigil-v4/iteration-04/headside.png": true,
+    "artifacts/art/last-vigil-v4/iteration-04/hero.png": true,
+    "artifacts/art/last-vigil-v4/iteration-04/last-vigil-v4.blend": true,
+    "artifacts/art/last-vigil-v4/iteration-04/last_vigil_v4.py": true,
+    "artifacts/art/last-vigil-v4/iteration-04/material-sample-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-04/palm.png": true,
+    "artifacts/art/last-vigil-v4/iteration-04/static-cape-clearance.json": true,
+    "artifacts/art/last-vigil-v4/iteration-04/uv-glove.png": true,
+    "artifacts/art/last-vigil-v4/iteration-04/uv-map-audit.json": true,
+    "artifacts/art/last-vigil-v4/iteration-04/uv-visor.png": true,
+    "artifacts/art/last-vigil-v4/mask_head.png": true,
+    "artifacts/art/last-vigil-v4/mask_palm.png": true,
+    "artifacts/art/last-vigil-v4/material-sample-audit.json": true,
+    "artifacts/art/last-vigil-v4/palm.png": true,
+    "artifacts/art/last-vigil-v4/probe-1793988867.log": true,
+    "artifacts/art/last-vigil-v4/probe-process.json": true,
+    "artifacts/art/last-vigil-v4/session-audit-source.py": true,
+    "artifacts/art/last-vigil-v4/side.png": true,
+    "artifacts/art/last-vigil-v4/static-cape-clearance.json": true,
+    "artifacts/art/last-vigil-v4/techart-delivery-audit.json": true,
+    "artifacts/art/last-vigil-v4/uv-glove.png": true,
+    "artifacts/art/last-vigil-v4/uv-map-audit.json": true,
+    "artifacts/art/last-vigil-v4/uv-visor.png": true,
+    "scripts/bosslab-art-v4": true,
+    "unreal/art-studio/revision-v4-2026-11-07/last-vigil-v4.blend": true,
+    "unreal/art-studio/revision-v4-2026-11-07/textures/V3-authored-leather-color.png": true,
+    "unreal/art-studio/revision-v4-2026-11-07/textures/V3-authored-leather-relief.png": true,
+    "unreal/art-studio/revision-v4-2026-11-07/textures/V3-authored-leather-roughness.png": true,
+    "unreal/art-studio/revision-v4-2026-11-07/textures/V3-authored-steel-color.png": true,
+    "unreal/art-studio/revision-v4-2026-11-07/textures/V3-authored-steel-relief.png": true,
+    "unreal/art-studio/revision-v4-2026-11-07/textures/V3-authored-steel-roughness.png": true,
+    "unreal/art-studio/revision-v4-2026-11-07/textures/leather-placement-mask.png": true,
+    "unreal/art-studio/revision-v4-2026-11-07/textures/steel-placement-mask.png": true,
+    "unreal/art-studio/source/last_vigil_v4.py": true
+  },
+  "reviewed_final_images": {
+    "artifacts/art/last-vigil-v5/hero.png": {
+      "sha256": "bcefcf09cacfe127ac3077e9adac386fd12758058b939cd5c7ad97fab0eece15",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/head.png": {
+      "sha256": "0396311842c84537d00390c1bf1be03ce66eb4e61738aa70be0f7c4e5da97ef9",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/headside.png": {
+      "sha256": "9b54a5d4f68b99527f3d27a191c7467b865562f0e6500f3f505ff3fb214c4bff",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/palm.png": {
+      "sha256": "5b8c2e0538a6b90704b90921549ba786cec590ae4b97ac65fb1fba6b71a61fe0",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/clay_hero.png": {
+      "sha256": "b85ebe6f64b382fea8994fa0b85d06c8b285a62b17bdec22c10d7ee8180cad0b",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/clay_head.png": {
+      "sha256": "3cded4696d8ab80356d1aa91a13981bd33b0d4c50d2247dddfc5383e37edd79a",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/clay_palm.png": {
+      "sha256": "8f4dccb281a1efa1d8630f6887695772d6827d8ad0df308fbc10c18116948601",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/front.png": {
+      "sha256": "5940a27af6460c8e01a2755834b7d7011889860e27323d91218776984a36ed97",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/back.png": {
+      "sha256": "cf36177637cfb9789f37c76c393e97f7689b8391099626f2bbdabca1e1862bec",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/side.png": {
+      "sha256": "853d95593e75e53722aad441ad9b22ca85d682a8d604f78e364cfc79251c62c0",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/garment.png": {
+      "sha256": "edba80bee30733ffb9947ca4e13c52b05708c33274358fadf754ef46268a234c",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/cape_detail.png": {
+      "sha256": "7cecbe5be7cc577a2ffd1874061e54b61e3038ab0801f8fb3c9cc8c07856540f",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/mask_head.png": {
+      "sha256": "30bbcf19be15f6c92a56bb0c7995cd99c6ceaa8c818f612a853192cc632acbc4",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/mask_palm.png": {
+      "sha256": "b2861f0b6efed1e65a2f920c98c41fe5545c43051909a156b0f279c2373e8e15",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/sword.png": {
+      "sha256": "cc9ae25bcf23f402edba9852cb40a2a73b3323f0794cf94c4c110c28997d0e0e",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/head-detail.png": {
+      "sha256": "f6991230ffb4f0434fbf7e6008bae74c2fed0d2335f61c5ec72d1d477aebad3a",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    },
+    "artifacts/art/last-vigil-v5/garment-detail.png": {
+      "sha256": "857dcfac2a63a67dea6edf2cc3a1c73d99da5b48f57ba7e4d379171e1b06fc32",
+      "matches_delivery": true,
+      "visually_reviewed": true
+    }
+  },
+  "final_source_scene_scripts": {
+    "unreal/art-studio/source/last_vigil_v5.py": {
+      "sha256": "d604904951bb29f5bdbe410c05efabd4431c4ad36afbc8779edc99b30522c3bc",
+      "matches_delivery": true
+    },
+    "unreal/art-studio/source/v5_glove_uv_study.py": {
+      "sha256": "0d41908c8a6332e7ba6f4cae23ff886799e5743ae9ba9445c609795a53a4ab27",
+      "matches_delivery": true
+    },
+    "scripts/bosslab-art-v5": {
+      "sha256": "cbe7c4589956abfae125d2a7e5d6e7386363da1d8f841c5d1d271ccc4e8639ff",
+      "matches_delivery": true
+    },
+    "unreal/art-studio/revision-v5-2026-11-07/last-vigil-v5.blend": {
+      "sha256": "8f187e663f03ce4e8e07c100265665c22df940651d2800ace27e385fc01ff866",
+      "matches_delivery": true
+    },
+    "unreal/art-studio/revision-v5-2026-11-07/v5-glove-seam-study.blend": {
+      "sha256": "a3a7e63ab405c3998e2f51064d084164b2efde47876fe2ca9a0ff7927ba054b0",
+      "matches_delivery": true
+    }
+  },
+  "storage": {
+    "unreal_allocated_bytes": 2692726784,
+    "free_bytes": 29303713792,
+    "unreal_budget_bytes": 10000000000,
+    "free_reserve_bytes": 25769803776
+  },
+  "new_gameplay_tests": false,
+  "boss_ai_gate": "closed",
+  "uv_study_integrated": false,
+  "limits": [
+    "Isolated UV study still2R/1L sampled overlaps, not clean or production unwrap",
+    "Main character retains original projected glove sample",
+    "Static cape mask correction excludes exact mantle yoke; no geometry correction or motion pass",
+    "Shared evolving docs/status excluded from immutable V4 preservation",
+    "No production rig, new cloth simulation, runtime integration or FPS claim"
+  ]
+}

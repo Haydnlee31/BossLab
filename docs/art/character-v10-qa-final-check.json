@@ -1,0 +1,278 @@
+{
+  "scope": "Independent V10 frozen file integrity and evidence review; no DCC/game test rerun",
+  "time_unix": 1794028872.094154,
+  "v9_armor_sha256": {
+    "checked": 68,
+    "mismatches": []
+  },
+  "game_sha256": {
+    "checked": 28,
+    "mismatches": []
+  },
+  "delivery_files": [
+    {
+      "path": "unreal/art-studio/source/last_vigil_v10.py",
+      "sha256": "f49bfcc8136e9f4fb85c5bda86e864f6069b616d006c855df9acba32af0c71ec",
+      "matches": true
+    },
+    {
+      "path": "scripts/bosslab-art-v10",
+      "sha256": "8a585e68a18537e6edde64fc1c86ae2821b3a63a578895e9b65cbf897524da9c",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/last-vigil-v10.blend",
+      "sha256": "c91477d262097a45fc5198c3bc0a808783594505f89f8fd6e5a3027454c9cf66",
+      "matches": true
+    },
+    {
+      "path": "docs/art/character-v10-techart.md",
+      "sha256": "f9271b94dfbeb50429877a8208fcc5457fed0d4c8a028584ca0bc59a65add633",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/index.html",
+      "sha256": "77899a2ad8d3b7977133d3fceafc15afb759f5e08e6b93699d979f61335951c9",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/hero.png",
+      "sha256": "5100d39918c0671efcdddb51305494b90c803fa1e3cc555f5a2c104d98bc86cc",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/front.png",
+      "sha256": "fb3169cba318274de7afdadfa64f4439a1233f538a0943175adf1187feb1c80a",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/back.png",
+      "sha256": "96f9896ea68e5fb0cb1675001bba32364bae011a2cd6aa3492dd74894e73d43d",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/side.png",
+      "sha256": "204c44338e62b54385596f847ed5771c8a32d047c3d5920736b75b4912ffbef9",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/head.png",
+      "sha256": "aaf9aedcce2763b04683800ca37a16205502a6c4bc11a76b9cc80b764a2daf91",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/shoulder.png",
+      "sha256": "3b87359d1cadf75c224b748e4759ebb608f3cfc2169ea5ae7e8d1cf360d8d9d7",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/garment.png",
+      "sha256": "1d2b6be4ff020ec368a3753db053418119c0cf8740d5f29bb69326e478992228",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/clay_shoulder.png",
+      "sha256": "a8d25cca4f60e08451bad2204c08c0b5fd023f3cf5b5de487fd7f9a23eb98a11",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/clay_side.png",
+      "sha256": "bbdafc6716f68e562846b1cc641623dc8b7354e9ac34aa1e5c06ad7a9eac5e17",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/shoulder-detail.png",
+      "sha256": "935e0aa3fb5b9d6a7355bf5baec93e4beb10b4fe724ac905ddb50272ebc9eda0",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/garment-detail.png",
+      "sha256": "d46125b4f36c5cae96ac9f6509f1a95e6407298f490af64103344a51703ad211",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/mask_head.png",
+      "sha256": "0ed12f022c79aa8f41c923eeb7e1faa4747b9c0e5c521e15b0e6366ba54d4664",
+      "matches": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v10/mask_shoulder.png",
+      "sha256": "f4587fa3b4f65bd70245e47b458d39c406754b090c05057447d921f8c0c3646b",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-articulated-color.png",
+      "sha256": "a5e3fa234b51c0ae7e3536b50df9e9d1fec6481e7889b3dee32a54a866c4db77",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-articulated-construction-mask.png",
+      "sha256": "4393c1941f6a1ab1f31d4b8b80b9f4ab1c181f9eccf1ae5e5a793ff23018b578",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-articulated-roughness-metallic.png",
+      "sha256": "74e4b83861f46558942123ac22301a46dc8a2263b08fd9ddfa6d27f8d19f6c2c",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-crown-color.png",
+      "sha256": "d5316c22d64efd29eedd8e512252ece748fd61efec88d0b7e0ab447fe3e58d37",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-crown-construction-mask.png",
+      "sha256": "3af7e00e1945ce232fb7068877437146ad5b5b5d4769fc23347dcb4e8e99a520",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-crown-roughness-metallic.png",
+      "sha256": "071e7f54c8734267822c4e1ac9509d66750f73eea4c0ffffa43b7f83a94de6d3",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-shoulder-color.png",
+      "sha256": "c6c9d7e8d831634c3745a80991be4638be13f9a6282483e3b915b69aff12fe41",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-shoulder-construction-mask.png",
+      "sha256": "e0362c006d63c64ac2132001018b40da46a269cd8e97b1761661d223f3d95bed",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-shoulder-roughness-metallic.png",
+      "sha256": "c378e8315005d8e7976657f8227f2e9db3ea0bdcd5ef84e8ae00e70d1359419d",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-visor-color.png",
+      "sha256": "7ce6144bffc1482000b28e91acaff5d47d21e3fdafe274baf45ce9bc453c0a59",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-visor-construction-mask.png",
+      "sha256": "6f756e02da6202a6455288685d125bb4f4f1768448be127d779915e198dd8cea",
+      "matches": true
+    },
+    {
+      "path": "unreal/art-studio/revision-v10-2026-11-07/textures/V10-visor-roughness-metallic.png",
+      "sha256": "f49625a8b9e5c533ee0e775a8cf0aedf22e6de91ab15306194575c1472b87b02",
+      "matches": true
+    }
+  ],
+  "protected_state_equal": true,
+  "distinct_camera_matrices": 6,
+  "producer_geometry": {
+    "kind": "Editable studio geometry validation, not a game-performance or artistic-quality test",
+    "renderable_objects": 339,
+    "evaluated_vertices": 430752,
+    "evaluated_triangles": 813036,
+    "finite_vertices": true,
+    "packed_authored_images": 37,
+    "bounds_m": [
+      [
+        -0.433866411447525,
+        -0.20009982585906982,
+        0.01000000536441803
+      ],
+      [
+        0.9089999794960022,
+        0.46217280626296997,
+        1.8742388486862183
+      ]
+    ],
+    "production_body_rig": false,
+    "runtime_lods": false,
+    "blender": "4.5.15 LTS"
+  },
+  "producer_garment_clearance": [
+    {
+      "object": "V10 | authored static split surcoat -1",
+      "body_front_envelope_samples": 7712,
+      "min_body_front_clearance_m": 0.0038766562938690186,
+      "body_samples_below_3mm": 0,
+      "tasset_back_envelope_samples": 1647,
+      "min_tasset_back_clearance_m": 0.005131900310516357,
+      "tasset_samples_below_3mm": 0
+    },
+    {
+      "object": "V10 | authored static split surcoat 1",
+      "body_front_envelope_samples": 8117,
+      "min_body_front_clearance_m": 0.0038767009973526,
+      "body_samples_below_3mm": 0,
+      "tasset_back_envelope_samples": 1647,
+      "min_tasset_back_clearance_m": 0.005129754543304443,
+      "tasset_samples_below_3mm": 0
+    }
+  ],
+  "producer_collar_metrics": {
+    "old_evaluated_support_bounds": {
+      "min": [
+        -0.27463945746421814,
+        -0.14608807861804962,
+        1.477537989616394
+      ],
+      "max": [
+        0.27160924673080444,
+        0.20193186402320862,
+        1.635502576828003
+      ],
+      "span": [
+        0.5462487041950226,
+        0.34801994264125824,
+        0.1579645872116089
+      ]
+    },
+    "new_evaluated_support_bounds": {
+      "min": [
+        -0.17020000517368317,
+        -0.13766667246818542,
+        1.5195903778076172
+      ],
+      "max": [
+        0.17075499892234802,
+        0.18000000715255737,
+        1.6515552997589111
+      ],
+      "span": [
+        0.3409550040960312,
+        0.3176666796207428,
+        0.13196492195129395
+      ]
+    },
+    "retention_end_nearest_samples": [
+      {
+        "endpoint_vertex": 0,
+        "nearest_collar_distance_m": 0.0014999780105426908
+      },
+      {
+        "endpoint_vertex": 1,
+        "nearest_collar_distance_m": 0.0015000127023085952
+      },
+      {
+        "endpoint_vertex": 32,
+        "nearest_collar_distance_m": 0.001500000013038516
+      },
+      {
+        "endpoint_vertex": 33,
+        "nearest_collar_distance_m": 0.0015000022249296308
+      }
+    ],
+    "scope": "Same evaluated support-only bounds, excluding groom; strap four control-end vertex nearest distances only, not full contact or motion validation."
+  },
+  "final_view_counts": {
+    "material_or_clay": 9,
+    "high_resolution_detail": 2,
+    "placement_diagnostic_not_beauty": 2
+  },
+  "storage": {
+    "unreal_allocated_bytes": 4128923648,
+    "free_bytes": 27232702464,
+    "limit_bytes": 10000000000,
+    "reserve_bytes": 25769803776
+  },
+  "verdict": "Local progress; overall needs work",
+  "new_game_tests": false,
+  "boss_AI_gate": "closed"
+}

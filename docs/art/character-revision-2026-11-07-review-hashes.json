@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-07",
+  "review": "art-director fifth actual revision; needs work, not reference-quality pass",
+  "files": {
+    "artifacts/art/last-vigil-v2/hero.png": "1f060f422d59cabe7e1542eab3c93140be015facc6c82097c86142791345608d",
+    "artifacts/art/last-vigil-v2/hand.png": "caa89be9adccfe8db17ab60fa59b93b250026b45267f7c42c05a71caf8ff5616",
+    "artifacts/art/last-vigil-v2/side.png": "c0d9750d33aab603dfbe5c69b4179fe14a0a989fac4f4a11860d13f91372ec46",
+    "artifacts/art/last-vigil-v2/back.png": "bf3ec4dff384052ca852550ac64def06d540dc210f076748d845d6a68e3dfb90",
+    "artifacts/art/last-vigil-v2/armor.png": "d6632022f42614e935dca77373cd9b652e90f71aa78f3789ba987a291418dbf0",
+    "artifacts/art/last-vigil-v2/hilt.png": "c0f30ac2060f1d1eb8fcac7b278c947ff8216f42906779997052b03b9bb745d2"
+  }
+}

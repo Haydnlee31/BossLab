@@ -1,0 +1,69 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "Lees-Laptop.local",
+			"instance": "F0B4486B524EDE2A0A8BDAA88EC8929F",
+			"instanceName": "Lees-Laptop.local-28474",
+			"platform": "MacEditor",
+			"oSVersion": "macOS 26.6.2 25G83",
+			"model": "Default",
+			"gPU": "Apple M3",
+			"cPUModel": "Apple M3",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.07-18.20.47",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.51842105388641357,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "ActualTransferAndMotion",
+			"fullTestPath": "V13Trial.ActualTransferAndMotion",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"F0B4486B524EDE2A0A8BDAA88EC8929F"
+			],
+			"duration": 0.51842105388641357,
+			"dateTime": "2026.11.07-18.20.47",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Sampled death minimum 1.367cm",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.07-18.20.47"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Actual V13: 18 parts, 103356 triangles, 48 sections; sampled roll minZ 0.490cm; engine grip 0.000cm. Rigid test, not cloth/skin/collision certification.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.07-18.20.47"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

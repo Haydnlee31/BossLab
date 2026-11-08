@@ -1,0 +1,32 @@
+{
+  "review": "Independent static visual review; useful leaner-proportion milestone, overall art target unmet",
+  "reviewed_images": [
+    {
+      "path": "artifacts/art/last-vigil-v8/hero.png",
+      "sha256": "32bab653b2663b2cbca2f7711ba2e2e0527e065102d8053ec7e2d8d952edc39c"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/front.png",
+      "sha256": "be6f93eff8c5ed7685035564c68f57014b2fe840bc4c7066c76df1ea68ad49b6"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/side.png",
+      "sha256": "61e9b4d8bdf857d5fa304a3ecaec73eeb395c6e9731b92b3504e9218be6d5ea4"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/clay_front.png",
+      "sha256": "a5546c19e614b1ba8a8bf700afe1d6b377421fec6b3602f54d6d35a4ff25c7f8"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/clay_side.png",
+      "sha256": "c4f843779297be0f7531f7ff7362ff99e3348df35756d06bf2e58cf600751f74"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v8/back.png",
+      "sha256": "a59c8d48ec0b16ec3cb077d8c6834ec5adf2f7fd9e1243efd15a9b946afa3601"
+    }
+  ],
+  "artist_frozen_source_sha256": "8251f9acff26b39d0859eb0960dadea13f29d63c78ab03b35b6f9cffb479275f",
+  "artist_frozen_scene_sha256": "2491ed67d9c248214b2a9b8df5f9712fe8ade8f202da4161531d896a1ff6ba23",
+  "scope": "Six images independently inspected; artist reports twelve final views. No claim of inspecting unlisted images."
+}

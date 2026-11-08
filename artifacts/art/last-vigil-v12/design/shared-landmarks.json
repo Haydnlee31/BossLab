@@ -1,0 +1,93 @@
+{
+  "units": "mm",
+  "axes": "X left/right, Y anterior negative, Z up from waist",
+  "torso_rings": [
+    {
+      "z": 0,
+      "half_width": 165,
+      "front_y": -110,
+      "back_y": 100
+    },
+    {
+      "z": 100,
+      "half_width": 180,
+      "front_y": -125,
+      "back_y": 110
+    },
+    {
+      "z": 240,
+      "half_width": 220,
+      "front_y": -145,
+      "back_y": 115
+    },
+    {
+      "z": 330,
+      "half_width": 215,
+      "front_y": -125,
+      "back_y": 110
+    },
+    {
+      "z": 390,
+      "half_width": 170,
+      "front_y": -95,
+      "back_y": 95
+    }
+  ],
+  "neck": {
+    "center": [
+      0,
+      0,
+      400
+    ],
+    "inner_half_width": 70,
+    "inner_half_depth": 75,
+    "rim_z": 455,
+    "base_z": 375,
+    "base_half_width": 105,
+    "base_half_depth": 105
+  },
+  "arms": [
+    {
+      "center": [
+        -245,
+        0,
+        310
+      ],
+      "half_width": 56,
+      "half_depth": 75,
+      "upper_z": 365,
+      "lower_z": 170
+    },
+    {
+      "center": [
+        245,
+        0,
+        310
+      ],
+      "half_width": 56,
+      "half_depth": 75,
+      "upper_z": 365,
+      "lower_z": 170
+    }
+  ],
+  "shoulder": {
+    "max_outer_x": 315,
+    "top_z": 390,
+    "cup_lower_z": 300,
+    "lame_bottoms_z": [
+      270,
+      240,
+      210
+    ],
+    "hidden_overlap": 12,
+    "shell_thickness": 3,
+    "body_clearance": 8
+  },
+  "notes": [
+    "Dimensions are authored trial design, not inferred measurements of raster concept.",
+    "Torso rear is a connected convex shell with central closure; no disconnected backing sphere.",
+    "Armholes remove torso side faces above Z240 and inside shoulder socket boundary.",
+    "Gorget is hollow oval ring, joined to neckline flange; no capped neck cylinder.",
+    "Cup and lames wrap around arm root toward rear, preserve open medial armpit."
+  ]
+}

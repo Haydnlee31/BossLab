@@ -1,0 +1,27 @@
+{
+  "time_unix": 1794157176.493332,
+  "scope": "Final candidate03 independent review and preservation; rejected art/continuity",
+  "baseline_count": 32,
+  "baseline_mismatches": [],
+  "source_sha256": "e9489646370e780ab3a05f19de360b6aaa84403eae207e165fd084a96f2fc016",
+  "scene_sha256": "a7b2c04fa214d7dd4a7bdf31ee6789c374b4e2a79acb9eba8be3968317d35525",
+  "audit_source_match": true,
+  "audit_scene_match": true,
+  "inspected_final_images": {
+    "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/thrust-threequarter.png": "694a15a3c42edbb87c33fdd8009bb1513c134d47d5329e0ac2108021bcde698a",
+    "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/idle-back.png": "9a032178eabb93d5b0d7c05594860fe752a9a9c75550cbe0a04046c4f360ae0d",
+    "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/idle-front.png": "a206027384b77e6da9ca4be98a832e3116c777b662ea45d12f50cf29a4c674af",
+    "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/anticipation-threequarter.png": "4071425ff2e857f7d0627143f94411e7a42b0f6214e6aa8b402c87cd2612b077",
+    "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/release-threequarter.png": "6ef6881ff3a0391d6dbbb8cfe78d52c3507fbc1401089e7d89edb8129d0d44e6",
+    "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/fullcast-threequarter.png": "bd23f98cce6c8734ae39196611ba2853bd2097cce008bfc89c5f84081e3ca972",
+    "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/miss-threequarter.png": "676d8624fe7c58bed1d558eeaf74e0c6f91ce51dd2c0cffed2a23bbe9b5573bb",
+    "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/idle-side.png": "56bd3094f44d2fe6cfc4e3942e74e9818dd1915abb4c0ccb6ebd34937e3a6e47",
+    "artifacts/art/funeral-regent-clay-2026-11-09/attempt-03/reel-threequarter.png": "4f565fd1aa5300ebc78c9bcf5b2492a992f75a52f99891dab2a7199e164dbece"
+  },
+  "free_bytes": 26743029760,
+  "underbody_components": 19,
+  "verdict": "rejected; no fourth correction, no materials/runtime progression",
+  "manifest_entries": 16,
+  "manifest_mismatches": [],
+  "definitive_freeze": true
+}

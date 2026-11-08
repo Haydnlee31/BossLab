@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+"""Bounded, foreground-only character studio. Keeps the existing Unreal build intact."""
+import os,signal,subprocess,sys,time,json,shutil
+from pathlib import Path
+R=Path(__file__).resolve().parents[1]; studio=R/'unreal/art-studio'; evidence=R/'artifacts/art/last-vigil-v8'
+mode=sys.argv[1] if len(sys.argv)>1 else 'draft'
+if mode not in ['draft','render','audit','probe','support','baseline']:raise SystemExit('Usage: scripts/bosslab-art-v8 draft|render|audit|probe|support|baseline [view]')
+evidence.mkdir(parents=True,exist_ok=True)
+def storage():
+ return {'free_bytes':shutil.disk_usage(R).free,'project_bytes':int(subprocess.check_output(['du','-sk',str(R/'unreal')],text=True).split()[0])*1024}
+def guard():
+ d=storage()
+ if d['free_bytes']<24*1024**3 or d['project_bytes']>=10_000_000_000:raise RuntimeError('Storage guard: '+str(d))
+ return d
+before=guard()
+if os.environ.get('BOSSLAB_ART_DEVICE')=='METAL' and before['free_bytes']<24*1024**3+3_500_000_000:raise RuntimeError('Metal rendering requires 3.5GB of extra headroom above the reserve')
+exe=studio/'tools/Blender.app/Contents/MacOS/Blender';assert exe.is_file()
+env=os.environ.copy();env.update(BLENDER_USER_CONFIG=str(studio/'user/config'),BLENDER_USER_SCRIPTS=str(studio/'user/scripts'),BLENDER_USER_DATAFILES=str(studio/'user/datafiles'),TMPDIR=str(studio/'tmp'))
+(studio/'tmp').mkdir(exist_ok=True)
+cmd=[str(exe),'-b','-t',('2' if mode=='support' else '4'),'--factory-startup','--python-exit-code','1','--python',str(studio/'source/last_vigil_v8.py'),'--',mode]+sys.argv[2:]
+started=time.time();report={'mode':mode,'start':started,'before':before,'command':cmd};reason=None
+log=evidence/(mode+'-'+str(int(started))+'.log')
+shutil.copy2(cmd[cmd.index('--python')+1],evidence/(mode+'-'+str(int(started))+'.py'))
+with log.open('w') as f:
+ p=subprocess.Popen(cmd,env=env,cwd=R,stdout=f,stderr=subprocess.STDOUT,start_new_session=True)
+ try:
+  while p.poll() is None:
+   time.sleep(2)
+   guard()
+   if time.time()-started>1200:raise RuntimeError('20-minute deadline')
+ except (BaseException,) as e:
+  reason=str(e);os.killpg(p.pid,signal.SIGTERM)
+  try:p.wait(timeout=10)
+  except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait()
+ # Catch a reserve crossing between the last periodic poll and child exit.
+ try:after=guard()
+ except RuntimeError as e:
+  after=storage();reason=reason or ('Post-exit reserve check: '+str(e))
+ report.update(exit_code=p.returncode,reason=reason,seconds=time.time()-started,after=after,log=str(log.relative_to(R)))
+(evidence/(mode+'-process.json')).write_text(json.dumps(report,indent=2)+'\n')
+print(json.dumps(report,indent=2));sys.exit(1 if reason or p.returncode else 0)

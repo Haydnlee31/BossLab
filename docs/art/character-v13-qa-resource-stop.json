@@ -1,0 +1,297 @@
+{
+  "scope": "V13 resource-stop interim integrity; NOT final source/art freeze",
+  "time_unix": 1794047815.9470642,
+  "free_bytes": 24996417536,
+  "reserve_bytes": 25769803776,
+  "v10_v12_sha256": {
+    "checked": 376,
+    "mismatches": []
+  },
+  "game_sha256": {
+    "checked": 28,
+    "mismatches": []
+  },
+  "context12_images": [
+    {
+      "path": "artifacts/art/last-vigil-v13/context-12-back.png",
+      "sha256": "afcf521a88ea1e64d410d2c2e7b3e401974850ff16f0412dfe9650130ea7de0b",
+      "bytes": 790641
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-12-front.png",
+      "sha256": "c0069c51639b8f40e7c67960162223e49cf16c1298e7a270fc3fa64141c5716d",
+      "bytes": 731947
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-12-garment.png",
+      "sha256": "99fe567f33399cce55aef524b854a02ca0474b02b51c47b4b83151cf9e1919d6",
+      "bytes": 841474
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-12-hand.png",
+      "sha256": "bcf6ad8e0c78a868463aa4c2a33057c308b1d621be704ad9903c43a32c5de99c",
+      "bytes": 836144
+    }
+  ],
+  "receipts": {
+    "context-process.json": {
+      "mode": "context",
+      "start": 1794047613.3009331,
+      "before": {
+        "free_bytes": 26093416448,
+        "project_bytes": 4227702784
+      },
+      "command": [
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender",
+        "-b",
+        "-t",
+        "4",
+        "--factory-startup",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/source/last_vigil_v13.py",
+        "--",
+        "context",
+        "hand",
+        "garment",
+        "front",
+        "back"
+      ],
+      "exit_code": 1,
+      "reason": null,
+      "seconds": 4.195066928863525,
+      "after": {
+        "free_bytes": 26091233280,
+        "project_bytes": 4227702784
+      },
+      "log": "artifacts/art/last-vigil-v13/context-1794047613.log"
+    },
+    "context-12-failed-curve-type-process.json": {
+      "mode": "context",
+      "start": 1794047613.3009331,
+      "before": {
+        "free_bytes": 26093416448,
+        "project_bytes": 4227702784
+      },
+      "command": [
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender",
+        "-b",
+        "-t",
+        "4",
+        "--factory-startup",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/source/last_vigil_v13.py",
+        "--",
+        "context",
+        "hand",
+        "garment",
+        "front",
+        "back"
+      ],
+      "exit_code": 1,
+      "reason": null,
+      "seconds": 4.195066928863525,
+      "after": {
+        "free_bytes": 26091233280,
+        "project_bytes": 4227702784
+      },
+      "log": "artifacts/art/last-vigil-v13/context-1794047613.log"
+    },
+    "draft-process.json": {
+      "mode": "draft",
+      "start": 1794045206.9554381,
+      "before": {
+        "free_bytes": 26769960960,
+        "project_bytes": 4165726208
+      },
+      "command": [
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender",
+        "-b",
+        "-t",
+        "4",
+        "--factory-startup",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/source/last_vigil_v13.py",
+        "--",
+        "draft",
+        "front",
+        "three-quarter"
+      ],
+      "exit_code": 0,
+      "reason": null,
+      "seconds": 10.432809829711914,
+      "after": {
+        "free_bytes": 26764607488,
+        "project_bytes": 4168335360
+      },
+      "log": "artifacts/art/last-vigil-v13/draft-1794045206.log"
+    },
+    "context-diagnose-process.json": {
+      "mode": "context-diagnose",
+      "start": 1794047421.0918348,
+      "before": {
+        "free_bytes": 26101395456,
+        "project_bytes": 4227698688
+      },
+      "command": [
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender",
+        "-b",
+        "-t",
+        "4",
+        "--factory-startup",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/source/last_vigil_v13.py",
+        "--",
+        "context-diagnose",
+        "palm",
+        "596",
+        "306"
+      ],
+      "exit_code": 0,
+      "reason": null,
+      "seconds": 4.255610227584839,
+      "after": {
+        "free_bytes": 26099802112,
+        "project_bytes": 4227698688
+      },
+      "log": "artifacts/art/last-vigil-v13/context-diagnose-1794047421.log"
+    },
+    "context-inventory-process.json": {
+      "mode": "context-inventory",
+      "start": 1794045085.817255,
+      "before": {
+        "free_bytes": 26790395904,
+        "project_bytes": 4165726208
+      },
+      "command": [
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender",
+        "-b",
+        "-t",
+        "4",
+        "--factory-startup",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/source/last_vigil_v13.py",
+        "--",
+        "context-inventory"
+      ],
+      "exit_code": 0,
+      "reason": null,
+      "seconds": 2.1088919639587402,
+      "after": {
+        "free_bytes": 26790199296,
+        "project_bytes": 4165726208
+      },
+      "log": "artifacts/art/last-vigil-v13/context-inventory-1794045085.log"
+    },
+    "audit-process.json": {
+      "mode": "audit",
+      "start": 1794044704.872965,
+      "before": {
+        "free_bytes": 26821988352,
+        "project_bytes": 4161794048
+      },
+      "command": [
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender",
+        "-b",
+        "-t",
+        "4",
+        "--factory-startup",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/source/last_vigil_v13.py",
+        "--",
+        "audit"
+      ],
+      "exit_code": 0,
+      "reason": null,
+      "seconds": 2.131546974182129,
+      "after": {
+        "free_bytes": 26821943296,
+        "project_bytes": 4161794048
+      },
+      "log": "artifacts/art/last-vigil-v13/audit-1794044704.log"
+    },
+    "context-04-failed-fractional-power-process.json": {
+      "mode": "context",
+      "start": 1794046364.9998999,
+      "before": {
+        "free_bytes": 26170945536,
+        "project_bytes": 4225548288
+      },
+      "command": [
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender",
+        "-b",
+        "-t",
+        "4",
+        "--factory-startup",
+        "--python-exit-code",
+        "1",
+        "--python",
+        "/Users/haydn/Documents/BossLab/unreal/art-studio/source/last_vigil_v13.py",
+        "--",
+        "context",
+        "hero",
+        "front",
+        "side",
+        "torso"
+      ],
+      "exit_code": 1,
+      "reason": null,
+      "seconds": 4.256958246231079,
+      "after": {
+        "free_bytes": 26173198336,
+        "project_bytes": 4225548288
+      },
+      "log": "artifacts/art/last-vigil-v13/context-1794046364.log"
+    }
+  },
+  "resource_stop_receipt": "artifacts/art/last-vigil-v13/context-12-reserve-stop.json",
+  "resource_stop_receipt_checks": [
+    {
+      "path": "unreal/art-studio/revision-v13-2026-11-07/last-vigil-v13-context.blend",
+      "sha256": "1d3deca502d7ff634fa0ed106268ede8eb2c4aaebecaec0e185917a125b1fa41",
+      "matches_receipt": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-1794047661.py",
+      "sha256": "96305b01764038b1fa9d8abb2ded5f3174c1a968a49c69de37368017ca34297d",
+      "matches_receipt": true
+    },
+    {
+      "path": "unreal/art-studio/source/last_vigil_v13.py",
+      "sha256": "f731799d34fc1ae9c9c70fbc798e6c84521fd561f842bcb922b1722fd7a1a866",
+      "matches_receipt": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-12-back.png",
+      "sha256": "afcf521a88ea1e64d410d2c2e7b3e401974850ff16f0412dfe9650130ea7de0b",
+      "matches_receipt": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-12-front.png",
+      "sha256": "c0069c51639b8f40e7c67960162223e49cf16c1298e7a270fc3fa64141c5716d",
+      "matches_receipt": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-12-garment.png",
+      "sha256": "99fe567f33399cce55aef524b854a02ca0474b02b51c47b4b83151cf9e1919d6",
+      "matches_receipt": true
+    },
+    {
+      "path": "artifacts/art/last-vigil-v13/context-12-hand.png",
+      "sha256": "bcf6ad8e0c78a868463aa4c2a33057c308b1d621be704ad9903c43a32c5de99c",
+      "matches_receipt": true
+    }
+  ],
+  "guarded_run_status": "Wrapper failed; child log contains four image saves and Blender quit. Not a successful guarded-run receipt."
+}

@@ -1,0 +1,6 @@
+{
+  "reason": "retain latest two focal scene checkpoints; images/source/log preserved",
+  "path": "unreal/art-studio/regent-focal-2026-11-09/regent-focal-01.blend",
+  "bytes": 672670,
+  "sha256": "aaa94c769f08e41d64c5b08d0eb214bb88badb56a390edd297d9c13473d623f6"
+}

@@ -1,0 +1,8 @@
+{
+  "checkpoint": "artifacts/ppo-smoke.pt",
+  "steps": 4096,
+  "finite": true,
+  "mask_invalid_probability_zero": true,
+  "reload_logits_exact": true,
+  "torch_version": "2.14.0"
+}

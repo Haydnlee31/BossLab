@@ -1,0 +1,40 @@
+{
+  "scope": "Independent text OBJ integrity, not imported-DCC verification",
+  "files": [
+    {
+      "file": "unreal/art-studio/revision-v9-2026-11-07/neutral-handoff/measured-collision-proxies.obj",
+      "vertices": 1719,
+      "faces": 2742,
+      "finite": true,
+      "valid_indices": true,
+      "sha256": "6332c40cd4914fc9b17e71200d7e1ce2a37f14806f798c56e22218ff9dc06f00"
+    },
+    {
+      "file": "unreal/art-studio/revision-v9-2026-11-07/neutral-handoff/tailored-rest-panels.obj",
+      "vertices": 1890,
+      "faces": 1760,
+      "finite": true,
+      "valid_indices": true,
+      "sha256": "8a6bdc0a95a4575c8d6a64392b13b9c2826429e684297b74240ddf4727c2a487"
+    },
+    {
+      "file": "unreal/art-studio/revision-v9-2026-11-07/neutral-handoff/rigid-tassets.obj",
+      "vertices": 4332,
+      "faces": 4344,
+      "finite": true,
+      "valid_indices": true,
+      "sha256": "413e76dce774c0f1e4cdb25840f3a01e1552fd87c7f46551f55a71281b22d17b"
+    },
+    {
+      "file": "unreal/art-studio/revision-v9-2026-11-07/neutral-handoff/best-stable-partial-not-approved.obj",
+      "vertices": 15108,
+      "faces": 15104,
+      "finite": true,
+      "valid_indices": true,
+      "sha256": "b0897f9bf39f9b7607714564cbf569d37be035332037df267e85d0e3cc8dc504"
+    }
+  ],
+  "pin_count": 42,
+  "maximum_rest_coordinate_difference_m": 4.332275371776717e-10,
+  "targets_finite": true
+}

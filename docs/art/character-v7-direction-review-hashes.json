@@ -1,0 +1,27 @@
+{
+  "scope": "Final independently inspected V7 views: partial form/construction gain; material and reference-quality gates unmet",
+  "source_sha256": "a2fe6366f22745bb4755c35b12da5f5b8d84b35795aaddeed4ea04fe8b68092f",
+  "scene_sha256": "d695f788c55e26c2e57f8f9e6b4636e99fe576c65c9f1d91bcf5ed60eee663d9",
+  "reviewed_files": [
+    {
+      "path": "artifacts/art/last-vigil-v7/hero.png",
+      "sha256": "81b253fcc19f747af6bb74bec747c958f3273508cc3556bb35bace9a7974cb08"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v7/headside.png",
+      "sha256": "907670fb785e108f6a0ce836822e40c3d2e94b876641f0b05eaae83ddba5eb81"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v7/mask_head.png",
+      "sha256": "d281851d83c526449373c1229cbac42e7c86a943314542db810f0d8c4630f0e6"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v7/head-detail.png",
+      "sha256": "fcdbcdfefb42e19354b23f68628da38c1b64ac89b9aa820ee71237ea88508156"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v7/shoulder-detail.png",
+      "sha256": "00980d4f377208de9e64b2f87ec9f4fee1ad52fc20f0c6ff57b55fb9a6cf568c"
+    }
+  ]
+}

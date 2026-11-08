@@ -1,0 +1,43 @@
+{
+  "scope": "Final independently inspected V6 views; construction progress, reference-quality gate needs work",
+  "files": [
+    {
+      "path": "artifacts/art/last-vigil-v6/hero.png",
+      "sha256": "518d7481dc60a7b601641ccba766a0bab19aab155e1c64d774e869a3741674c2"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v6/head.png",
+      "sha256": "970664fa30f6dd0bffc9b3cec0d5801958506d1de44ac0cbcd72e47ff80cc138"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v6/headside.png",
+      "sha256": "42ace2da05dddb6302892c161422070b9de3e1df3f6414f1ba9c39d2dab525e4"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v6/torso.png",
+      "sha256": "4d0c22582185341a637ba5a492904fb1cf98af1a4f62e6ac7c186ffa55b4e24d"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v6/mask_torso.png",
+      "sha256": "737246b048a8a8a1ef5f4bf84dd22eaf22def44ae8f79d7c61ae8d02337c1edf"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v6/back.png",
+      "sha256": "b2a937b6705e1b717bce930e38fa05fc6a15612a6f5a7d49552651d3f4f86641"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v6/side.png",
+      "sha256": "2d92e0c383c1a2ca8bc2371ea6ad58ec73ce80f1a1cadb857cbca7234304b18b"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v6/head-detail.png",
+      "sha256": "6cf0956f978dd780a9fb01c41c53b182e3548d077aa2c02b691e922a9d53cc23"
+    },
+    {
+      "path": "artifacts/art/last-vigil-v6/torso-detail.png",
+      "sha256": "c9bd5eb30f84f5425c8f73a2b0dc119fa47302d477cc49060c951b524ba493d9"
+    }
+  ],
+  "source_sha256": "bed76d4c3ee695a00b489706d27be57d1e0d395fb1ef2c7d254e653cfab0ebb2",
+  "scene_sha256": "12a5395147d9271f64e73f90d4e16f100ef0e3270864d9cfe9467d16e7c25e26"
+}
