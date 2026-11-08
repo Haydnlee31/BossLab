@@ -315,7 +315,7 @@ void AWardenPrototypeHUD::DrawHUD()
     }
     if (Mode->bDemo) DrawText(FString::Printf(TEXT("PERFORMANCE / %s | Round %d | %.1fs | Resets disclosed"),TEXT("FIXED REHEARSAL"),Mode->DemoRounds+1,Mode->DemoTick/60.f),FColor(130,210,215),32,158);
     else if (Mode->bScriptedPlayer) DrawText(TEXT("SCRIPTED TEST PLAYER | Fixed rehearsal, real damage"),FColor(130,210,215),32,158);
-    if(Mode->bOutfitStudy) DrawText(Mode->Player->bV13Outfit?TEXT("LAST VIGIL V13 | Blender transfer test / rigid attachments"):TEXT("ASHBOUND KNIGHT | Authored 3D outfit study / inspection camera"),FColor(230,192,125),32,158);
+    if(Mode->bOutfitStudy) DrawText(Mode->Player->bRevampOutfit?TEXT("REVAMP KNIGHT | Generated from approved concept / inspection camera"):Mode->Player->bV13Outfit?TEXT("LAST VIGIL V13 | Blender transfer test / rigid attachments"):TEXT("ASHBOUND KNIGHT | Authored 3D outfit study / inspection camera"),FColor(230,192,125),32,158);
     if(!Mode->bMotionStudy && !Mode->bOutfitStudy)
     {
         Bar(W*.25f,H-110,W*.5f,B.Health/B.MaxHealth,FLinearColor(.65,.34,.12));
@@ -340,6 +340,7 @@ void AWardenPrototypeHUD::DrawHUD()
         }
     }
     if(Mode->Player->bV13Outfit) DrawText(TEXT("V13 TEST | Approximate rigid fitting / simplified materials"),FColor(230,192,125),32,258);
+    if(Mode->Player->bRevampOutfit) DrawText(TEXT("REVAMP TEST | Generated characters / distance-weighted skin, no cloth sim"),FColor(230,192,125),32,258);
     if(Mode->bCaptureFrames) DrawText(TEXT("ENGINE FRAME CAPTURE / fixed 30 fps / not a real-time benchmark"),FColor(230,192,125),32,184);
     if(Mode->bMotionStudy)
     {

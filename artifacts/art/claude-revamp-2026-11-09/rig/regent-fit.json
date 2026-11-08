@@ -1,0 +1,9 @@
+{"glb": "artifacts/art/claude-revamp-2026-11-09/regent-trellis2/model.glb",
+ "manny_fbx": "artifacts/art/claude-revamp-2026-11-09/rig/manny.fbx", "out_fbx": "artifacts/art/claude-revamp-2026-11-09/rig/regent/SKM_RevampRegent.fbx", "out_blend": "artifacts/art/claude-revamp-2026-11-09/rig/regent/regent-rig.blend",
+ "yaw_deg": 0, "height_scale": 1.0, "offset": [0, 0.04, 0],
+ "pose": [["upperarm_l", [0,1,0], 16], ["upperarm_r", [0,1,0], -18],
+          ["lowerarm_l", [0,1,0], 6], ["lowerarm_r", [0,1,0], -6],
+          ["lowerarm_l", [1,0,0], 13], ["lowerarm_r", [1,0,0], 13]],
+ "cut_segments": [[[-0.4963,-0.1712,-0.02],[-0.3236,-0.0675,0.80],0.03]],
+ "cut_islands": [[[-0.40,-0.20,0.82],[-0.25,0.03,1.03]]],
+ "target_tris": 100000, "voxel": 0.012}

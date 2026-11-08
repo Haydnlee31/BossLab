@@ -1,0 +1,7 @@
+{"glb": "artifacts/art/claude-revamp-2026-11-09/player-trellis2/model.glb",
+ "manny_fbx": "artifacts/art/claude-revamp-2026-11-09/rig/manny.fbx", "out_fbx": "artifacts/art/claude-revamp-2026-11-09/rig/player/SKM_RevampPlayer.fbx", "out_blend": "artifacts/art/claude-revamp-2026-11-09/rig/player/player-rig.blend",
+ "yaw_deg": 0, "height_scale": 1.0, "offset": [0, 0.04, 0],
+ "pose": [["upperarm_l", [0,1,0], 14], ["upperarm_r", [0,1,0], -10],
+          ["lowerarm_l", [0,1,0], 29], ["lowerarm_r", [0,1,0], -23],
+          ["lowerarm_l", [1,0,0], 13], ["lowerarm_r", [1,0,0], 13]],
+ "target_tris": 100000, "voxel": 0.012}

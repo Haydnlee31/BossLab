@@ -1,3 +1,7 @@
+## Claude revamp — generated characters playable (2026-11-09, branch Claude-revamp)
+
+Owner allowed free models/services and said to proceed through rigging and integration. Player knight and Funeral Regent were generated from the approved concepts with the free TRELLIS.2 Space, fitted and skinned to the mannequin skeleton in Blender (rotation-only re-rest, distance weights), imported as skeletal meshes and swapped in with `BOSSLAB_OUTFIT=revamp BOSSLAB_QUALITY=performance ./scripts/bosslab-unreal play`. Default 21/21 and RevampTrial 1/1 pass; actual in-game turntable/motion captures inspected; one 720p performance run 59.0 FPS mean / 17.31 ms p95 (single run, not locked 60). No cloth sim; engine sword placeholder remains; swords/skulls blocked on the free daily GPU quota. Default costume, V13 trial and packaged app unchanged. Details and next steps: [CLAUDE_REVAMP.md](CLAUDE_REVAMP.md).
+
 ## GitHub handoff —2026-11-09
 
 Owner requested cleanup and push to public Haydnlee31/BossLab. Start at `HANDOFF.md` for portable launch, current art failure, AI boundaries and exact next task. Source-safe publication excludes Epic mannequin files, installed tools, binaries/packages/cache and referencevideo media. `docs/UNREAL_RESTORE.md` supplies local Epic restore instructions; fresh-clone Unreal build is not verified. Current playable local V13 build remains preserved.

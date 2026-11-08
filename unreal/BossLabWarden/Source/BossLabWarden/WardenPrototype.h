@@ -64,6 +64,8 @@ public:
     void DressAshbound();
     bool DressV13();
     bool bV13Outfit=false;
+    bool DressRevamp();
+    bool bRevampOutfit=false;
     FString V13SourceHash;
     void UpdateAshbound(const FVector& Travel);
     int32 OutfitTriangles=0;

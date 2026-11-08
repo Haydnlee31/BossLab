@@ -41,10 +41,12 @@ def main():
                   'storage': storage()}
         print(json.dumps(report, indent=2))
         return 0
-    if mode not in ('build', 'editor', 'test', 'play', 'evaluate', 'benchmark', 'capture', 'package', 'package-play', 'package-benchmark', 'package-test', 'package-capture'):
-        raise RuntimeError('Usage: scripts/bosslab-unreal doctor|build|editor|test|play|evaluate|benchmark|capture|package|package-play|package-benchmark|package-test|package-capture')
+    if mode not in ('build', 'editor', 'python', 'test', 'play', 'evaluate', 'benchmark', 'capture', 'package', 'package-play', 'package-benchmark', 'package-test', 'package-capture'):
+        raise RuntimeError('Usage: scripts/bosslab-unreal doctor|build|editor|python <script.py>|test|play|evaluate|benchmark|capture|package|package-play|package-benchmark|package-test|package-capture')
     if mode == 'evaluate':
         raise RuntimeError('Adaptive evaluation is deferred in the fundamentals revision; historical unarmed reports remain in artifacts/unreal.')
+    if os.environ.get('BOSSLAB_OUTFIT', 'original') == 'revamp' and mode.startswith('package'):
+        raise RuntimeError('Revamp characters are editor-game only; the original packaged app is unchanged.')
     if os.environ.get('BOSSLAB_OUTFIT', 'original') == 'v13' and mode.startswith('package'):
         raise RuntimeError('V13 trial uses editor play/capture/benchmark (or dedicated native tests). The original packaged app is unchanged; do not use BOSSLAB_OUTFIT=v13 with package modes.')
     guard()
@@ -118,6 +120,13 @@ def main():
                 if not script.is_relative_to(ROOT) or script.suffix != '.py':
                     raise RuntimeError('Editor startup script must be a project-local Python file')
                 cmd += ['-ExecutePythonScript=' + str(script)]
+        elif mode == 'python':
+            # Headless editor commandlet for scripted asset import/export.
+            script = (ROOT / sys.argv[2]).resolve() if len(sys.argv) > 2 else None
+            if script is None or not script.is_relative_to(ROOT) or script.suffix != '.py' or not script.is_file():
+                raise RuntimeError('python mode needs a project-local .py script')
+            # Skeletal-mesh FBX export asserts in commandlets; use `editor <script>` for that.
+            cmd += ['-run=pythonscript', '-script=' + str(script), '-NoSound', '-unattended', '-NullRHI', '-stdout', '-FullStdOutLogOutput']
         elif mode in ('test', 'evaluate'):
             cmd += ['-NoSound', '-unattended', '-NullRHI', '-ExecCmds=Automation RunTests ' + ('WardenEvaluation' if mode == 'evaluate' else os.environ.get('BOSSLAB_TEST_FILTER', 'BossLab')),
                     '-TestExit=Automation Test Queue Empty',
@@ -138,15 +147,17 @@ def main():
                     cmd += ['-BossLabRollStudy=' + str(group)]
         if mode == 'benchmark':
             cmd += ['-BossLabBenchmark', '-ForceRes']
-        deadline = 300 if mode in ('test', 'evaluate') else 1800
+        deadline = 300 if mode in ('test', 'evaluate') else 900 if mode == 'python' else 1800
     # Installed UE ShaderCompiler.cpp reads these Engine INI values before spawning
     # local workers. Eight virtual cores minus seven reserved => one worker here.
     # Launch-scoped only: no engine/user config mutation. Restore via env=default.
     if mode in ('play', 'benchmark', 'capture') and os.environ.get('BOSSLAB_SHADER_WORKERS', '1') == '1':
         cmd += ['-ini:Engine:[DevOptions.Shaders]:NumUnusedShaderCompilingThreads=7,[DevOptions.Shaders]:NumUnusedShaderCompilingThreadsDuringGame=7,[DevOptions.Shaders]:ShaderCompilerCoreCountThreshold=999']
     outfit = os.environ.get('BOSSLAB_OUTFIT', 'original')
-    if outfit not in ('original', 'v13'):
-        raise RuntimeError('BOSSLAB_OUTFIT must be original or v13')
+    if outfit not in ('original', 'v13', 'revamp'):
+        raise RuntimeError('BOSSLAB_OUTFIT must be original, v13 or revamp')
+    if outfit == 'revamp' and mode in ('play', 'benchmark', 'capture', 'test'):
+        cmd += ['-BossLabRevamp']
     if outfit == 'v13' and mode not in ('build', 'package', 'editor'):
         cmd += ['-BossLabV13=' + os.environ.get('BOSSLAB_V13_DATA', str(PROJECT.parent / 'Content/BossLab/V13/v13-runtime.json'))]
     quality = os.environ.get('BOSSLAB_QUALITY', 'balanced')

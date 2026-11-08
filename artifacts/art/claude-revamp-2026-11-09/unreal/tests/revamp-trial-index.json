@@ -1,0 +1,57 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "Lees-Laptop.local",
+			"instance": "E0F1D7E85A4AFA3F3194A5BD5ACCE862",
+			"instanceName": "Lees-Laptop.local-30476",
+			"platform": "MacEditor",
+			"oSVersion": "macOS 26.6.2 25G83",
+			"model": "Default",
+			"gPU": "Apple M3",
+			"cPUModel": "Apple M3",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.08-19.56.43",
+	"succeeded": 1,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.61346060037612915,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "SkinnedCharactersAndMotion",
+			"fullTestPath": "RevampTrial.SkinnedCharactersAndMotion",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"E0F1D7E85A4AFA3F3194A5BD5ACCE862"
+			],
+			"duration": 0.61346060037612915,
+			"dateTime": "2026.11.08-19.56.42",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Revamp: sampled roll foot minZ 3.000cm, engine grip 0.000cm. Skinned presentation test, not cloth/clipping certification.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.08-19.56.43"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

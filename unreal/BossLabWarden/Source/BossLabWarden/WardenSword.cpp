@@ -26,7 +26,7 @@ void AWardenChallenger::CreateSword()
         C->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,Mesh));
         C->SetMaterial(0,LoadObject<UMaterialInterface>(nullptr,*(FString(TEXT("/Game/BossLab/Materials/MI_"))+Mat)));
         C->SetupAttachment(SwordRoot); C->SetRelativeLocation(Pos); C->SetRelativeScale3D(Scale);
-        C->SetCollisionEnabled(ECollisionEnabled::NoCollision); C->SetVisibility(bBoss); C->RegisterComponent(); AddInstanceComponent(C);
+        C->SetCollisionEnabled(ECollisionEnabled::NoCollision); C->SetVisibility(bBoss || bRevampOutfit); C->RegisterComponent(); AddInstanceComponent(C);
     };
     Part(TEXT("SwordBlade"),TEXT("/Engine/BasicShapes/Cube"),FVector(0,0,70),FVector(.105,.025,1.22),TEXT("Iron"));
     Part(TEXT("SwordRidge"),TEXT("/Engine/BasicShapes/Cube"),FVector(0,0,70),FVector(.028,.04,1.2),TEXT("Bronze"));

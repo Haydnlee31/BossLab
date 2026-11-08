@@ -67,8 +67,9 @@ void AWardenArenaMode::DressArena()
 }
 void AWardenChallenger::DressFighter()
 {
+    const bool Revamp=DressRevamp();
     auto* Main=Surface(TEXT("Iron"));
-    for(int32 I=0;I<VisualBody->GetNumMaterials();++I) VisualBody->SetMaterial(I,Main);
+    if(!Revamp) for(int32 I=0;I<VisualBody->GetNumMaterials();++I) VisualBody->SetMaterial(I,Main);
     TInlineComponentArray<UStaticMeshComponent*> Existing(this);
     for(auto* C:Existing) if(C->GetFName()==TEXT("IronGauntlet")) C->SetMaterial(0,Surface(TEXT("Bronze")));
     // Create once; subsequent resets recolor without duplicating geometry.
@@ -91,15 +92,17 @@ void AWardenChallenger::DressFighter()
     Piece(TEXT("Mantle"),TEXT("spine_03"),FVector(-15,0,-17),FVector(.055,.37,.52),bBoss?TEXT("BlackIron"):TEXT("Cloth"));
     Piece(TEXT("Seal"),TEXT("spine_03"),FVector(15,0,-4),FVector(.04,.08,.16),bBoss?TEXT("Amber"):TEXT("Jade"));
     }
-    if(!bBoss && !DressV13()) DressAshbound();
-    VisualBody->SetVisibility(bBoss || !bV13Outfit,false);
+    if(!bBoss && !Revamp && !DressV13()) DressAshbound();
+    VisualBody->SetVisibility(bBoss || Revamp || !bV13Outfit,false);
     TInlineComponentArray<UStaticMeshComponent*> Parts(this);
     for(auto* C:Parts)
     {
         const FString N=C->GetName();
-        if(C->ComponentHasTag(TEXT("V13Trial"))) C->SetVisibility(!bBoss && bV13Outfit);
-        else if(C->ComponentHasTag(TEXT("Ashbound"))) C->SetVisibility(!bBoss && !bV13Outfit);
-        else if(N.StartsWith(TEXT("Sword")) || N==TEXT("Crown") || N==TEXT("Crest") || N.StartsWith(TEXT("Shoulder")) || N==TEXT("Mantle") || N==TEXT("Seal")) C->SetVisibility(bBoss);
+        if(C->ComponentHasTag(TEXT("V13Trial"))) C->SetVisibility(!bBoss && !Revamp && bV13Outfit);
+        else if(C->ComponentHasTag(TEXT("Ashbound"))) C->SetVisibility(!bBoss && !Revamp && !bV13Outfit);
+        // Revamp costumes carry their own crown/armour; both fighters keep the engine sword.
+        else if(N.StartsWith(TEXT("Sword"))) C->SetVisibility(bBoss || Revamp);
+        else if(N==TEXT("Crown") || N==TEXT("Crest") || N.StartsWith(TEXT("Shoulder")) || N==TEXT("Mantle") || N==TEXT("Seal")) C->SetVisibility(bBoss && !Revamp);
     }
 
 }

@@ -1,0 +1,40 @@
+{
+ "player": {
+  "imported": [
+   "/Game/BossLab/Revamp/SKM_RevampPlayer.SKM_RevampPlayer"
+  ],
+  "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin",
+  "materials": [
+   "/Game/BossLab/Revamp/M_RevampPlayer.M_RevampPlayer"
+  ],
+  "bounds_extent": [
+   45.037193298339844,
+   26.26278018951416,
+   90.2761534646852
+  ],
+  "bounds_origin": [
+   0.00103759765625,
+   2.86582088470459,
+   90.27346811734606
+  ]
+ },
+ "regent": {
+  "imported": [
+   "/Game/BossLab/Revamp/SKM_RevampRegent.SKM_RevampRegent"
+  ],
+  "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin",
+  "materials": [
+   "/Game/BossLab/Revamp/M_RevampRegent.M_RevampRegent"
+  ],
+  "bounds_extent": [
+   45.968801498413086,
+   26.857544898986816,
+   90.19892230629921
+  ],
+  "bounds_origin": [
+   4.334962844848633,
+   2.8552427291870117,
+   90.32466778159142
+  ]
+ }
+}
