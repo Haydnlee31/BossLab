@@ -65,6 +65,12 @@ public:
     // natural speeds); blended by travel angle. Tuned by AnimationTests.
     static inline float GaitTrim[3]={1.f,1.f,1.f};
     float TurnRate=0;
+    // Jumps: the capsule's floor height, current lift and the lift a jump attack starts at.
+    float GroundZ=0, AirLift=0, JumpAttackLift=0;
+    // Last drawn sword key, so cancels (chain cuts, rolling thrust) start from it.
+    bool bPoseFromLast=false;
+    FVector LastGrip=FVector(28,5,114), LastAxis=FVector(.38,-.12,.92);
+    float LastTwist=-7, LastLean=5;
     // Walking foot locks (WardenSword.cpp); reset with the fighter.
     bool FootLocked[2]={false,false};
     FVector FootLock[2], FootReleaseFrom[2], FootAnimPrev[2];
@@ -139,6 +145,7 @@ private:
     void StopSprint() { SprintHeld=false; }
     void QuitMenu();
     void Dodge() { QueueAction(EWardenAction::Dodge); }
+    void JumpPressed() { QueueAction(EWardenAction::Jump); }
     void Heal() { QueueAction(EWardenAction::Heal); }
     void Restart();
     void PauseGame();
@@ -213,6 +220,12 @@ public:
     void RegentResolve();
     FVector RegentAshTarget() const;
     void RegentSound(const TCHAR* Name,const FVector& At,float Volume);
+    // Hit-stop ticks left and camera shake strength (presentation) after a landed blow.
+    int32 HitStop=0;
+    // Test-only pilot: when set, replaces keyboard intent and may queue player actions.
+    TFunction<void(AWardenArenaMode&,FVector&)> TestPilot;
+    float Shake=0;
+    void Impact(int32 FreezeTicks,float ShakeAmount) { HitStop=FMath::Max(HitStop,FreezeTicks); Shake=FMath::Max(Shake,ShakeAmount); }
     // Capture-only side-on review of every Regent move (-BossLabRegentStudy).
     bool bRegentStudy=false;
     int32 RegentStudyMove=WardenRegent::First, RegentStudyWait=90;

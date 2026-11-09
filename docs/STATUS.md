@@ -1,3 +1,23 @@
+## Souls-style controls (2026-11-10, branch regent-moveset-01)
+
+The owner asked for Elden Ring-style controls and said the boss was unbeatable, there was no jump attack, and the roll and swing felt off.
+
+- **Research:** community frame data gives Elden Ring's roll about 0.43–0.47 s of invincibility for 12 stamina, with roughly 45 stamina/s regeneration.
+- **Roll:** 26 protected ticks (0.43 s), 320 cm, 14 stamina.
+- **Stamina:** regenerates at 45/s after 0.5 s.
+- **Movement:** run 420 cm/s, sprint 630 cm/s.
+- **Attacks:**
+  - a three-cut chain with buffered inputs;
+  - roll-cancel out of late recovery;
+  - F to jump, plus a jump attack, a rolling thrust and a running cut.
+- **Impact:** hit-stop and camera shake on landed blows.
+- **Stance:** heavy hits remove 2 stance points.
+- **Regent:** now 600 hp and 6 stance, because a test bot beat the 240 hp version in 26 s.
+- **Tests:** native suite 31/31. A frame-perfect bot beats the Warden in 18 s and the Regent in about 80 s using 2–3 heals.
+- **Not done:** no owner feel test.
+
+Read [SOULS_CONTROLS.md](SOULS_CONTROLS.md).
+
 ## Animation refinement round 2 (2026-11-09, branch regent-moveset-01)
 
 - **Foot locking while walking:** plant is detected by the clip foot's speed, the foot is pinned with leg IK, and released with a 6-tick ease. Planted-foot slip is now 0–4% for both characters in every direction except the boss's sideways shuffle (13%). No pops: peak foot speed is 2.8–3.2× travel, with no forced releases.

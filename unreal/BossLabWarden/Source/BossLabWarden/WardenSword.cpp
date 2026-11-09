@@ -215,8 +215,39 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             Release={FVector(43,-3,120),FVector(1,0,.1).GetSafeNormal(),0,7};
             Follow={FVector(12,24,160),FVector(.2,.6,.77).GetSafeNormal(),-45,-6};
         }
+        else if(!bBoss)
+        {
+            // Player moveset: cut I (right-to-left diagonal, the keys above), cut II
+            // backhand, cut III overhead finisher, jump slam, rolling thrust, running cut.
+            switch(Fight.Move)
+            {
+            case WardenRules::CutTwo:
+                Wind={FVector(10,-26,140),FVector(-.45,-.75,.5).GetSafeNormal(),45,-8};
+                Release={FVector(44,-4,122),FVector(.95,-.2,.15).GetSafeNormal(),0,10};
+                Follow={FVector(18,26,112),FVector(.1,.98,-.15).GetSafeNormal(),-50,18}; break;
+            case WardenRules::CutThree:
+                Wind={FVector(12,3,178),FVector(-.52,0,.85).GetSafeNormal(),0,-12};
+                Release={FVector(45,0,125),FVector(.95,0,.3).GetSafeNormal(),0,16};
+                Follow={FVector(32,0,88),FVector(.8,0,-.6).GetSafeNormal(),0,28}; break;
+            case WardenRules::JumpAttack:
+                Wind={FVector(8,3,182),FVector(-.6,0,.8).GetSafeNormal(),0,-16};
+                Release={FVector(46,0,120),FVector(.9,0,.2).GetSafeNormal(),0,20};
+                Follow={FVector(36,0,74),FVector(.7,0,-.72).GetSafeNormal(),0,32}; break;
+            case WardenRules::RollAttack:
+                Wind={FVector(4,16,112),FVector(.97,.05,.2).GetSafeNormal(),-18,-4};
+                Release={FVector(58,4,118),FVector(1,0,0),10,14};
+                Follow={FVector(52,4,116),FVector(1,0,-.05).GetSafeNormal(),8,12}; break;
+            case WardenRules::RunAttack:
+                Wind={FVector(-2,30,132),FVector(-.6,.75,.25).GetSafeNormal(),-58,-6};
+                Release={FVector(46,6,120),FVector(.97,.2,.05).GetSafeNormal(),-4,14};
+                Follow={FVector(14,-28,112),FVector(.05,-.98,-.1).GetSafeNormal(),62,24}; break;
+            default: break;
+            }
+        }
+        // Cancels (chain cuts, rolling thrust, jump attack) wind up from the interrupted pose.
+        const FSwordKey Start=bPoseFromLast ? FSwordKey{LastGrip,LastAxis,LastTwist,LastLean} : Guard;
         if(bRegent && WardenRegent::IsRegent(Fight.Move)) Key=RegentKey(Fight);
-        else if(Fight.Age<D.Windup) Key=Blend(Guard,Wind,float(Fight.Age)/FMath::Max(1,D.Windup-6));
+        else if(Fight.Age<D.Windup) Key=Blend(Start,Wind,float(Fight.Age)/FMath::Max(1,D.Windup-6));
         else if(Fight.Age<D.Windup+D.Active)
         {
             // One quadratic arc with a single acceleration/deceleration envelope.
@@ -253,6 +284,13 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const float HandTuck=Smooth(U/.14f)*(1-Smooth((U-.78f)/.19f));
         Key=Blend(Guard,{FVector(26,-4,97),CarryAxis,0,68},HandTuck);
         Key.Lean+=6*Landing;
+    }
+    else if(Fight.Action==EWardenAction::Jump)
+    {
+        // Gather, rise with the blade held high, tuck the legs at the top, reach for the floor.
+        const float U=float(Fight.Age)/WardenRules::JumpTicks;
+        Key=Blend(Guard,{Guard.Grip+FVector(0,0,16),Guard.Axis,0,-10},FMath::Sin(PI*U));
+        Tuck=.5f*FMath::Sin(PI*U);
     }
     else if(Fight.Action==EWardenAction::Heal)
         Key=Blend(Guard,{FVector(20,8,105),FVector(.6,.2,.77).GetSafeNormal(),0,8},FMath::Sin(PI*float(Fight.Age)/WardenRules::HealTicks));
@@ -324,7 +362,8 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     // The Regent glides under its robe on every long lunge (>= 1 m), dash, drift and ash
     // step: feet planted at the start would stretch the rear leg across the travel and drag
     // the long robe into a backward slope (seen in the 2026-11-09 study capture).
-    const bool Glide=bRegent && WardenRegent::IsRegent(Fight.Move) && (FMath::Abs(Fight.Definition().Advance)>=100 || Fight.Move==WardenRegent::AshStep);
+    const bool Glide=(bRegent && WardenRegent::IsRegent(Fight.Move) && (FMath::Abs(Fight.Definition().Advance)>=100 || Fight.Move==WardenRegent::AshStep))
+        || (!bBoss && (Fight.Move==WardenRules::JumpAttack || FMath::Abs(Fight.Definition().Advance)>=60));
     if(Fight.Action==EWardenAction::Strike && !Glide)
     {
         // The support foot stays in world space through the cut. During recovery
@@ -360,7 +399,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         IK(TEXT("thigh_r"),TEXT("calf_r"),TEXT("foot_r"),Rear,MeshPoint(FVector(65,20,55)));
         SetRotation(FootLI,FootL.GetRotation()); SetRotation(FootRI,FootR.GetRotation());
     }
-    if(Fight.Action==EWardenAction::Dodge)
+    if(Fight.Action==EWardenAction::Dodge || Fight.Action==EWardenAction::Jump)
     {
         const FVector Left=FMath::Lerp(FootL.GetLocation(),MeshPoint(FVector(22,-15,64)),Tuck);
         const FVector Right=FMath::Lerp(FootR.GetLocation(),MeshPoint(FVector(4,15,57)),Tuck);
@@ -402,6 +441,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     }
     else { FootLocked[0]=FootLocked[1]=false; FootRelease[0]=FootRelease[1]=1; }
     const FVector Axis=MeshPoint(Key.Axis).GetSafeNormal();
+    LastGrip=Key.Grip; LastAxis=Key.Axis; LastTwist=Key.Twist; LastLean=Key.Lean;
     SwordFrame=FTransform(FQuat::FindBetweenNormals(FVector::UpVector,Axis),MeshPoint(Key.Grip));
     const FVector Across=SwordFrame.GetRotation().GetAxisX();
     // Project the shared hilt into the intersection of both arms' reachable

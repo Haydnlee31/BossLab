@@ -13,6 +13,7 @@
 #include "Misc/FileHelper.h"
 #include "HAL/FileManager.h"
 #include "Misc/ScopeExit.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
 FVector AWardenChallenger::MoveIntent() const
@@ -33,6 +34,7 @@ void AWardenChallenger::ResetFighter(bool Boss)
     // A reset re-poses outside the fixed step: drop any blended frame and its history.
     bRenderBlended=false; bRenderValid=false; Arm->SetRelativeLocation(FVector::ZeroVector);
     bBoss = Boss; Fight = FWardenFighterState();
+    GroundZ=GetActorLocation().Z; AirLift=JumpAttackLift=0; bPoseFromLast=false;
     FootLocked[0]=FootLocked[1]=false; FootRelease[0]=FootRelease[1]=1; FootLow[0]=FootLow[1]=1e9f;
     Fight.IsBoss = Boss;
     Fight.Health = Fight.MaxHealth = Boss ? 240.f : 100.f;
@@ -45,7 +47,12 @@ void AWardenChallenger::ResetFighter(bool Boss)
 }
 bool AWardenChallenger::BeginAction(EWardenAction Action, int32 Move, FVector Aim)
 {
+    const EWardenAction Before=Fight.Action;
     if (!Fight.Request(Action,Move)) return false;
+    // A cancel (chain cut, rolling thrust, jump attack) starts its pose from the pose it
+    // interrupted, not from the guard.
+    bPoseFromLast=Before!=EWardenAction::Ready;
+    if (Action==EWardenAction::Strike && !bBoss && Move==WardenRules::JumpAttack) JumpAttackLift=AirLift;
     StrikeOrigin=GetActorLocation();
     PlayCue(Action==EWardenAction::Strike ? 0 : Action==EWardenAction::Heal ? 2 : 3);
     if (Action == EWardenAction::Strike)
@@ -60,6 +67,11 @@ bool AWardenChallenger::BeginAction(EWardenAction Action, int32 Move, FVector Ai
     else if (Action == EWardenAction::Dodge)
     {
         CommittedDirection = Aim.IsNearlyZero() ? -GetActorForwardVector() : Aim.GetSafeNormal2D();
+    }
+    else if (Action == EWardenAction::Jump)
+    {
+        // Jumps carry the run's momentum; standing jumps go straight up.
+        CommittedDirection = MoveVelocity.IsNearlyZero() ? GetActorForwardVector() : MoveVelocity.GetSafeNormal2D();
     }
     PresentedAction = -1;
     CombatPose(FVector::ZeroVector);
@@ -88,6 +100,10 @@ void AWardenChallenger::StepFighter(const FVector& Direction, bool SprintRequest
                 SetActorRotation(FMath::RInterpConstantTo(GetActorRotation(),FRotator(0,Facing.Rotation().Yaw,0),WardenRules::Step,540.f));
             TurnRate=FMath::FindDeltaAngleDegrees(YawBefore,GetActorRotation().Yaw)/WardenRules::Step;
         }
+        else if (Fight.Action == EWardenAction::Jump)
+        {
+            MoveSwept(MoveVelocity*WardenRules::Step);
+        }
         else if (Fight.Action == EWardenAction::Dodge)
         {
             MoveVelocity=FVector::ZeroVector;
@@ -106,6 +122,17 @@ void AWardenChallenger::StepFighter(const FVector& Direction, bool SprintRequest
         else MoveVelocity=FVector::ZeroVector;
     }
     else { MoveVelocity=FVector::ZeroVector; DeathAge=FMath::Min(DeathAge+1,72.f); }
+    // Height above the floor: the jump arc, then the jump attack's descent to landing at
+    // contact. The capsule really rises (low sweeps and fire pools can pass beneath).
+    float Lift=0;
+    if (Fight.Action==EWardenAction::Jump) Lift=WardenRules::JumpLift(Fight.Age);
+    else if (Fight.Action==EWardenAction::Strike && !bBoss && Fight.Move==WardenRules::JumpAttack)
+        Lift=JumpAttackLift*FMath::Max(0.f,1-FMath::Square(float(Fight.Age)/Fight.Definition().Windup));
+    if (!FMath::IsNearlyEqual(Lift,AirLift) || Lift>0)
+    {
+        AirLift=Lift;
+        SetActorLocation(FVector(GetActorLocation().X,GetActorLocation().Y,GroundZ+AirLift));
+    }
     CombatPose(GetActorLocation()-Before);
 }
 void AWardenChallenger::CombatPose(const FVector& Travel)
@@ -127,8 +154,13 @@ bool AWardenChallenger::ResolveStrike(AWardenChallenger* Other, bool Debug)
             FHitResult Hit;
             if(!Blocked && GetWorld()->SweepSingleByChannel(Hit,PreviousBlade[I],Current,FQuat::Identity,ECC_Pawn,FCollisionShape::MakeSphere(Def.Radius*GetActorScale3D().X),Query) && Hit.GetActor()==Other)
             {
-                Fight.HitConsumed=true; Dealt=Other->Fight.Damage(Def.Damage);
-                if(Dealt) { Other->HitFlash=.18f; Other->PlayCue(1); }
+                Fight.HitConsumed=true; Dealt=Other->Fight.Damage(Def.Damage,true,Def.Stance);
+                if(Dealt)
+                {
+                    Other->HitFlash=.18f; Other->PlayCue(1);
+                    // Hit-stop: both fighters freeze a few ticks so the blow lands with weight.
+                    if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>()) Mode->Impact(Def.Stance>=2 ? 6 : 4, bBoss ? .35f : .15f+.1f*Def.Stance);
+                }
             }
             if(Debug) { DrawDebugSphere(GetWorld(),Current,Def.Radius,8,FColor::Orange,false,.04f); DrawDebugLine(GetWorld(),PreviousBlade[I],Current,FColor::Yellow,false,.04f,0,1); }
         }
@@ -194,10 +226,12 @@ void AWardenArenaMode::ResetEncounter(bool RetainEvidence)
     Player->ResetFighter(false); Warden->ResetFighter(true);
     CombatTick = 0; CombatAccumulator = 0; VisibleHistory.Reset(); SetMenuOpen(false);
     ++Encounter; Statistics.NewEncounter(Encounter,RetainEvidence); bReportSaved=false;
-    RehearsalMove=0; RehearsalWait=100;
+    RehearsalMove=0; RehearsalWait=100; HitStop=0; Shake=0;
     if(bRegent)
     {
         Regent=FWardenRegentState(); Warden->bRegent=true; Warden->SetActorHiddenInGame(false);
+        Warden->Fight.Health=Warden->Fight.MaxHealth=WardenRegent::Health;
+        Warden->Fight.Poise=Warden->Fight.MaxPoise=WardenRegent::Poise;
         // Testing shortcut: open at the phase threshold, so the transition plays first.
         if(bRegentPhaseTwoStart) Warden->Fight.Health=WardenRegent::PhaseTwoHealth;
     }
@@ -254,6 +288,13 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
     }
     const float Alpha=float(CombatAccumulator/WardenRules::Step);
     Player->BlendRenderState(Alpha); Warden->BlendRenderState(Alpha);
+    // Camera shake after landed blows (off with reduced motion); presentation only.
+    Shake=FMath::Max(0.f,Shake-DeltaSeconds*2.2f);
+    if(Player->Camera)
+    {
+        const float S=bReducedMotion ? 0.f : Shake, Time=GetWorld()->GetTimeSeconds();
+        Player->Camera->SetRelativeLocation(FVector(0,FMath::Sin(Time*83)*S*7,FMath::Sin(Time*71+1)*S*5));
+    }
 }
 void AWardenArenaMode::FixedStep()
 {
@@ -261,6 +302,8 @@ void AWardenArenaMode::FixedStep()
     // Exact step state in, snapshot out; frames blend between snapshots (WardenRenderBlend.cpp).
     Player->RestoreStepState(); Warden->RestoreStepState();
     ON_SCOPE_EXIT { Player->CaptureStepState(); Warden->CaptureStepState(); };
+    // Hit-stop freezes the whole fight (both fighters, hazards, skulls) for a few ticks.
+    if(HitStop>0) { --HitStop; return; }
     if(bDemo) ++DemoTick;
     if(!Player->Fight.Alive() || !Warden->Fight.Alive())
     {
@@ -298,6 +341,7 @@ void AWardenArenaMode::FixedStep()
     }
     FVector Intent = Player->MoveIntent();
     if(bGaitStudy) GaitStudyStep(Intent,BossDirection);
+    if(TestPilot) TestPilot(*this,Intent);
     if(bScriptedPlayer)
     {
         const auto Command=PlayerScript.Decide(bDemo?DemoTick:CombatTick,Player->GetActorLocation(),Player->Fight,Warden->GetActorLocation(),Warden->Fight.Action,Warden->Fight.Move,Warden->Fight.Age,Warden->Fight.AttackInstance);
@@ -319,24 +363,27 @@ void AWardenArenaMode::FixedStep()
         }
         else
         {
-            if(CombatTick==125 || CombatTick==290) Player->PendingAction=EWardenAction::Strike;
-            if(CombatTick==230 || CombatTick==400)
+            // The player kit in one take: three-cut chain (buffered presses), a side roll,
+            // jump + jump attack, then a back roll into the rolling thrust.
+            if(CombatTick==125 || CombatTick==150 || CombatTick==192 || CombatTick==355 || CombatTick==455) Player->PendingAction=EWardenAction::Strike;
+            if(CombatTick==270 || CombatTick==420)
             {
                 Player->PendingAction=EWardenAction::Dodge;
-                Player->PendingDirection=CombatTick==230 ? FVector::RightVector : -FVector::ForwardVector;
+                Player->PendingDirection=CombatTick==270 ? FVector::RightVector : -FVector::ForwardVector;
             }
+            if(CombatTick==340) Player->PendingAction=EWardenAction::Jump;
         }
     }
     if (Player->PendingAction != EWardenAction::Ready)
     {
         const auto Action = Player->PendingAction;
         const FVector Aim = Action == EWardenAction::Dodge ? (bScriptedPlayer?Intent:Player->PendingDirection) : (Player->IsLocked() || bScriptedPlayer) ? Warden->GetActorLocation()-Player->GetActorLocation() : Player->GetActorForwardVector();
-        const bool Accepted=Player->BeginAction(Action,0,Aim);
+        const bool Accepted=Player->BeginAction(Action,Action==EWardenAction::Strike ? Player->Fight.NextPlayerMove() : 0,Action==EWardenAction::Jump ? Intent : Aim);
         const bool Rejected=Player->Fight.Ready() && !Accepted;
         if(Rejected)
         {
             Player->RejectFlash=.55f;
-            LastEvent=Player->Fight.Stamina<(Action==EWardenAction::Dodge?WardenRules::DodgeCost:Action==EWardenAction::Strike?WardenRules::StrikeCost:WardenRules::HealCost)
+            LastEvent=Player->Fight.Stamina<(Action==EWardenAction::Dodge?WardenRules::DodgeCost:Action==EWardenAction::Strike?Player->Fight.StrikeCostOf(Player->Fight.NextPlayerMove()):Action==EWardenAction::Jump?WardenRules::JumpCost:WardenRules::HealCost)
                 ? TEXT("Not enough stamina.") : Action==EWardenAction::Heal ? TEXT("Heal unavailable: full health or no charges.") : TEXT("Still recovering.");
         }
         if(Accepted || Rejected || ++Player->PendingAge>WardenRules::InputBufferTicks)

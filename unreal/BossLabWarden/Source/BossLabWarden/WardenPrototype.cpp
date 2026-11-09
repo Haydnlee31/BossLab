@@ -106,6 +106,7 @@ void AWardenChallenger::SetupPlayerInputComponent(UInputComponent* Input)
     Input->BindAction(TEXT("Sprint"),IE_Released,this,&AWardenChallenger::StopSprint);
     Input->BindAction(TEXT("QuitMenu"),IE_Pressed,this,&AWardenChallenger::QuitMenu);
     Input->BindAction(TEXT("Dodge"),IE_Pressed,this,&AWardenChallenger::Dodge);
+    Input->BindAction(TEXT("Jump"),IE_Pressed,this,&AWardenChallenger::JumpPressed);
     Input->BindAction(TEXT("Heal"),IE_Pressed,this,&AWardenChallenger::Heal);
     Input->BindAction(TEXT("Restart"),IE_Pressed,this,&AWardenChallenger::Restart);
     Input->BindAction(TEXT("Pause"),IE_Pressed,this,&AWardenChallenger::PauseGame);
@@ -324,12 +325,12 @@ void AWardenPrototypeHUD::DrawHUD()
     Bar(32,78,260,P.Stamina/100,FLinearColor(.3,.6,.45));
     if(Mode->Player->RejectFlash>0) DrawRect(FLinearColor(1,.3,.12,Mode->Player->RejectFlash),30,76,264,15);
     DrawText(FString::Printf(TEXT("HP %.0f   STAMINA %.0f   HEALS %d"),P.Health,P.Stamina,P.Heals),FColor::White,32,100);
-    if(!Mode->bRecording) DrawText(TEXT("WASD move | Shift sprint | Tab target | J / LMB cut | Space roll | E heal | Esc menu"),FColor(200,205,210),32,H-62);
+    if(!Mode->bRecording) DrawText(TEXT("WASD move | Shift sprint | Tab target | LMB cut (chain x3) | Space roll | F jump | E heal | Esc menu"),FColor(200,205,210),32,H-62);
     if(!Mode->bRecording) DrawText(TEXT("I controls | F5 boss rehearsal | F6 test pilot | F9 export | F1 clean"),FColor(170,180,190),32,H-42);
     if(!Mode->bRecording && (Mode->Player->RejectFlash>0 || (!Mode->LastEvent.StartsWith(TEXT("Not enough stamina")) && !Mode->LastEvent.StartsWith(TEXT("Heal unavailable"))))) DrawText(Mode->LastEvent,FColor(230,192,125),32,132);
     if(!Mode->bRecording)
     {
-        const TCHAR* State=!P.Alive()?TEXT("FALLEN"):P.Action==EWardenAction::Heal?TEXT("HEAL / committed"):P.Action==EWardenAction::Hurt?TEXT("HIT / recovering"):P.Action==EWardenAction::Dodge?P.Invulnerable()?TEXT("ROLL / protected"):TEXT("ROLL / vulnerable"):P.Action==EWardenAction::Strike?P.Active()?TEXT("CUT / contact"):P.Age<P.Definition().Windup?TEXT("CUT / wind-up"):TEXT("CUT / recovery"):P.Gap>0?TEXT("RECOVERING"):P.Sprinting?TEXT("SPRINTING"):TEXT("READY");
+        const TCHAR* State=!P.Alive()?TEXT("FALLEN"):P.Action==EWardenAction::Heal?TEXT("HEAL / committed"):P.Action==EWardenAction::Hurt?TEXT("HIT / recovering"):P.Action==EWardenAction::Dodge?P.Invulnerable()?TEXT("ROLL / protected"):TEXT("ROLL / vulnerable"):P.Action==EWardenAction::Jump?TEXT("JUMP / attack to slam"):P.Action==EWardenAction::Strike?P.Active()?TEXT("CUT / contact"):P.Age<P.Definition().Windup?TEXT("CUT / wind-up"):TEXT("CUT / recovery"):P.Gap>0?TEXT("RECOVERING"):P.Sprinting?TEXT("SPRINTING"):TEXT("READY");
         DrawText(State,FColor(190,210,210),32,116);
     }
     if (Mode->bDemo) DrawText(FString::Printf(TEXT("PERFORMANCE / %s | Round %d | %.1fs | Resets disclosed"),TEXT("FIXED REHEARSAL"),Mode->DemoRounds+1,Mode->DemoTick/60.f),FColor(130,210,215),32,158);
@@ -339,7 +340,7 @@ void AWardenPrototypeHUD::DrawHUD()
     {
         Bar(W*.25f,H-110,W*.5f,B.Health/B.MaxHealth,FLinearColor(.65,.34,.12));
         DrawText(Mode->bRegent?TEXT("THE FUNERAL REGENT"):TEXT("THE WARDEN"),FColor(230,192,125),W*.25f,H-137,nullptr,1.2f);
-        DrawText(FString::Printf(TEXT("POISE %d / 3%s"),B.Poise,B.Action==EWardenAction::Hurt?TEXT(" / BROKEN"):TEXT("")),FColor(190,205,210),W*.65f,H-137);
+        DrawText(FString::Printf(TEXT("STANCE %d / %d%s"),B.Poise,B.MaxPoise,B.Action==EWardenAction::Hurt?TEXT(" / BROKEN"):TEXT("")),FColor(190,205,210),W*.65f,H-137);
         if(Mode->bRegent) DrawText(FString::Printf(TEXT("SKULLS %d / 3%s"),Mode->Regent.ReadySkulls(),Mode->Regent.PhaseTwo?TEXT("   |   SECOND PHASE"):TEXT("")),FColor(150,190,255),W*.48f,H-137);
     }
     if (P.Alive() && B.Alive() && B.Action == EWardenAction::Strike)

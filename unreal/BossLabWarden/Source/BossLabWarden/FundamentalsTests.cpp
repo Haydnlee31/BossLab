@@ -40,9 +40,9 @@ bool FWardenSprintTest::RunTest(const FString&)
     for(int32 I=0;I<60;++I) { P->StepFighter(FVector::ForwardVector,true); P->Fight.Advance(); }
     const float Sprint=P->GetActorLocation().X;
     TestTrue(TEXT("Sprint is substantially faster with the same acceleration"),Sprint>Walk*1.3f);
-    TestTrue(TEXT("Sprint reaches540cm/s"),FMath::IsNearlyEqual(float(P->MoveVelocity.Size()),540.f,.1f));
+    TestTrue(TEXT("Sprint reaches sprint speed"),FMath::IsNearlyEqual(float(P->MoveVelocity.Size()),WardenRules::SprintSpeed,.1f));
     TestTrue(TEXT("One moving second costs12 stamina without regen"),FMath::IsNearlyEqual(P->Fight.Stamina,88.f,.01f));
-    for(int32 I=0;I<10;++I) { P->StepFighter(FVector::ZeroVector,true); P->Fight.Advance(); }
+    for(int32 I=0;I<11;++I) { P->StepFighter(FVector::ZeroVector,true); P->Fight.Advance(); }
     TestTrue(TEXT("Stationary Shift spends no stamina and brakes"),FMath::IsNearlyEqual(P->Fight.Stamina,88.f,.01f) && P->MoveVelocity.IsNearlyZero());
     P->StepFighter(FVector::ForwardVector,true);
     TestTrue(TEXT("Roll can start from sprint"),P->BeginAction(EWardenAction::Dodge,0,FVector::RightVector));
@@ -79,21 +79,27 @@ FUNDAMENTAL_TEST(FWardenSwordGripTest,"BossLab.Fundamentals.TwoHandGripAndAuthor
 bool FWardenSwordGripTest::RunTest(const FString&)
 {
     auto* W=NewWorld(); auto* P=Fighter(W,FVector(0,0,95)); float MaxError=0,MaxTravel=0,MinMidCutTravel=10000;
-    for(int32 Family=-1;Family<3;++Family)
+    // Every player move (cut chain, jump slam, rolling thrust, running cut) and the three
+    // boss rehearsal swings, posed tick by tick from the guard.
+    for(int32 Family=-WardenRules::PlayerMoveCount;Family<3;++Family)
     {
-        P->ResetFighter(Family>=0); P->BeginAction(EWardenAction::Strike,FMath::Max(0,Family),FVector::ForwardVector);
+        P->ResetFighter(Family>=0); P->BeginAction(EWardenAction::Strike,0,FVector::ForwardVector);
+        P->Fight.Move=Family>=0 ? Family : Family+WardenRules::PlayerMoveCount;
         FVector Prior=P->BladePoint(1);
+        float MoveTravel=0; int32 PeakAge=0;
         for(int32 T=0;T<P->Fight.Definition().Total();++T)
         {
             P->Fight.Age=T; P->CombatPose(FVector::ZeroVector); MaxError=FMath::Max(MaxError,P->GripError);
             const FVector Tip=P->BladePoint(1); TestFalse(TEXT("Finite authored blade transform"),Tip.ContainsNaN());
             const float Distance=FVector::Distance(Tip,Prior);
             MaxTravel=FMath::Max(MaxTravel,Distance);
+            if(Distance>MoveTravel) { MoveTravel=Distance; PeakAge=T; }
             const auto& D=P->Fight.Definition();
             if(T>=D.Windup+D.Active*.4f && T<=D.Windup+D.Active*.6f)
                 MinMidCutTravel=FMath::Min(MinMidCutTravel,Distance);
             Prior=Tip;
         }
+        AddInfo(FString::Printf(TEXT("%s %s: peak tip travel %.1f cm/tick at age %d (windup %d)"),Family>=0?TEXT("Boss"):TEXT("Player"),P->Fight.Definition().Name,MoveTravel,PeakAge,P->Fight.Definition().Windup));
     }
     AddInfo(FString::Printf(TEXT("All sword poses: max grip error %.3f cm; max per-tick tip travel %.3f cm"),MaxError,MaxTravel));
     AddInfo(FString::Printf(TEXT("Minimum middle-of-cut blade travel %.3f cm/tick"),MinMidCutTravel));
@@ -110,7 +116,7 @@ bool FWardenBladeTest::RunTest(const FString&)
     int32 Hits=0;
     for(int32 T=0;T<WardenRules::Strike(0,false).Total();++T) { P->StepFighter(FVector::ZeroVector); if(P->ResolveStrike(B,false)) ++Hits; P->Fight.Advance(); }
     TestEqual(TEXT("Visible blade connects once per committed swing"),Hits,1);
-    TestEqual(TEXT("Authored blade damage only once"),B->Fight.Health,208.f);
+    TestEqual(TEXT("Authored blade damage only once"),B->Fight.Health,240.f-WardenRules::Strike(0,false).Damage);
     P->SetActorLocation(FVector(0,0,95)); P->ResetFighter(false); B->ResetFighter(true);
     auto* Wall=W->SpawnActor<AActor>(); auto* Box=NewObject<UBoxComponent>(Wall); Wall->SetRootComponent(Box);
     Box->SetBoxExtent(FVector(15,250,220)); Box->SetCollisionEnabled(ECollisionEnabled::QueryOnly); Box->SetCollisionResponseToAllChannels(ECR_Block); Box->RegisterComponent(); Wall->SetActorLocation(FVector(90,0,100));
@@ -127,11 +133,15 @@ bool FWardenRollTest::RunTest(const FString&)
     for(int32 T=0;T<WardenRules::DodgeTicks;++T)
     {
         if(P->Fight.Invulnerable()) ++Protected;
+        // A plain cut never cancels a roll; only the rolling thrust, and only after the
+        // protected frames (checked on a copy so this roll continues).
         TestFalse(TEXT("Greatsword cannot cancel the roll"),P->BeginAction(EWardenAction::Strike));
+        FWardenFighterState Probe=P->Fight; Probe.Stamina=100;
+        TestEqual(TEXT("Rolling thrust opens only after protection"),Probe.Request(EWardenAction::Strike,WardenRules::RollAttack),T>=WardenRules::RollAttackOpen);
         P->StepFighter(FVector::ForwardVector); MaxError=FMath::Max(MaxError,P->GripError); P->Fight.Advance();
     }
-    TestEqual(TEXT("Fourteen fixed protection ticks"),Protected,14);
-    TestTrue(TEXT("Roll travels 300 cm along committed input, not later input"),P->GetActorLocation().Equals(FVector(0,300,95),.1));
+    TestEqual(TEXT("Twenty-six fixed protection ticks"),Protected,WardenRules::DodgeInvulnerableEnd-WardenRules::DodgeInvulnerableStart);
+    TestTrue(TEXT("Roll travels 320 cm along committed input, not later input"),P->GetActorLocation().Equals(FVector(0,320,95),.1));
     AddInfo(FString::Printf(TEXT("Roll max grip error %.3f cm"),MaxError));
     TestTrue(TEXT("Roll maintains finite grip"),FMath::IsFinite(MaxError) && MaxError<3);
     TestFalse(TEXT("Recovery gap remains committed"),P->Fight.Ready());
@@ -164,8 +174,8 @@ bool FWardenRollContinuityTest::RunTest(const FString&)
             for(int32 I=0;I<5;++I) LowestBlade=FMath::Min(LowestBlade,float(P->BladePoint(I/4.f).Z));
             P->Fight.Advance();
         }
-        TestTrue(TEXT("Every normalized direction travels exactly 300 cm"),P->GetActorLocation().Equals(FVector(0,0,95)+Direction*300,.1));
-        TestEqual(TEXT("Every direction pays the normal roll cost"),P->Fight.Stamina,72.f);
+        TestTrue(TEXT("Every normalized direction travels exactly 320 cm"),P->GetActorLocation().Equals(FVector(0,0,95)+Direction*320,.1));
+        TestEqual(TEXT("Every direction pays the normal roll cost"),P->Fight.Stamina,100-WardenRules::DodgeCost);
         P->CombatPose(FVector::ZeroVector);
         for(int32 I=0;I<4;++I) MaxExit=FMath::Max(MaxExit,FVector::Distance(Prior[I],P->VisualBody->GetBoneLocationByName(Bones[I],EBoneSpaces::WorldSpace)));
     }
@@ -180,7 +190,7 @@ FUNDAMENTAL_TEST(FWardenRollHitWindowTest,"BossLab.Fundamentals.RollInvulnerabil
 bool FWardenRollHitWindowTest::RunTest(const FString&)
 {
     auto* W=NewWorld(); auto* Attacker=Fighter(W,FVector(0,0,95)); auto* Defender=Fighter(W,FVector(170,0,95),true);
-    for(int32 Age:{3,4,17,18})
+    for(int32 Age:{WardenRules::DodgeInvulnerableStart-1,WardenRules::DodgeInvulnerableStart,WardenRules::DodgeInvulnerableEnd-1,WardenRules::DodgeInvulnerableEnd})
     {
         Attacker->SetActorLocation(FVector(0,0,95)); Attacker->ResetFighter(false);
         Defender->ResetFighter(true); Defender->BeginAction(EWardenAction::Dodge,0,FVector(1,1,0).GetSafeNormal());
@@ -190,10 +200,10 @@ bool FWardenRollHitWindowTest::RunTest(const FString&)
         bool Dealt=false;
         for(int32 T=0;T<WardenRules::Strike(0,false).Total();++T)
         { Attacker->StepFighter(FVector::ZeroVector); Dealt|=Attacker->ResolveStrike(Defender,false); Attacker->Fight.Advance(); }
-        const bool Protected=Age>=4 && Age<18;
+        const bool Protected=Age>=WardenRules::DodgeInvulnerableStart && Age<WardenRules::DodgeInvulnerableEnd;
         TestTrue(TEXT("Real blade sweep reaches the rolling defender"),Attacker->Fight.HitConsumed);
         TestEqual(TEXT("Only the protected interval rejects actual damage"),Dealt,!Protected);
-        TestEqual(TEXT("Boundary health matches protection"),Defender->Fight.Health,Protected?240.f:208.f);
+        TestEqual(TEXT("Boundary health matches protection"),Defender->Fight.Health,Protected?240.f:240.f-WardenRules::Strike(0,false).Damage);
         AddInfo(FString::Printf(TEXT("Roll age %d: contact %d, damage %d, health %.0f"),Age,Attacker->Fight.HitConsumed,Dealt,Defender->Fight.Health));
     }
     CloseWorld(W); return true;
@@ -211,12 +221,12 @@ bool FWardenEightWayRequestTest::RunTest(const FString&)
             const FVector Direction=FRotator(0,I*45.f,0).Vector();
             M->Player->PendingAction=EWardenAction::Dodge;
             M->Player->PendingDirection=Direction;
-            for(int32 T=0;T<36;++T) M->FixedStep();
-            TestTrue(TEXT("Queued roll follows chosen direction despite lock-on"),M->Player->GetActorLocation().Equals(Start+300*Direction,.1));
-            TestEqual(TEXT("Queued directional roll pays once"),M->Player->Fight.Stamina,72.f);
+            for(int32 T=0;T<WardenRules::DodgeTicks;++T) M->FixedStep();
+            TestTrue(TEXT("Queued roll follows chosen direction despite lock-on"),M->Player->GetActorLocation().Equals(Start+320*Direction,.1));
+            TestEqual(TEXT("Queued directional roll pays once"),M->Player->Fight.Stamina,100-WardenRules::DodgeCost);
             TestEqual(TEXT("Queued directional roll completes"),int32(M->Player->Fight.Action),int32(EWardenAction::Ready));
         }
-    AddInfo(TEXT("16 ordinary queued rolls: eight headings with lock on and off, each 300 cm and 28 stamina"));
+    AddInfo(TEXT("16 ordinary queued rolls: eight headings with lock on and off, each 320 cm and 14 stamina"));
     CloseWorld(W); return true;
 }
 FUNDAMENTAL_TEST(FWardenInputBufferTest,"BossLab.Fundamentals.BoundedInputBufferWithoutCancel");
@@ -228,9 +238,9 @@ bool FWardenInputBufferTest::RunTest(const FString&)
     TestEqual(TEXT("Late roll input executes after recovery"),int32(M->Player->Fight.Action),int32(EWardenAction::Dodge));
     TestEqual(TEXT("Buffered request consumed once"),int32(M->Player->PendingAction),int32(EWardenAction::Ready));
     M->ResetEncounter(); M->Player->BeginAction(EWardenAction::Strike,0,FVector::ForwardVector); M->Player->PendingAction=EWardenAction::Dodge;
-    for(int32 I=0;I<14;++I) M->FixedStep();
+    for(int32 I=0;I<WardenRules::InputBufferTicks+2;++I) M->FixedStep();
     TestEqual(TEXT("Early roll cannot cancel sword"),int32(M->Player->Fight.Action),int32(EWardenAction::Strike));
-    TestEqual(TEXT("Old buffered input expires after twelve ticks"),int32(M->Player->PendingAction),int32(EWardenAction::Ready));
+    TestEqual(TEXT("Old buffered input expires after the buffer window"),int32(M->Player->PendingAction),int32(EWardenAction::Ready));
     for(int32 Remaining=0;Remaining<=4;++Remaining)
     {
         M->ResetEncounter(); M->Player->BeginAction(EWardenAction::Strike,0,FVector::ForwardVector);
@@ -238,7 +248,9 @@ bool FWardenInputBufferTest::RunTest(const FString&)
         M->Player->PendingAction=EWardenAction::Dodge; M->Player->PendingDirection=FVector::RightVector;
         for(int32 T=0;T<Remaining+9;++T) M->FixedStep();
         TestEqual(TEXT("Last four recovery ticks and gap boundary retain dodge"),int32(M->Player->Fight.Action),int32(EWardenAction::Dodge));
-        TestTrue(TEXT("Buffered dodge costs once, after sword cost"),M->Player->Fight.Stamina>=50 && M->Player->Fight.Stamina<54);
+        // Late recovery is roll-cancellable, so the buffered roll starts without regeneration.
+        const float Paid=100-WardenRules::Strike(0,false).Cost-WardenRules::DodgeCost;
+        TestTrue(TEXT("Buffered dodge costs once, after sword cost"),M->Player->Fight.Stamina>=Paid && M->Player->Fight.Stamina<Paid+8);
     }
     CloseWorld(W); return true;
 }
@@ -254,16 +266,19 @@ bool FWardenImpactTest::RunTest(const FString&)
     TestFalse(TEXT("Protected hit does not trigger hurt"),P.Damage(24));
     TestEqual(TEXT("Protected roll remains committed"),int32(P.Action),int32(EWardenAction::Dodge));
     FWardenFighterState B; B.IsBoss=true; B.Health=B.MaxHealth=240; B.Request(EWardenAction::Strike);
-    B.Damage(32); B.Damage(32);
-    TestEqual(TEXT("Two hits leave armored boss attack intact"),int32(B.Action),int32(EWardenAction::Strike));
+    B.Damage(32); B.Damage(32); B.Damage(32);
+    TestEqual(TEXT("Three light hits leave armored boss attack intact"),int32(B.Action),int32(EWardenAction::Strike));
     B.Damage(32);
-    TestEqual(TEXT("Third real damage event breaks boss poise"),int32(B.Action),int32(EWardenAction::Hurt));
+    TestEqual(TEXT("Fourth stance point breaks boss poise"),int32(B.Action),int32(EWardenAction::Hurt));
     TestFalse(TEXT("Broken attack cannot deal lingering damage"),B.Active());
-    TestEqual(TEXT("Poise break does not change damage"),B.Health,144.f);
+    TestEqual(TEXT("Poise break does not change damage"),B.Health,112.f);
     for(int32 T=0;T<WardenRules::BossHurtTicks+WardenRules::RecoveryGap;++T) B.Advance();
     TestTrue(TEXT("Boss returns after explicit recovery"),B.Ready());
     B.Damage(1); for(int32 T=0;T<300;++T) B.Advance();
-    TestEqual(TEXT("Poise restores after five seconds without damage"),B.Poise,3);
+    TestEqual(TEXT("Poise restores after five seconds without damage"),B.Poise,WardenRules::BossPoise);
+    FWardenFighterState Heavy; Heavy.IsBoss=true; Heavy.Health=Heavy.MaxHealth=240; Heavy.Request(EWardenAction::Strike);
+    Heavy.Damage(46,true,2); Heavy.Damage(52,true,2);
+    TestEqual(TEXT("Two heavy stance hits break the boss"),int32(Heavy.Action),int32(EWardenAction::Hurt));
     return true;
 }
 FUNDAMENTAL_TEST(FWardenMovementTest,"BossLab.Fundamentals.GroundedTravelAndAcceleration");
@@ -271,13 +286,13 @@ bool FWardenMovementTest::RunTest(const FString&)
 {
     auto* W=NewWorld(); auto* P=Fighter(W,FVector(0,0,95));
     P->StepFighter(FVector::ForwardVector);
-    TestTrue(TEXT("Walk accelerates rather than instant full speed"),P->MoveVelocity.X>0 && P->MoveVelocity.X<360);
+    TestTrue(TEXT("Walk accelerates rather than instant full speed"),P->MoveVelocity.X>0 && P->MoveVelocity.X<WardenRules::WalkSpeed);
     for(int32 I=0;I<12;++I) P->StepFighter(FVector::ForwardVector);
-    TestEqual(TEXT("Walking reaches intended speed"),P->MoveVelocity.X,360.0);
-    for(int32 I=0;I<6;++I) P->StepFighter(FVector::ZeroVector);
-    TestTrue(TEXT("Walking brakes within six ticks"),P->MoveVelocity.IsNearlyZero());
+    TestEqual(TEXT("Walking reaches intended speed"),float(P->MoveVelocity.X),WardenRules::WalkSpeed);
+    for(int32 I=0;I<7;++I) P->StepFighter(FVector::ZeroVector);
+    TestTrue(TEXT("Walking brakes within seven ticks"),P->MoveVelocity.IsNearlyZero());
     float Previous=0,MaxChange=0;
-    for(int32 I=0;I<36;++I)
+    for(int32 I=0;I<WardenRules::DodgeTicks;++I)
     {
         const float Distance=WardenRules::DodgeDistance(I+1)-WardenRules::DodgeDistance(I);
         TestTrue(TEXT("Roll travel always forward"),Distance>=0);
@@ -285,7 +300,7 @@ bool FWardenMovementTest::RunTest(const FString&)
     }
     TestTrue(TEXT("Last landing tick carries less than a centimetre"),Previous<1);
     TestTrue(TEXT("Roll has no old six-centimetre speed step"),MaxChange<3.2f);
-    TestEqual(TEXT("Smooth roll preserves 300 cm"),WardenRules::DodgeDistance(36),300.f);
+    TestEqual(TEXT("Smooth roll preserves 320 cm"),WardenRules::DodgeDistance(WardenRules::DodgeTicks),320.f);
     P->Fight.Damage(999);
     for(int32 I=0;I<72;++I) P->StepFighter(FVector::ZeroVector);
     TestEqual(TEXT("Death presentation reaches settled state"),P->DeathAge,72.f);
@@ -373,10 +388,10 @@ bool FWardenCameraFrameTest::RunTest(const FString&)
 FUNDAMENTAL_TEST(FWardenSwordRulesTest,"BossLab.Fundamentals.CostsRecoveryHealingAndDeath");
 bool FWardenSwordRulesTest::RunTest(const FString&)
 {
-    FWardenFighterState S; TestTrue(TEXT("Sword starts"),S.Request(EWardenAction::Strike)); TestEqual(TEXT("Cost once"),S.Stamina,78.f);
+    FWardenFighterState S; TestTrue(TEXT("Sword starts"),S.Request(EWardenAction::Strike)); TestEqual(TEXT("Cost once"),S.Stamina,100-WardenRules::Strike(0,false).Cost);
     TestFalse(TEXT("Roll does not cancel sword windup"),S.Request(EWardenAction::Dodge));
     int32 Active=0; for(int32 I=0;I<WardenRules::Strike(0,false).Total();++I) { if(S.Active()) ++Active; S.Advance(); }
-    TestEqual(TEXT("Twenty blade-contact ticks"),Active,20);
+    TestEqual(TEXT("Blade contact lasts the cut's active window"),Active,WardenRules::Strike(0,false).Active);
     for(int32 I=0;I<8;++I) S.Advance(); S.Health=40;
     TestTrue(TEXT("Heal starts"),S.Request(EWardenAction::Heal)); TestEqual(TEXT("Charge spent on commitment"),S.Heals,2);
     S.Damage(100); for(int32 I=0;I<90;++I) S.Advance(); TestEqual(TEXT("Lethal damage cannot heal-resurrect"),S.Health,0.f);

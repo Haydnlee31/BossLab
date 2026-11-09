@@ -11,7 +11,10 @@ namespace WardenRegent
     enum class EKind : uint8 { Blade, Censer, Cast, Move, Vanish, Ring, Transition };
     inline constexpr int32 First=Thrust, Count=End-Thrust;
     inline constexpr int32 Skulls=3, MaxPools=4, AshVanish=20, AshAppear=44;
-    inline constexpr float PhaseTwoHealth=120, ArenaRadius=1180, FloorRadius=1400;
+    // Boss-scale health and stance (2026-11-10): a disciplined test bot beat the 240 hp
+    // Regent in 26 s under the souls-style player rules; this aims at minutes, not seconds.
+    inline constexpr float Health=600, PhaseTwoHealth=300, ArenaRadius=1180, FloorRadius=1400;
+    inline constexpr int32 Poise=6;
     inline constexpr float SkullSpeed=720, SkullRadius=30, SkullDamage=16, SkullTurnDegrees=2, SkullLockDistance=350;
     inline constexpr float PoolDamage=5, BellPoolRadius=250, PyrePoolRadius=200, PyreSpread=340;
     inline constexpr int32 PoolInterval=30, PoolIgnite=18, BellPoolTicks=180, PyrePoolTicks=240;

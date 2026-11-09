@@ -307,7 +307,7 @@ void AWardenArenaMode::RegentResolve()
         const float Before=Player->Fight.Health;
         if(!Player->Fight.Damage(Amount,Flinch)) return false;
         BossDamage+=Before-Player->Fight.Health; Player->HitFlash=.18f;
-        if(Flinch) Player->PlayCue(1);
+        if(Flinch) { Player->PlayCue(1); Impact(4,.35f); }
         LastEvent=Event; return true;
     };
     auto AddPool=[&](const FVector& Centre,float Radius,int32 Ticks)
@@ -417,6 +417,8 @@ void AWardenArenaMode::RegentResolve()
     {
         if(H.Kind==ERegentHazard::Eruption && H.Arm==T) RegentSound(TEXT("RegentEruption"),H.Center,.45f);
         if(!H.Armed(T) || H.Kind==ERegentHazard::Mark) continue;
+        // Fire pools burn the floor: jumping over one avoids the chip damage.
+        if(H.Kind==ERegentHazard::Pool && Player->AirLift>25) continue;
         if(FVector::Dist2D(Target,H.Center)>H.Radius+20) continue;
         if(H.Kind==ERegentHazard::Pool) { if(T>=H.NextHit && Hurt(H.Damage,false,TEXT("Soul fire burns. Leave the pool."))) H.NextHit=T+PoolInterval; }
         else if(Hurt(H.Damage,true,TEXT("The furrow erupted. Read the marks, then cross behind them."))) H.Spent=true;
