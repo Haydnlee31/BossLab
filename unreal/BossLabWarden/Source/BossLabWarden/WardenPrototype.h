@@ -111,6 +111,10 @@ public:
     // Funeral Regent (-BossLabRegent): one-handed estoc, censer chain from the left arm.
     bool bRegent=false;
     void DressRegentWeapon();
+    // Player's modelled enchanted greatsword and its rune material (glow driven per frame).
+    void DressGreatsword();
+    TWeakObjectPtr<UStaticMeshComponent> Greatsword;
+    TWeakObjectPtr<class UMaterialInstanceDynamic> SwordRunes;
     FVector CenserWorld() const;
     bool CenserStrike() const;
     FVector HitPoint(int32 Sample) const;
@@ -201,7 +205,7 @@ struct FWardenDungeon
 // Player presentation effects (WardenEffects.cpp): flask, heal motes, landing dust.
 struct FWardenEffects
 {
-    static constexpr int32 MoteCount=48, DustCount=18, Bursts=6, Drops=34, Splats=60;
+    static constexpr int32 MoteCount=48, DustCount=18, Bursts=6, Drops=34, Splats=60, TrailSamples=10;
     TWeakObjectPtr<AActor> Owner;
     TWeakObjectPtr<class UInstancedStaticMeshComponent> Motes, Dust, Flask, FlaskNeck, Blood, Splat;
     // Blood bursts (ring buffer) and the floor splats they leave, in world time.
@@ -211,7 +215,14 @@ struct FWardenEffects
     int32 NextBurst=0, NextSplat=0, SeenBleed[2]={0,0};
     // Health-bar trails and the boss damage number (Elden Ring style).
     float BossTrail=-1, PlayerTrail=-1, BossShown=-1, PlayerShown=-1, RecentDamage=0, LastBossHit=-100, LastPlayerHit=-100;
-    TWeakObjectPtr<class UPointLightComponent> Glow;
+    TWeakObjectPtr<class UPointLightComponent> Glow, SwordLight;
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> Trail;
+    // Swing trail: recent blade base/tip samples (world) with their times.
+    FVector TrailBase[TrailSamples], TrailTip[TrailSamples];
+    float TrailTime[TrailSamples]={};
+    int32 TrailNext=0;
+    float RuneFlash=0;
+    int32 FlashFor=0;
     int32 HealFor=-1, DustFor=-1;
     float HealAt=-100, DustTime=-100, DustScale=1;
     FVector DustAt=FVector::ZeroVector;

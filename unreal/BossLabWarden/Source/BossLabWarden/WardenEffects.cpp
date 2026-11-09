@@ -47,6 +47,8 @@ void AWardenArenaMode::BuildEffects()
     V.Dust=Set(TEXT("/Engine/BasicShapes/Plane"),Effect(TEXT("M_ImpactDust"),TEXT("Stone")),FWardenEffects::DustCount);
     V.Blood=Set(TEXT("/Engine/BasicShapes/Plane"),Effect(TEXT("M_BloodDrop"),TEXT("BlackIron")),FWardenEffects::Bursts*FWardenEffects::Drops);
     V.Splat=Set(TEXT("/Engine/BasicShapes/Plane"),Effect(TEXT("M_BloodSplat"),TEXT("BlackIron")),FWardenEffects::Splats);
+    V.Trail=Set(TEXT("/Engine/BasicShapes/Plane"),Effect(TEXT("M_SwordTrail"),TEXT("Amber")),FWardenEffects::TrailSamples-1);
+    for(float& T:V.TrailTime) T=-100;
     // Flask: a glowing crimson bulb with a dark iron neck and stopper.
     V.Flask=Set(TEXT("/Engine/BasicShapes/Sphere"),Effect(TEXT("M_FlaskGlass"),TEXT("Amber")),1);
     V.FlaskNeck=Set(TEXT("/Engine/BasicShapes/Cylinder"),LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/BossLab/Materials/MI_BlackIron")),2);
@@ -55,6 +57,11 @@ void AWardenArenaMode::BuildEffects()
     Light->SetIntensity(0); Light->SetAttenuationRadius(380); Light->SetLightColor(FLinearColor(1,.18,.08));
     Light->SetCastShadows(false); Light->RegisterComponent(); Owner->AddInstanceComponent(Light);
     V.Glow=Light;
+    auto* Blade=NewObject<UPointLightComponent>(Owner);
+    Blade->SetupAttachment(Root); Blade->SetMobility(EComponentMobility::Movable);
+    Blade->SetIntensity(0); Blade->SetAttenuationRadius(260); Blade->SetLightColor(FLinearColor(1,.5,.15));
+    Blade->SetCastShadows(false); Blade->RegisterComponent(); Owner->AddInstanceComponent(Blade);
+    V.SwordLight=Blade;
 }
 
 void AWardenArenaMode::RecentDamageAdd(float Amount,float Seconds)
@@ -196,6 +203,52 @@ void AWardenArenaMode::AnimateEffects(float Seconds)
         Splats.Add(Size>.5f ? FTransform(FRotator(0,S.Yaw,0),S.At,FVector(Size/100,Size/100,1)) : Hidden);
     }
     V.Splat->BatchUpdateInstancesTransforms(0,Splats,true,true);
+
+    // Enchanted greatsword: runes breathe at rest, brighten through the wind-up, blaze on
+    // contact (more on heavy moves) and flash when a blow lands; an amber trail follows the
+    // blade only during contact.
+    const bool Swinging=F.Action==EWardenAction::Strike;
+    float Glow=1+.25f*FMath::Sin(Seconds*2.2f);
+    if(Swinging)
+    {
+        const auto& Def=F.Definition();
+        const float Wind=FMath::Clamp(float(F.Age)/FMath::Max(1,Def.Windup),0.f,1.f);
+        Glow=FMath::Lerp(Glow,Def.Stance>=2 ? 3.2f : 2.2f,Wind);
+        if(F.Active()) Glow=Def.Stance>=2 ? 5.f : 3.6f;
+    }
+    if(Warden && Warden->BleedCount!=V.FlashFor) { V.FlashFor=Warden->BleedCount; V.RuneFlash=1; }
+    V.RuneFlash=FMath::Max(0.f,V.RuneFlash-GetWorld()->GetDeltaSeconds()*3);
+    Glow+=4*V.RuneFlash;
+    if(auto* Runes=Player->SwordRunes.Get()) Runes->SetScalarParameterValue(TEXT("Glow"),Glow);
+    if(auto* L=V.SwordLight.Get())
+    {
+        const bool Has=Player->Greatsword.IsValid();
+        L->SetVisibility(Has);
+        if(Has) { L->SetWorldLocation(Player->BladePoint(.45f)); L->SetIntensity(140*Glow); }
+    }
+    if(Swinging && (F.Active() || F.Age==F.Definition().Windup-1) && Player->Greatsword.IsValid())
+    {
+        V.TrailBase[V.TrailNext]=Player->BladePoint(.35f); V.TrailTip[V.TrailNext]=Player->BladePoint(1);
+        V.TrailTime[V.TrailNext]=Seconds; V.TrailNext=(V.TrailNext+1)%FWardenEffects::TrailSamples;
+    }
+    TArray<FTransform> Ribbon; Ribbon.Reserve(FWardenEffects::TrailSamples-1);
+    for(int32 K=0;K<FWardenEffects::TrailSamples-1;++K)
+    {
+        // Newest first: segment between consecutive samples, as a camera-facing card.
+        const int32 A=(V.TrailNext-1-K+2*FWardenEffects::TrailSamples)%FWardenEffects::TrailSamples, B=(A-1+FWardenEffects::TrailSamples)%FWardenEffects::TrailSamples;
+        const float Age=Seconds-V.TrailTime[A];
+        if(Age>.14f || Seconds-V.TrailTime[B]>.18f) { Ribbon.Add(Hidden); continue; }
+        const FVector MidA=(V.TrailBase[A]+V.TrailTip[A])*.5f, MidB=(V.TrailBase[B]+V.TrailTip[B])*.5f;
+        const FVector Along=(MidA-MidB), Span=(V.TrailTip[A]-V.TrailBase[A]+V.TrailTip[B]-V.TrailBase[B])*.5f;
+        if(Along.Size()<1) { Ribbon.Add(Hidden); continue; }
+        const FVector X=Along.GetSafeNormal(), Toward=(Eye-(MidA+MidB)*.5f).GetSafeNormal();
+        const FVector Y=FVector::CrossProduct(Toward,X).GetSafeNormal(), Z=FVector::CrossProduct(X,Y);
+        const float Fade=1-Age/.14f;
+        // Placed on the blade's outer half (where the tip sweeps), narrower than the blade.
+        const FVector Centre=((MidA+MidB)*.5f+(V.TrailTip[A]+V.TrailTip[B])*.5f)*.5f;
+        Ribbon.Add(FTransform(FMatrix(X,Y,Z,FVector::ZeroVector).ToQuat(),Centre,FVector(Along.Size()/100,Span.Size()/100*.45f*Fade,1)));
+    }
+    V.Trail->BatchUpdateInstancesTransforms(0,Ribbon,true,true);
 
     // Health-bar trails: hold 0.7 s after a hit, then drain; the boss damage number sums
     // hits landed within 2.5 s of each other.

@@ -7,6 +7,7 @@ Writes /Game/BossLab/Effects (local, not committed). No textures.
   M_ImpactDust  translucent soft dust puff, grey-brown, per-instance variation
   M_BloodDrop   translucent dark-red droplet
   M_BloodSplat  translucent irregular floor splat with satellite drops
+  M_SwordTrail  additive amber swing-trail ribbon
 See docs/SOULS_CONTROLS.md.
 """
 import json, os
@@ -130,6 +131,24 @@ def blood(name, code, seed):
 
 mote(); flask(); dust()
 blood('M_BloodDrop', BLOOD_CODE, False)
+
+# Sword trail: additive amber ribbon card, bright along its centre line, fading to the
+# edges and toward the card's trailing end (u = 1).
+TRAIL_CODE = '''
+float2 uv=UV.xy; float across=1-abs(uv.y*2-1);
+// Soft and dim: 3.2 with bloom drew solid slabs in the first capture.
+return float3(1,.5,.14)*pow(saturate(across),3.5)*(1-uv.x*.8)*.9;
+'''
+def trail():
+    mat = get_or_create('M_SwordTrail')
+    mat.set_editor_property('blend_mode', unreal.BlendMode.BLEND_ADDITIVE)
+    uv = mel.create_material_expression(mat, unreal.MaterialExpressionTextureCoordinate, -800, 0)
+    node = custom(mat, TRAIL_CODE, ['UV'], unreal.CustomMaterialOutputType.CMOT_FLOAT3, -400, 0)
+    mel.connect_material_expressions(uv, '', node, 'UV')
+    mel.connect_material_property(node, '', unreal.MaterialProperty.MP_EMISSIVE_COLOR)
+    mel.recompile_material(mat)
+    report['M_SwordTrail'] = 'additive amber ribbon'
+trail()
 blood('M_BloodSplat', SPLAT_CODE, True)
 eal.save_directory(DEST, only_if_is_dirty=False, recursive=True)
 out = os.path.join(ROOT, 'artifacts/art/souls-controls-2026-11-10')

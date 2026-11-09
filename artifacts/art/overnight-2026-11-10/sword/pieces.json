@@ -1,0 +1,15 @@
+{
+ "triangles": 10838,
+ "size_cm": [
+  37.0,
+  5.4,
+  186.2
+ ],
+ "materials": [
+  "sword_steel",
+  "sword_iron",
+  "sword_leather",
+  "sword_bronze",
+  "sword_rune"
+ ]
+}

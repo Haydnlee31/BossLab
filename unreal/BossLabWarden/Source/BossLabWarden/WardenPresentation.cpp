@@ -77,6 +77,7 @@ void AWardenArenaMode::DressArena()
 void AWardenChallenger::DressFighter()
 {
     const bool Revamp=DressRevamp();
+    if(Revamp && !bBoss) DressGreatsword();
     auto* Main=Surface(TEXT("Iron"));
     if(!Revamp) for(int32 I=0;I<VisualBody->GetNumMaterials();++I) VisualBody->SetMaterial(I,Main);
     TInlineComponentArray<UStaticMeshComponent*> Existing(this);

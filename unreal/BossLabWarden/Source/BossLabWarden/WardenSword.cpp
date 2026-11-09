@@ -6,6 +6,7 @@
 #include "Animation/BlendSpace.h"
 #include "Engine/SkeletalMesh.h"
 #include "Materials/MaterialInterface.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 namespace
 {
@@ -117,6 +118,27 @@ void AWardenChallenger::CreateSword()
     Part(TEXT("SwordGuard"),TEXT("/Engine/BasicShapes/Cube"),FVector(0,0,8),FVector(.34,.06,.055),TEXT("Bronze"));
     Part(TEXT("SwordGrip"),TEXT("/Engine/BasicShapes/Cylinder"),FVector(0,0,-9),FVector(.045,.045,.32),TEXT("BlackIron"));
     Part(TEXT("SwordPommel"),TEXT("/Engine/BasicShapes/Sphere"),FVector(0,0,-27),FVector(.075,.075,.09),TEXT("Bronze"));
+}
+void AWardenChallenger::DressGreatsword()
+{
+    // The modelled enchanted greatsword (prep_greatsword.py / ue_import_greatsword.py) in
+    // the sword root's frame: grip at the origin, point at the existing 148 cm reach, so
+    // contact sweeps are unchanged. Falls back to the primitive blade when absent.
+    auto* Mesh=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/Sword/SM_Greatsword"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    if(!Mesh) return;
+    for(const TCHAR* Name:{TEXT("SwordBlade"),TEXT("SwordRidge"),TEXT("SwordTip"),TEXT("SwordGuard"),TEXT("SwordGrip"),TEXT("SwordPommel")})
+        if(auto* C=FindObject<UStaticMeshComponent>(this,Name)) C->SetVisibility(false);
+    UStaticMeshComponent* Blade=FindObject<UStaticMeshComponent>(this,TEXT("PlayerGreatsword"));
+    if(!Blade)
+    {
+        Blade=NewObject<UStaticMeshComponent>(this,TEXT("PlayerGreatsword"));
+        Blade->SetStaticMesh(Mesh); Blade->SetupAttachment(SwordRoot);
+        Blade->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        Blade->RegisterComponent(); AddInstanceComponent(Blade);
+        const int32 Slot=Blade->GetMaterialIndex(TEXT("sword_rune"));
+        if(Slot!=INDEX_NONE) SwordRunes=Blade->CreateDynamicMaterialInstance(Slot);
+    }
+    Greatsword=Blade;
 }
 FVector AWardenChallenger::BladePoint(float Along) const
 {

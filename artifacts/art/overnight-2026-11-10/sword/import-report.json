@@ -1,0 +1,51 @@
+{
+ "M_SwordSteel": "pattern-welded bands, metallic .92",
+ "M_SwordIron": {
+  "colour": [
+   0.035,
+   0.035,
+   0.04
+  ],
+  "metal": 0.85,
+  "rough": 0.55
+ },
+ "M_SwordLeather": {
+  "colour": [
+   0.07,
+   0.022,
+   0.014
+  ],
+  "metal": 0,
+  "rough": 0.78
+ },
+ "M_SwordBronze": {
+  "colour": [
+   0.38,
+   0.25,
+   0.1
+  ],
+  "metal": 0.95,
+  "rough": 0.36
+ },
+ "M_SwordRune": "emissive amber, MID parameter Glow",
+ "SM_Greatsword": {
+  "slots": [
+   "sword_steel",
+   "sword_iron",
+   "sword_leather",
+   "sword_bronze",
+   "sword_rune"
+  ],
+  "min_cm": [
+   -18.5,
+   -2.7,
+   -37.9
+  ],
+  "max_cm": [
+   18.5,
+   2.7,
+   148.3
+  ],
+  "triangles": 10838
+ }
+}
