@@ -16,6 +16,89 @@ FSwordKey Blend(const FSwordKey& A,const FSwordKey& B,float T)
 {
     T=Smooth(T); return {FMath::Lerp(A.Grip,B.Grip,T),FQuat::Slerp(FQuat::Identity,FQuat::FindBetweenNormals(A.Axis.GetSafeNormal(),B.Axis.GetSafeNormal()),T).RotateVector(A.Axis).GetSafeNormal(),FMath::Lerp(A.Twist,B.Twist,T),FMath::Lerp(A.Lean,B.Lean,T)};
 }
+// Funeral Regent: one-handed estoc in the right hand. Blade moves thrust from a high
+// en-garde; censer and cast moves carry the estoc low while the body and left arm work.
+// Greybox keys on the engine-owned phases; they never change contact timing.
+FSwordKey RegentGuard() { return {FVector(30,22,112),FVector(.9f,-.15f,.4f).GetSafeNormal(),-10,2}; }
+FSwordKey RegentKey(const FWardenFighterState& F)
+{
+    using namespace WardenRegent;
+    const FSwordKey Guard=RegentGuard();
+    const FSwordKey Wind{FVector(2,26,130),FVector(.97f,-.05f,.2f).GetSafeNormal(),-28,-6};
+    const FSwordKey Lunge{FVector(60,8,124),FVector(1,-.05f,.02f).GetSafeNormal(),18,14};
+    const FSwordKey Low{FVector(16,30,92),FVector(.45f,.2f,-.87f).GetSafeNormal(),0,0};
+    const auto& D=F.Definition();
+    const int32 A=F.Age, R=A-D.Windup;
+    const float In=Smooth(float(A)/FMath::Max(1,D.Windup)), Hit=Smooth(float(R+2)/FMath::Max(2,D.Active)), Out=Smooth(float(R-D.Active)/D.Recovery);
+    auto Phased=[&](const FSwordKey& Base,float WindLean,float WindTwist,float HitLean,float HitTwist)
+    {
+        FSwordKey K=Blend(Guard,Blend(Base,Guard,Out),float(A)/12);
+        K.Lean=FMath::Lerp(FMath::Lerp(0.f,WindLean,In),HitLean,Hit)*(1-Out);
+        K.Twist=FMath::Lerp(FMath::Lerp(0.f,WindTwist,In),HitTwist,Hit)*(1-Out);
+        return K;
+    };
+    switch(Kind(F.Move))
+    {
+    case EKind::Blade: case EKind::Vanish:
+    {
+        if(A<D.Windup)
+        {
+            const int32 From=F.Move==AshStep ? AshAppear : 0;
+            // Held Thrust winds as fast as the plain thrust, then holds coiled and drawn back.
+            const int32 Wound=F.Move==HeldThrust ? 30 : D.Windup-6;
+            FSwordKey K=Blend(Guard,Wind,float(A-From)/FMath::Max(1,Wound-From));
+            if(F.Move==Dash) K.Lean+=18*In;   // crouched before the procession dash
+            if(F.Move==HeldThrust && A>30)
+            {
+                const float Coil=Smooth((A-30)/16.f);
+                K.Grip+=FVector(-8,4,4)*Coil; K.Twist-=10*Coil; K.Lean-=5*Coil;
+            }
+            return K;
+        }
+        if(F.Move==Rite)
+        {
+            // Extend over four ticks into each contact window, hold, retract over eight.
+            float E=0;
+            for(const int32 S:{0,20,56}) E=FMath::Max(E,Smooth(float(R-S+4)/4)*(1-Smooth(float(R-S-(S==56?10:8))/8)));
+            return Blend(Wind,Lunge,E);
+        }
+        if(R<D.Active) { FSwordKey K=Blend(Wind,Lunge,float(R+3)/4); if(F.Move==Dash) K.Lean+=20; return K; }
+        const float U=float(R-D.Active)/D.Recovery;
+        return U<.25f ? Lunge : Blend(Lunge,Guard,(U-.25f)/.75f);
+    }
+    case EKind::Censer: return F.Move==Arc ? Phased(Low,-4,35,6,-40) : Phased(Low,-14,8,24,0);
+    case EKind::Cast: return F.Move==Volley ? Phased(Low,-9,10,4,0) : Phased(Low,-6,0,18,0);
+    case EKind::Move: return Phased(Guard,-8,0,-8,0);
+    case EKind::Ring:
+    {
+        const FSwordKey Raised{FVector(10,18,170),FVector(.1f,0,1).GetSafeNormal(),0,-16};
+        const FSwordKey Slam{FVector(26,14,86),FVector(.25f,0,-1).GetSafeNormal(),0,26};
+        if(A<D.Windup) return Blend(Guard,Raised,float(A)/(D.Windup*.6f));
+        if(R<D.Active) return Blend(Raised,Slam,float(R+1)/3);
+        return Blend(Slam,Guard,float(R-D.Active)/D.Recovery);
+    }
+    default: return Phased({FVector(8,40,118),FVector(.2f,.7f,.68f).GetSafeNormal(),0,0},-20,0,-10,0);
+    }
+}
+// Left hand of the Regent in the same key space, for moves that cast with it. Other moves
+// aim the arm at the censer instead (see SwordPose).
+bool RegentLeftKey(const FWardenFighterState& F,FVector& Out)
+{
+    using namespace WardenRegent;
+    if(F.Action!=EWardenAction::Strike || !IsRegent(F.Move)) return false;
+    const auto& D=F.Definition();
+    const float In=Smooth(float(F.Age)/FMath::Max(1,D.Windup)), Hit=Smooth(float(F.Age-D.Windup+2)/FMath::Max(2,D.Active)), Back=Smooth(float(F.Age-D.Windup-D.Active)/D.Recovery);
+    const FVector Low(14,-34,96);
+    auto Path=[&](FVector Wind,FVector Release) { return FMath::Lerp(FMath::Lerp(FMath::Lerp(Low,Wind,In),Release,Hit),Low,Back); };
+    switch(F.Move)
+    {
+        case Volley: Out=Path(FVector(34,-28,178),FVector(52,-20,162)); return true;
+        case Furrow: Out=Path(FVector(0,-40,170),FVector(58,-18,70)); return true;
+        case Pyre: Out=Path(FVector(8,-34,200),FVector(30,-20,80)); return true;
+        case Wakes: Out=Path(FVector(4,-62,165),FVector(4,-66,175)); return true;
+        default: return false;
+    }
+}
 }
 void AWardenChallenger::CreateSword()
 {
@@ -44,28 +127,48 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     if(GuardBase.IsEmpty() || !VisualBody->GetSkinnedAsset()) return;
     const auto& Ref=VisualBody->GetSkinnedAsset()->GetRefSkeleton();
     TArray<FTransform> Local=GuardBase;
-    const float Speed=Travel.Size2D()*60.f;
+    // The blendspace's speed axis is in the unscaled mannequin's cm/s; the boss is drawn
+    // at 1.35x, so the same ground speed needs a proportionally slower gait.
+    const float StepSpeed=Travel.Size2D()*60.f/FMath::Max(.1f,float(GetActorScale3D().X));
     // Only locomotion evaluates the installed blendspace. All sword/roll motion below
     // is an original keyed pose with IK; it is not a relabeled punch or dash.
     if(Fight.Action==EWardenAction::Ready && Locomotion)
     {
         if(Body->GetSingleNodeInstance()->GetCurrentAsset()!=Locomotion) Body->PlayAnimation(Locomotion,true);
         auto* Anim=Body->GetSingleNodeInstance();
-        const float Angle=FMath::RadiansToDegrees(FMath::Atan2(FVector::DotProduct(Travel,GetActorRightVector()),FVector::DotProduct(Travel,GetActorForwardVector())));
-        Anim->SetBlendSpacePosition(FVector(Angle,Speed,0));
+        float Angle=FMath::RadiansToDegrees(FMath::Atan2(FVector::DotProduct(Travel,GetActorRightVector()),FVector::DotProduct(Travel,GetActorForwardVector())));
+        // Turning on the spot steps the feet round (side-step clips) instead of spinning
+        // the idle pose like a turntable. Travel still wins when the body is moving.
+        float Speed=StepSpeed;
+        // Feet ~15 cm from the turning axis travel about 0.26 cm/s per deg/s; 0.5 gives a
+        // visible shuffle without a full walking stride.
+        const float Turn=FMath::Min(FMath::Abs(TurnRate)*.5f,150.f);
+        if(Turn>20 && Turn>Speed) { Speed=Turn; Angle=TurnRate>0 ? 90.f : -90.f; }
+        // Speed warping: below the walk samples (300) keep the full walk stride and slow
+        // its clock, instead of mixing in idle (a short shuffling stride at full cadence).
+        // The last 60 cm/s still fade into idle at a fixed slow clock, so stops settle.
+        float Param=Speed, Rate=GaitRate;
+        if(Speed>60 && Speed<300) { Param=300; Rate=GaitRate*Speed/300; }
+        else if(Speed<=60) { Param=Speed*5; Rate=GaitRate*.2f; }
+        Anim->SetBlendSpacePosition(FVector(Angle,Param,0));
         // Blendspace sample weights and marker clocks require a real delta.
         // SetPosition + TickAnimation(0) left the sample cache at idle even while
         // the capsule travelled: measured foot excursion was only 0.052 cm.
-        Anim->SetPlayRate(1.f);
+        Anim->SetPlayRate(Rate);
         Body->TickAnimation(WardenRules::Step,false); Body->RefreshBoneTransforms(); Local=Body->GetBoneSpaceTransforms();
     }
     // Blend only the unmodified animation base: never feed procedural IK back
     // into itself. This removes the walk/stop/commit snap while keeping contact
     // poses authoritative on the fixed simulation step.
-    if(MotionBase.Num()==Local.Num())
+    // Only around a change of action (walk/stop/commit): a permanent low-pass also damped
+    // every stride, so planted feet skated at ~65% of body speed (AnimationTests).
+    if(Fight.Action!=PosedAction) { PosedAction=Fight.Action; PoseSettle=10; }
+    const float Catch=PoseSettle>0 ? FMath::Lerp(1.f,.28f,PoseSettle/10.f) : 1.f;
+    if(PoseSettle>0) --PoseSettle;
+    if(MotionBase.Num()==Local.Num() && Catch<1)
         for(int32 I=0;I<Local.Num();++I)
         {
-            FTransform Blended; Blended.Blend(MotionBase[I],Local[I],.28f); Local[I]=Blended;
+            FTransform Blended; Blended.Blend(MotionBase[I],Local[I],Catch); Local[I]=Blended;
         }
     MotionBase=Local;
     Local[0].SetTranslation(FVector::ZeroVector);
@@ -82,7 +185,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     const int32 FootLI=Index(TEXT("foot_l")),FootRI=Index(TEXT("foot_r"));
     const FTransform FootL=CS[FootLI],FootR=CS[FootRI];
     float Plant=0,Recover=0,Load=0,Drive=0,Settle=0;
-    FSwordKey Guard{FVector(28,5,114),FVector(.38,-.12,.92).GetSafeNormal(),-7,5};
+    FSwordKey Guard=bRegent ? RegentGuard() : FSwordKey{FVector(28,5,114),FVector(.38,-.12,.92).GetSafeNormal(),-7,5};
     FSwordKey Key=Guard;
     float Roll=0, Tuck=0,Landing=0;
     if(Fight.Action==EWardenAction::Strike)
@@ -110,7 +213,8 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             Release={FVector(43,-3,120),FVector(1,0,.1).GetSafeNormal(),0,7};
             Follow={FVector(12,24,160),FVector(.2,.6,.77).GetSafeNormal(),-45,-6};
         }
-        if(Fight.Age<D.Windup) Key=Blend(Guard,Wind,float(Fight.Age)/FMath::Max(1,D.Windup-6));
+        if(bRegent && WardenRegent::IsRegent(Fight.Move)) Key=RegentKey(Fight);
+        else if(Fight.Age<D.Windup) Key=Blend(Guard,Wind,float(Fight.Age)/FMath::Max(1,D.Windup-6));
         else if(Fight.Age<D.Windup+D.Active)
         {
             // One quadratic arc with a single acceleration/deceleration envelope.
@@ -215,7 +319,11 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         SetRotation(A,FQuat::FindBetweenNormals((CS[B].GetLocation()-Root).GetSafeNormal(),(Elbow-Root).GetSafeNormal())*CS[A].GetRotation());
         SetRotation(B,FQuat::FindBetweenNormals((CS[C].GetLocation()-CS[B].GetLocation()).GetSafeNormal(),(Root+Aim*D-CS[B].GetLocation()).GetSafeNormal())*CS[B].GetRotation());
     };
-    if(Fight.Action==EWardenAction::Strike)
+    // The Regent glides under its robe on every long lunge (>= 1 m), dash, drift and ash
+    // step: feet planted at the start would stretch the rear leg across the travel and drag
+    // the long robe into a backward slope (seen in the 2026-11-09 study capture).
+    const bool Glide=bRegent && WardenRegent::IsRegent(Fight.Move) && (FMath::Abs(Fight.Definition().Advance)>=100 || Fight.Move==WardenRegent::AshStep);
+    if(Fight.Action==EWardenAction::Strike && !Glide)
     {
         // The support foot stays in world space through the cut. During recovery
         // each foot lifts before repositioning instead of sliding flat on the floor.
@@ -265,8 +373,10 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     // spheres. The weapon and both hands share this corrected transform; no
     // stretched arm bones or independent floating off-hand.
     FVector SharedGrip=SwordFrame.GetLocation();
+    // The Regent holds the estoc in the right hand only; the left arm carries the chain.
+    const int32 Hands=bRegent ? 1 : 2;
     for(int32 Iteration=0;Iteration<12;++Iteration)
-        for(int32 Side=0;Side<2;++Side)
+        for(int32 Side=0;Side<Hands;++Side)
         {
             const bool Right=Side==0;
             const int32 U=Index(Right?TEXT("upperarm_r"):TEXT("upperarm_l"));
@@ -279,7 +389,22 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         }
     SwordFrame.SetTranslation(SharedGrip);
     GripError=0;
-    for(int32 Side=0;Side<2;++Side)
+    if(bRegent)
+    {
+        const int32 U=Index(TEXT("upperarm_l")),L=Index(TEXT("lowerarm_l")),H=Index(TEXT("hand_l")),Middle=Index(TEXT("middle_01_l"));
+        if(U>=0 && L>=0 && H>=0)
+        {
+            const FVector Shoulder=CS[U].GetLocation();
+            const float Reach=FVector::Distance(Shoulder,CS[L].GetLocation())+FVector::Distance(CS[L].GetLocation(),CS[H].GetLocation());
+            FVector Cast;
+            const FVector Aim=RegentLeftKey(Fight,Cast) ? MeshPoint(Cast)-Shoulder
+                : VisualBody->GetComponentTransform().InverseTransformPosition(CenserWorld())-Shoulder;
+            const FVector HandTarget=Shoulder+Aim.GetClampedToMaxSize(Reach*.95f);
+            IK(TEXT("upperarm_l"),TEXT("lowerarm_l"),TEXT("hand_l"),HandTarget,MeshPoint(FVector(-10,-55,100)));
+            if(Middle>=0) SetRotation(H,FQuat::FindBetweenNormals((CS[Middle].GetLocation()-CS[H].GetLocation()).GetSafeNormal(),Aim.GetSafeNormal())*CS[H].GetRotation());
+        }
+    }
+    for(int32 Side=0;Side<Hands;++Side)
     {
         const bool Right=Side==0;
         const FVector Grip=SwordFrame.TransformPosition(FVector(0,0,Right?0:-17));

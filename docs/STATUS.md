@@ -1,3 +1,47 @@
+## Animation feel pass (2026-11-09, branch regent-moveset-01)
+
+The owner said the boss and player movement felt weird. Measured first, then fixed how motion feeds the clips; combat rules unchanged.
+
+- **Planted-foot slip:** cut from 65–70% of travel speed to 7% (player) and 10–20% (boss). Fixes: speed warping, scale-corrected blendspace speed, play rate 1.1 chosen by sweep, pose smoothing only around action changes.
+- **Facing:** bosses face the player while backpedalling and strafing.
+- **Turning:** turning on the spot steps the feet.
+- **Judder:** render interpolation between the 60 Hz steps makes drawn motion even at any frame rate (variation 0.354 → 0.000 at 45 fps). The exact step state is restored before every step.
+- **Tests:** native suite 29/29, with 3 new animation tests.
+- **Not done:** no owner feel test.
+
+Read [ANIMATION_FEEL.md](ANIMATION_FEEL.md).
+
+## Funeral Regent refinement pass (2026-11-09, branch regent-moveset-01)
+
+Owner: "rectify all the problems, gradually refine the moves". 
+- **Props:**
+  - the CC0 Poly Haven brass lantern as the censer;
+  - a modelled chain link (up to 72 follow the chain);
+  - an interim Blender skull with glowing eyes.
+- **Sound:** 8 original procedural cues (bell, whoosh, thrust, skull wail, eruption, blink, pyre, wakes), played spatialised.
+- **Readability:** a glint on the estoc point before each thrust, a censer flare in wind-ups, camera-facing flames, pools that smoulder before igniting.
+- **Pacing:** new Held Thrust (delayed release), per-move pauses with punish windows, Drift Step flowing into the Dash.
+- **Review tool:** new `capture regent-study`, a side-on review of every move.
+- **Fixes from that review:**
+  - lunges tipped backwards because the planted feet stretched the robe; the Regent now glides on long lunges, and a new pose test checks it;
+  - the lantern core bloomed, and the flames read as white candles.
+- **Tests:** native suite 26/26.
+- **Performance:** in back-to-back benchmarks on a heavily loaded machine, the Regent was within noise of the Warden. No 60 FPS claim.
+- **Remaining:** no owner feel test, sounds not listened to, interim skull, procedural poses. See [REGENT_MOVESET.md](REGENT_MOVESET.md).
+
+## Funeral Regent moveset greybox — playable opt-in (2026-11-09, branch regent-moveset-01)
+
+The owner chose weapon A: an estoc, plus a soul-fire censer on a left-arm chain. The owner also asked for diversified magic and a second phase. Launch: `BOSSLAB_BOSS=regent` (editor game only), with `BOSSLAB_REGENT_PHASE=2` to start at the threshold.
+
+- **Moves:** 11 engine-owned Regent moves, boss indices 3–13: thrust, triple rite, censer arc, grave bell plus fire pool, witness-skull volley, drift step, procession dash, ashen furrow. Phase two adds: transition (hall fire turns blue), ash-step blink and funeral pyre ring.
+- **Controller:** fixed, labelled rehearsal sequence; no AI.
+- **Visuals:** greybox primitives, the estoc prop, and blue flame/rune materials (local `/Game/BossLab/Regent`).
+- **Tests:** native suite 25/25, the default 22 plus 3 Regent tests. Each damaging move hurts a player who stands still and does 0 damage after one timed roll. Both phases use all 11 moves. Skull and pool budgets hold. Results are identical at 60 and 30 fps.
+- **Captures:** two 24 s captures inspected. They led to two visual fixes: the transition burst and the pyre circle.
+- **Not done:** no owner feel test, no performance measurement, no authored animation or final art.
+
+Read [REGENT_MOVESET.md](REGENT_MOVESET.md). Next action: owner playtest, then timing tuning.
+
 ## Dungeon arena — props and souls-style pass (2026-11-09, branch arena-design-01)
 
 Owner asked for more props and a more souls-like feel. Added CC0 Poly Haven props, converted in project-local Blender because the project has no glTF importer, and imported to `/Game/BossLab/Dungeon/Props` (local): guardian statues on plinths, a sealed great door, an entry door with a translucent fog wall, iron-gated cells, rubble, dropped arms, and candle shrines on the parapet. Also added procedural tattered banners, a cool moonlight shaft through an oculus with dust, and a muted grade. Default suite 22/22 (dungeon test: 1,030 instances, 17 lights, 0 colliding, nothing raised inside the wall line), RevampTrial 1/1. Inspected tour and exchange captures (new `capture tour`). Quieter-machine 720p run: dungeon 18.17 ms vs original 16.70 ms; shared machine, no locked-60 claim. See [ARENA_DUNGEON.md](ARENA_DUNGEON.md).

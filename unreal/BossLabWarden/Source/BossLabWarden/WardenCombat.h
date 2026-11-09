@@ -21,6 +21,8 @@ namespace WardenRules
     inline constexpr int32 HealTicks = 78, HealCommit = 60, RecoveryGap = 8;
     inline constexpr int32 InputBufferTicks = 12, HurtTicks = 18, BossHurtTicks = 36;
     inline constexpr float StrikeCost = 22, DodgeCost = 28, HealCost = 12;
+    // Rehearsal moves 0-2 plus the opt-in Funeral Regent moves 3-14 (WardenRegent.h).
+    inline constexpr int32 BossMoveCount = 15;
     inline constexpr float WalkSpeed=360, SprintSpeed=540, SprintCostPerSecond=12, SprintStartStamina=10;
     const FWardenStrike& Strike(int32 Index, bool Boss = true);
     float DodgeDistance(float Age);
@@ -35,10 +37,10 @@ struct FWardenFighterState
     bool Sprinting=false, SprintExhausted=false;
     void UpdateSprint(bool Requested, bool Moving);
     bool IsBoss = false;
-    int32 Cooldowns[3] = {0,0,0};
+    int32 Cooldowns[WardenRules::BossMoveCount] = {};
     int32 Poise = 3, PoiseReset = 0, ImpactTicks = 0;
     const FWardenStrike& Definition() const { return WardenRules::Strike(Move,IsBoss); }
-    bool CanStrike(int32 Index) const { return Index >= 0 && Index < 3 && (IsBoss || Index == 0) && Ready() && Stamina >= WardenRules::StrikeCost && Cooldowns[Index] == 0; }
+    bool CanStrike(int32 Index) const { return Index >= 0 && Index < WardenRules::BossMoveCount && (IsBoss || Index == 0) && Ready() && Stamina >= WardenRules::StrikeCost && Cooldowns[Index] == 0; }
     bool Alive() const { return Health > 0 && Action != EWardenAction::Dead; }
     bool Ready() const { return Alive() && Action == EWardenAction::Ready && Gap == 0; }
     bool Invulnerable() const;
@@ -46,6 +48,7 @@ struct FWardenFighterState
     bool Request(EWardenAction Requested, int32 MoveIndex = 0);
     // Called after geometry/damage. Lethal damage therefore cancels a same-tick heal.
     void Advance();
-    bool Damage(float Amount);
+    // Flinch=false is lingering chip damage (Regent fire pools): no hurt state or poise.
+    bool Damage(float Amount, bool Flinch = true);
     float AnimationTime() const;
 };

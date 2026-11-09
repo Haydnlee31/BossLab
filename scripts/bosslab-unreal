@@ -49,6 +49,8 @@ def main():
         raise RuntimeError('Revamp characters are editor-game only; the original packaged app is unchanged.')
     if os.environ.get('BOSSLAB_ARENA', 'original') == 'dungeon' and mode.startswith('package'):
         raise RuntimeError('The dungeon arena is editor-game only; the original packaged app is unchanged.')
+    if os.environ.get('BOSSLAB_BOSS', 'warden') == 'regent' and mode.startswith('package'):
+        raise RuntimeError('The Funeral Regent moveset is an editor-game greybox; the original packaged app is unchanged.')
     if os.environ.get('BOSSLAB_OUTFIT', 'original') == 'v13' and mode.startswith('package'):
         raise RuntimeError('V13 trial uses editor play/capture/benchmark (or dedicated native tests). The original packaged app is unchanged; do not use BOSSLAB_OUTFIT=v13 with package modes.')
     guard()
@@ -148,6 +150,9 @@ def main():
                 cmd += ['-BossLabMotionStudy']
             if 'tour' in sys.argv[2:]:
                 cmd += ['-BossLabMotionStudy', '-BossLabArenaTour']
+            if 'regent-study' in sys.argv[2:]:
+                # Side-on review of every Regent move; needs BOSSLAB_BOSS=regent.
+                cmd += ['-BossLabRegentStudy', '-BossLabCaptureSeconds=30']
             for name, group in [('rolls-cardinal', 0), ('rolls-diagonal', 1)]:
                 if name in sys.argv[2:]:
                     cmd += ['-BossLabRollStudy=' + str(group)]
@@ -171,6 +176,14 @@ def main():
         raise RuntimeError('BOSSLAB_ARENA must be original or dungeon')
     if arena == 'dungeon' and mode in ('play', 'benchmark', 'capture', 'test'):
         cmd += ['-BossLabArena=dungeon']
+    boss = os.environ.get('BOSSLAB_BOSS', 'warden')
+    if boss not in ('warden', 'regent'):
+        raise RuntimeError('BOSSLAB_BOSS must be warden or regent')
+    # Native tests enable the Regent explicitly, so the default suite runs unchanged.
+    if boss == 'regent' and mode in ('play', 'benchmark', 'capture'):
+        cmd += ['-BossLabRegent']
+        if os.environ.get('BOSSLAB_REGENT_PHASE', '1') == '2':
+            cmd += ['-BossLabRegentPhaseTwo']
     quality = os.environ.get('BOSSLAB_QUALITY', 'balanced')
     if quality not in ('original', 'balanced', 'performance', 'minimal'):
         raise RuntimeError('BOSSLAB_QUALITY must be original, balanced, performance or minimal')

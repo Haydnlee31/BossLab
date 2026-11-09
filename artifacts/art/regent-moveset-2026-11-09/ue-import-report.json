@@ -1,0 +1,22 @@
+{
+ "M_RegentFlame": {
+  "blend": "additive unlit",
+  "glow": 3.5
+ },
+ "M_RegentRune": {
+  "blend": "additive unlit",
+  "params": [
+   "Radius",
+   "Intensity",
+   "Tint"
+  ]
+ },
+ "M_RegentBone": {
+  "base": [
+   0.62,
+   0.57,
+   0.47
+  ],
+  "roughness": 0.62
+ }
+}

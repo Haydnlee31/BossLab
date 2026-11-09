@@ -79,6 +79,7 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
     auto* Coals=Set(Sphere,TEXT("MI_Amber"));
     auto* Inlay=Set(Cube,TEXT("MI_Bronze"));
     auto* Fire=Set(TEXT("/Engine/BasicShapes/Plane"),TEXT("M_DungeonFlame"));
+    Out.Fire=Fire;
     auto Box=[](UInstancedStaticMeshComponent* C,FVector Centre,FVector Size,FRotator Rotation)
     { C->AddInstance(FTransform(Rotation,Centre,Size/100),true); };
     // CC0 Poly Haven props (ue_import_props.py): pivot at base centre, front faces +Y, so

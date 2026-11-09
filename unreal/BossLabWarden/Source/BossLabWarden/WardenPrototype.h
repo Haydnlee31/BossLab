@@ -7,6 +7,7 @@
 #include "WardenPolicy.h"
 #include "WardenScript.h"
 #include "WardenStatistics.h"
+#include "WardenRegent.h"
 #include "WardenPrototype.generated.h"
 
 class UCapsuleComponent;
@@ -57,6 +58,17 @@ public:
     float GripError = 0;
     TArray<FTransform> GuardBase;
     TArray<FTransform> MotionBase;
+    EWardenAction PosedAction=EWardenAction::Ready;
+    int32 PoseSettle=0;
+    static inline float GaitRate=1.1f;
+    float TurnRate=0;   // yaw deg/s this step while ready; drives turn-in-place stepping
+    // Render interpolation between fixed steps (WardenRenderBlend.cpp); presentation only.
+    struct FStepPose { FVector Location=FVector::ZeroVector; float Yaw=0; FTransform Visual, Sword; TArray<FTransform> Bones; };
+    FStepPose RenderPrev, RenderCurr;
+    bool bRenderValid=false, bRenderBlended=false;
+    void CaptureStepState();
+    void RestoreStepState();
+    void BlendRenderState(float Alpha);   // locomotion clip play rate (tuned by AnimationTests)
     UPROPERTY() TObjectPtr<UPoseableMeshComponent> VisualBody;
     UPROPERTY() TObjectPtr<USceneComponent> SwordRoot;
     void StepFighter(const FVector& Direction, bool SprintRequested=false);
@@ -77,6 +89,13 @@ public:
     TArray<FWardenSwingChain> SwingChains;
     void SwingCloth(const TArray<FTransform>& CS);
     FString V13SourceHash;
+    // Funeral Regent (-BossLabRegent): one-handed estoc, censer chain from the left arm.
+    bool bRegent=false;
+    void DressRegentWeapon();
+    FVector CenserWorld() const;
+    bool CenserStrike() const;
+    FVector HitPoint(int32 Sample) const;
+    FVector HitOrigin() const;
     void UpdateAshbound(const FVector& Travel);
     int32 OutfitTriangles=0;
     float OutfitClock=0;
@@ -150,6 +169,22 @@ struct FWardenDungeon
     TWeakObjectPtr<class UInstancedStaticMeshComponent> Embers;
     TWeakObjectPtr<class UInstancedStaticMeshComponent> Dust;
     TArray<FVector> EmberSources;
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> Fire;
+};
+
+// Greybox visuals for the Regent's censer, chain, skulls and floor fire. Read-only view
+// of FWardenRegentState; rebuilt from it every rendered frame.
+struct FWardenRegentView
+{
+    static constexpr int32 Links=72, Flames=220, Discs=14;
+    TWeakObjectPtr<AActor> Owner;
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> Censer, Chain, Bones, Eyes, Fire, Glint;
+    bool bLantern=false, bLinks=false, bSkull=false;   // local props found (else primitives)
+    TArray<TWeakObjectPtr<class UStaticMeshComponent>> Disc;
+    TArray<TWeakObjectPtr<class UMaterialInstanceDynamic>> DiscMaterial;
+    TWeakObjectPtr<class UPointLightComponent> Glow;
+    TArray<FLinearColor> HallColors;
+    bool bBlueHall=false;
 };
 
 UCLASS()
@@ -162,6 +197,21 @@ public:
     static void AnimateDungeon(FWardenDungeon& Dungeon,float Seconds);
     bool bDungeon=false;
     FWardenDungeon Dungeon;
+    bool bRegent=false, bRegentPhaseTwoStart=false;
+    FWardenRegentState Regent;
+    FWardenRegentView RegentView;
+    void EnableRegent();
+    void RegentDecide(FVector& BossDirection);
+    void RegentResolve();
+    FVector RegentAshTarget() const;
+    void RegentSound(const TCHAR* Name,const FVector& At,float Volume);
+    // Capture-only side-on review of every Regent move (-BossLabRegentStudy).
+    bool bRegentStudy=false;
+    int32 RegentStudyMove=WardenRegent::First, RegentStudyWait=90;
+    TWeakObjectPtr<class ACameraActor> RegentStudyCamera;
+    void RegentStudyStep();
+    void BuildRegentView();
+    void AnimateRegentView(float Seconds);
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type Reason) override;
     virtual void Tick(float DeltaSeconds) override;

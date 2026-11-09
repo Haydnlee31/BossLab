@@ -1,0 +1,19 @@
+{
+  "mode": "test",
+  "quality": "balanced",
+  "tests": {
+    "succeeded": 25,
+    "succeededWithWarnings": 0,
+    "failed": 0,
+    "notRun": 0
+  },
+  "exit_code": 0,
+  "reason": null,
+  "seconds": 19.718247291166335,
+  "storage": {
+    "free_bytes": 28727721984,
+    "unreal_bytes": 4204339200,
+    "reserve_bytes": 25769803776,
+    "limit_bytes": 10000000000
+  }
+}

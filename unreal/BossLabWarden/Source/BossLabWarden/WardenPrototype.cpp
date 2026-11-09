@@ -25,6 +25,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
+#include "Camera/CameraActor.h"
 
 AWardenChallenger::AWardenChallenger()
 {
@@ -259,6 +260,8 @@ void AWardenArenaMode::BeginPlay()
         PC->bShowMouseCursor = false;
     }
     DressArena();
+    if(FParse::Param(FCommandLine::Get(),TEXT("BossLabRegent"))) EnableRegent();
+    bRegentPhaseTwoStart=bRegent && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegentPhaseTwo"));
     ResetEncounter();
     bTitle=true;
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabCapture")))
@@ -272,6 +275,13 @@ void AWardenArenaMode::BeginPlay()
         bMotionStudy=true; bRehearsal=false; bScriptedPlayer=false; Player->SetLocked(false);
         bArenaTour=FParse::Param(FCommandLine::Get(),TEXT("BossLabArenaTour"));
         if(auto* PC=World->GetFirstPlayerController()) PC->SetControlRotation(FRotator(-12,-40,0));
+    }
+    if(bCaptureFrames && bRegent && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegentStudy")))
+    {
+        bRegentStudy=true; bScriptedPlayer=false; Player->SetLocked(false);
+        auto* Camera=World->SpawnActor<ACameraActor>(FVector(150,-820,240),FRotator(-8,90,0));
+        RegentStudyCamera=Camera;
+        if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
     }
     if(bCaptureFrames && FParse::Param(FCommandLine::Get(),TEXT("BossLabOutfitStudy")))
     {
@@ -320,8 +330,9 @@ void AWardenPrototypeHUD::DrawHUD()
     if(!Mode->bMotionStudy && !Mode->bOutfitStudy)
     {
         Bar(W*.25f,H-110,W*.5f,B.Health/B.MaxHealth,FLinearColor(.65,.34,.12));
-        DrawText(TEXT("THE WARDEN"),FColor(230,192,125),W*.25f,H-137,nullptr,1.2f);
+        DrawText(Mode->bRegent?TEXT("THE FUNERAL REGENT"):TEXT("THE WARDEN"),FColor(230,192,125),W*.25f,H-137,nullptr,1.2f);
         DrawText(FString::Printf(TEXT("POISE %d / 3%s"),B.Poise,B.Action==EWardenAction::Hurt?TEXT(" / BROKEN"):TEXT("")),FColor(190,205,210),W*.65f,H-137);
+        if(Mode->bRegent) DrawText(FString::Printf(TEXT("SKULLS %d / 3%s"),Mode->Regent.ReadySkulls(),Mode->Regent.PhaseTwo?TEXT("   |   SECOND PHASE"):TEXT("")),FColor(150,190,255),W*.48f,H-137);
     }
     if (P.Alive() && B.Alive() && B.Action == EWardenAction::Strike)
     {
@@ -332,7 +343,7 @@ void AWardenPrototypeHUD::DrawHUD()
     if ((!P.Alive() || !B.Alive()) && !Mode->bPaused)
     {
         DrawRect(FLinearColor(.015,.02,.025,.85),W*.25f,H*.35f,W*.5f,190);
-        DrawText(!P.Alive() ? TEXT("YOU FELL") : !B.Alive() ? TEXT("WARDEN FALLEN") : TEXT("PAUSED"),FColor(230,192,125),W*.3f,H*.4f,nullptr,2.f);
+        DrawText(!P.Alive() ? TEXT("YOU FELL") : !B.Alive() ? (Mode->bRegent?TEXT("REGENT FALLEN"):TEXT("WARDEN FALLEN")) : TEXT("PAUSED"),FColor(230,192,125),W*.3f,H*.4f,nullptr,2.f);
         DrawText(P.Alive() && B.Alive() ? TEXT("P resume / R restart | M mute | F2 motion | F4 sensitivity") : TEXT("R to begin a fresh encounter"),FColor::White,W*.3f,H*.47f);
         if(!P.Alive() || !B.Alive())
         {
@@ -353,7 +364,7 @@ void AWardenPrototypeHUD::DrawHUD()
     }
     DrawInspector(Mode);
     if (Mode->Player->HitFlash > 0 && !Mode->bReducedMotion) DrawRect(FLinearColor(.7,.03,.01,Mode->Player->HitFlash),0,0,W,H);
-    DrawText(Mode->bRehearsal?TEXT("FIXED ATTACK REHEARSAL"):TEXT("PRACTICE DUMMY"),FColor(180,195,200),W-285,28);
+    DrawText(Mode->bRehearsal?(Mode->bRegent?TEXT("REGENT GREYBOX / FIXED SEQUENCE"):TEXT("FIXED ATTACK REHEARSAL")):TEXT("PRACTICE DUMMY"),FColor(180,195,200),W-285,28);
     if (Mode->bTitle)
     {
         DrawRect(FLinearColor(.01,.015,.02,.93),W*.18f,H*.2f,W*.64f,H*.55f);

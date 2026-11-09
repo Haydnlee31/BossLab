@@ -234,3 +234,6 @@ Owner says proceed with refinements. Continue the approved target using the exis
 119. Owner explicitly authorizes checkpoint cleanup and GitHub push to Haydnlee31/BossLab. Public emptyrepo sourcehandoff with originalsource/authoredassets/selectedevidence; omitEpictemplateassets/tools/packages/referencevideo/cache/secrets. Remove13obsoleteblendfiles plus8V9cachetrees1113files132,840,630bytes; retainactivepairs/dependencies. Preservebuildkit/game, no inventedlicense/deployment. Restoreguide recordsMac/UEdependencylimits.
 
 120. Owner requests arena-design-01. Base currentClaude-revamp9e7c75b to preserve newerplayablecharacters. Separateoriginal Court ofLastWitness Blenderdraft, existingR14floor/2.6wall/8pillar envelopes preserved, R12tactical/R12.8clear distinguish. Newscenicpiers outsideboundary; offsetthrone toY+2.2 insteadmovingcollider, sealed8.1moculus. Staticgeometrychecks are notUEcamera/FPSproof. No livegameorAIchanges; humanreviewthenopt-in integration.
+
+
+121. 2026-11-09: Owner chose Regent weapon A (estoc + soul-fire censer chain), "magic as diversified as possible", and a second phase, and authorised a greybox implementation for later testing. It is opt-in `BOSSLAB_BOSS=regent`; the default Warden rehearsal and the packaged app are unchanged. No AI. See docs/REGENT_MOVESET.md.

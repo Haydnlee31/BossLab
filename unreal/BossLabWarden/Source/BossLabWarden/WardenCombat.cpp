@@ -1,4 +1,5 @@
 #include "WardenCombat.h"
+#include "WardenRegent.h"
 
 float WardenRules::DodgeDistance(float Age)
 {
@@ -16,6 +17,7 @@ const FWardenStrike& WardenRules::Strike(int32 Index, bool Boss)
 {
     static const FWardenStrike Player={TEXT("GREATSWORD CUT"),TEXT("AuthoredSword"),TEXT("hand_r"),30,20,36,0.f,0.f,1.f,32,6,45};
     if (!Boss) { check(Index == 0); return Player; }
+    if (WardenRegent::IsRegent(Index)) return WardenRegent::Strike(Index);
     // Engine-owned rehearsal timings; authored sword poses use these same phases.
     static const FWardenStrike Moves[] = {
         {TEXT("BROAD SWEEP"), TEXT("AuthoredSword"), TEXT("hand_r"), 44,24,54, 0,0,1, 24,7,55},
@@ -41,11 +43,13 @@ void FWardenFighterState::UpdateSprint(bool Requested, bool Moving)
 
 bool FWardenFighterState::Invulnerable() const
 {
+    if (Action == EWardenAction::Strike && WardenRegent::Vanished(Move,Age)) return true;
     return Action == EWardenAction::Dodge && Age >= WardenRules::DodgeInvulnerableStart && Age < WardenRules::DodgeInvulnerableEnd;
 }
 bool FWardenFighterState::Active() const
 {
     if (Action != EWardenAction::Strike || !Alive()) return false;
+    if (WardenRegent::IsRegent(Move)) return WardenRegent::Contact(Move,Age);
     const auto& Def = Definition();
     return Age >= Def.Windup && Age < Def.Windup + Def.Active;
 }
@@ -82,17 +86,18 @@ void FWardenFighterState::Advance()
     else if (Action == EWardenAction::Ready) Stamina = FMath::Min(100.f,Stamina+26.f/60.f);
     if (Action == EWardenAction::Ready) return;
     ++Age;
+    if (Action == EWardenAction::Strike && WardenRegent::Rearm(Move,Age)) HitConsumed = false;
     if (Action == EWardenAction::Heal && Age == WardenRules::HealCommit) Health = FMath::Min(MaxHealth,Health+45.f);
     const int32 Duration = Action == EWardenAction::Strike ? Definition().Total() : Action == EWardenAction::Dodge ? WardenRules::DodgeTicks : Action==EWardenAction::Hurt ? (IsBoss?WardenRules::BossHurtTicks:WardenRules::HurtTicks) : WardenRules::HealTicks;
     if (Age >= Duration) { Action = EWardenAction::Ready; Age = 0; Gap = WardenRules::RecoveryGap; }
 }
-bool FWardenFighterState::Damage(float Amount)
+bool FWardenFighterState::Damage(float Amount, bool Flinch)
 {
     if (!Alive() || Invulnerable() || Amount <= 0 || !FMath::IsFinite(Amount)) return false;
-    Sprinting=false;
+    if (Flinch) Sprinting=false;
     Health = FMath::Max(0.f,Health-Amount);
     if (Health == 0) { Action = EWardenAction::Dead; Age = 0; }
-    else
+    else if (Flinch)
     {
         ImpactTicks=18;
         if(IsBoss) { --Poise; PoiseReset=300; }

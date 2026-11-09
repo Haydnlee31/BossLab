@@ -1,0 +1,11 @@
+Worst-case pool cover 12.8% of the floor
+MOURNER'S THRUST: standing still takes 22, timed roll takes 0
+TRIPLE RITE: standing still takes 36, timed roll takes 0
+CENSER ARC: standing still takes 24, timed roll takes 0
+GRAVE BELL: standing still takes 60, timed roll takes 0
+WITNESS VOLLEY: standing still takes 32, timed roll takes 0
+PROCESSION DASH: standing still takes 26, timed roll takes 0
+ASHEN FURROW: standing still takes 20, timed roll takes 0
+ASH STEP: standing still takes 24, timed roll takes 0
+FUNERAL PYRE: standing still takes 28, timed roll takes 0
+11 of 11 Regent moves used; max 2 skulls in flight; max pool cover 6.1%; max boss radius 1259 cm; player took 404

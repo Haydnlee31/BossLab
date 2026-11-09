@@ -12,6 +12,8 @@
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
 #include "HAL/FileManager.h"
+#include "Misc/ScopeExit.h"
+#include "GameFramework/SpringArmComponent.h"
 
 FVector AWardenChallenger::MoveIntent() const
 {
@@ -28,6 +30,8 @@ void AWardenChallenger::MoveSwept(const FVector& Step)
 void AWardenChallenger::ResetFighter(bool Boss)
 {
     ClearGameplayInput();
+    // A reset re-poses outside the fixed step: drop any blended frame and its history.
+    bRenderBlended=false; bRenderValid=false; Arm->SetRelativeLocation(FVector::ZeroVector);
     bBoss = Boss; Fight = FWardenFighterState();
     Fight.IsBoss = Boss;
     Fight.Health = Fight.MaxHealth = Boss ? 240.f : 100.f;
@@ -58,12 +62,13 @@ bool AWardenChallenger::BeginAction(EWardenAction Action, int32 Move, FVector Ai
     }
     PresentedAction = -1;
     CombatPose(FVector::ZeroVector);
-    for(int32 I=0;I<5;++I) PreviousBlade[I]=BladePoint(I/4.f);
+    for(int32 I=0;I<5;++I) PreviousBlade[I]=HitPoint(I);
     return true;
 }
 void AWardenChallenger::StepFighter(const FVector& Direction, bool SprintRequested)
 {
     const FVector Before = GetActorLocation();
+    TurnRate=0;
     Fight.UpdateSprint(SprintRequested,!Direction.IsNearlyZero());
     if (Fight.Alive())
     {
@@ -74,8 +79,13 @@ void AWardenChallenger::StepFighter(const FVector& Direction, bool SprintRequest
             MoveSwept(MoveVelocity*WardenRules::Step);
             FVector Facing = Direction;
             if (!bBoss && IsLocked()) Facing = GetTargetPosition()-GetActorLocation();
+            // Bosses keep their eyes on the player while walking, backing off or circling;
+            // the directional walk clips carry backpedals and strafes.
+            if (bBoss && Target.IsValid()) Facing = Target->GetActorLocation()-GetActorLocation();
+            const float YawBefore=GetActorRotation().Yaw;
             if (!Facing.IsNearlyZero())
                 SetActorRotation(FMath::RInterpConstantTo(GetActorRotation(),FRotator(0,Facing.Rotation().Yaw,0),WardenRules::Step,540.f));
+            TurnRate=FMath::FindDeltaAngleDegrees(YawBefore,GetActorRotation().Yaw)/WardenRules::Step;
         }
         else if (Fight.Action == EWardenAction::Dodge)
         {
@@ -108,11 +118,11 @@ bool AWardenChallenger::ResolveStrike(AWardenChallenger* Other, bool Debug)
     FCollisionQueryParams Query(SCENE_QUERY_STAT(WardenBlade),false,this);
     for(int32 I=0;I<5;++I)
     {
-        const FVector Current=BladePoint(I/4.f);
+        const FVector Current=HitPoint(I);
         if(Fight.Active() && !Fight.HitConsumed && Other && Other->Fight.Alive())
         {
             FHitResult Occlusion;
-            const bool Blocked=GetWorld()->LineTraceSingleByChannel(Occlusion,SwordRoot->GetComponentLocation(),Current,ECC_Pawn,Query) && Occlusion.GetActor()!=Other;
+            const bool Blocked=GetWorld()->LineTraceSingleByChannel(Occlusion,HitOrigin(),Current,ECC_Pawn,Query) && Occlusion.GetActor()!=Other;
             FHitResult Hit;
             if(!Blocked && GetWorld()->SweepSingleByChannel(Hit,PreviousBlade[I],Current,FQuat::Identity,ECC_Pawn,FCollisionShape::MakeSphere(Def.Radius*GetActorScale3D().X),Query) && Hit.GetActor()==Other)
             {
@@ -179,24 +189,33 @@ void AWardenArenaMode::ResetEncounter(bool RetainEvidence)
     if (!Player || !Warden) return;
     Player->SetActorLocation(FVector(-450,0,95)); Player->SetActorRotation(FRotator::ZeroRotator);
     Warden->SetActorLocation(FVector(300,0,128)); Warden->SetActorRotation(FRotator(0,180,0));
-    Player->SetTarget(Warden); Warden->SetTarget(nullptr);
+    Player->SetTarget(Warden); Warden->SetTarget(Player);
     Player->ResetFighter(false); Warden->ResetFighter(true);
     CombatTick = 0; CombatAccumulator = 0; VisibleHistory.Reset(); SetMenuOpen(false);
     ++Encounter; Statistics.NewEncounter(Encounter,RetainEvidence); bReportSaved=false;
     RehearsalMove=0; RehearsalWait=100;
+    if(bRegent)
+    {
+        Regent=FWardenRegentState(); Warden->bRegent=true; Warden->SetActorHiddenInGame(false);
+        // Testing shortcut: open at the phase threshold, so the transition plays first.
+        if(bRegentPhaseTwoStart) Warden->Fight.Health=WardenRegent::PhaseTwoHealth;
+    }
     PlayerDamage=BossDamage=0; AcceptedTick=0; AcceptedMove=-1; bDecisionAccepted=false;
     Observation=FWardenObservation(); Decision=FWardenDecision();
     PolicyRandom.Initialize(PolicySeed);
     PlayerScript.LastRespondedInstance=-1;
     for(int32& Count : MoveCounts) Count=0;
     LastPlayerPosition=Player->GetActorLocation();
-    LastEvent = TEXT("Tab target. Read the sword. Roll through contact; punish recovery.");
+    LastEvent = bRegent ? TEXT("The Funeral Regent. Read the censer and the skulls; roll late, punish recovery.")
+        : TEXT("Tab target. Read the sword. Roll through contact; punish recovery.");
     if (Player->GetController()) Player->GetController()->SetControlRotation(FRotator(-12,0,0));
 }
 void AWardenArenaMode::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
     if(bDungeon) AnimateDungeon(Dungeon,GetWorld()->GetTimeSeconds());
+    // Regent visuals follow the fixed-step state below; updated after the steps run.
+    ON_SCOPE_EXIT { if(bRegent) AnimateRegentView(GetWorld()->GetTimeSeconds()); };
     const double Now=FPlatformTime::Seconds();
     if(LastFrameTime>0 && !bPaused && !bTitle && Player && Warden && Player->Fight.Alive() && Warden->Fight.Alive())
     {
@@ -232,16 +251,22 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
         CombatAccumulator -= WardenRules::Step;
         FixedStep();
     }
+    const float Alpha=float(CombatAccumulator/WardenRules::Step);
+    Player->BlendRenderState(Alpha); Warden->BlendRenderState(Alpha);
 }
 void AWardenArenaMode::FixedStep()
 {
     if (!Player || !Warden) return;
+    // Exact step state in, snapshot out; frames blend between snapshots (WardenRenderBlend.cpp).
+    Player->RestoreStepState(); Warden->RestoreStepState();
+    ON_SCOPE_EXIT { Player->CaptureStepState(); Warden->CaptureStepState(); };
     if(bDemo) ++DemoTick;
     if(!Player->Fight.Alive() || !Warden->Fight.Alive())
     {
         if(!Player->Fight.Alive()) Player->StepFighter(FVector::ZeroVector);
         if(!Warden->Fight.Alive()) Warden->StepFighter(FVector::ZeroVector);
         Statistics.Censor();
+        if(bRegent) { Regent.Flying.Reset(); Regent.Hazards.Reset(); }
         if(!bReportSaved) { SaveReport(); bReportSaved=true; }
         if(bDemo && ++DemoResetWait>=120) { ++DemoRounds; ResetEncounter(true); DemoResetWait=0; LastEvent=TEXT("DEMO ROUND RESET | Health restored; evidence retained"); }
         return;
@@ -250,7 +275,13 @@ void AWardenArenaMode::FixedStep()
     FVector BossDirection=FVector::ZeroVector;
     // Temporary rehearsal choreography: fixed 0,1,2 order, no learned policy,
     // response statistics, input reading or hidden resource-dependent selection.
-    if(bRehearsal && Warden->Fight.Ready())
+    if(bRegentStudy)
+    {
+        // The in-action half of RegentDecide (tracking, ash-step teleport) still runs.
+        FVector Ignored; Regent.Waiting=1000000; RegentDecide(Ignored); RegentStudyStep();
+    }
+    else if(bRehearsal && bRegent) RegentDecide(BossDirection);
+    else if(bRehearsal && Warden->Fight.Ready())
     {
         const FVector ToPlayer=Player->GetActorLocation()-Warden->GetActorLocation();
         const float Distance=ToPlayer.Size2D();
@@ -320,6 +351,7 @@ void AWardenArenaMode::FixedStep()
     // Explicit boss-first ordering; lethal damage prevents retaliation and healing.
     if (Warden->ResolveStrike(Player,bDebugGeometry)) { BossDamage+=PriorPlayerHealth-Player->Fight.Health; LastEvent = TEXT("You were hit. Recover before committing again."); }
     if (Player->ResolveStrike(Warden,bDebugGeometry)) { PlayerDamage+=PriorBossHealth-Warden->Fight.Health; LastEvent = TEXT("Greatsword connected."); }
+    if(bRegent && bRehearsal) RegentResolve();
     Player->Fight.Advance(); Warden->Fight.Advance();
     if(bCaptureFrames) ReviewTrace+=FString::Printf(TEXT("%d,%d,%d,%.1f,%.1f,%d,%d,%.1f,%d,%.2f\n"),CombatTick,int32(Player->Fight.Action),Player->Fight.Age,Player->Fight.Health,Player->Fight.Stamina,int32(Warden->Fight.Action),Warden->Fight.Age,Warden->Fight.Health,Warden->Fight.Poise,FVector::Dist2D(Player->GetActorLocation(),Warden->GetActorLocation()));
 }
