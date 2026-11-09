@@ -669,7 +669,15 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
         for(int32 K=0;K<24;++K) Flame(FVector(BossAt.X,BossAt.Y,0)+Ring(K*15.f,F.Definition().Radius*(.3f+.7f*U),0),110,260*(1-U),K+200);
     }
     if(Striking && F.Move==Wakes)
-        for(int32 K=0;K<10;++K) Flame(FVector(BossAt.X,BossAt.Y,0)+Ring(K*36.f+Seconds*60,170+90*FMath::Clamp(F.Age/60.f,0.f,1.f),0),55,190*FMath::Sin(PI*FMath::Clamp(F.Age/100.f,0.f,1.f)),K+300);
+    {
+        // A low, uneven ring of soul fire spreading out, not a palisade of tall spikes.
+        const float Swell=FMath::Sin(PI*FMath::Clamp(F.Age/100.f,0.f,1.f)), Spread=170+110*FMath::Clamp(F.Age/60.f,0.f,1.f);
+        for(int32 K=0;K<18;++K)
+        {
+            const float Jitter=FMath::Frac(FMath::Sin(K*7.31f)*93.7f);
+            Flame(FVector(BossAt.X,BossAt.Y,0)+Ring(K*20.f+Seconds*40,Spread*(.9f+.2f*Jitter),0),85+30*Jitter,(70+70*Jitter)*Swell*(.85f+.15f*FMath::Sin(Seconds*9+K)),K+300);
+        }
+    }
     for(int32 I=Used;I<V.Disc.Num();++I) if(auto* D=V.Disc[I].Get()) D->SetVisibility(false);
     while(Fire.Num()<FWardenRegentView::Flames) Fire.Add(Hidden);
     V.Fire->BatchUpdateInstancesTransforms(0,Fire,true,true);

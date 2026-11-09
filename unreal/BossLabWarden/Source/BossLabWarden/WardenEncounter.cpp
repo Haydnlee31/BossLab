@@ -33,6 +33,7 @@ void AWardenChallenger::ResetFighter(bool Boss)
     // A reset re-poses outside the fixed step: drop any blended frame and its history.
     bRenderBlended=false; bRenderValid=false; Arm->SetRelativeLocation(FVector::ZeroVector);
     bBoss = Boss; Fight = FWardenFighterState();
+    FootLocked[0]=FootLocked[1]=false; FootRelease[0]=FootRelease[1]=1; FootLow[0]=FootLow[1]=1e9f;
     Fight.IsBoss = Boss;
     Fight.Health = Fight.MaxHealth = Boss ? 240.f : 100.f;
     PendingAction = EWardenAction::Ready; PendingAge=0; PendingDirection=FVector::ZeroVector; PresentedAction = -1;
@@ -296,6 +297,7 @@ void AWardenArenaMode::FixedStep()
         }
     }
     FVector Intent = Player->MoveIntent();
+    if(bGaitStudy) GaitStudyStep(Intent,BossDirection);
     if(bScriptedPlayer)
     {
         const auto Command=PlayerScript.Decide(bDemo?DemoTick:CombatTick,Player->GetActorLocation(),Player->Fight,Warden->GetActorLocation(),Warden->Fight.Action,Warden->Fight.Move,Warden->Fight.Age,Warden->Fight.AttackInstance);

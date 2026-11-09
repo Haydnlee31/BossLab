@@ -1,3 +1,13 @@
+## Animation refinement round 2 (2026-11-09, branch regent-moveset-01)
+
+- **Foot locking while walking:** plant is detected by the clip foot's speed, the foot is pinned with leg IK, and released with a 6-tick ease. Planted-foot slip is now 0–4% for both characters in every direction except the boss's sideways shuffle (13%). No pops: peak foot speed is 2.8–3.2× travel, with no forced releases.
+- **Review capture:** new `capture gait`, a side-on tracking review of walking, backpedalling, circling, strafing and turning.
+- **Regent:** the phase-change flames are now a low ring.
+- **Tests:** 29/29.
+- **Not done:** no owner feel test; generated skull still waits for the GPU quota and token.
+
+See [ANIMATION_FEEL.md](ANIMATION_FEEL.md).
+
 ## Animation feel pass (2026-11-09, branch regent-moveset-01)
 
 The owner said the boss and player movement felt weird. Measured first, then fixed how motion feeds the clips; combat rules unchanged.

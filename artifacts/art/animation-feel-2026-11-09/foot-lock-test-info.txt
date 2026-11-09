@@ -1,0 +1,16 @@
+Boss sideways trim sweep: 0.7:0.19 0.8:0.23 0.9:0.13 1.0:0.13 1.1:0.13 1.2:0.11 1.3:0.24
+Boss backward trim sweep: 0.7:0.01 0.8:0.01 0.9:0.00 1.0:0.00 1.1:0.00 1.2:0.00 1.3:0.00
+player forward: peak foot speed 2.79x travel, 0 forced lock releases
+player forward: planted-foot slip 0.01 of travel (354 cm/s), final yaw 0
+boss forward: peak foot speed 3.14x travel, 0 forced lock releases
+boss forward: planted-foot slip 0.04 of travel (257 cm/s), final yaw 0
+boss backward: peak foot speed 2.79x travel, 0 forced lock releases
+boss backward: planted-foot slip 0.00 of travel (257 cm/s), final yaw 0
+boss sideways: peak foot speed 3.24x travel, 0 forced lock releases
+boss sideways: planted-foot slip 0.13 of travel (257 cm/s), final yaw -1
+boss diagonal: peak foot speed 3.13x travel, 0 forced lock releases
+boss diagonal: planted-foot slip 0.03 of travel (257 cm/s), final yaw -0
+player sideways (locked on): peak foot speed 2.79x travel, 0 forced lock releases
+player sideways (locked on): planted-foot slip 0.00 of travel (354 cm/s), final yaw 1
+At 45 fps: drawn body 260 cm/s (variation 0.000), fixed-step actor 260 cm/s (variation 0.354)
+Turning at up to 90 deg/s: smaller foot lift 20.1 cm

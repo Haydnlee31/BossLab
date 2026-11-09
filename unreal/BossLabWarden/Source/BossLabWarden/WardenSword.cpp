@@ -147,9 +147,11 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         // Speed warping: below the walk samples (300) keep the full walk stride and slow
         // its clock, instead of mixing in idle (a short shuffling stride at full cadence).
         // The last 60 cm/s still fade into idle at a fixed slow clock, so stops settle.
-        float Param=Speed, Rate=GaitRate;
-        if(Speed>60 && Speed<300) { Param=300; Rate=GaitRate*Speed/300; }
-        else if(Speed<=60) { Param=Speed*5; Rate=GaitRate*.2f; }
+        const float Side=FMath::Abs(Angle)<=90 ? FMath::Abs(Angle)/90 : 0, Back=FMath::Abs(Angle)>90 ? (FMath::Abs(Angle)-90)/90 : 0;
+        const float Trim=FMath::Abs(Angle)<=90 ? FMath::Lerp(GaitTrim[0],GaitTrim[1],Side) : FMath::Lerp(GaitTrim[1],GaitTrim[2],Back);
+        float Param=Speed, Rate=GaitRate*Trim;
+        if(Speed>60 && Speed<300) { Param=300; Rate*=Speed/300; }
+        else if(Speed<=60) { Param=Speed*5; Rate*=.2f; }
         Anim->SetBlendSpacePosition(FVector(Angle,Param,0));
         // Blendspace sample weights and marker clocks require a real delta.
         // SetPosition + TickAnimation(0) left the sample cache at idle even while
@@ -366,6 +368,39 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         IK(TEXT("thigh_r"),TEXT("calf_r"),TEXT("foot_r"),Right,MeshPoint(FVector(75,20,55)));
         SetRotation(FootLI,FootL.GetRotation()); SetRotation(FootRI,FootR.GetRotation());
     }
+    // Foot locking while ready: a foot that plants stays pinned to the floor (leg IK) until
+    // the clip lifts it, then eases back onto the clip over six ticks. Removes the residual
+    // skate the clips carry, most visible on strafes. Presentation only; no capsule change.
+    if(Fight.Action==EWardenAction::Ready && Fight.Alive())
+    {
+        const FTransform MeshWorld=VisualBody->GetComponentTransform();
+        const float Scale=GetActorScale3D().X;
+        for(int32 Side=0;Side<2;++Side)
+        {
+            const FTransform& Anim=Side?FootR:FootL;
+            const FVector AnimWorld=MeshWorld.TransformPosition(Anim.GetLocation());
+            FootLow[Side]=FMath::Min(FootLow[Side],float(Anim.GetLocation().Z));
+            // Planted = the clip's own foot is nearly still over the floor and low; a height
+            // test alone kept slowed full strides "planted" into the swing (forced releases).
+            const float AnimMove=FVector::Dist2D(AnimWorld,FootAnimPrev[Side]);
+            FootAnimPrev[Side]=AnimWorld;
+            const bool Planted=Anim.GetLocation().Z<FootLow[Side]+4.f && AnimMove<FMath::Max(1.2f,.6f*float(Travel.Size2D()));
+            if(Planted && !FootLocked[Side] && FootRelease[Side]>=1) { FootLocked[Side]=true; FootLock[Side]=AnimWorld; }
+            if(FootLocked[Side] && (!Planted || FVector::Dist2D(FootLock[Side],AnimWorld)>28*Scale))
+            { if(Planted) ++FootForcedReleases; FootLocked[Side]=false; FootReleaseFrom[Side]=FootLock[Side]; FootRelease[Side]=0; }
+            FVector Pin=AnimWorld;
+            if(FootLocked[Side]) Pin=FVector(FootLock[Side].X,FootLock[Side].Y,AnimWorld.Z);
+            else if(FootRelease[Side]<1)
+            {
+                FootRelease[Side]=FMath::Min(1.f,FootRelease[Side]+1/6.f);
+                Pin=FMath::Lerp(FVector(FootReleaseFrom[Side].X,FootReleaseFrom[Side].Y,AnimWorld.Z),AnimWorld,Smooth(FootRelease[Side]));
+            }
+            if(Pin.Equals(AnimWorld,.01)) continue;
+            IK(Side?TEXT("thigh_r"):TEXT("thigh_l"),Side?TEXT("calf_r"):TEXT("calf_l"),Side?TEXT("foot_r"):TEXT("foot_l"),MeshWorld.InverseTransformPosition(Pin),MeshPoint(FVector(65,Side?20.f:-20.f,55)));
+            SetRotation(Side?FootRI:FootLI,Anim.GetRotation());
+        }
+    }
+    else { FootLocked[0]=FootLocked[1]=false; FootRelease[0]=FootRelease[1]=1; }
     const FVector Axis=MeshPoint(Key.Axis).GetSafeNormal();
     SwordFrame=FTransform(FQuat::FindBetweenNormals(FVector::UpVector,Axis),MeshPoint(Key.Grip));
     const FVector Across=SwordFrame.GetRotation().GetAxisX();

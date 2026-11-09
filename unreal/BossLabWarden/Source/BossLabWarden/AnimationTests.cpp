@@ -11,11 +11,12 @@ void CloseWorld(UWorld* W) { GEngine->DestroyWorldContext(W); W->DestroyWorld(fa
 // Planted-foot slip: while walking steadily, the lower foot should hold still on the floor.
 // Returns the mean horizontal speed of the planted foot divided by the body's travel speed
 // (0 = perfect plant, 1 = the foot skates along with the body).
+float PeakFootSpeed=0;   // last Slip(): fastest foot motion (cm/s) relative to travel
 float Slip(AWardenChallenger* F,const FVector& Direction,AActor* FaceTarget,float& Travel)
 {
     // Fighters start far apart so their capsules never block each other.
     F->SetActorLocation(FVector(0,F->bBoss?2000:-2000,F->bBoss?128:95)); F->SetActorRotation(FRotator::ZeroRotator); F->ResetFighter(F->bBoss);
-    F->SetTarget(FaceTarget);
+    F->SetTarget(FaceTarget); F->SetLocked(FaceTarget!=nullptr);   // player strafes only when locked on
     const FVector Start=F->GetActorLocation();
     const int32 Steps=240;
     TArray<FVector> Feet[2];
@@ -35,6 +36,9 @@ float Slip(AWardenChallenger* F,const FVector& Direction,AActor* FaceTarget,floa
         for(int32 I=61;I<Steps;++I)
             if(Feet[K][I].Z<Floor+1.5f && Feet[K][I-1].Z<Floor+1.5f) { Sum+=FVector::Dist2D(Feet[K][I],Feet[K][I-1])*60; ++Samples; }
     }
+    float Peak=0;
+    for(int32 K=0;K<2;++K) for(int32 I=61;I<Steps;++I) Peak=FMath::Max(Peak,float(FVector::Dist2D(Feet[K][I],Feet[K][I-1])*60));
+    PeakFootSpeed=Peak/FMath::Max(1.f,Travel);
     return Samples ? Sum/Samples/FMath::Max(1.f,Travel) : 1;
 }
 }
@@ -52,7 +56,21 @@ bool FWardenFootSlipTest::RunTest(const FString&)
         {TEXT("player forward"),P,FVector::ForwardVector,nullptr},
         {TEXT("boss forward"),B,FVector::ForwardVector,Target},
         {TEXT("boss backward"),B,-FVector::ForwardVector,Target},
-        {TEXT("boss sideways"),B,FVector::RightVector,Target}};
+        {TEXT("boss sideways"),B,FVector::RightVector,Target},
+        {TEXT("boss diagonal"),B,FVector(1,1,0).GetSafeNormal(),Target},
+        {TEXT("player sideways (locked on)"),P,FVector::RightVector,Target}};
+    // Per-direction trim sweep (boss): reports the best trim for sideways and backward.
+    for(int32 Slot:{1,2})
+    {
+        const float Kept=AWardenChallenger::GaitTrim[Slot]; FString Line;
+        for(const float Trim:{.7f,.8f,.9f,1.f,1.1f,1.2f,1.3f})
+        {
+            AWardenChallenger::GaitTrim[Slot]=Trim; float Travel=0;
+            Line+=FString::Printf(TEXT(" %.1f:%.2f"),Trim,Slip(B,Slot==1?FVector::RightVector:-FVector::ForwardVector,Target,Travel));
+        }
+        AWardenChallenger::GaitTrim[Slot]=Kept;
+        AddInfo(FString::Printf(TEXT("Boss %s trim sweep:%s"),Slot==1?TEXT("sideways"):TEXT("backward"),*Line));
+    }
     // Report the play-rate sweep used to choose AWardenChallenger::GaitRate.
     const float Chosen=AWardenChallenger::GaitRate;
     for(const float Rate:{1.f,1.1f,1.2f,1.3f,1.4f})
@@ -65,10 +83,17 @@ bool FWardenFootSlipTest::RunTest(const FString&)
     for(const auto& C:Cases)
     {
         float Travel=0;
+        C.Who->FootForcedReleases=0;
         const float Ratio=Slip(C.Who,C.Direction,C.Face,Travel);
+        AddInfo(FString::Printf(TEXT("%s: peak foot speed %.2fx travel, %d forced lock releases"),C.Name,PeakFootSpeed,C.Who->FootForcedReleases));
+        // A swinging foot peaks around 2-3x body speed in a normal gait; pops would spike it.
+        TestTrue(FString::Printf(TEXT("%s: no foot pops"),C.Name),PeakFootSpeed<4.f);
+        TestTrue(FString::Printf(TEXT("%s: locks rarely broken by stretch"),C.Name),C.Who->FootForcedReleases<=2);
         const float Yaw=C.Who->GetActorRotation().Yaw;
         AddInfo(FString::Printf(TEXT("%s: planted-foot slip %.2f of travel (%.0f cm/s), final yaw %.0f"),C.Name,Ratio,Travel,Yaw));
-        TestTrue(FString::Printf(TEXT("%s: planted foot slips under 35%% of travel"),C.Name),Ratio<.35f);
+        // Foot locks hold most gaits at 0-5%; the boss strafe clip shuffles low, so part of
+        // each step eases along the floor (13%, measured 2026-11-09).
+        TestTrue(FString::Printf(TEXT("%s: planted foot slips under 15%% of travel"),C.Name),Ratio<.15f);
         if(C.Face) TestTrue(FString::Printf(TEXT("%s: boss keeps facing its target"),C.Name),FMath::Abs(FRotator::NormalizeAxis(Yaw))<5);
     }
     CloseWorld(W); return true;

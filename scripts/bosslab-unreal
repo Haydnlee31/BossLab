@@ -150,6 +150,9 @@ def main():
                 cmd += ['-BossLabMotionStudy']
             if 'tour' in sys.argv[2:]:
                 cmd += ['-BossLabMotionStudy', '-BossLabArenaTour']
+            if 'gait' in sys.argv[2:]:
+                # Side-on scripted locomotion review (walk, backpedal, circle, strafe, turn).
+                cmd += ['-BossLabGaitStudy', '-BossLabCaptureSeconds=24']
             if 'regent-study' in sys.argv[2:]:
                 # Side-on review of every Regent move; needs BOSSLAB_BOSS=regent.
                 cmd += ['-BossLabRegentStudy', '-BossLabCaptureSeconds=30']

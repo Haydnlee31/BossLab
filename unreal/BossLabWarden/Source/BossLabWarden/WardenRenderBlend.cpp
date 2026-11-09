@@ -7,6 +7,7 @@
 #include "WardenPrototype.h"
 #include "Components/PoseableMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraActor.h"
 
 void AWardenChallenger::CaptureStepState()
 {
@@ -47,4 +48,37 @@ void AWardenChallenger::BlendRenderState(float Alpha)
     // The follow camera rides the blended position too.
     Arm->SetRelativeLocation(Actor.InverseTransformVector(Location-Actor.GetLocation()));
     bRenderBlended=true;
+}
+
+void AWardenArenaMode::GaitStudyStep(FVector& PlayerIntent,FVector& BossDirection)
+{
+    // Capture-only locomotion review, side-on: 0-4 s boss walks in, 4-7 s backpedals,
+    // 7-11 s circles; 11-15 s player walks in and strafes locked on while the boss turns
+    // on the spot; 15-19 s player backs off; then both stand. Ticks offset by the 2 s
+    // capture warm-up. No attacks or damage.
+    const int32 T=CombatTick-120;
+    const FVector ToPlayer=(Player->GetActorLocation()-Warden->GetActorLocation()).GetSafeNormal2D();
+    const FVector Around(-ToPlayer.Y,ToPlayer.X,0);
+    PlayerIntent=FVector::ZeroVector; BossDirection=FVector::ZeroVector;
+    const float Distance=FVector::Dist2D(Player->GetActorLocation(),Warden->GetActorLocation());
+    if(T<240) BossDirection=Distance>260 ? ToPlayer : FVector::ZeroVector;
+    else if(T<420) BossDirection=-ToPlayer;
+    else if(T<660) BossDirection=Around;
+    else if(T<900)
+    {
+        Player->SetLocked(true);
+        PlayerIntent=T<760 ? (Distance>300 ? -ToPlayer : FVector::ZeroVector) : FVector(ToPlayer.Y,-ToPlayer.X,0);
+    }
+    else if(T<1140) PlayerIntent=ToPlayer*.8f;
+    else Player->SetLocked(false);
+    // Camera stays side-on to the line between the fighters, framing both at mid range.
+    if(RegentStudyCamera.IsValid())
+    {
+        const FVector Mid=(Player->GetActorLocation()+Warden->GetActorLocation())*.5f;
+        const FVector Eye=FVector(Mid.X,Mid.Y,0)+Around*(320+Distance*.55f)+FVector(0,0,190);
+        const FVector Look=FVector(Mid.X,Mid.Y,105);
+        const FRotator Want=(Look-Eye).Rotation();
+        RegentStudyCamera->SetActorLocationAndRotation(FMath::VInterpTo(RegentStudyCamera->GetActorLocation(),Eye,WardenRules::Step,3.f),
+            FMath::RInterpTo(RegentStudyCamera->GetActorRotation(),Want,WardenRules::Step,4.f));
+    }
 }

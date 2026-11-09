@@ -54,9 +54,39 @@ New native tests in [AnimationTests.cpp](../unreal/BossLabWarden/Source/BossLabW
 - **Regressions:** every existing test still passes, including frame-partition determinism (60 vs 30 fps give an identical fight), the Regent roll and pose tests, and the dungeon test.
 - **Captures:** 24 s Regent exchange captures (`artifacts/art/animation-feel-2026-11-09/`) were inspected and show nothing broken. The scripted fighters stay pressed together, though, so the stills say little about gait; the measurements above are the evidence.
 
+## Second round: foot locking and gait review (2026-11-09, later)
+
+The owner said to keep refining wherever I saw room.
+
+- **Per-direction play-rate trims** (`GaitTrim`). A sweep showed rate 1.0 was already the best sideways (0.20) and backwards (0.09). The leftover slide was built into the clips, so the trims stay at 1.0.
+- **Foot locking while ready** ([WardenSword.cpp](../unreal/BossLabWarden/Source/BossLabWarden/WardenSword.cpp)):
+  - **Plant:** a foot locks when the clip's own foot is nearly still over the floor (horizontal speed under 60% of travel) and low. The lock pins it in world space with leg IK while the ankle height and foot rotation stay the clip's.
+  - **Release:** when the clip lifts or moves the foot, it eases back onto the clip over 6 ticks. A 28 cm × scale stretch limit forces a release if needed.
+  - **Detection, first try:** plant was detected by height alone. With the boss's slowed full stride, that kept feet "planted" into the swing and gave 5 forced releases and foot-speed spikes of 4.5× travel. Plant is now detected by foot speed.
+  - **Results:**
+
+    | Case | Planted-foot slip | Peak foot speed | Forced releases |
+    |---|---|---|---|
+    | Player forward | 0.01 | 2.79× | 0 |
+    | Player locked-on strafe | 0.00 | 2.79× | 0 |
+    | Boss forward | 0.04 | 3.14× | 0 |
+    | Boss backward | 0.00 | 2.79× | 0 |
+    | Boss diagonal | 0.03 | 3.13× | 0 |
+    | Boss sideways | 0.13 | 3.24× | 0 |
+
+    The boss strafe clip shuffles low, so part of each step eases along the floor. The test thresholds are under 15% slip, peak foot speed under 4×, and at most 2 forced releases.
+- **Gait review capture.** `./scripts/bosslab-unreal capture gait` scripts locomotion with a camera that tracks side-on to the line between the fighters:
+  - the boss walks in, backpedals and circles;
+  - the player walks in, strafes while locked on and backs off;
+  - the boss turns on the spot.
+
+  A first version used a fixed, far camera and was replaced; the fighters were tiny and walked out of frame. Inspected sheets: `gait-boss-walk-sheet.png`, `gait-player-strafe-sheet.png`, `gait-boss-legs-closeup.png` (in `artifacts/art/animation-feel-2026-11-09/`). They show stepping, planted feet, and the boss facing the player while backpedalling and circling.
+- **Regent phase-change ring.** Now a low, uneven ring of 18 flames spreading outward, replacing 10 tall narrow cards that read as ice spikes (`study3-wakes-ring-sheet.png`).
+- **Tests:** native suite 29/29 after this round.
+
 ## Limits
 
 - **Feel.** Not owner-tested. Feel is the real acceptance test.
 - **Clips.** Strike, roll and Regent poses are still procedural keys. These fixes improve how motion is fed, not authored animation quality.
-- **Sideways foot slip.** The boss's sideways slip (0.20) is the weakest case. The strafe clips' natural speed differs from the forward clips'.
+- **Sideways foot slip.** The boss's sideways walk is still the weakest case (0.13 after foot locking), because its strafe clip shuffles low.
 - **Default Warden behaviour.** The default Warden now faces the player while repositioning. That changes its look in the default rehearsal, but not its move order, timing or damage; the determinism and rehearsal tests still pass.

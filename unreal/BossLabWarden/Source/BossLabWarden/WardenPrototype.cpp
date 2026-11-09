@@ -283,6 +283,14 @@ void AWardenArenaMode::BeginPlay()
         RegentStudyCamera=Camera;
         if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
     }
+    if(bCaptureFrames && FParse::Param(FCommandLine::Get(),TEXT("BossLabGaitStudy")))
+    {
+        bGaitStudy=true; bScriptedPlayer=false; bRehearsal=false; Player->SetLocked(false);
+        Player->SetActorLocation(FVector(-350,0,95)); Warden->SetActorLocation(FVector(350,0,128));
+        auto* Camera=World->SpawnActor<ACameraActor>(FVector(0,-1050,260),(FVector(0,0,110)-FVector(0,-1050,260)).Rotation());
+        RegentStudyCamera=Camera;
+        if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
+    }
     if(bCaptureFrames && FParse::Param(FCommandLine::Get(),TEXT("BossLabOutfitStudy")))
     {
         bOutfitStudy=true; bScriptedPlayer=false; bRehearsal=false; bMotionStudy=false; bTitle=false;

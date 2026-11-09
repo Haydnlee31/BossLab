@@ -61,7 +61,15 @@ public:
     EWardenAction PosedAction=EWardenAction::Ready;
     int32 PoseSettle=0;
     static inline float GaitRate=1.1f;
-    float TurnRate=0;   // yaw deg/s this step while ready; drives turn-in-place stepping
+    // Per-direction play-rate trims (forward / sideways / backward clips walk at different
+    // natural speeds); blended by travel angle. Tuned by AnimationTests.
+    static inline float GaitTrim[3]={1.f,1.f,1.f};
+    float TurnRate=0;
+    // Walking foot locks (WardenSword.cpp); reset with the fighter.
+    bool FootLocked[2]={false,false};
+    FVector FootLock[2], FootReleaseFrom[2], FootAnimPrev[2];
+    float FootRelease[2]={1,1}, FootLow[2]={1e9f,1e9f};
+    int32 FootForcedReleases=0;   // locks broken by the stretch limit (should stay rare)   // yaw deg/s this step while ready; drives turn-in-place stepping
     // Render interpolation between fixed steps (WardenRenderBlend.cpp); presentation only.
     struct FStepPose { FVector Location=FVector::ZeroVector; float Yaw=0; FTransform Visual, Sword; TArray<FTransform> Bones; };
     FStepPose RenderPrev, RenderCurr;
@@ -209,6 +217,9 @@ public:
     bool bRegentStudy=false;
     int32 RegentStudyMove=WardenRegent::First, RegentStudyWait=90;
     TWeakObjectPtr<class ACameraActor> RegentStudyCamera;
+    // Capture-only side-on locomotion review (-BossLabGaitStudy): scripted walking, no attacks.
+    bool bGaitStudy=false;
+    void GaitStudyStep(FVector& PlayerIntent,FVector& BossDirection);
     void RegentStudyStep();
     void BuildRegentView();
     void AnimateRegentView(float Seconds);
