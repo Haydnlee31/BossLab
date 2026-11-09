@@ -196,6 +196,7 @@ void AWardenArenaMode::ResetEncounter(bool RetainEvidence)
 void AWardenArenaMode::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+    if(bDungeon) AnimateDungeon(Dungeon,GetWorld()->GetTimeSeconds());
     const double Now=FPlatformTime::Seconds();
     if(LastFrameTime>0 && !bPaused && !bTitle && Player && Warden && Player->Fight.Alive() && Warden->Fight.Alive())
     {

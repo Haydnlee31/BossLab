@@ -47,6 +47,8 @@ def main():
         raise RuntimeError('Adaptive evaluation is deferred in the fundamentals revision; historical unarmed reports remain in artifacts/unreal.')
     if os.environ.get('BOSSLAB_OUTFIT', 'original') == 'revamp' and mode.startswith('package'):
         raise RuntimeError('Revamp characters are editor-game only; the original packaged app is unchanged.')
+    if os.environ.get('BOSSLAB_ARENA', 'original') == 'dungeon' and mode.startswith('package'):
+        raise RuntimeError('The dungeon arena is editor-game only; the original packaged app is unchanged.')
     if os.environ.get('BOSSLAB_OUTFIT', 'original') == 'v13' and mode.startswith('package'):
         raise RuntimeError('V13 trial uses editor play/capture/benchmark (or dedicated native tests). The original packaged app is unchanged; do not use BOSSLAB_OUTFIT=v13 with package modes.')
     guard()
@@ -160,6 +162,11 @@ def main():
         cmd += ['-BossLabRevamp']
     if outfit == 'v13' and mode not in ('build', 'package', 'editor'):
         cmd += ['-BossLabV13=' + os.environ.get('BOSSLAB_V13_DATA', str(PROJECT.parent / 'Content/BossLab/V13/v13-runtime.json'))]
+    arena = os.environ.get('BOSSLAB_ARENA', 'original')
+    if arena not in ('original', 'dungeon'):
+        raise RuntimeError('BOSSLAB_ARENA must be original or dungeon')
+    if arena == 'dungeon' and mode in ('play', 'benchmark', 'capture', 'test'):
+        cmd += ['-BossLabArena=dungeon']
     quality = os.environ.get('BOSSLAB_QUALITY', 'balanced')
     if quality not in ('original', 'balanced', 'performance', 'minimal'):
         raise RuntimeError('BOSSLAB_QUALITY must be original, balanced, performance or minimal')

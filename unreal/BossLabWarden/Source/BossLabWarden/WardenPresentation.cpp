@@ -14,6 +14,8 @@
 #include "Sound/SoundWave.h"
 #include "Sound/SoundAttenuation.h"
 #include "Kismet/GameplayStatics.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
 
 static UMaterialInterface* Surface(const TCHAR* Name)
 {
@@ -21,6 +23,13 @@ static UMaterialInterface* Surface(const TCHAR* Name)
 }
 void AWardenArenaMode::DressArena()
 {
+    FString Arena;
+    if(FParse::Value(FCommandLine::Get(),TEXT("BossLabArena="),Arena) && Arena==TEXT("dungeon"))
+    {
+        bDungeon=true;
+        BuildDungeon(GetWorld(),Dungeon);
+        return;
+    }
     for(TActorIterator<AStaticMeshActor> It(GetWorld());It;++It)
         It->GetStaticMeshComponent()->SetMaterial(0,Surface(It->GetActorLocation().Z<0?TEXT("Stone"):TEXT("DarkStone")));
     auto Instances=[&](const TCHAR* Mesh,const TCHAR* Material)

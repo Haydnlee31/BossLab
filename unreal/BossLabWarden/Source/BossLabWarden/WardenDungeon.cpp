@@ -1,0 +1,234 @@
+// Opt-in dungeon arena (-BossLabArena=dungeon): a fire-lit masonry hall around the
+// unchanged fight floor. The floor/wall/pillar actors spawned in BeginPlay keep their
+// transforms and collision and only change material; everything added here is
+// NoCollision scenery outside the wall line or overhead. See docs/ARENA_DUNGEON.md.
+#include "WardenPrototype.h"
+#include "Components/InstancedStaticMeshComponent.h"
+#include "Components/PointLightComponent.h"
+#include "Components/SpotLightComponent.h"
+#include "Components/SkyLightComponent.h"
+#include "Components/ExponentialHeightFogComponent.h"
+#include "Components/PostProcessComponent.h"
+#include "Engine/DirectionalLight.h"
+#include "Engine/ExponentialHeightFog.h"
+#include "Engine/PointLight.h"
+#include "Engine/SpotLight.h"
+#include "Engine/SkyLight.h"
+#include "Engine/StaticMeshActor.h"
+#include "Engine/PostProcessVolume.h"
+#include "Components/BrushComponent.h"
+#include "Engine/World.h"
+#include "EngineUtils.h"
+#include "Materials/MaterialInterface.h"
+
+namespace Dungeon
+{
+// Existing collision layout (WardenPrototype.cpp): floor R1400 top Z0; 32 wall blocks
+// centred R1360, 260 high; 8 pillars centred R1360, radius 55, 540 high.
+constexpr float PillarTop=540, OuterWall=1560, Height=1350, Piers=16;
+UMaterialInterface* Mat(const TCHAR* Name)
+{
+    const FString Path=FString(Name).StartsWith(TEXT("MI_"))?FString(TEXT("/Game/BossLab/Materials/"))+Name:FString(TEXT("/Game/BossLab/Dungeon/"))+Name;
+    return LoadObject<UMaterialInterface>(nullptr,*Path);
+}
+FVector Radial(float A,float R,float Z) { return FVector(FMath::Cos(A)*R,FMath::Sin(A)*R,Z); }
+float Hash(int32 I) { return FMath::Frac(FMath::Sin(I*12.9898f)*43758.5453f); }
+}
+
+void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
+{
+    using namespace Dungeon;
+    Out=FWardenDungeon();
+    for(TActorIterator<AStaticMeshActor> It(World);It;++It)
+    {
+        const bool Pillar=It->GetStaticMeshComponent()->GetStaticMesh() && It->GetStaticMeshComponent()->GetStaticMesh()->GetName()==TEXT("Cylinder");
+        const TCHAR* Name=It->GetActorLocation().Z<0?TEXT("M_DungeonFloor"):Pillar?TEXT("M_DungeonColumn"):TEXT("M_DungeonWall");
+        It->GetStaticMeshComponent()->SetMaterial(0,Mat(Name));
+    }
+    // Firelight only: the default sun/fill are switched off and the sky fill is a faint
+    // cool fill so dark costumes keep a readable silhouette against the warm flames.
+    for(TActorIterator<ADirectionalLight> It(World);It;++It) It->GetLightComponent()->SetVisibility(false);
+    for(TActorIterator<ASkyLight> It(World);It;++It) { It->GetLightComponent()->SetIntensity(.5f); It->GetLightComponent()->SetLightColor(FLinearColor(.55,.66,1)); }
+
+    auto Set=[&](const TCHAR* Mesh,const TCHAR* Material)
+    {
+        auto* Owner=World->SpawnActor<AActor>();
+        auto* C=NewObject<UInstancedStaticMeshComponent>(Owner);
+        Owner->SetRootComponent(C);
+        C->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,Mesh)); C->SetMaterial(0,Mat(Material));
+        C->SetCollisionEnabled(ECollisionEnabled::NoCollision); C->SetCanEverAffectNavigation(false);
+        // Only the key light casts shadows and no scenery sits in its cone; each set spans
+        // the whole hall, so letting it cast would redraw every instance into that map.
+        C->SetCastShadow(false);
+        C->RegisterComponent(); Owner->AddInstanceComponent(C);
+        return C;
+    };
+    const TCHAR* Cube=TEXT("/Engine/BasicShapes/Cube");
+    const TCHAR* Cylinder=TEXT("/Engine/BasicShapes/Cylinder");
+    const TCHAR* Sphere=TEXT("/Engine/BasicShapes/Sphere");
+    auto* Wall=Set(Cube,TEXT("M_DungeonWall"));
+    auto* Pier=Set(Cube,TEXT("M_DungeonPier"));
+    auto* Floor=Set(Cylinder,TEXT("M_DungeonFloor"));
+    auto* Iron=Set(Cube,TEXT("MI_BlackIron"));
+    auto* IronRound=Set(Cylinder,TEXT("MI_BlackIron"));
+    auto* Bowl=Set(TEXT("/Engine/BasicShapes/Cone"),TEXT("MI_BlackIron"));
+    auto* Coals=Set(Sphere,TEXT("MI_Amber"));
+    auto* Inlay=Set(Cube,TEXT("MI_Bronze"));
+    auto* Fire=Set(TEXT("/Engine/BasicShapes/Plane"),TEXT("M_DungeonFlame"));
+    auto Box=[](UInstancedStaticMeshComponent* C,FVector Centre,FVector Size,FRotator Rotation)
+    { C->AddInstance(FTransform(Rotation,Centre,Size/100),true); };
+    // Crossed vertical cards, base at Base; yaw jitter keeps neighbours from lining up.
+    auto Flame=[&](FVector Base,float Width,float Tall,int32 Cards,int32 Seed)
+    {
+        for(int32 K=0;K<Cards;++K)
+            Box(Fire,Base+FVector(0,0,Tall*.5f),FVector(Width,Tall,100),FRotator(0,K*180.f/Cards+Hash(Seed)*90,90));
+    };
+    auto Light=[&](FVector Position,float Intensity,float Radius,FLinearColor Color,bool Shadows)
+    {
+        auto* L=World->SpawnActor<APointLight>(Position,FRotator::ZeroRotator);
+        auto* C=CastChecked<UPointLightComponent>(L->GetLightComponent());
+        C->SetMobility(EComponentMobility::Movable); C->SetIntensity(Intensity); C->SetAttenuationRadius(Radius);
+        C->SetLightColor(Color); C->SetCastShadows(Shadows); C->SetSourceRadius(Shadows?25:10);
+        Out.Lights.Add(C); Out.Base.Add(Intensity);
+    };
+    const FLinearColor FireColor(1,.42,.13);
+
+    // Fight floor ritual rings (flush inlays, as in the default arena) and the sunken
+    // trench floor between the parapet and the outer wall.
+    for(float R:{360.f,1210.f})
+        for(int32 I=0;I<96;++I)
+        {
+            const float A=I*2*PI/96;
+            Box(Inlay,Radial(A,R,.4f),FVector(2*PI*R/96+2,3,.6f),FRotator(0,FMath::RadiansToDegrees(A)+90,0));
+        }
+    Box(Floor,FVector(0,0,-60),FVector(2*OuterWall+40,2*OuterWall+40,40),FRotator::ZeroRotator);
+
+    // Outer hall: 48 wall blocks, 16 piers, cornice, pointed arches, ceiling and ribs.
+    for(int32 I=0;I<48;++I)
+    {
+        const float A=I*2*PI/48;
+        Box(Wall,Radial(A,OuterWall+40,(Height+300-80)*.5f),FVector(80,2*PI*OuterWall/48+30,Height+380),FRotator(0,FMath::RadiansToDegrees(A),0));
+        Box(Pier,Radial(A,OuterWall-30,700),FVector(70,2*PI*OuterWall/48+12,46),FRotator(0,FMath::RadiansToDegrees(A),0));
+    }
+    for(int32 I=0;I<Piers;++I)
+    {
+        const float A=I*2*PI/Piers, Yaw=FMath::RadiansToDegrees(A);
+        Box(Pier,Radial(A,OuterWall-60,Height*.5f),FVector(150,150,Height),FRotator(0,Yaw,0));
+        Box(Pier,Radial(A,OuterWall-100,90),FVector(100,190,180),FRotator(0,Yaw,0));
+        // Pointed arch over the bay to the next pier: two struts meeting at the apex.
+        const float Mid=A+PI/Piers;
+        const FVector Tangent(-FMath::Sin(Mid),FMath::Cos(Mid),0);
+        const FVector Centre=Radial(Mid,OuterWall-35,0);
+        const float Half=2*OuterWall*FMath::Sin(PI/Piers)*.5f-75;
+        for(float Side:{-1.f,1.f})
+        {
+            const FVector Spring=Centre+Tangent*Side*Half+FVector(0,0,760), Apex=Centre+FVector(0,0,1060);
+            Box(Pier,(Spring+Apex)*.5f,FVector(FVector::Dist(Spring,Apex)+40,70,55),(Apex-Spring).Rotation());
+        }
+        // Ribs from each pier top to the central boss of the vault.
+        const FVector From=Radial(A,OuterWall-80,Height-20), To=Radial(A,230,Height+250);
+        Box(Pier,(From+To)*.5f,FVector(FVector::Dist(From,To),55,60),(To-From).Rotation());
+        // Barred cells in alternate bays, torches on every pier face.
+        if(I%2==0)
+        {
+            for(float Side:{-1.f,1.f}) Box(Pier,Centre+Tangent*Side*190+FVector(0,0,220)-Radial(Mid,40,0),FVector(80,60,440),FRotator(0,FMath::RadiansToDegrees(Mid),0));
+            Box(Pier,Centre+FVector(0,0,470)-Radial(Mid,40,0),FVector(80,440,60),FRotator(0,FMath::RadiansToDegrees(Mid),0));
+            for(int32 B=-4;B<=4;++B)
+                Box(IronRound,Centre+Tangent*B*38+FVector(0,0,220)-Radial(Mid,55,0),FVector(7,7,440),FRotator::ZeroRotator);
+            for(float Z:{120.f,330.f})
+                Box(Iron,Centre+FVector(0,0,Z)-Radial(Mid,55,0),FVector(6,340,10),FRotator(0,FMath::RadiansToDegrees(Mid),0));
+        }
+        const FVector Torch=Radial(A,OuterWall-150,420);
+        Box(Iron,Torch-Radial(A,-30,40),FVector(60,10,10),FRotator(-35,Yaw+180,0));
+        Box(IronRound,Torch,FVector(22,22,18),FRotator::ZeroRotator);
+        Flame(Torch+FVector(0,0,6),48,95,2,I*7+3);
+        // Deferred light cost scales with covered pixels: alternate torches lit, short reach.
+        if(I%2) Light(Torch+FVector(0,0,70)-Radial(A,60,0),8000,520,FireColor,false);
+    }
+    Box(Wall,FVector(0,0,Height+300),FVector(2*OuterWall+200,2*OuterWall+200,40),FRotator::ZeroRotator);
+    Box(IronRound,FVector(0,0,Height+230),FVector(520,520,60),FRotator::ZeroRotator);
+
+    // Fire trench behind the parapet: a coal bed whose tongues lick over the 2.6 m wall.
+    for(int32 I=0;I<52;++I)
+    {
+        const float A=(I+Hash(I)*.6f)*2*PI/52, R=1450+Hash(I+101)*70;
+        Box(Coals,Radial(A,R,-40),FVector(220+Hash(I+7)*80,100,28),FRotator(0,FMath::RadiansToDegrees(A)+90,0));
+        // Keep the barred cells (even bays) readable behind embers rather than flames.
+        if(FMath::FloorToInt(A/(2*PI/Piers))%2==0) continue;
+        Flame(Radial(A,R,-45),220+Hash(I+3)*60,380+Hash(I+5)*140,2,I+11);
+    }
+    // No trench lights: the flame cards and brazier light read as the fire; each extra
+    // deferred light measured ~0.3 ms here.
+
+    // Great braziers on the eight preserved pillars.
+    for(int32 I=0;I<8;++I)
+    {
+        const FVector Top=Radial(I*2*PI/8,1360,PillarTop);
+        Box(Bowl,Top+FVector(0,0,32),FVector(150,150,64),FRotator(180,0,0));
+        Box(IronRound,Top+FVector(0,0,62),FVector(160,160,8),FRotator::ZeroRotator);
+        Box(Coals,Top+FVector(0,0,58),FVector(125,125,26),FRotator::ZeroRotator);
+        Flame(Top+FVector(0,0,52),150,250,3,I*13+1);
+        // Shadowless: eight cube-shadowed point lights cost 48 shadow views per frame;
+        // the overhead key light carries the fighters' shadows instead.
+        Light(Top+FVector(0,0,190),80000,2000,FireColor,false);
+        Out.EmberSources.Add(Top+FVector(0,0,90));
+    }
+
+    // Chandelier: an iron ring of candles over the floor centre, hung on four chains,
+    // with a downward key light that pools on the duel.
+    const float Ring=Height-350;
+    for(int32 I=0;I<24;++I)
+    {
+        const float A=I*2*PI/24;
+        Box(Iron,Radial(A,280,Ring),FVector(16,2*PI*280/24+4,22),FRotator(0,FMath::RadiansToDegrees(A),0));
+        if(I%2==0) { Box(IronRound,Radial(A,280,Ring+20),FVector(12,12,22),FRotator::ZeroRotator); Flame(Radial(A,280,Ring+30),16,38,2,I+400); }
+        if(I%6==0) Box(IronRound,Radial(A,275,(Ring+Height+230)*.5f),FVector(5,5,Height+230-Ring),FRotator::ZeroRotator);
+    }
+    auto* Key=World->SpawnActor<ASpotLight>(FVector(0,0,Ring-20),FRotator(-90,0,0));
+    auto* KeyC=CastChecked<USpotLightComponent>(Key->GetLightComponent());
+    KeyC->SetMobility(EComponentMobility::Movable); KeyC->SetIntensity(450000); KeyC->SetAttenuationRadius(2400);
+    KeyC->SetOuterConeAngle(58); KeyC->SetInnerConeAngle(30); KeyC->SetLightColor(FLinearColor(1,.62,.36)); KeyC->SetCastShadows(true);
+    Out.Lights.Add(KeyC); Out.Base.Add(450000);
+
+    // Embers: tiny glowing motes rising from the braziers (animated in AnimateDungeon).
+    auto* Embers=Set(Sphere,TEXT("MI_Amber"));
+    for(int32 I=0;I<160;++I) Embers->AddInstance(FTransform(FRotator::ZeroRotator,Out.EmberSources[I%8],FVector(.03f)),true);
+    Out.Embers=Embers;
+
+    auto* Fog=World->SpawnActor<AExponentialHeightFog>();
+    Fog->GetComponent()->SetFogDensity(.015f);
+    Fog->GetComponent()->SetFogHeightFalloff(.12f);
+    Fog->GetComponent()->SetFogInscatteringColor(FLinearColor(.03,.014,.008));
+    Fog->GetComponent()->SetStartDistance(500);
+    auto* Post=World->SpawnActor<APostProcessVolume>();
+    Post->bUnbound=true;
+    Post->GetBrushComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    Post->Settings.bOverride_VignetteIntensity=true; Post->Settings.VignetteIntensity=.55f;
+    Post->Settings.bOverride_BloomIntensity=true; Post->Settings.BloomIntensity=1.1f;
+    Post->Settings.bOverride_ColorSaturation=true; Post->Settings.ColorSaturation=FVector4(1,.96,.92,1);
+}
+
+// Presentation-time flicker and embers; the fixed combat step never reads these.
+void AWardenArenaMode::AnimateDungeon(FWardenDungeon& D,float T)
+{
+    using namespace Dungeon;
+    for(int32 I=0;I<D.Lights.Num();++I)
+        if(auto* L=D.Lights[I].Get())
+        {
+            const float P=Hash(I+31)*20;
+            const float Flicker=1+.10f*FMath::Sin(T*7.3f+P)+.07f*FMath::Sin(T*13.1f+P*1.7f)+.05f*FMath::Sin(T*23.f+P*.3f);
+            L->SetIntensity(D.Base[I]*(L->IsA<USpotLightComponent>()?1+(Flicker-1)*.3f:Flicker));
+        }
+    auto* E=D.Embers.Get();
+    if(!E || D.EmberSources.IsEmpty()) return;
+    TArray<FTransform> Motes; Motes.SetNum(E->GetInstanceCount());
+    for(int32 I=0;I<Motes.Num();++I)
+    {
+        const float Life=2.4f+Hash(I)*2, Age=FMath::Frac(T/Life+Hash(I+500));
+        const float A=Hash(I+900)*2*PI+T*.6f*(Hash(I+77)-.5f);
+        const FVector Drift(FMath::Cos(A)*(20+Age*90),FMath::Sin(A)*(20+Age*90),Age*520);
+        const FVector Sway(FMath::Sin(T*2.1f+I)*12,FMath::Cos(T*1.7f+I*.7f)*12,0);
+        Motes[I]=FTransform(FRotator::ZeroRotator,D.EmberSources[I%D.EmberSources.Num()]+Drift+Sway*Age,FVector(.035f*(1-Age)+.004f));
+    }
+    E->BatchUpdateInstancesTransforms(0,Motes,true,true);
+}

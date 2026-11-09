@@ -141,12 +141,26 @@ private:
     int32 PresentedAction = -1;
 };
 
+// Opt-in dungeon dressing (-BossLabArena=dungeon). Presentation only: every added
+// component is NoCollision, so the floor/wall/pillar collision actors stay authoritative.
+struct FWardenDungeon
+{
+    TArray<TWeakObjectPtr<class ULightComponent>> Lights;
+    TArray<float> Base;
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> Embers;
+    TArray<FVector> EmberSources;
+};
+
 UCLASS()
 class BOSSLABWARDEN_API AWardenArenaMode : public AGameModeBase
 {
     GENERATED_BODY()
 public:
     AWardenArenaMode();
+    static void BuildDungeon(UWorld* World,FWardenDungeon& Out);
+    static void AnimateDungeon(FWardenDungeon& Dungeon,float Seconds);
+    bool bDungeon=false;
+    FWardenDungeon Dungeon;
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type Reason) override;
     virtual void Tick(float DeltaSeconds) override;
