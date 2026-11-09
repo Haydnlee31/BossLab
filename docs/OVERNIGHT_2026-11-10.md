@@ -92,6 +92,23 @@ Everything is on branch `regent-moveset-01`. Imported Unreal assets stay local, 
 - **Benchmarks:** confounded tonight. macOS overnight jobs were running alongside: `mediaanalysisd` at up to 146% CPU, Bluetooth `BTLEServer` at about 100%, storage management, and the animated wallpaper. Load average went from 5 to 40. Full-build runs measured 19.7–26.7 ms mean. The quiet-machine baseline from earlier tonight was 16.8 ms. An old-floor/new-floor A/B was inconclusive under that load. Reports are kept in `artifacts/art/overnight-2026-11-10/benchmark-*.json`. There is no 60 FPS claim; re-measure on a quiet machine.
 - **Final fight capture:** `final-fight-sheet.png` and `final-fight-closeups.png`.
 
+## Late benchmarks (03:50–04:00)
+
+All runs below are at 720p with the performance preset, the Regent and the revamp characters.
+
+| Run | Mean / p95 (ms) | Load during run |
+|---|---|---|
+| Original arena (back to back with the next row) | 17.9 / 25.2 | about 17 |
+| Dungeon (back to back with the previous row) | 21.8 / 30.6 | about 17–24 |
+| Dungeon, old floor, run 1 | 23.3 / 33.2 | rising to 52 |
+| Dungeon, old floor, run 2 | 24.9 / 41.6 | rising to 52 |
+| Dungeon, new floor | 24.0 / 33.9 | rising to 52 |
+
+- **Dungeon cost:** the dungeon now costs about 3.9 ms over the original arena in the back-to-back pair, against about 1.5 ms on the quieter machine earlier.
+- **Floor:** the floor A/B shows no measurable floor cost.
+- **Conclusion:** the extra cost could not be attributed under this load. The suspects to profile on a quiet machine are the dynamic lights, then the hall geometry (gallery, dais), the Regent's flame cards and the translucent blood.
+- **Reports:** `benchmark-ab-*.json` and `benchmark-ab2-*.json`.
+
 ## Next
 
 - **Generated skull:** a cleaner skull input image (large, single, neutral background), when the quota allows.
