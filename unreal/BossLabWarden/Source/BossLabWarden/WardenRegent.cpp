@@ -353,7 +353,25 @@ void AWardenArenaMode::RegentResolve()
             if(Since==3) { AddPool(Head,BellPoolRadius,BellPoolTicks); RegentSound(TEXT("RegentBell"),Head,.9f); }
             break;
         case Volley:
-            if(Since>=0 && Since%12==0 && Since/12<(R.PhaseTwo ? 3 : 2))
+            // Phase two: every ready skull at once, fanned 25 degrees apart, curving in.
+            if(R.PhaseTwo)
+            {
+                if(Since==0)
+                {
+                    int32 Fan=0;
+                    for(int32 S=0;S<Skulls;++S)
+                        if(R.Regrow[S]==0)
+                        {
+                            FRegentSkull K; K.Slot=S; K.Position=BossAt+SkullOrbit(S,T);
+                            const FVector Aim=(Player->GetActorLocation()-K.Position).GetSafeNormal();
+                            K.Velocity=Aim.RotateAngleAxis((Fan-1)*25.f,FVector::UpVector)*SkullSpeed; ++Fan;
+                            R.Flying.Add(K); R.Regrow[S]=SkullRegrowPhaseTwo;
+                            RegentSound(TEXT("RegentSkull"),K.Position,.3f);
+                        }
+                }
+                break;
+            }
+            if(Since>=0 && Since%12==0 && Since/12<2)
                 for(int32 S=0;S<Skulls;++S)
                     if(R.Regrow[S]==0)
                     {

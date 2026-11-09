@@ -281,6 +281,9 @@ void AWardenArenaMode::BeginPlay()
     if(bCaptureFrames && bRegent && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegentStudy")))
     {
         bRegentStudy=true; bScriptedPlayer=false; Player->SetLocked(false);
+        // Optional: start the review at one move (BOSSLAB_STUDY_FROM=<move index>).
+        int32 From=0;
+        if(FParse::Value(FCommandLine::Get(),TEXT("BossLabRegentStudyFrom="),From) && WardenRegent::IsRegent(From)) RegentStudyMove=From;
         auto* Camera=World->SpawnActor<ACameraActor>(FVector(150,-820,240),FRotator(-8,90,0));
         RegentStudyCamera=Camera;
         if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);

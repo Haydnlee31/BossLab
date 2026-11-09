@@ -156,6 +156,8 @@ def main():
             if 'regent-study' in sys.argv[2:]:
                 # Side-on review of every Regent move; needs BOSSLAB_BOSS=regent.
                 cmd += ['-BossLabRegentStudy', '-BossLabCaptureSeconds=30']
+                if os.environ.get('BOSSLAB_STUDY_FROM'):
+                    cmd += ['-BossLabRegentStudyFrom=' + os.environ['BOSSLAB_STUDY_FROM']]
             for name, group in [('rolls-cardinal', 0), ('rolls-diagonal', 1)]:
                 if name in sys.argv[2:]:
                     cmd += ['-BossLabRollStudy=' + str(group)]

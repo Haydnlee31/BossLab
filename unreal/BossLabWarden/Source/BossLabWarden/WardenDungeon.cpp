@@ -151,9 +151,19 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
         const bool Door=I==0 || I==8;
         if(Door)
         {
-            for(float Side:{-1.f,1.f}) Box(Pier,Centre+Tangent*Side*235+FVector(0,0,290)-Radial(Mid,30,0),FVector(90,70,660),FRotator(0,MidYaw,0));
-            Box(Pier,Centre+FVector(0,0,650)-Radial(Mid,30,0),FVector(90,560,80),FRotator(0,MidYaw,0));
-            Prop(TEXT("SM_CastleDoor"),Centre-Radial(Mid,15,0)+FVector(0,0,-40),FRotator(0,Face,0),FVector(2.05f,2,2.05f));
+            // The great door behind the boss (bay 0) stands raised on a stone dais above the
+            // parapet, with side steps down into the trench; the entry door stays at floor level.
+            const float Raise=I==0 ? 300.f : 0.f;
+            if(I==0)
+            {
+                Box(Pier,Centre-Radial(Mid,85,0)+FVector(0,0,(Raise-40)*.5f-20),FVector(170,600,Raise+40),FRotator(0,MidYaw,0));
+                for(float Side:{-1.f,1.f})
+                    for(int32 K=0;K<4;++K)
+                        Box(Pier,Centre-Radial(Mid,85,0)+Tangent*Side*(330+K*55)+FVector(0,0,(Raise-K*75-40)*.5f-20),FVector(150,55,Raise-K*75+40),FRotator(0,MidYaw,0));
+            }
+            for(float Side:{-1.f,1.f}) Box(Pier,Centre+Tangent*Side*235+FVector(0,0,290+Raise)-Radial(Mid,30,0),FVector(90,70,660),FRotator(0,MidYaw,0));
+            Box(Pier,Centre+FVector(0,0,650+Raise)-Radial(Mid,30,0),FVector(90,560,80),FRotator(0,MidYaw,0));
+            Prop(TEXT("SM_CastleDoor"),Centre-Radial(Mid,15,0)+FVector(0,0,-40+Raise),FRotator(0,Face,0),FVector(2.05f,2,2.05f));
             if(I==8) Box(FogGate,Centre-Radial(Mid,75,0)+FVector(0,0,-40+320),FVector(450,640,100),FRotator(0,Face,90));
         }
         else if(I%2==0 && (I==4 || I==12))
@@ -181,6 +191,20 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
             Prop(TEXT("SM_CandleTriple"),Ledge+Tangent*55,FRotator(0,Face+Hash(I+1)*40,0),FVector(1));
             Prop(TEXT("SM_CandleSmall"),Ledge-Tangent*45,FRotator::ZeroRotator,FVector(1));
             Prop(TEXT("SM_CandleSmall"),Ledge-Tangent*70+Radial(Mid,8,0),FRotator::ZeroRotator,FVector(.8f));
+        }
+        // Upper gallery: a balustraded walkway on carved corbels at ~8 m, between the arches
+        // and above the statues; it rings the hall except over the two doors.
+        if(!Door)
+        {
+            const float Chord=2*1450*FMath::Sin(PI/Piers)+20;
+            Box(Pier,Radial(Mid,1450,805),FVector(110,Chord,35),FRotator(0,MidYaw,0));
+            Box(Pier,Radial(Mid,1398,862),FVector(14,Chord,80),FRotator(0,MidYaw,0));
+            Box(Pier,Radial(Mid,1398,906),FVector(24,Chord,10),FRotator(0,MidYaw,0));
+            for(int32 K=-1;K<=1;++K)
+            {
+                Box(Pier,Radial(Mid,1398,862)+Tangent*K*Chord*.33f,FVector(22,22,90),FRotator(0,MidYaw,0));
+                Box(Pier,Radial(Mid,1470,745)+Tangent*K*Chord*.33f,FVector(70,36,90),FRotator(-25,MidYaw,0));
+            }
         }
         // Tattered banner on an iron rod in every bay.
         Box(Banner,Radial(Mid,OuterWall-12,790),FVector(170,440,100),FRotator(0,Face,90));
