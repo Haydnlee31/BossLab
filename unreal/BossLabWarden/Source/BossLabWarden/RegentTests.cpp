@@ -81,7 +81,7 @@ bool FRegentRollTest::RunTest(const FString&)
     const FVector Side=FVector::RightVector, Back=FVector::ForwardVector;  // player stands on +X
     const FCase Cases[]={
         {Thrust,250,32,Side},{Rite,230,26,Side},{Arc,300,52,Back},{Bell,300,62,Side},{Volley,600,SkullRoll,Side},
-        {Dash,700,40,Side},{Furrow,500,60,Side},{AshStep,300,64,Side},{Pyre,300,68,Back},{HeldThrust,250,54,Side}};
+        {Dash,700,40,Side},{Furrow,500,60,Side},{AshStep,300,64,Side},{Pyre,300,68,Back},{HeldThrust,250,54,Side},{Circle,300,SkullRoll,Side}};
     for(const auto& C:Cases)
     {
         const TCHAR* Name=WardenRules::Strike(C.Move).Name;

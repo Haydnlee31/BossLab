@@ -193,7 +193,11 @@ bool AWardenChallenger::ResolveStrike(AWardenChallenger* Other, bool Debug)
             FHitResult Hit;
             if(!Blocked && GetWorld()->SweepSingleByChannel(Hit,PreviousBlade[I],Current,FQuat::Identity,ECC_Pawn,FCollisionShape::MakeSphere(Def.Radius*GetActorScale3D().X),Query) && Hit.GetActor()==Other)
             {
-                Fight.HitConsumed=true; Dealt=Other->Fight.Damage(Def.Damage,true,Def.Stance);
+                // A staggered (stance-broken) boss takes a critical blow.
+                const bool Critical=!bBoss && Other->bBoss && Other->Fight.Action==EWardenAction::Hurt;
+                Fight.HitConsumed=true; Dealt=Other->Fight.Damage(Def.Damage*(Critical ? WardenRules::StaggerCritical : 1.f),true,Def.Stance);
+                if(Dealt && Critical)
+                    if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>()) { Mode->Impact(9,.8f); Mode->LastEvent=TEXT("CRITICAL BLOW | The staggered boss takes heavy damage."); }
                 if(Dealt)
                 {
                     Other->HitFlash=.18f; Other->PlayCue(1);

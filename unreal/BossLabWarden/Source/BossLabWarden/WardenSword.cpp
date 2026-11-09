@@ -68,7 +68,7 @@ FSwordKey RegentKey(const FWardenFighterState& F)
         return U<.25f ? Lunge : Blend(Lunge,Guard,(U-.25f)/.75f);
     }
     case EKind::Censer: return F.Move==Arc ? Phased(Low,-4,35,6,-40) : Phased(Low,-14,8,24,0);
-    case EKind::Cast: return F.Move==Volley ? Phased(Low,-9,10,4,0) : Phased(Low,-6,0,18,0);
+    case EKind::Cast: return F.Move==Volley || F.Move==Circle ? Phased(Low,-9,10,4,0) : Phased(Low,-6,0,18,0);
     case EKind::Move: return Phased(Guard,-8,0,-8,0);
     case EKind::Ring:
     {
@@ -93,7 +93,7 @@ bool RegentLeftKey(const FWardenFighterState& F,FVector& Out)
     auto Path=[&](FVector Wind,FVector Release) { return FMath::Lerp(FMath::Lerp(FMath::Lerp(Low,Wind,In),Release,Hit),Low,Back); };
     switch(F.Move)
     {
-        case Volley: Out=Path(FVector(34,-28,178),FVector(52,-20,162)); return true;
+        case Volley: case Circle: Out=Path(FVector(34,-28,178),FVector(52,-20,162)); return true;
         case Furrow: Out=Path(FVector(0,-40,170),FVector(58,-18,70)); return true;
         case Pyre: Out=Path(FVector(8,-34,200),FVector(30,-20,80)); return true;
         case Wakes: Out=Path(FVector(4,-62,165),FVector(4,-66,175)); return true;

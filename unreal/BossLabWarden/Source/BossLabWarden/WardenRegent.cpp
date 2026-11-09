@@ -47,6 +47,8 @@ const FWardenStrike& WardenRegent::Strike(int32 Index)
         {TEXT("THE PYRE WAKES"),TEXT("RegentCast"),TEXT("head"),30,30,40,0,0,1,0,0,0},
         // Same thrust, held cocked for an extra beat: punishes rolling on the usual rhythm.
         {TEXT("HELD THRUST"),TEXT("RegentBlade"),TEXT("hand_r"),58,10,44,0,0,1,22,7,120},
+        // The three skulls circle the player, then converge from three sides at once.
+        {TEXT("WITNESS CIRCLE"),TEXT("RegentCast"),TEXT("hand_l"),36,20,50,0,0,1,18,0,0},
     };
     check(IsRegent(Index));
     return Moves[Index-First];
@@ -57,7 +59,7 @@ WardenRegent::EKind WardenRegent::Kind(int32 Move)
     {
         case Thrust: case Rite: case Dash: case HeldThrust: return EKind::Blade;
         case Arc: case Bell: return EKind::Censer;
-        case Volley: case Furrow: return EKind::Cast;
+        case Volley: case Furrow: case Circle: return EKind::Cast;
         case Drift: return EKind::Move;
         case AshStep: return EKind::Vanish;
         case Pyre: return EKind::Ring;
@@ -147,6 +149,7 @@ int32 WardenRegent::Pause(int32 Move)
     {
         case Drift: return 0;
         case Volley: case AshStep: return 8;
+        case Circle: return 30;
         case Thrust: case HeldThrust: return 18;
         case Arc: case Furrow: case Wakes: return 24;
         case Bell: case Dash: return 32;
@@ -277,9 +280,9 @@ void AWardenArenaMode::RegentDecide(FVector& BossDirection)
     // Fixed rehearsal sequence, labelled as such: no learning, no input reading. Each
     // step walks into its distance band, commits, or is skipped after four seconds.
     static const int32 One[]={Thrust,Arc,Volley,Rite,HeldThrust,Drift,Dash,Bell,Furrow};
-    static const int32 Two[]={AshStep,Rite,Pyre,HeldThrust,Volley,Dash,Arc,Furrow,Bell,Thrust,Drift};
+    static const int32 Two[]={AshStep,Rite,Pyre,HeldThrust,Volley,Dash,Arc,Circle,Furrow,Bell,Thrust,Drift};
     const int32 Next=R.PhaseTwo ? Two[R.Step%UE_ARRAY_COUNT(Two)] : One[R.Step%UE_ARRAY_COUNT(One)];
-    if(Next==Volley && R.ReadySkulls()==0) { ++R.Step; R.Seeking=0; return; }
+    if((Next==Volley || Next==Circle) && R.ReadySkulls()==0) { ++R.Step; R.Seeking=0; return; }
     const FVector2D B=Band(Next);
     // A player who stays close cannot lock out the ranged rites: after backing off for
     // three quarters of a second the Regent commits from where it stands.
@@ -361,6 +364,17 @@ void AWardenArenaMode::RegentResolve()
                         break;
                     }
             break;
+        case Circle:
+            if(Since==0)
+                for(int32 S=0;S<Skulls;++S)
+                    if(R.Regrow[S]==0)
+                    {
+                        FRegentSkull K; K.Slot=S; K.Position=BossAt+SkullOrbit(S,T); K.Homing=false;
+                        K.Orbit=CircleOrbitTicks; K.OrbitAngle=S*120.f;
+                        R.Flying.Add(K); R.Regrow[S]=SkullRegrowPhaseTwo;
+                        RegentSound(TEXT("RegentSkull"),K.Position,.3f);
+                    }
+            break;
         case Furrow:
             if(Since==0) { R.FurrowOrigin=BossAt; R.FurrowDirection=Warden->CommittedDirection.GetSafeNormal2D(); }
             if(Since>=0 && Since%FurrowStagger==0 && Since/FurrowStagger<FurrowMarks)
@@ -391,7 +405,19 @@ void AWardenArenaMode::RegentResolve()
     {
         auto& K=R.Flying[I]; ++K.Age;
         const FVector To=Target-K.Position;
-        if(K.Homing)
+        if(K.Orbit>0)
+        {
+            // Circle the player at a fixed radius (a clear tell), then dive in together.
+            const FVector Ring=Target+FRotator(0,K.OrbitAngle+(CircleOrbitTicks-K.Orbit)*3.5f,0).Vector()*CircleRadius+FVector(0,0,70);
+            const FVector Step=(Ring-K.Position).GetClampedToMaxSize(1100*WardenRules::Step);
+            K.Velocity=Step/WardenRules::Step;
+            if(--K.Orbit==0)
+            {
+                K.Velocity=(Target-(K.Position+Step)).GetSafeNormal()*CircleDiveSpeed;
+                RegentSound(TEXT("RegentSkull"),K.Position,.25f);
+            }
+        }
+        else if(K.Homing)
         {
             if(To.Size2D()<SkullLockDistance) K.Homing=false;
             else
@@ -602,13 +628,18 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
         FVector Pos=BossAt+SkullOrbit(S,T)+FVector(0,0,6*FMath::Sin(Seconds*2.1f+S*2));
         FVector Facing=(Player?Player->GetActorLocation()+FVector(0,0,60):Pos)-Pos;
         float Size=1-FMath::Clamp(Regent.Regrow[S]/60.f,0.f,1.f);
-        for(const auto& K:Regent.Flying) if(K.Slot==S) { Pos=K.Position; Facing=K.Velocity; Size=1; }
+        bool InFlight=false;
+        for(const auto& K:Regent.Flying) if(K.Slot==S) { Pos=K.Position; Facing=K.Velocity; Size=1; InFlight=true; }
         if(Gone && Regent.Regrow[S]==0) Size=0;
         const FQuat Look=Facing.Rotation().Quaternion();
         Set(V.Bones.Get(),S,FTransform(Look,Pos,FVector(SkullScale*Size)));
         for(int32 E=0;E<2;++E)
             Set(V.Eyes.Get(),S*2+E,FTransform(Look,Pos+Look.RotateVector(FVector(7.5f,E?3.f:-3.f,1)*SkullScale)*Size,FVector((Calling?.05f:.035f)*Size)));
         if(Size>.2f) Flame(Pos+FVector(0,0,10*SkullScale/1.4f),30*Size,(Calling?100:45)*Size,S+20);
+        // Soul-fire trail streaming behind a flying skull.
+        if(InFlight)
+            for(int32 K=1;K<=4;++K)
+                Flame(Pos-Facing.GetSafeNormal()*K*20-FVector(0,0,8),(34-6*K)*1.f,(70-12*K)*1.f,S*13+K);
     }
 
     // Blade glint: the classic tell, a star flash on the estoc point just before a thrust.

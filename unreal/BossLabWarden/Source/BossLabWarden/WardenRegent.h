@@ -7,7 +7,7 @@
 // encounter, policies and tests never select them.
 namespace WardenRegent
 {
-    enum EMove : int32 { Thrust=3, Rite, Arc, Bell, Volley, Drift, Dash, Furrow, AshStep, Pyre, Wakes, HeldThrust, End };
+    enum EMove : int32 { Thrust=3, Rite, Arc, Bell, Volley, Drift, Dash, Furrow, AshStep, Pyre, Wakes, HeldThrust, Circle, End };
     enum class EKind : uint8 { Blade, Censer, Cast, Move, Vanish, Ring, Transition };
     inline constexpr int32 First=Thrust, Count=End-Thrust;
     inline constexpr int32 Skulls=3, MaxPools=4, AshVanish=20, AshAppear=44;
@@ -20,6 +20,9 @@ namespace WardenRegent
     inline constexpr int32 PoolInterval=30, PoolIgnite=18, BellPoolTicks=180, PyrePoolTicks=240;
     inline constexpr int32 FurrowMarks=8, FurrowSpacing=150, FurrowStagger=5, FurrowWarn=30, FurrowBurst=12;
     inline constexpr int32 SkullRegrow=480, SkullRegrowPhaseTwo=300, SkullLife=300;
+    // Witness Circle (phase two): the skulls circle the player, then converge together.
+    inline constexpr int32 CircleOrbitTicks=54;
+    inline constexpr float CircleRadius=320, CircleDiveSpeed=860;
 
     const FWardenStrike& Strike(int32 Index);
     inline bool IsRegent(int32 Move) { return Move>=First && Move<End; }
@@ -47,6 +50,8 @@ struct FRegentSkull
 {
     FVector Position=FVector::ZeroVector, Velocity=FVector::ZeroVector;
     int32 Slot=0, Age=0;
+    int32 Orbit=0;              // Witness Circle: ticks left circling the player
+    float OrbitAngle=0;
     bool Homing=true, Passed=false;
 };
 enum class ERegentHazard : uint8 { Pool, Eruption, Mark };

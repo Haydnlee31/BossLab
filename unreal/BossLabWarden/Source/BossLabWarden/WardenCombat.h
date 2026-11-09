@@ -34,13 +34,16 @@ namespace WardenRules
     inline constexpr float HealWalkSpeed = 190, EntryBrake = 4200, SteerDegreesPerSecond = 540;
     inline constexpr int32 MoveCancelAfterContact = 14, JumpAttackMoveCancel = 28, RollMoveCancel = 34;
     inline constexpr int32 HealTicks = 78, HealCommit = 60, RecoveryGap = 8;
-    inline constexpr int32 InputBufferTicks = 18, HurtTicks = 18, BossHurtTicks = 36;
+    // A broken boss stance staggers it long enough to punish (Elden Ring stance break), and
+    // blows landed on a staggered boss deal critical damage.
+    inline constexpr int32 InputBufferTicks = 18, HurtTicks = 18, BossHurtTicks = 84;
+    inline constexpr float StaggerCritical = 2.5f;
     inline constexpr int32 RegenDelayTicks = 30, BossRegenDelayTicks = 42, BossPoise = 4;
     // The flask costs no stamina (as in Elden Ring); only the drinking time commits you.
     inline constexpr float StrikeCost = 22, DodgeCost = 14, HealCost = 0;
     inline constexpr float StaminaRegen = 45, BossStaminaRegen = 26;
-    // Rehearsal moves 0-2 plus the opt-in Funeral Regent moves 3-14 (WardenRegent.h).
-    inline constexpr int32 BossMoveCount = 15;
+    // Rehearsal moves 0-2 plus the opt-in Funeral Regent moves 3-15 (WardenRegent.h).
+    inline constexpr int32 BossMoveCount = 16;
     enum EPlayerMove : int32 { CutOne, CutTwo, CutThree, JumpAttack, RollAttack, RunAttack, PlayerMoveCount };
     inline constexpr float WalkSpeed=420, SprintSpeed=630, SprintCostPerSecond=12, SprintStartStamina=10;
     const FWardenStrike& Strike(int32 Index, bool Boss = true);
