@@ -1,3 +1,13 @@
+## Hit feedback, blood, running jump attack, free flask (2026-11-10, branch regent-moveset-01)
+
+- **Running jump attack:** an input follow-up slot keeps jump-then-attack in order, so a running jump attack works.
+- **Recoil:** directional, plus a head snap during the boss's armoured swings.
+- **Blood:** mist, spray and floor splats on every landed blow, for both fighters.
+- **Health bars:** Elden Ring-style trails on both, plus a damage number for the boss.
+- **Flask:** costs no stamina.
+- **Tests:** native suite 33/33. Blood and bar captures inspected.
+- **Not done:** no owner feel test.
+
 ## Movement during actions (2026-11-10, branch regent-moveset-01)
 
 The owner said actions stopped the player dead and felt stiff.

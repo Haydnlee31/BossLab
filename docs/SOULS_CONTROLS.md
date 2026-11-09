@@ -130,6 +130,29 @@ The owner reported that every action stopped the player completely, which felt v
 
 **Capture:** `drink-while-walking-sheet.png` shows the knight walking with the flask at the mouth and the sword low, then the crimson burst.
 
+## Running jump attack, hit feedback and a free flask (2026-11-10, later)
+
+The owner reported three problems: they couldn't run, jump and attack together; hitting the boss "has no feeling"; and drinking shouldn't cost stamina.
+
+- **Running jump attack.**
+  - **Cause:** the input buffer held a single action, so pressing jump and attack close together let the attack overwrite the jump, which produced a running cut instead.
+  - **Fix:** a follow-up slot. An attack pressed right after a jump (or roll) waits behind it and becomes the buffered input once the jump starts.
+  - **Test:** sprinting, then pressing jump and attack on consecutive frames gives a jump attack that carries the run 2.6 m.
+- **Hit reactions.**
+  - **Recoil:** a landed blow records its direction. The victim leans and twists away from it and the pelvis is shoved along it.
+  - **Armoured hits:** while the boss is in an armoured swing, only the head and neck snap, so the blade's path stays authoritative.
+  - **Interaction with the stance rule:** stance breaks still use the full hurt pose.
+- **Blood** ([WardenEffects.cpp](../unreal/BossLabWarden/Source/BossLabWarden/WardenEffects.cpp); materials `M_BloodDrop` and `M_BloodSplat`):
+  - **Burst:** each landed blow, on the boss or the player, spawns a short blood mist at the contact point and 28 drops sprayed over a wide hemisphere biased along the blow, falling under gravity.
+  - **Splats:** drops reaching the floor leave irregular splats, which linger 12 s and then shrink away.
+  - **Rejected first tries:** very dark drops sprayed only away from the attacker were invisible from the over-the-shoulder camera (the bodies hid them). Brighter crimson, bigger drops, the mist and the wide spray fixed it.
+- **Health bars.** An Elden Ring-style pale trail shows health just lost, holding 0.7 s before draining, on both bars. A damage number beside the boss bar sums the latest flurry, covering hits within 2.5 s of each other.
+- **Flask.** It costs no stamina (`HealCost` 0) and can be drunk with an empty bar; only the drinking time commits you.
+- **Tests:** native suite 33/33, with the new `BossLab.Controls.RunningJumpAttackAndHitFeedback`.
+- **Captures:**
+  - `hit-blood-spray-sheet.png`: the boss recoils, a blood mist bursts and drops arc out;
+  - `hit-healthbar-trail-sheet.png`: the trail and damage number.
+
 ## Limits
 
 - **Feel.** Not owner-tested. These are first-pass values for tuning by hand.

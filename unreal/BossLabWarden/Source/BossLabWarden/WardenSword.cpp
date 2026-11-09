@@ -314,7 +314,13 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const float Weight=Smooth(U/.17f)*(1-Smooth((U-.32f)/.68f));
         Key=Blend(Guard,{FVector(12,15,100),FVector(.45,.65,.6).GetSafeNormal(),-22,-27},Weight);
     }
-    else if(!Fight.Active()) Key.Lean-=Recoil*9;
+    // Directional recoil from the blow: lean away from the hit and twist off it. Never
+    // during an armoured swing's contact (the blade path stays authoritative); the head
+    // still snaps then (below).
+    const float HitFront=ImpactDir.IsNearlyZero() ? -1.f : float(FVector::DotProduct(ImpactDir,GetActorForwardVector()));
+    const float HitSide=ImpactDir.IsNearlyZero() ? 0.f : float(FVector::DotProduct(ImpactDir,GetActorRightVector()));
+    if(Fight.Action!=EWardenAction::Hurt && !Fight.Active())
+    { Key.Lean+=HitFront*13*Recoil; Key.Twist-=HitSide*18*Recoil; }
     if(Fight.Action==EWardenAction::Dead)
     {
         const float U=Smooth(DeathAge/60.f);
@@ -327,7 +333,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const float Weight=1-Settle;
         const FVector Shift=Fight.Action==EWardenAction::Strike
             ? FVector(FMath::Lerp(-7.f,9.f,Drive)*Load*Weight,FMath::Lerp(4.f,-3.f,Drive)*Load*Weight,-9*Load*Weight)
-            : FVector(-3*Recoil,0,-32*Tuck-6*Landing);
+            : FVector(6*HitFront*Recoil,6*HitSide*Recoil,-32*Tuck-6*Landing-4*Recoil);
         Local[Pelvis].AddToTranslation(MeshPoint(Shift)); Rebuild(Pelvis);
         const float HipTurn=Fight.Action==EWardenAction::Strike ? FMath::Lerp(-22.f,26.f,Drive)*Load*Weight : Key.Twist*.2f;
         SetRotation(Pelvis,FQuat(FVector::UpVector,FMath::DegreesToRadians(-HipTurn))*CS[Pelvis].GetRotation());
@@ -346,6 +352,11 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         SetRotation(I,FQuat(FVector::UpVector,FMath::DegreesToRadians(Key.Twist*.18f))*
             FQuat(FVector::ForwardVector,FMath::DegreesToRadians(Key.Lean*.13f))*CS[I].GetRotation());
     }
+    // The head snaps with the blow, even mid-swing.
+    if(Recoil>0)
+        for(const TCHAR* Name:{TEXT("neck_01"),TEXT("head")})
+            if(const int32 I=Index(Name); I>=0)
+                SetRotation(I,FQuat(FVector::UpVector,FMath::DegreesToRadians(HitSide*9*Recoil))*FQuat(FVector::ForwardVector,FMath::DegreesToRadians(HitFront*10*Recoil))*CS[I].GetRotation());
     // Head tips back to drink while the flask is at the mouth.
     const float Drink=Fight.Action==EWardenAction::Heal && !bBoss ? Smooth((Fight.Age-14)/10.f)*(1-Smooth((Fight.Age-54)/10.f)) : 0;
     if(Drink>0)

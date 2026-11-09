@@ -185,3 +185,38 @@ bool FWardenMoveDuringActionsTest::RunTest(const FString&)
     CloseWorld(W); return true;
 }
 #endif
+#if WITH_DEV_AUTOMATION_TESTS
+CONTROLS_TEST(FWardenRunningJumpAttackTest,"BossLab.Controls.RunningJumpAttackAndHitFeedback");
+bool FWardenRunningJumpAttackTest::RunTest(const FString&)
+{
+    using namespace WardenRules;
+    auto* W=NewWorld(); auto* M=Arena(W,false); AWardenChallenger* P=M->Player; AWardenChallenger* B=M->Warden;
+    M->RehearsalWait=1000000;
+    // Sprint, then press jump and attack on consecutive frames: the attack must follow
+    // the jump as a jump attack, not overwrite it as a running cut.
+    B->SetActorLocation(FVector(1200,0,128));
+    P->SetActorLocation(FVector(-400,0,95)); P->SetActorRotation(FRotator::ZeroRotator);
+    for(int32 T=0;T<40;++T) { P->StepFighter(FVector::ForwardVector,true); P->Fight.Advance(); }
+    const float RunSpeed=P->MoveVelocity.Size();
+    P->QueueAction(EWardenAction::Jump); P->QueueAction(EWardenAction::Strike);
+    const float TakeOff=P->GetActorLocation().X; bool SawJumpAttack=false;
+    for(int32 T=0;T<60;++T) { M->FixedStep(); SawJumpAttack|=P->Fight.Action==EWardenAction::Strike && P->Fight.Move==JumpAttack; }
+    AddInfo(FString::Printf(TEXT("Running jump attack from %.0f cm/s carried %.0f cm"),RunSpeed,P->GetActorLocation().X-TakeOff));
+    TestTrue(TEXT("Sprint, jump, attack becomes a jump attack"),SawJumpAttack);
+    TestTrue(TEXT("A running jump attack carries the run"),P->GetActorLocation().X-TakeOff>250);
+    // The flask costs no stamina.
+    P->ResetFighter(false); P->Fight.Health=40; P->Fight.Stamina=0;
+    TestTrue(TEXT("Flask works at zero stamina"),P->BeginAction(EWardenAction::Heal,0,FVector::ZeroVector));
+    TestEqual(TEXT("Flask costs no stamina"),P->Fight.Stamina,0.f);
+    // A landed blow records recoil direction and a blood burst at the contact point.
+    P->SetActorLocation(FVector(0,0,95)); P->SetActorRotation(FRotator::ZeroRotator); P->ResetFighter(false);
+    B->SetActorLocation(FVector(170,0,128)); B->ResetFighter(true);
+    const int32 Bled=B->BleedCount;
+    P->BeginAction(EWardenAction::Strike,CutOne,FVector::ForwardVector);
+    for(int32 T=0;T<Strike(CutOne,false).Total();++T) { P->StepFighter(FVector::ZeroVector); P->ResolveStrike(B,false); P->Fight.Advance(); }
+    TestEqual(TEXT("One blood burst per landed blow"),B->BleedCount,Bled+1);
+    TestTrue(TEXT("Recoil pushes the boss away from the attacker"),B->ImpactDir.X>.9f);
+    TestTrue(TEXT("Blood starts at the boss, not the origin"),FVector::Dist2D(B->BleedAt,B->GetActorLocation())<120);
+    CloseWorld(W); return true;
+}
+#endif

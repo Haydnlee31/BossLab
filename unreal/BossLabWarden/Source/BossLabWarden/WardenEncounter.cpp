@@ -197,6 +197,8 @@ bool AWardenChallenger::ResolveStrike(AWardenChallenger* Other, bool Debug)
                 if(Dealt)
                 {
                     Other->HitFlash=.18f; Other->PlayCue(1);
+                    Other->ImpactDir=(Other->GetActorLocation()-GetActorLocation()).GetSafeNormal2D();
+                    Other->BleedAt=Hit.ImpactPoint; Other->BleedDir=(Current-PreviousBlade[I]).GetSafeNormal(); ++Other->BleedCount;
                     // Hit-stop: both fighters freeze a few ticks so the blow lands with weight.
                     if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>()) Mode->Impact(Def.Stance>=2 ? 6 : 4, bBoss ? .35f : .15f+.1f*Def.Stance);
                 }
@@ -433,7 +435,13 @@ void AWardenArenaMode::FixedStep()
                 ? TEXT("Not enough stamina.") : Action==EWardenAction::Heal ? TEXT("Heal unavailable: full health or no charges.") : TEXT("Still recovering.");
         }
         if(Accepted || Rejected || ++Player->PendingAge>WardenRules::InputBufferTicks)
-        { Player->PendingAction=EWardenAction::Ready; Player->PendingAge=0; }
+        {
+            Player->PendingAction=EWardenAction::Ready; Player->PendingAge=0;
+            // The queued follow-up (an attack pressed right after a jump or roll) becomes
+            // the buffered input once its lead action has started.
+            if(Accepted && Player->FollowAction!=EWardenAction::Ready) Player->PendingAction=Player->FollowAction;
+            Player->FollowAction=EWardenAction::Ready;
+        }
     }
     Player->StepFighter(Intent,!bScriptedPlayer && !bMotionStudy && Player->SprintHeld);
     Warden->StepFighter(BossDirection);

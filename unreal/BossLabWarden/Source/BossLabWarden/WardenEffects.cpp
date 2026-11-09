@@ -45,6 +45,8 @@ void AWardenArenaMode::BuildEffects()
     };
     V.Motes=Set(TEXT("/Engine/BasicShapes/Plane"),Effect(TEXT("M_HealMote"),TEXT("Amber")),FWardenEffects::MoteCount);
     V.Dust=Set(TEXT("/Engine/BasicShapes/Plane"),Effect(TEXT("M_ImpactDust"),TEXT("Stone")),FWardenEffects::DustCount);
+    V.Blood=Set(TEXT("/Engine/BasicShapes/Plane"),Effect(TEXT("M_BloodDrop"),TEXT("BlackIron")),FWardenEffects::Bursts*FWardenEffects::Drops);
+    V.Splat=Set(TEXT("/Engine/BasicShapes/Plane"),Effect(TEXT("M_BloodSplat"),TEXT("BlackIron")),FWardenEffects::Splats);
     // Flask: a glowing crimson bulb with a dark iron neck and stopper.
     V.Flask=Set(TEXT("/Engine/BasicShapes/Sphere"),Effect(TEXT("M_FlaskGlass"),TEXT("Amber")),1);
     V.FlaskNeck=Set(TEXT("/Engine/BasicShapes/Cylinder"),LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/BossLab/Materials/MI_BlackIron")),2);
@@ -55,6 +57,11 @@ void AWardenArenaMode::BuildEffects()
     V.Glow=Light;
 }
 
+void AWardenArenaMode::RecentDamageAdd(float Amount,float Seconds)
+{
+    auto& V=Effects;
+    V.RecentDamage=Seconds-V.LastBossHit<2.5f ? V.RecentDamage+Amount : Amount;
+}
 void AWardenArenaMode::AnimateEffects(float Seconds)
 {
     auto& V=Effects;
@@ -134,5 +141,75 @@ void AWardenArenaMode::AnimateEffects(float Seconds)
         Dust.Add(Card(V.DustAt+FVector(FMath::Cos(A)*R,FMath::Sin(A)*R,(12+28*D)*V.DustScale),(35+55*D)*V.DustScale*(1-D*D)));
     }
     V.Dust->BatchUpdateInstancesTransforms(0,Dust,true,true);
+
+    // Blood: a burst at each landed blow, sprayed along the blade's travel and away from
+    // the attacker, falling under gravity; the drops that reach the floor leave splats.
+    AWardenChallenger* Bleeders[2]={Player.Get(),Warden.Get()};
+    for(int32 K=0;K<2;++K)
+    {
+        AWardenChallenger* Who=Bleeders[K];
+        if(!Who || Who->BleedCount==V.SeenBleed[K]) continue;
+        V.SeenBleed[K]=Who->BleedCount;
+        auto& B=V.Burst[V.NextBurst]; V.NextBurst=(V.NextBurst+1)%FWardenEffects::Bursts;
+        B.Start=Seconds; B.At=Who->BleedAt; B.Seed=Who->BleedCount*31+K*7;
+        B.Dir=(Who->BleedDir*.6f+Who->ImpactDir*.8f).GetSafeNormal(); B.Scale=Who->GetActorScale3D().X;
+        // Splats where some drops will land (floor top at z 0).
+        for(int32 I=0;I<5;++I)
+        {
+            const float Speed=(160+200*Hash(B.Seed+I*3))*B.Scale, Up=80+120*Hash(B.Seed+I*5);
+            const float T=(Up+FMath::Sqrt(Up*Up+2*980*FMath::Max(1.f,float(B.At.Z))))/980;
+            auto& S=V.Splat_[V.NextSplat]; V.NextSplat=(V.NextSplat+1)%FWardenEffects::Splats;
+            const FVector Side=FVector(-B.Dir.Y,B.Dir.X,0)*(Hash(B.Seed+I*7)-.5f)*120;
+            S.At=FVector(B.At.X,B.At.Y,1.2f)+(FVector(B.Dir.X,B.Dir.Y,0)*Speed+Side)*T*.55f;
+            S.Start=Seconds+T; S.Size=(14+26*Hash(B.Seed+I*11))*B.Scale; S.Yaw=360*Hash(B.Seed+I*13);
+        }
+    }
+    TArray<FTransform> Drops; Drops.Reserve(FWardenEffects::Bursts*FWardenEffects::Drops);
+    for(const auto& B:V.Burst)
+        for(int32 I=0;I<FWardenEffects::Drops;++I)
+        {
+            const float T=Seconds-B.Start, Life=.55f+.35f*Hash(B.Seed+I);
+            if(T<0 || T>Life) { Drops.Add(Hidden); continue; }
+            // The first few drops are a short blood mist at the wound (big, soft, quick);
+            // the rest spray over a wide hemisphere, biased along the blow, so some always
+            // fly out past the bodies toward the camera.
+            if(I<6)
+            {
+                const float U=T/.3f;
+                if(U>=1) { Drops.Add(Hidden); continue; }
+                const FVector Puff=FVector(Hash(B.Seed+I*9)-.5f,Hash(B.Seed+I*10)-.5f,Hash(B.Seed+I*11)*.6f)*60*U*B.Scale;
+                Drops.Add(Card(B.At+Puff,(18+30*Hash(B.Seed+I*12))*B.Scale*FMath::Sin(PI*FMath::Min(1.f,U*1.4f)))); continue;
+            }
+            const FVector Random=FVector(Hash(B.Seed+I*2)-.5f,Hash(B.Seed+I*3)-.5f,Hash(B.Seed+I*4)*.8f).GetSafeNormal();
+            const FVector Velocity=((B.Dir*.55f+Random).GetSafeNormal()*(220+300*Hash(B.Seed+I*5))+FVector(0,0,120+180*Hash(B.Seed+I*6)))*B.Scale;
+            FVector At=B.At+Velocity*T+FVector(0,0,-490*T*T);
+            if(At.Z<1) { Drops.Add(Hidden); continue; }
+            Drops.Add(Card(At,(4+6*Hash(B.Seed+I*7))*B.Scale*(1-T/Life*.5f)));
+        }
+    V.Blood->BatchUpdateInstancesTransforms(0,Drops,true,true);
+    TArray<FTransform> Splats; Splats.Reserve(FWardenEffects::Splats);
+    for(const auto& S:V.Splat_)
+    {
+        const float T=Seconds-S.Start;
+        // Spreads in over a fifth of a second, lingers, then shrinks away after 12 s.
+        const float Size=T<0 ? 0 : S.Size*FMath::Min(1.f,T/.2f)*(1-FMath::Clamp((T-12)/3,0.f,1.f));
+        Splats.Add(Size>.5f ? FTransform(FRotator(0,S.Yaw,0),S.At,FVector(Size/100,Size/100,1)) : Hidden);
+    }
+    V.Splat->BatchUpdateInstancesTransforms(0,Splats,true,true);
+
+    // Health-bar trails: hold 0.7 s after a hit, then drain; the boss damage number sums
+    // hits landed within 2.5 s of each other.
+    auto Trail=[&](float& TrailValue,float& Shown,float& LastHit,float Health,bool Boss)
+    {
+        if(Shown<0 || Health>Shown) { TrailValue=Health; Shown=Health; return; }
+        if(Health<Shown)
+        {
+            if(Boss) RecentDamageAdd(Shown-Health,Seconds);
+            LastHit=Seconds; Shown=Health;
+        }
+        if(Seconds-LastHit>.7f) TrailValue=FMath::Max(Health,TrailValue-200*(GetWorld()->GetDeltaSeconds()));
+    };
+    if(Warden) Trail(V.BossTrail,V.BossShown,V.LastBossHit,Warden->Fight.Health,true);
+    Trail(V.PlayerTrail,V.PlayerShown,V.LastPlayerHit,Player->Fight.Health,false);
     for(auto* C:{V.Flask.Get(),V.FlaskNeck.Get()}) C->MarkRenderStateDirty();
 }

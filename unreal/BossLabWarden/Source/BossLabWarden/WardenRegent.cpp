@@ -307,6 +307,11 @@ void AWardenArenaMode::RegentResolve()
         const float Before=Player->Fight.Health;
         if(!Player->Fight.Damage(Amount,Flinch)) return false;
         BossDamage+=Before-Player->Fight.Health; Player->HitFlash=.18f;
+        if(Flinch)
+        {
+            Player->ImpactDir=(Player->GetActorLocation()-Warden->GetActorLocation()).GetSafeNormal2D();
+            Player->BleedAt=Player->GetActorLocation()+FVector(0,0,35); Player->BleedDir=Player->ImpactDir; ++Player->BleedCount;
+        }
         if(Flinch) { Player->PlayCue(1); Impact(4,.35f); }
         LastEvent=Event; return true;
     };

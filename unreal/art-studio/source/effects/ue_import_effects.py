@@ -5,6 +5,8 @@ Writes /Game/BossLab/Effects (local, not committed). No textures.
   M_HealMote    additive soft round mote, warm crimson-gold, per-instance flicker
   M_FlaskGlass  additive crimson glow for the flask (drawn over a dark glass shell)
   M_ImpactDust  translucent soft dust puff, grey-brown, per-instance variation
+  M_BloodDrop   translucent dark-red droplet
+  M_BloodSplat  translucent irregular floor splat with satellite drops
 See docs/SOULS_CONTROLS.md.
 """
 import json, os
@@ -90,7 +92,44 @@ def dust():
     mel.recompile_material(mat)
     report['M_ImpactDust'] = 'translucent soft puff'
 
+# Blood: dark, not glowing. Droplets are soft round cards; splats are irregular blotches
+# with a darker rim, per-instance shape variation.
+BLOOD_CODE = '''
+float2 d=UV.xy*2-1; float r=length(d);
+return saturate((1-r)*2.2);
+'''
+SPLAT_CODE = '''
+float2 d=UV.xy*2-1; float s=Seed.x*40;
+float a=atan2(d.y,d.x);
+float edge=.62+.16*sin(a*5+s)+.09*sin(a*11+s*2.3)+.05*sin(a*23+s*.7);
+float r=length(d);
+float n=frac(sin(dot(floor(UV.xy*9+s),float2(12.9898,78.233)))*43758.5453);
+float drops=0;
+for(int i=0;i<4;i++){ float2 c=float2(sin(s+i*2.1),cos(s*1.3+i*1.7))*.8; drops=max(drops,saturate((.13-length(d-c))*12)); }
+return saturate(max(saturate((edge-r)*14),drops)*(.82+.18*n));
+'''
+
+def blood(name, code, seed):
+    mat = get_or_create(name)
+    mat.set_editor_property('blend_mode', unreal.BlendMode.BLEND_TRANSLUCENT)
+    uv = mel.create_material_expression(mat, unreal.MaterialExpressionTextureCoordinate, -800, 0)
+    inputs = [(uv, 'UV')]
+    if seed:
+        inputs.append((mel.create_material_expression(mat, unreal.MaterialExpressionPerInstanceRandom, -800, 150), 'Seed'))
+    node = custom(mat, code, [n for _, n in inputs], unreal.CustomMaterialOutputType.CMOT_FLOAT1, -400, 200)
+    for src, pin in inputs:
+        mel.connect_material_expressions(src, '', node, pin)
+    col = mel.create_material_expression(mat, unreal.MaterialExpressionConstant3Vector, -400, 0)
+    # Crimson enough to read against dark costumes in the dim hall (0.2 read as black).
+    col.set_editor_property('constant', unreal.LinearColor(.22, .008, .005, 1) if seed else unreal.LinearColor(.75, .025, .012, 1))
+    mel.connect_material_property(col, '', unreal.MaterialProperty.MP_EMISSIVE_COLOR)
+    mel.connect_material_property(node, '', unreal.MaterialProperty.MP_OPACITY)
+    mel.recompile_material(mat)
+    report[name] = 'translucent dark blood'
+
 mote(); flask(); dust()
+blood('M_BloodDrop', BLOOD_CODE, False)
+blood('M_BloodSplat', SPLAT_CODE, True)
 eal.save_directory(DEST, only_if_is_dirty=False, recursive=True)
 out = os.path.join(ROOT, 'artifacts/art/souls-controls-2026-11-10')
 os.makedirs(out, exist_ok=True)

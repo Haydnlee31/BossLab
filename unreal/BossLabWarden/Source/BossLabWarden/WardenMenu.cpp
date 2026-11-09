@@ -17,12 +17,16 @@ bool AWardenChallenger::AllowsGameplayInput() const
 void AWardenChallenger::ClearGameplayInput()
 {
     ForwardInput=RightInput=0; SprintHeld=false;
-    PendingAction=EWardenAction::Ready; PendingAge=0; PendingDirection=FVector::ZeroVector;
+    PendingAction=EWardenAction::Ready; PendingAge=0; PendingDirection=FVector::ZeroVector; FollowAction=EWardenAction::Ready;
     MoveVelocity=FVector::ZeroVector; Fight.Sprinting=false;
 }
 void AWardenChallenger::QueueAction(EWardenAction Action)
 {
     if(!AllowsGameplayInput()) return;
+    // Jump/roll then attack in quick succession: keep the jump or roll and queue the
+    // attack behind it, instead of the second press overwriting the first.
+    if(Action==EWardenAction::Strike && (PendingAction==EWardenAction::Jump || PendingAction==EWardenAction::Dodge))
+    { FollowAction=Action; return; }
     PendingAction=Action; PendingAge=0; PendingDirection=MoveIntent();
 }
 void AWardenChallenger::QuitMenu()

@@ -1,5 +1,7 @@
 {
  "M_HealMote": "additive soft mote, crimson-gold",
  "M_FlaskGlass": "additive crimson glow",
- "M_ImpactDust": "translucent soft puff"
+ "M_ImpactDust": "translucent soft puff",
+ "M_BloodDrop": "translucent dark blood",
+ "M_BloodSplat": "translucent dark blood"
 }

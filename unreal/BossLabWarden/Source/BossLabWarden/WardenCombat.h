@@ -36,7 +36,8 @@ namespace WardenRules
     inline constexpr int32 HealTicks = 78, HealCommit = 60, RecoveryGap = 8;
     inline constexpr int32 InputBufferTicks = 18, HurtTicks = 18, BossHurtTicks = 36;
     inline constexpr int32 RegenDelayTicks = 30, BossRegenDelayTicks = 42, BossPoise = 4;
-    inline constexpr float StrikeCost = 22, DodgeCost = 14, HealCost = 12;
+    // The flask costs no stamina (as in Elden Ring); only the drinking time commits you.
+    inline constexpr float StrikeCost = 22, DodgeCost = 14, HealCost = 0;
     inline constexpr float StaminaRegen = 45, BossStaminaRegen = 26;
     // Rehearsal moves 0-2 plus the opt-in Funeral Regent moves 3-14 (WardenRegent.h).
     inline constexpr int32 BossMoveCount = 15;

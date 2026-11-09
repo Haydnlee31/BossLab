@@ -151,6 +151,12 @@ private:
     void QuitMenu();
     void Dodge() { QueueAction(EWardenAction::Dodge); }
     void JumpPressed() { QueueAction(EWardenAction::Jump); }
+public:
+    EWardenAction FollowAction=EWardenAction::Ready;
+    // Last landed blow (presentation): recoil direction and the blood burst it spawns.
+    FVector ImpactDir=FVector::ZeroVector, BleedAt=FVector::ZeroVector, BleedDir=FVector::ForwardVector;
+    int32 BleedCount=0;
+private:
     void Heal() { QueueAction(EWardenAction::Heal); }
     void Restart();
     void PauseGame();
@@ -195,9 +201,16 @@ struct FWardenDungeon
 // Player presentation effects (WardenEffects.cpp): flask, heal motes, landing dust.
 struct FWardenEffects
 {
-    static constexpr int32 MoteCount=48, DustCount=18;
+    static constexpr int32 MoteCount=48, DustCount=18, Bursts=6, Drops=34, Splats=60;
     TWeakObjectPtr<AActor> Owner;
-    TWeakObjectPtr<class UInstancedStaticMeshComponent> Motes, Dust, Flask, FlaskNeck;
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> Motes, Dust, Flask, FlaskNeck, Blood, Splat;
+    // Blood bursts (ring buffer) and the floor splats they leave, in world time.
+    struct FBurst { float Start=-100, Scale=1; FVector At=FVector::ZeroVector, Dir=FVector::ForwardVector; int32 Seed=0; };
+    struct FSplat { float Start=-100, Size=0, Yaw=0; FVector At=FVector::ZeroVector; };
+    FBurst Burst[Bursts]; FSplat Splat_[Splats];
+    int32 NextBurst=0, NextSplat=0, SeenBleed[2]={0,0};
+    // Health-bar trails and the boss damage number (Elden Ring style).
+    float BossTrail=-1, PlayerTrail=-1, BossShown=-1, PlayerShown=-1, RecentDamage=0, LastBossHit=-100, LastPlayerHit=-100;
     TWeakObjectPtr<class UPointLightComponent> Glow;
     int32 HealFor=-1, DustFor=-1;
     float HealAt=-100, DustTime=-100, DustScale=1;
@@ -241,6 +254,7 @@ public:
     FWardenEffects Effects;
     void BuildEffects();
     void AnimateEffects(float Seconds);
+    void RecentDamageAdd(float Amount,float Seconds);
     // Hit-stop ticks left and camera shake strength (presentation) after a landed blow.
     int32 HitStop=0;
     // Test-only pilot: when set, replaces keyboard intent and may queue player actions.

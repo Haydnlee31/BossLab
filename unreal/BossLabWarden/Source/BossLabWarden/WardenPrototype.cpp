@@ -322,7 +322,10 @@ void AWardenPrototypeHUD::DrawHUD()
     };
     DrawRect(FLinearColor(.008,.014,.02,.75),20,18,300,110);
     DrawText(TEXT("BOSSLAB / THE WARDEN"),FColor(230,192,125),32,24,nullptr,1.3f);
-    Bar(32,58,260,P.Health/P.MaxHealth,FLinearColor(.65,.13,.12));
+    // Elden Ring style: a pale trail shows the health just lost before it drains away.
+    const auto& Fx=Mode->Effects;
+    Bar(32,58,260,(Fx.PlayerTrail>=0?Fx.PlayerTrail:P.Health)/P.MaxHealth,FLinearColor(.85,.72,.42));
+    DrawRect(FLinearColor(.65,.13,.12),32,58,260*FMath::Clamp(P.Health/P.MaxHealth,0.f,1.f),11);
     Bar(32,78,260,P.Stamina/100,FLinearColor(.3,.6,.45));
     if(Mode->Player->RejectFlash>0) DrawRect(FLinearColor(1,.3,.12,Mode->Player->RejectFlash),30,76,264,15);
     DrawText(FString::Printf(TEXT("HP %.0f   STAMINA %.0f   HEALS %d"),P.Health,P.Stamina,P.Heals),FColor::White,32,100);
@@ -339,7 +342,11 @@ void AWardenPrototypeHUD::DrawHUD()
     if(Mode->bOutfitStudy) DrawText(Mode->Player->bRevampOutfit?TEXT("REVAMP KNIGHT | Generated from approved concept / inspection camera"):Mode->Player->bV13Outfit?TEXT("LAST VIGIL V13 | Blender transfer test / rigid attachments"):TEXT("ASHBOUND KNIGHT | Authored 3D outfit study / inspection camera"),FColor(230,192,125),32,158);
     if(!Mode->bMotionStudy && !Mode->bOutfitStudy)
     {
-        Bar(W*.25f,H-110,W*.5f,B.Health/B.MaxHealth,FLinearColor(.65,.34,.12));
+        Bar(W*.25f,H-110,W*.5f,(Fx.BossTrail>=0?Fx.BossTrail:B.Health)/B.MaxHealth,FLinearColor(.85,.72,.42));
+        DrawRect(FLinearColor(.62,.1,.07),W*.25f,H-110,W*.5f*FMath::Clamp(B.Health/B.MaxHealth,0.f,1.f),11);
+        // Damage dealt by the latest flurry, beside the bar.
+        if(GetWorld()->GetTimeSeconds()-Fx.LastBossHit<2.5f && Fx.RecentDamage>0)
+            DrawText(FString::Printf(TEXT("%.0f"),Fx.RecentDamage),FColor(240,225,200),W*.75f+12,H-114,nullptr,1.15f);
         DrawText(Mode->bRegent?TEXT("THE FUNERAL REGENT"):TEXT("THE WARDEN"),FColor(230,192,125),W*.25f,H-137,nullptr,1.2f);
         DrawText(FString::Printf(TEXT("STANCE %d / %d%s"),B.Poise,B.MaxPoise,B.Action==EWardenAction::Hurt?TEXT(" / BROKEN"):TEXT("")),FColor(190,205,210),W*.65f,H-137);
         if(Mode->bRegent) DrawText(FString::Printf(TEXT("SKULLS %d / 3%s"),Mode->Regent.ReadySkulls(),Mode->Regent.PhaseTwo?TEXT("   |   SECOND PHASE"):TEXT("")),FColor(150,190,255),W*.48f,H-137);
