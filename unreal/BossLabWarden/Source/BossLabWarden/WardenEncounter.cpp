@@ -72,6 +72,7 @@ bool AWardenChallenger::BeginAction(EWardenAction Action, int32 Move, FVector Ai
     {
         // Jumps carry the run's momentum; standing jumps go straight up.
         CommittedDirection = MoveVelocity.IsNearlyZero() ? GetActorForwardVector() : MoveVelocity.GetSafeNormal2D();
+        JumpMomentum = MoveVelocity;
     }
     PresentedAction = -1;
     CombatPose(FVector::ZeroVector);
@@ -113,6 +114,8 @@ void AWardenChallenger::StepFighter(const FVector& Direction, bool SprintRequest
         {
             const auto& Def = Fight.Definition();
             MoveVelocity=FVector::ZeroVector;
+            // A jump attack keeps flying with the jump's momentum until it lands.
+            if(!bBoss && Fight.Move==WardenRules::JumpAttack && Fight.Age<Def.Windup) MoveSwept(JumpMomentum*WardenRules::Step);
             if(Fight.Age<Def.Windup-8)
                 SetActorRotation(FMath::RInterpConstantTo(GetActorRotation(),CommittedDirection.Rotation(),WardenRules::Step,720.f));
             // Authored displacement only during the final anticipation and contact.
@@ -127,7 +130,10 @@ void AWardenChallenger::StepFighter(const FVector& Direction, bool SprintRequest
     float Lift=0;
     if (Fight.Action==EWardenAction::Jump) Lift=WardenRules::JumpLift(Fight.Age);
     else if (Fight.Action==EWardenAction::Strike && !bBoss && Fight.Move==WardenRules::JumpAttack)
-        Lift=JumpAttackLift*FMath::Max(0.f,1-FMath::Square(float(Fight.Age)/Fight.Definition().Windup));
+    {
+        const float U=FMath::Clamp(float(Fight.Age-WardenRules::JumpAttackHang)/(Fight.Definition().Windup-WardenRules::JumpAttackHang),0.f,1.f);
+        Lift=JumpAttackLift*(1-U*U);
+    }
     if (!FMath::IsNearlyEqual(Lift,AirLift) || Lift>0)
     {
         AirLift=Lift;
@@ -250,7 +256,7 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
     if(bDungeon) AnimateDungeon(Dungeon,GetWorld()->GetTimeSeconds());
     // Regent visuals follow the fixed-step state below; updated after the steps run.
-    ON_SCOPE_EXIT { if(bRegent) AnimateRegentView(GetWorld()->GetTimeSeconds()); };
+    ON_SCOPE_EXIT { if(bRegent) AnimateRegentView(GetWorld()->GetTimeSeconds()); AnimateEffects(GetWorld()->GetTimeSeconds()); };
     const double Now=FPlatformTime::Seconds();
     if(LastFrameTime>0 && !bPaused && !bTitle && Player && Warden && Player->Fight.Alive() && Warden->Fight.Alive())
     {
@@ -371,7 +377,12 @@ void AWardenArenaMode::FixedStep()
                 Player->PendingAction=EWardenAction::Dodge;
                 Player->PendingDirection=CombatTick==270 ? FVector::RightVector : -FVector::ForwardVector;
             }
-            if(CombatTick==340) Player->PendingAction=EWardenAction::Jump;
+            if(CombatTick==340 || CombatTick==760) Player->PendingAction=EWardenAction::Jump;
+            // Then a flask (health lowered first: healing is refused at full health).
+            if(CombatTick==560) Player->Fight.Health=55;
+            if(CombatTick==580) Player->PendingAction=EWardenAction::Heal;
+            // Turn the study camera to the knight's front for the drink, then back.
+            if(CombatTick==570 || CombatTick==700) MotionStudyView=CombatTick==570 ? FRotator(-8,160,0) : FRotator(-12,-40,0);
         }
     }
     if (Player->PendingAction != EWardenAction::Ready)

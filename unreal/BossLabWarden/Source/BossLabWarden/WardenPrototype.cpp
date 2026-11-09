@@ -180,7 +180,7 @@ void AWardenChallenger::Tick(float DeltaSeconds)
     }
     View.Pitch = FMath::Clamp(FRotator::NormalizeAxis(View.Pitch),-55.f,25.f);
     if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>(); Mode && Mode->bTitle) View=FRotator(-12,0,0);
-    if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>(); Mode && Mode->bMotionStudy) View=Mode->bArenaTour?FRotator(10,Mode->CaptureFrame*1.6f,0):FRotator(-12,-40,0);
+    if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>(); Mode && Mode->bMotionStudy) View=Mode->bArenaTour?FRotator(10,Mode->CaptureFrame*1.6f,0):Mode->MotionStudyView;
     View.Roll = 0;
     Controller->SetControlRotation(View);
 }
@@ -261,6 +261,7 @@ void AWardenArenaMode::BeginPlay()
         PC->bShowMouseCursor = false;
     }
     DressArena();
+    BuildEffects();
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabRegent"))) EnableRegent();
     bRegentPhaseTwoStart=bRegent && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegentPhaseTwo"));
     ResetEncounter();

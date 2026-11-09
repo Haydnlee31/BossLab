@@ -67,6 +67,7 @@ public:
     float TurnRate=0;
     // Jumps: the capsule's floor height, current lift and the lift a jump attack starts at.
     float GroundZ=0, AirLift=0, JumpAttackLift=0;
+    FVector JumpMomentum=FVector::ZeroVector;
     // Last drawn sword key, so cancels (chain cuts, rolling thrust) start from it.
     bool bPoseFromLast=false;
     FVector LastGrip=FVector(28,5,114), LastAxis=FVector(.38,-.12,.92);
@@ -77,7 +78,7 @@ public:
     float FootRelease[2]={1,1}, FootLow[2]={1e9f,1e9f};
     int32 FootForcedReleases=0;   // locks broken by the stretch limit (should stay rare)   // yaw deg/s this step while ready; drives turn-in-place stepping
     // Render interpolation between fixed steps (WardenRenderBlend.cpp); presentation only.
-    struct FStepPose { FVector Location=FVector::ZeroVector; float Yaw=0; FTransform Visual, Sword; TArray<FTransform> Bones; };
+    struct FStepPose { FVector Location=FVector::ZeroVector; float Yaw=0, Lift=0; FTransform Visual, Sword; TArray<FTransform> Bones; };
     FStepPose RenderPrev, RenderCurr;
     bool bRenderValid=false, bRenderBlended=false;
     void CaptureStepState();
@@ -187,6 +188,19 @@ struct FWardenDungeon
     TWeakObjectPtr<class UInstancedStaticMeshComponent> Fire;
 };
 
+// Player presentation effects (WardenEffects.cpp): flask, heal motes, landing dust.
+struct FWardenEffects
+{
+    static constexpr int32 MoteCount=48, DustCount=18;
+    TWeakObjectPtr<AActor> Owner;
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> Motes, Dust, Flask, FlaskNeck;
+    TWeakObjectPtr<class UPointLightComponent> Glow;
+    int32 HealFor=-1, DustFor=-1;
+    float HealAt=-100, DustTime=-100, DustScale=1;
+    FVector DustAt=FVector::ZeroVector;
+    bool bAirborne=false;
+};
+
 // Greybox visuals for the Regent's censer, chain, skulls and floor fire. Read-only view
 // of FWardenRegentState; rebuilt from it every rendered frame.
 struct FWardenRegentView
@@ -220,6 +234,9 @@ public:
     void RegentResolve();
     FVector RegentAshTarget() const;
     void RegentSound(const TCHAR* Name,const FVector& At,float Volume);
+    FWardenEffects Effects;
+    void BuildEffects();
+    void AnimateEffects(float Seconds);
     // Hit-stop ticks left and camera shake strength (presentation) after a landed blow.
     int32 HitStop=0;
     // Test-only pilot: when set, replaces keyboard intent and may queue player actions.
@@ -253,6 +270,7 @@ public:
     FString ReviewTrace=TEXT("tick,player_action,player_age,player_health,stamina,boss_action,boss_age,boss_health,boss_poise,distance_cm\n");
     bool bMotionStudy=false;
     bool bArenaTour=false;  // capture-only slow 360° look around the arena
+    FRotator MotionStudyView=FRotator(-12,-40,0);   // capture-only study camera direction
     bool bOutfitStudy=false;
     int32 RollStudyGroup=-1;
     FString MotionStudyTrace=TEXT("tick,action,age,stamina,grip_error_cm,x,y,z,protected\n");

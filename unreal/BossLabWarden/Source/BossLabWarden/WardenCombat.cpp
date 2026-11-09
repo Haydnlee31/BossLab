@@ -39,7 +39,7 @@ const FWardenStrike& WardenRules::Strike(int32 Index, bool Boss)
         {TEXT("GREATSWORD CUT I"),TEXT("AuthoredSword"),TEXT("hand_r"),24,16,28,0.f,0.f,1.f,30,6,22,18,1},
         {TEXT("GREATSWORD CUT II"),TEXT("AuthoredSword"),TEXT("hand_r"),20,16,28,0.f,0.f,1.f,30,6,20,18,1},
         {TEXT("GREATSWORD CUT III"),TEXT("AuthoredSword"),TEXT("hand_r"),28,18,38,0.f,0.f,1.f,46,7,36,22,2},
-        {TEXT("JUMP ATTACK"),TEXT("AuthoredSword"),TEXT("hand_r"),22,14,40,0.f,0.f,1.f,52,7,60,14,2},
+        {TEXT("JUMP ATTACK"),TEXT("AuthoredSword"),TEXT("hand_r"),18,14,40,0.f,0.f,1.f,52,7,30,14,2},
         {TEXT("ROLLING THRUST"),TEXT("AuthoredSword"),TEXT("hand_r"),12,10,32,0.f,0.f,1.f,24,6,80,16,1},
         {TEXT("RUNNING CUT"),TEXT("AuthoredSword"),TEXT("hand_r"),16,16,34,0.f,0.f,1.f,36,6,120,20,1}};
     if (!Boss) { check(Index >= 0 && Index < PlayerMoveCount); return Player[Index]; }

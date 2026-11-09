@@ -76,6 +76,35 @@ The native suite passes **31/31**. The existing fundamentals tests were updated 
 
   Both are in `artifacts/art/souls-controls-2026-11-10/`.
 
+## Jump attack and flask pass (2026-11-10, later)
+
+The owner said the jump attack still didn't feel like Elden Ring, and asked for a flask-drinking heal with red particles.
+
+- **Jump.**
+  - **Arc:** snappier and higher, 40 ticks and 90 cm (was 44 ticks and 75 cm). It rises 72 cm in its first 12 ticks (was 56).
+  - **Jump attack:** it hangs for 4 ticks with the blade raised, then plunges with a gravity ease-in to land exactly at contact. It keeps the jump's momentum, so a running jump attack covers ground. Wind-up is 18 ticks (was 22).
+  - **Impact:** a dust burst at the blade's landing point and a strong camera kick (0.65), even on a miss. A plain jump landing gets a small puff and a light kick.
+  - **Camera:** the follow camera rises only 40% of a jump's height, so the view doesn't bob.
+- **Flask.** Healing is now a drink:
+  - the sword drops to the right hand alone, low and pointing down;
+  - the left hand brings a glowing crimson flask from the hip to just below the mouth (arm IK) and holds it while the head tips back (neck and head bones), then lowers it;
+  - a dim red light glows while drinking;
+  - when the heal lands, 48 crimson motes swirl up the body over about 1.5 s with a red light flash.
+
+  It is presentation only: heal timing (78 ticks, applied at 60) and the amount (+45) are unchanged.
+- **Materials.** [ue_import_effects.py](../unreal/art-studio/source/effects/ue_import_effects.py) builds three materials in `/Game/BossLab/Effects` (local):
+  - `M_HealMote`, additive crimson motes;
+  - `M_FlaskGlass`, the flask's glow;
+  - `M_ImpactDust`, translucent dust puffs.
+
+  [WardenEffects.cpp](../unreal/BossLabWarden/Source/BossLabWarden/WardenEffects.cpp) draws the effects from the fighter state every frame.
+- **Problems found in the captures, and fixes:**
+  - The motes read gold-white. Fix: a redder palette, below white.
+  - The flask core bloomed to white. Fix: a dimmer emissive.
+  - The motion-study camera ignored the front view requested for the drink, because the player's tick forced a fixed view. Fix: a `MotionStudyView` setting.
+- **Evidence:** `heal-flask-front-sheet.png` (front view: raise, drink, lower, mote burst) and `jump-attack-plunge-sheet.png` (rise, raised blade, plunge, dust).
+- **Tests:** native suite 31/31; the jump tests use the new constants.
+
 ## Limits
 
 - **Feel.** Not owner-tested. These are first-pass values for tuning by hand.

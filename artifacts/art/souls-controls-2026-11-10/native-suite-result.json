@@ -9,10 +9,10 @@
   },
   "exit_code": 0,
   "reason": null,
-  "seconds": 45.25431454181671,
+  "seconds": 28.255933749955148,
   "storage": {
-    "free_bytes": 28635824128,
-    "unreal_bytes": 4306448384,
+    "free_bytes": 26597957632,
+    "unreal_bytes": 5236539392,
     "reserve_bytes": 25769803776,
     "limit_bytes": 10000000000
   }

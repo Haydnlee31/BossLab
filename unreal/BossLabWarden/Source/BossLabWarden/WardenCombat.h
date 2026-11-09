@@ -24,8 +24,10 @@ namespace WardenRules
     // roll ~14% of the bar, 45 stamina/s regeneration after 0.5 s, sprint 1.5x run.
     inline constexpr int32 DodgeTicks = 40, DodgeInvulnerableStart = 2, DodgeInvulnerableEnd = 28;
     inline constexpr int32 RollAttackOpen = 28, RollChainOpen = 32;
-    inline constexpr int32 JumpTicks = 44, JumpAttackOpen = 4, JumpAttackClose = 30;
-    inline constexpr float JumpHeight = 75, JumpCost = 12;
+    // Jump: snappy 40-tick arc; the jump attack hangs 4 ticks with the blade raised, then
+    // plunges (gravity ease-in) to land exactly at contact, keeping the jump's momentum.
+    inline constexpr int32 JumpTicks = 40, JumpAttackOpen = 4, JumpAttackClose = 28, JumpAttackHang = 4;
+    inline constexpr float JumpHeight = 90, JumpCost = 12;
     inline constexpr int32 HealTicks = 78, HealCommit = 60, RecoveryGap = 8;
     inline constexpr int32 InputBufferTicks = 18, HurtTicks = 18, BossHurtTicks = 36;
     inline constexpr int32 RegenDelayTicks = 30, BossRegenDelayTicks = 42, BossPoise = 4;

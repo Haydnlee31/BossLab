@@ -293,7 +293,12 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         Tuck=.5f*FMath::Sin(PI*U);
     }
     else if(Fight.Action==EWardenAction::Heal)
-        Key=Blend(Guard,{FVector(20,8,105),FVector(.6,.2,.77).GetSafeNormal(),0,8},FMath::Sin(PI*float(Fight.Age)/WardenRules::HealTicks));
+    {
+        // Drinking the flask: the blade drops to the right hand alone, low and pointing down,
+        // while the left hand brings the flask to the mouth (below).
+        const float Hold=Smooth(Fight.Age/12.f)*(1-Smooth((Fight.Age-64)/14.f));
+        Key=Blend(Guard,{FVector(22,26,96),FVector(.5,.3,-.8).GetSafeNormal(),-8,4},Hold);
+    }
     const float Recoil=Fight.ImpactTicks>0 ? FMath::Sin(PI*float(18-Fight.ImpactTicks)/18) : 0;
     // Armored hits still read through the torso, but never alter the sword's
     // active arc. Poise breaks and player flinches get a complete hurt pose.
@@ -335,6 +340,11 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         SetRotation(I,FQuat(FVector::UpVector,FMath::DegreesToRadians(Key.Twist*.18f))*
             FQuat(FVector::ForwardVector,FMath::DegreesToRadians(Key.Lean*.13f))*CS[I].GetRotation());
     }
+    // Head tips back to drink while the flask is at the mouth.
+    const float Drink=Fight.Action==EWardenAction::Heal && !bBoss ? Smooth((Fight.Age-14)/10.f)*(1-Smooth((Fight.Age-54)/10.f)) : 0;
+    if(Drink>0)
+        for(const TCHAR* Name:{TEXT("neck_02"),TEXT("head")})
+            if(const int32 I=Index(Name); I>=0) SetRotation(I,FQuat(FVector::ForwardVector,FMath::DegreesToRadians(13*Drink))*CS[I].GetRotation());
     // Shoulder girdle opens under the backswing and reaches across on release.
     // The shared hilt IK below remains responsible for exact palm placement.
     for(int32 Side=0;Side<2;++Side)
@@ -449,7 +459,9 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     // stretched arm bones or independent floating off-hand.
     FVector SharedGrip=SwordFrame.GetLocation();
     // The Regent holds the estoc in the right hand only; the left arm carries the chain.
-    const int32 Hands=bRegent ? 1 : 2;
+    // One hand on the hilt for the Regent (chain arm) and for the player while drinking.
+    const bool Drinking=!bBoss && Fight.Action==EWardenAction::Heal;
+    const int32 Hands=bRegent || Drinking ? 1 : 2;
     for(int32 Iteration=0;Iteration<12;++Iteration)
         for(int32 Side=0;Side<Hands;++Side)
         {
@@ -477,6 +489,21 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             const FVector HandTarget=Shoulder+Aim.GetClampedToMaxSize(Reach*.95f);
             IK(TEXT("upperarm_l"),TEXT("lowerarm_l"),TEXT("hand_l"),HandTarget,MeshPoint(FVector(-10,-55,100)));
             if(Middle>=0) SetRotation(H,FQuat::FindBetweenNormals((CS[Middle].GetLocation()-CS[H].GetLocation()).GetSafeNormal(),Aim.GetSafeNormal())*CS[H].GetRotation());
+        }
+    }
+    else if(Drinking)
+    {
+        // Flask from the hip to just below the mouth (following the tipped head), held, lowered.
+        const int32 Head=Index(TEXT("head")),Middle=Index(TEXT("middle_01_l")),H=Index(TEXT("hand_l"));
+        if(Head>=0 && H>=0)
+        {
+            const float Raise=Smooth(Fight.Age/16.f)*(1-Smooth((Fight.Age-58)/14.f));
+            const FVector Mouth=CS[Head].GetLocation()+MeshPoint(FVector(13,-3,-9));
+            const FVector Hip=MeshPoint(FVector(14,-28,98));
+            const FVector FlaskAt=FMath::Lerp(Hip,Mouth,Raise);
+            IK(TEXT("upperarm_l"),TEXT("lowerarm_l"),TEXT("hand_l"),FlaskAt,MeshPoint(FVector(-10,-60,95)));
+            // Palm turned in toward the face.
+            if(Middle>=0) SetRotation(H,FQuat::FindBetweenNormals((CS[Middle].GetLocation()-CS[H].GetLocation()).GetSafeNormal(),FMath::Lerp(MeshPoint(FVector(.3f,.2f,-1)),MeshPoint(FVector(.2f,.9f,.4f)),Raise).GetSafeNormal())*CS[H].GetRotation());
         }
     }
     for(int32 Side=0;Side<Hands;++Side)

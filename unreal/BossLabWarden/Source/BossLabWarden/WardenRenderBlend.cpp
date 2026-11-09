@@ -13,7 +13,7 @@ void AWardenChallenger::CaptureStepState()
 {
     RestoreStepState();
     RenderPrev=RenderCurr;
-    RenderCurr.Location=GetActorLocation(); RenderCurr.Yaw=GetActorRotation().Yaw;
+    RenderCurr.Location=GetActorLocation(); RenderCurr.Yaw=GetActorRotation().Yaw; RenderCurr.Lift=AirLift;
     RenderCurr.Visual=VisualBody->GetRelativeTransform(); RenderCurr.Sword=SwordRoot->GetRelativeTransform();
     RenderCurr.Bones=VisualBody->BoneSpaceTransforms;
     // Never blend across a teleport (reset, ash step) or a skeleton swap.
@@ -45,8 +45,10 @@ void AWardenChallenger::BlendRenderState(float Alpha)
     TArray<FTransform> Bones; Bones.SetNum(RenderCurr.Bones.Num());
     for(int32 I=0;I<Bones.Num();++I) Bones[I].Blend(RenderPrev.Bones[I],RenderCurr.Bones[I],Alpha);
     VisualBody->BoneSpaceTransforms=MoveTemp(Bones); VisualBody->RefreshBoneTransforms();
-    // The follow camera rides the blended position too.
-    Arm->SetRelativeLocation(Actor.InverseTransformVector(Location-Actor.GetLocation()));
+    // The follow camera rides the blended position too, but only follows 40% of a jump's
+    // height so the view does not bob with every jump.
+    const float Lift=FMath::Lerp(RenderPrev.Lift,RenderCurr.Lift,Alpha);
+    Arm->SetRelativeLocation(Actor.InverseTransformVector(Location-Actor.GetLocation()-FVector(0,0,Lift*.6f)));
     bRenderBlended=true;
 }
 

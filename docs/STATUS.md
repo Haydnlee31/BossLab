@@ -1,3 +1,13 @@
+## Jump attack feel and flask heal (2026-11-10, branch regent-moveset-01)
+
+- **Jump attack:** a snappier, higher jump. The attack hangs briefly with the blade raised, then plunges with momentum to land at contact, with a dust burst and camera kick.
+- **Camera:** it follows only 40% of the jump's height.
+- **Heal:** a flask-drinking animation (sword one-handed, flask to the mouth, head tips back) with crimson motes and a red flash when the heal lands. Timing and amount are unchanged.
+- **Tests:** native suite 31/31. Front-view heal and jump-attack captures inspected.
+- **Not done:** no owner feel test.
+
+See [SOULS_CONTROLS.md](SOULS_CONTROLS.md).
+
 ## Souls-style controls (2026-11-10, branch regent-moveset-01)
 
 The owner asked for Elden Ring-style controls and said the boss was unbeatable, there was no jump attack, and the roll and swing felt off.

@@ -1,0 +1,138 @@
+// Presentation-only player effects, read from fighter state every rendered frame:
+// the crimson flask in the left hand while healing, the rising crimson motes and light
+// flash when the heal lands (Elden Ring's flask feel), and dust with a camera kick when
+// a jump or jump attack lands. Materials: ue_import_effects.py (/Game/BossLab/Effects).
+#include "WardenPrototype.h"
+#include "Components/InstancedStaticMeshComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/PoseableMeshComponent.h"
+#include "Components/PointLightComponent.h"
+#include "Camera/PlayerCameraManager.h"
+#include "GameFramework/PlayerController.h"
+#include "Materials/MaterialInterface.h"
+#include "Engine/StaticMesh.h"
+#include "Engine/World.h"
+
+namespace
+{
+float Hash(int32 I) { return FMath::Frac(FMath::Sin(I*12.9898f)*43758.5453f); }
+UMaterialInterface* Effect(const TCHAR* Name,const TCHAR* Fallback)
+{
+    if(auto* M=LoadObject<UMaterialInterface>(nullptr,*(FString(TEXT("/Game/BossLab/Effects/"))+Name),nullptr,LOAD_Quiet|LOAD_NoWarn)) return M;
+    return LoadObject<UMaterialInterface>(nullptr,*(FString(TEXT("/Game/BossLab/Materials/MI_"))+Fallback));
+}
+}
+
+void AWardenArenaMode::BuildEffects()
+{
+    auto& V=Effects;
+    if(V.Owner.IsValid()) return;
+    auto* Owner=GetWorld()->SpawnActor<AActor>();
+    V.Owner=Owner;
+    auto* Root=NewObject<USceneComponent>(Owner); Owner->SetRootComponent(Root); Root->RegisterComponent();
+    auto Prepare=[&](UPrimitiveComponent* C)
+    {
+        C->SetupAttachment(Root); C->SetCollisionEnabled(ECollisionEnabled::NoCollision); C->SetCanEverAffectNavigation(false);
+        C->SetCastShadow(false); C->RegisterComponent(); Owner->AddInstanceComponent(C);
+    };
+    auto Set=[&](const TCHAR* Mesh,UMaterialInterface* Material,int32 Count)
+    {
+        auto* C=NewObject<UInstancedStaticMeshComponent>(Owner);
+        C->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,Mesh)); C->SetMaterial(0,Material); Prepare(C);
+        TArray<FTransform> Hidden; Hidden.Init(FTransform(FRotator::ZeroRotator,FVector::ZeroVector,FVector::ZeroVector),Count);
+        C->AddInstances(Hidden,false);
+        return C;
+    };
+    V.Motes=Set(TEXT("/Engine/BasicShapes/Plane"),Effect(TEXT("M_HealMote"),TEXT("Amber")),FWardenEffects::MoteCount);
+    V.Dust=Set(TEXT("/Engine/BasicShapes/Plane"),Effect(TEXT("M_ImpactDust"),TEXT("Stone")),FWardenEffects::DustCount);
+    // Flask: a glowing crimson bulb with a dark iron neck and stopper.
+    V.Flask=Set(TEXT("/Engine/BasicShapes/Sphere"),Effect(TEXT("M_FlaskGlass"),TEXT("Amber")),1);
+    V.FlaskNeck=Set(TEXT("/Engine/BasicShapes/Cylinder"),LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/BossLab/Materials/MI_BlackIron")),2);
+    auto* Light=NewObject<UPointLightComponent>(Owner);
+    Light->SetupAttachment(Root); Light->SetMobility(EComponentMobility::Movable);
+    Light->SetIntensity(0); Light->SetAttenuationRadius(380); Light->SetLightColor(FLinearColor(1,.18,.08));
+    Light->SetCastShadows(false); Light->RegisterComponent(); Owner->AddInstanceComponent(Light);
+    V.Glow=Light;
+}
+
+void AWardenArenaMode::AnimateEffects(float Seconds)
+{
+    auto& V=Effects;
+    if(!Player || !V.Motes.IsValid()) return;
+    const auto& F=Player->Fight;
+    FVector Eye=Player->GetActorLocation()+FVector(-500,0,200);
+    if(auto* PC=GetWorld()->GetFirstPlayerController(); PC && PC->PlayerCameraManager) Eye=PC->PlayerCameraManager->GetCameraLocation();
+    auto Card=[&](const FVector& At,float Size)
+    {
+        // Plane faces +Z: turn its normal to the camera so motes and puffs never show an edge.
+        return FTransform(FRotationMatrix::MakeFromZ((Eye-At).GetSafeNormal()).ToQuat(),At,FVector(Size/100));
+    };
+    const FTransform Hidden(FRotator::ZeroRotator,Player->GetActorLocation(),FVector::ZeroVector);
+    const FVector Feet=Player->GetActorLocation()-FVector(0,0,Player->AirLift+90);
+
+    // Flask: visible while drinking, in the left palm, tipping toward the mouth.
+    const bool Drinking=F.Action==EWardenAction::Heal && F.Age>2 && F.Age<74;
+    const FVector Hand=Player->VisualBody->GetBoneLocationByName(TEXT("hand_l"),EBoneSpaces::WorldSpace);
+    const FVector Finger=Player->VisualBody->GetBoneLocationByName(TEXT("middle_01_l"),EBoneSpaces::WorldSpace);
+    const FVector Head=Player->VisualBody->GetBoneLocationByName(TEXT("head"),EBoneSpaces::WorldSpace);
+    const FVector Palm=(Hand+Finger)*.5f;
+    const float Tip=Drinking ? FMath::Clamp((F.Age-14)/12.f,0.f,1.f)*(1-FMath::Clamp((F.Age-54)/10.f,0.f,1.f)) : 0;
+    const FVector Neck=FMath::Lerp(FVector::UpVector,((Head-Palm).GetSafeNormal()+FVector::UpVector*.3f).GetSafeNormal(),Tip).GetSafeNormal();
+    const FQuat Upright=FQuat::FindBetweenNormals(FVector::UpVector,Neck);
+    auto Place=[&](UInstancedStaticMeshComponent* C,int32 I,const FTransform& X) { C->UpdateInstanceTransform(I,X,true,false,true); };
+    Place(V.Flask.Get(),0,Drinking ? FTransform(Upright,Palm,FVector(.085f,.085f,.1f)) : Hidden);
+    Place(V.FlaskNeck.Get(),0,Drinking ? FTransform(Upright,Palm+Neck*8.5f,FVector(.028f,.028f,.07f)) : Hidden);
+    Place(V.FlaskNeck.Get(),1,Drinking ? FTransform(Upright,Palm+Neck*12.5f,FVector(.036f,.036f,.025f)) : Hidden);
+
+    // Heal burst: when the heal lands (commit tick), crimson motes swirl up the body and a
+    // red light flashes; a few motes already gather around the flask while drinking.
+    const int32 HealKey=Encounter*10+F.Heals;
+    if(F.Action==EWardenAction::Heal && F.Age>=WardenRules::HealCommit && V.HealFor!=HealKey) { V.HealFor=HealKey; V.HealAt=Seconds; }
+    const float Since=Seconds-V.HealAt;
+    TArray<FTransform> Motes; Motes.Reserve(FWardenEffects::MoteCount);
+    for(int32 I=0;I<FWardenEffects::MoteCount;++I)
+    {
+        const float Life=1.f+.6f*Hash(I+3), Delay=.25f*Hash(I+7), U=(Since-Delay)/Life;
+        if(U>=0 && U<1)
+        {
+            const float A=Hash(I)*2*PI+U*(2.5f+2*Hash(I+11)), R=(22+28*Hash(I+5))*(1-.35f*U);
+            const FVector At=Feet+FVector(FMath::Cos(A)*R,FMath::Sin(A)*R,15+130*Hash(I+9)+(70+80*Hash(I+13))*U);
+            Motes.Add(Card(At,(5+5*Hash(I+17))*FMath::Sin(PI*FMath::Min(1.f,U*1.6f))));
+        }
+        else if(Drinking && I<10)
+        {
+            const float A=Seconds*3+I*.63f;
+            Motes.Add(Card(Palm+FVector(FMath::Cos(A)*9,FMath::Sin(A)*9,FMath::Frac(Seconds*.8f+I*.1f)*22),2.5f+1.5f*Hash(I)));
+        }
+        else Motes.Add(Hidden);
+    }
+    V.Motes->BatchUpdateInstancesTransforms(0,Motes,true,true);
+    if(auto* L=V.Glow.Get())
+    {
+        const float Flash=Since>=0 && Since<.9f ? FMath::Sin(PI*FMath::Min(1.f,Since/.9f))*(1-Since/.9f*.4f) : 0;
+        L->SetWorldLocation(Player->GetActorLocation()+FVector(0,0,20));
+        L->SetIntensity((Drinking ? 600.f : 0.f)+5000.f*Flash);
+    }
+
+    // Landing dust and camera kick: a jump attack's impact at the blade, a plain jump at the feet.
+    const bool Slam=F.Action==EWardenAction::Strike && F.Move==WardenRules::JumpAttack && F.Age>=F.Definition().Windup;
+    if(Slam && V.DustFor!=F.AttackInstance)
+    {
+        V.DustFor=F.AttackInstance; V.DustAt=Player->BladePoint(.9f); V.DustAt.Z=Feet.Z; V.DustAt+=FVector(0,0,2);
+        V.DustTime=Seconds; V.DustScale=1; Shake=FMath::Max(Shake,.65f);
+    }
+    if(V.bAirborne && Player->AirLift<1 && F.Action!=EWardenAction::Strike)
+    { V.DustAt=Feet+FVector(0,0,2); V.DustTime=Seconds; V.DustScale=.45f; Shake=FMath::Max(Shake,.15f); }
+    V.bAirborne=Player->AirLift>5;
+    TArray<FTransform> Dust; Dust.Reserve(FWardenEffects::DustCount);
+    const float D=(Seconds-V.DustTime)/.9f;
+    for(int32 I=0;I<FWardenEffects::DustCount;++I)
+    {
+        if(D<0 || D>=1) { Dust.Add(Hidden); continue; }
+        const float A=I*2*PI/FWardenEffects::DustCount+Hash(I+50)*.4f;
+        const float R=(20+150*FMath::Sqrt(D)*(.7f+.6f*Hash(I+51)))*V.DustScale;
+        Dust.Add(Card(V.DustAt+FVector(FMath::Cos(A)*R,FMath::Sin(A)*R,(12+28*D)*V.DustScale),(35+55*D)*V.DustScale*(1-D*D)));
+    }
+    V.Dust->BatchUpdateInstancesTransforms(0,Dust,true,true);
+    for(auto* C:{V.Flask.Get(),V.FlaskNeck.Get()}) C->MarkRenderStateDirty();
+}
