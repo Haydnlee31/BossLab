@@ -34,7 +34,7 @@ void AWardenChallenger::ResetFighter(bool Boss)
     // A reset re-poses outside the fixed step: drop any blended frame and its history.
     bRenderBlended=false; bRenderValid=false; Arm->SetRelativeLocation(FVector::ZeroVector);
     bBoss = Boss; Fight = FWardenFighterState();
-    GroundZ=GetActorLocation().Z; AirLift=JumpAttackLift=0; bPoseFromLast=false;
+    GroundZ=GetActorLocation().Z; AirLift=JumpAttackLift=0; bPoseFromLast=false; PoseEase=0;
     FootLocked[0]=FootLocked[1]=false; FootRelease[0]=FootRelease[1]=1; FootLow[0]=FootLow[1]=1e9f;
     Fight.IsBoss = Boss;
     Fight.Health = Fight.MaxHealth = Boss ? 240.f : 100.f;
@@ -86,7 +86,22 @@ void AWardenChallenger::StepFighter(const FVector& Direction, bool SprintRequest
     Fight.UpdateSprint(SprintRequested,!Direction.IsNearlyZero());
     if (Fight.Alive())
     {
-        if (Fight.Action == EWardenAction::Ready)
+        // Moving out of a late recovery hands control straight back (no stiff full stop).
+        if (!bBoss && !Direction.IsNearlyZero() && Fight.CancelIntoMove())
+        {
+            PoseEase=8; EaseGrip=LastGrip; EaseAxis=LastAxis; EaseTwist=LastTwist; EaseLean=LastLean;
+        }
+        if (Fight.Action == EWardenAction::Heal && !bBoss)
+        {
+            // Walk while drinking, slowly; the legs walk (SwordPose) while the arm drinks.
+            const FVector Desired=Direction.GetClampedToMaxSize(1.f)*WardenRules::HealWalkSpeed;
+            MoveVelocity=FMath::VInterpConstantTo(MoveVelocity,Desired,WardenRules::Step,Desired.IsNearlyZero()?3600.f:2400.f);
+            MoveSwept(MoveVelocity*WardenRules::Step);
+            const FVector Facing=IsLocked() ? GetTargetPosition()-GetActorLocation() : Direction;
+            if (!Facing.IsNearlyZero())
+                SetActorRotation(FMath::RInterpConstantTo(GetActorRotation(),FRotator(0,Facing.Rotation().Yaw,0),WardenRules::Step,360.f));
+        }
+        else if (Fight.Action == EWardenAction::Ready)
         {
             const FVector Desired=Direction.GetClampedToMaxSize(1.f)*(Fight.Sprinting ? WardenRules::SprintSpeed : bBoss ? 260.f : WardenRules::WalkSpeed);
             MoveVelocity=FMath::VInterpConstantTo(MoveVelocity,Desired,WardenRules::Step,Desired.IsNearlyZero()?3600.f:2400.f);
@@ -103,6 +118,9 @@ void AWardenChallenger::StepFighter(const FVector& Direction, bool SprintRequest
         }
         else if (Fight.Action == EWardenAction::Jump)
         {
+            // Some air control: the stick nudges the jump's momentum.
+            const FVector Desired=JumpMomentum+Direction.GetClampedToMaxSize(1.f)*WardenRules::WalkSpeed*WardenRules::AirControl;
+            MoveVelocity=FMath::VInterpConstantTo(MoveVelocity,Desired,WardenRules::Step,1200.f);
             MoveSwept(MoveVelocity*WardenRules::Step);
         }
         else if (Fight.Action == EWardenAction::Dodge)
@@ -113,9 +131,24 @@ void AWardenChallenger::StepFighter(const FVector& Direction, bool SprintRequest
         else if (Fight.Action == EWardenAction::Strike)
         {
             const auto& Def = Fight.Definition();
-            MoveVelocity=FVector::ZeroVector;
-            // A jump attack keeps flying with the jump's momentum until it lands.
-            if(!bBoss && Fight.Move==WardenRules::JumpAttack && Fight.Age<Def.Windup) MoveSwept(JumpMomentum*WardenRules::Step);
+            if(!bBoss && Fight.Move==WardenRules::JumpAttack)
+            {
+                // A jump attack keeps flying with the jump's momentum until it lands.
+                if(Fight.Age<Def.Windup) MoveSwept(MoveVelocity*WardenRules::Step);
+                else MoveVelocity=FVector::ZeroVector;
+            }
+            else if(!bBoss)
+            {
+                // Run momentum carries into the swing and brakes; the feet skid with it.
+                MoveVelocity=FMath::VInterpConstantTo(MoveVelocity,FVector::ZeroVector,WardenRules::Step,WardenRules::EntryBrake);
+                const FVector Skid=MoveVelocity*WardenRules::Step;
+                if(!Skid.IsNearlyZero()) { MoveSwept(Skid); StrikeFootAnchors[0]+=Skid; StrikeFootAnchors[1]+=Skid; }
+                // Steer the swing during its wind-up toward the lock target or the stick.
+                const FVector Want=IsLocked() ? GetTargetPosition()-GetActorLocation() : Direction;
+                if(Fight.Age<Def.Windup-6 && !Want.IsNearlyZero())
+                    CommittedDirection=FMath::RInterpConstantTo(CommittedDirection.Rotation(),FRotator(0,Want.Rotation().Yaw,0),WardenRules::Step,WardenRules::SteerDegreesPerSecond).Vector();
+            }
+            else MoveVelocity=FVector::ZeroVector;
             if(Fight.Age<Def.Windup-8)
                 SetActorRotation(FMath::RInterpConstantTo(GetActorRotation(),CommittedDirection.Rotation(),WardenRules::Step,720.f));
             // Authored displacement only during the final anticipation and contact.
@@ -381,6 +414,8 @@ void AWardenArenaMode::FixedStep()
             // Then a flask (health lowered first: healing is refused at full health).
             if(CombatTick==560) Player->Fight.Health=55;
             if(CombatTick==580) Player->PendingAction=EWardenAction::Heal;
+            // Walk while drinking (toward the camera's left), then stop.
+            if(CombatTick>=600 && CombatTick<650) Intent=FVector(0,-1,0);
             // Turn the study camera to the knight's front for the drink, then back.
             if(CombatTick==570 || CombatTick==700) MotionStudyView=CombatTick==570 ? FRotator(-8,160,0) : FRotator(-12,-40,0);
         }

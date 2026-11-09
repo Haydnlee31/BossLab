@@ -114,6 +114,21 @@ bool FWardenFighterState::CancelOpen(EWardenAction Requested, int32 MoveIndex) c
         default: return false;
     }
 }
+bool FWardenFighterState::MoveCancelOpen() const
+{
+    using namespace WardenRules;
+    if(IsBoss || !Alive()) return false;
+    if(Action==EWardenAction::Dodge) return Age>=RollMoveCancel;
+    if(Action!=EWardenAction::Strike) return false;
+    const auto& D=Definition();
+    return Age>=D.Windup+D.Active+(Move==JumpAttack ? JumpAttackMoveCancel : MoveCancelAfterContact);
+}
+bool FWardenFighterState::CancelIntoMove()
+{
+    if(!MoveCancelOpen()) return false;
+    Action=EWardenAction::Ready; Age=0; Gap=WardenRules::RecoveryGap/2;
+    return true;
+}
 bool FWardenFighterState::Request(EWardenAction Requested, int32 MoveIndex)
 {
     if (!Ready() && !CancelOpen(Requested,MoveIndex)) return false;

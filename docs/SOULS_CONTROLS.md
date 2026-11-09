@@ -105,6 +105,31 @@ The owner said the jump attack still didn't feel like Elden Ring, and asked for 
 - **Evidence:** `heal-flask-front-sheet.png` (front view: raise, drink, lower, mote burst) and `jump-attack-plunge-sheet.png` (rise, raised blade, plunge, dust).
 - **Tests:** native suite 31/31; the jump tests use the new constants.
 
+## Movement during actions (2026-11-10, later)
+
+The owner reported that every action stopped the player completely, which felt very stiff, and asked to move while attacking (momentum) and while drinking, plus a higher jump.
+
+**Research** (community sources, not FromSoftware statements):
+- **Drinking:** you can move while drinking either flask in Elden Ring ([CheatCC](https://www.cheatcc.com/?p=160043)).
+- **Attacks:** players note that Elden Ring "allows large turns mid-attack for many moves" ([No Rest for the Wicked forum](https://forum.norestforthewicked.com/t/dual-wielding-gauntlet-feedback/15963)).
+- **Wind-ups:** they track during the wind-up and stay committed once the attack comes down ([Steam discussion](https://steamcommunity.com/app/1245620/discussions/0/3719440044270966891)).
+- **Free movement:** attacks are not free movement; they are committed, with turning and root motion.
+
+**Rules** ([WardenCombat.h](../unreal/BossLabWarden/Source/BossLabWarden/WardenCombat.h)):
+- **Walk while drinking.** 190 cm/s, about 45% of running speed. The legs play the walk clips with foot locking while the arm drinks. Heal timing and amount are unchanged.
+- **Momentum into swings.** Attacking from a run carries the run's velocity and brakes it at 4200 cm/s². The feet skid with the body, then plant. A cut from a run travels 39.5 cm against 22 cm from standing; the skid is up to 17.5 cm, then the support foot holds at 0.000 cm.
+- **Steering in the wind-up.** Until 6 ticks before contact, a swing turns toward the lock target, or the stick when unlocked, at 540°/s. A test cut turned the full 90° toward the stick. Combo hits re-steer, because each cut has its own wind-up.
+- **Walking out of recovery.** Stick input ends late recovery straight into walking: 14 ticks after contact for cuts and contextual attacks, 28 for the jump attack (still punishable), and from age 34 of a 40-tick roll. The sword eases from the cancelled pose to the guard over 8 ticks, and the pose blend eases the legs into the walk.
+- **Rolls stay committed.** Stick input cannot steer a roll; it can only walk out of the roll's end.
+- **Higher jump.** 125 cm over 46 ticks, with 25% air control: a standing jump with full sideways input drifts 77 cm. The jump-attack window runs from age 4 to 32.
+
+**Tests:** native suite 32/32.
+- New `BossLab.Controls.MovementDuringActions` checks the move-cancel boundary tick, momentum distance, wind-up steering, walking while drinking with the heal still landing, and jump height with bounded air control.
+- Updated: the roll test (rolls are tested without stick input; stick input can't steer them and only walks out from age 34), the sprint/roll test, and the support-foot test, which now measures after the skid.
+- The test bot beats the Regent in 66 s (was 80) and the Warden in 18 s.
+
+**Capture:** `drink-while-walking-sheet.png` shows the knight walking with the flask at the mouth and the sword low, then the crimson burst.
+
 ## Limits
 
 - **Feel.** Not owner-tested. These are first-pass values for tuning by hand.

@@ -132,7 +132,8 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     const float StepSpeed=Travel.Size2D()*60.f/FMath::Max(.1f,float(GetActorScale3D().X));
     // Only locomotion evaluates the installed blendspace. All sword/roll motion below
     // is an original keyed pose with IK; it is not a relabeled punch or dash.
-    if(Fight.Action==EWardenAction::Ready && Locomotion)
+    const bool DrinkWalk=!bBoss && Fight.Action==EWardenAction::Heal;
+    if((Fight.Action==EWardenAction::Ready || DrinkWalk) && Locomotion)
     {
         if(Body->GetSingleNodeInstance()->GetCurrentAsset()!=Locomotion) Body->PlayAnimation(Locomotion,true);
         auto* Anim=Body->GetSingleNodeInstance();
@@ -299,6 +300,11 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const float Hold=Smooth(Fight.Age/12.f)*(1-Smooth((Fight.Age-64)/14.f));
         Key=Blend(Guard,{FVector(22,26,96),FVector(.5,.3,-.8).GetSafeNormal(),-8,4},Hold);
     }
+    if(Fight.Action==EWardenAction::Ready && PoseEase>0)
+    {
+        Key=Blend({EaseGrip,EaseAxis,EaseTwist,EaseLean},Key,1-PoseEase/8.f);
+        --PoseEase;
+    }
     const float Recoil=Fight.ImpactTicks>0 ? FMath::Sin(PI*float(18-Fight.ImpactTicks)/18) : 0;
     // Armored hits still read through the torso, but never alter the sword's
     // active arc. Poise breaks and player flinches get a complete hurt pose.
@@ -420,7 +426,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     // Foot locking while ready: a foot that plants stays pinned to the floor (leg IK) until
     // the clip lifts it, then eases back onto the clip over six ticks. Removes the residual
     // skate the clips carry, most visible on strafes. Presentation only; no capsule change.
-    if(Fight.Action==EWardenAction::Ready && Fight.Alive())
+    if((Fight.Action==EWardenAction::Ready || DrinkWalk) && Fight.Alive())
     {
         const FTransform MeshWorld=VisualBody->GetComponentTransform();
         const float Scale=GetActorScale3D().X;

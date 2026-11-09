@@ -138,3 +138,50 @@ bool FWardenBeatableTest::RunTest(const FString&)
     return true;
 }
 #endif
+#if WITH_DEV_AUTOMATION_TESTS
+CONTROLS_TEST(FWardenMoveDuringActionsTest,"BossLab.Controls.MovementDuringActions");
+bool FWardenMoveDuringActionsTest::RunTest(const FString&)
+{
+    using namespace WardenRules;
+    auto* W=NewWorld(); auto* M=Arena(W,false); AWardenChallenger* P=M->Player;
+    M->Warden->SetActorLocation(FVector(3000,3000,128));
+    auto Fresh=[&] { P->SetActorLocation(FVector(0,0,95)); P->SetActorRotation(FRotator::ZeroRotator); P->ResetFighter(false); P->SetLocked(false); };
+    // Walk out of late recovery, not before.
+    Fresh(); P->BeginAction(EWardenAction::Strike,CutOne,FVector::ForwardVector);
+    const auto& D=Strike(CutOne,false);
+    for(int32 T=0;T<D.Windup+D.Active+MoveCancelAfterContact-1;++T) { P->StepFighter(FVector::RightVector); P->Fight.Advance(); }
+    TestEqual(TEXT("Stick input cannot end the swing early"),int32(P->Fight.Action),int32(EWardenAction::Strike));
+    P->Fight.Advance(); P->StepFighter(FVector::RightVector);
+    TestEqual(TEXT("Stick input walks out of late recovery"),int32(P->Fight.Action),int32(EWardenAction::Ready));
+    // Momentum: a cut from a full run travels further than from standing.
+    Fresh(); P->BeginAction(EWardenAction::Strike,CutOne,FVector::ForwardVector);
+    for(int32 T=0;T<D.Windup+D.Active;++T) { P->StepFighter(FVector::ZeroVector); P->Fight.Advance(); }
+    const float Standing=P->GetActorLocation().X;
+    Fresh(); for(int32 T=0;T<30;++T) { P->StepFighter(FVector::ForwardVector); P->Fight.Advance(); }
+    const float RunStart=P->GetActorLocation().X; P->BeginAction(EWardenAction::Strike,CutOne,FVector::ForwardVector);
+    for(int32 T=0;T<D.Windup+D.Active;++T) { P->StepFighter(FVector::ZeroVector); P->Fight.Advance(); }
+    const float Running=P->GetActorLocation().X-RunStart;
+    AddInfo(FString::Printf(TEXT("Cut I travel: %.1f cm standing, %.1f cm from a run"),Standing,Running));
+    TestTrue(TEXT("Run momentum carries into the cut"),Running>Standing+12);
+    // Steering: during the wind-up the swing turns to the stick; it locks before contact.
+    Fresh(); P->BeginAction(EWardenAction::Strike,CutOne,FVector::ForwardVector);
+    for(int32 T=0;T<D.Windup;++T) { P->StepFighter(FVector::RightVector); P->Fight.Advance(); }
+    const float Steered=P->CommittedDirection.Rotation().Yaw;
+    AddInfo(FString::Printf(TEXT("Wind-up steering turned the cut %.0f degrees"),Steered));
+    TestTrue(TEXT("Wind-up steering turns the cut toward the stick"),Steered>45);
+    // Drinking: walks slowly, heal still lands at the commit tick.
+    Fresh(); P->Fight.Health=40; P->BeginAction(EWardenAction::Heal,0,FVector::ZeroVector);
+    for(int32 T=0;T<HealCommit+1;++T) { P->StepFighter(FVector::ForwardVector); P->Fight.Advance(); }
+    AddInfo(FString::Printf(TEXT("Walked %.1f cm while drinking, health %.0f"),P->GetActorLocation().X,P->Fight.Health));
+    TestTrue(TEXT("Walks while drinking"),P->GetActorLocation().X>150);
+    TestTrue(TEXT("Drinking walk is slower than walking"),P->MoveVelocity.Size()<=HealWalkSpeed+.1f);
+    TestEqual(TEXT("Heal still lands at the commit tick"),P->Fight.Health,85.f);
+    // Jump: higher, with some air control.
+    Fresh(); P->BeginAction(EWardenAction::Jump,0,FVector::ZeroVector); float Peak=0;
+    for(int32 T=0;T<JumpTicks;++T) { P->StepFighter(FVector::RightVector); P->Fight.Advance(); Peak=FMath::Max(Peak,float(P->GetActorLocation().Z-95)); }
+    AddInfo(FString::Printf(TEXT("Standing jump peak %.0f cm, air control drift %.0f cm"),Peak,P->GetActorLocation().Y));
+    TestTrue(TEXT("Jump reaches 1.2 m"),Peak>=120);
+    TestTrue(TEXT("Air control nudges a standing jump, but only nudges"),P->GetActorLocation().Y>20 && P->GetActorLocation().Y<100);
+    CloseWorld(W); return true;
+}
+#endif

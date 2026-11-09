@@ -1,0 +1,19 @@
+Cut I travel: 22.0 cm standing, 39.5 cm from a run
+Wind-up steering turned the cut 90 degrees
+Walked 187.2 cm while drinking, health 85
+Standing jump peak 125 cm, air control drift 77 cm
+Warden seed 1: WIN in 18s, player 100 hp, boss 0 hp, rolls 6, cuts 16, heals 0
+Warden seed 2: WIN in 18s, player 100 hp, boss 0 hp, rolls 6, cuts 16, heals 0
+Warden seed 3: WIN in 18s, player 100 hp, boss 0 hp, rolls 6, cuts 16, heals 0
+Warden seed 4: WIN in 18s, player 100 hp, boss 0 hp, rolls 6, cuts 16, heals 0
+Warden seed 5: WIN in 18s, player 100 hp, boss 0 hp, rolls 6, cuts 16, heals 0
+Warden seed 6: WIN in 18s, player 100 hp, boss 0 hp, rolls 6, cuts 16, heals 0
+Warden: bot won 6 of 6, mean 18s
+Regent seed 1: WIN in 67s, player 53 hp, boss 0 hp, rolls 30, cuts 86, heals 0
+Regent seed 2: WIN in 67s, player 58 hp, boss 0 hp, rolls 30, cuts 86, heals 0
+Regent seed 3: WIN in 65s, player 53 hp, boss 0 hp, rolls 28, cuts 86, heals 0
+Regent seed 4: WIN in 65s, player 53 hp, boss 0 hp, rolls 28, cuts 85, heals 0
+Regent seed 5: WIN in 65s, player 53 hp, boss 0 hp, rolls 29, cuts 86, heals 0
+Regent seed 6: WIN in 68s, player 58 hp, boss 0 hp, rolls 30, cuts 102, heals 0
+Regent: bot won 6 of 6, mean 66s
+Four moving entries: momentum skid up to 17.5 cm, then support foot drift 0.000 cm; height error versus standing ankle 0.000 cm

@@ -1,3 +1,17 @@
+## Movement during actions (2026-11-10, branch regent-moveset-01)
+
+The owner said actions stopped the player dead and felt stiff.
+
+- **Drinking:** walk at 190 cm/s while drinking.
+- **Momentum:** run momentum carries into swings and skids.
+- **Steering:** swings turn toward the lock target or the stick during the wind-up.
+- **Recovery:** stick input walks out of late recovery (cuts at contact + 14, jump attack + 28, roll from age 34).
+- **Jump:** 125 cm with 25% air control.
+- **Tests:** native suite 32/32.
+- **Not done:** no owner feel test.
+
+See [SOULS_CONTROLS.md](SOULS_CONTROLS.md).
+
 ## Jump attack feel and flask heal (2026-11-10, branch regent-moveset-01)
 
 - **Jump attack:** a snappier, higher jump. The attack hangs briefly with the blade raised, then plunges with momentum to land at contact, with a dust burst and camera kick.

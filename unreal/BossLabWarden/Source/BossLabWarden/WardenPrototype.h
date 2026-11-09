@@ -72,6 +72,10 @@ public:
     bool bPoseFromLast=false;
     FVector LastGrip=FVector(28,5,114), LastAxis=FVector(.38,-.12,.92);
     float LastTwist=-7, LastLean=5;
+    // Sword pose eased from the cancelled action into the guard over a few ticks.
+    int32 PoseEase=0;
+    FVector EaseGrip=FVector::ZeroVector, EaseAxis=FVector::UpVector;
+    float EaseTwist=0, EaseLean=0;
     // Walking foot locks (WardenSword.cpp); reset with the fighter.
     bool FootLocked[2]={false,false};
     FVector FootLock[2], FootReleaseFrom[2], FootAnimPrev[2];

@@ -26,8 +26,13 @@ namespace WardenRules
     inline constexpr int32 RollAttackOpen = 28, RollChainOpen = 32;
     // Jump: snappy 40-tick arc; the jump attack hangs 4 ticks with the blade raised, then
     // plunges (gravity ease-in) to land exactly at contact, keeping the jump's momentum.
-    inline constexpr int32 JumpTicks = 40, JumpAttackOpen = 4, JumpAttackClose = 28, JumpAttackHang = 4;
-    inline constexpr float JumpHeight = 90, JumpCost = 12;
+    inline constexpr int32 JumpTicks = 46, JumpAttackOpen = 4, JumpAttackClose = 32, JumpAttackHang = 4;
+    inline constexpr float JumpHeight = 125, JumpCost = 12, AirControl = .25f;
+    // Movement during actions (Elden Ring style): walk while drinking, carry run momentum
+    // into a swing and brake it, steer a swing during its wind-up, and walk straight out
+    // of late recovery (attack from contact + 14, jump attack + 28, roll from age 34).
+    inline constexpr float HealWalkSpeed = 190, EntryBrake = 4200, SteerDegreesPerSecond = 540;
+    inline constexpr int32 MoveCancelAfterContact = 14, JumpAttackMoveCancel = 28, RollMoveCancel = 34;
     inline constexpr int32 HealTicks = 78, HealCommit = 60, RecoveryGap = 8;
     inline constexpr int32 InputBufferTicks = 18, HurtTicks = 18, BossHurtTicks = 36;
     inline constexpr int32 RegenDelayTicks = 30, BossRegenDelayTicks = 42, BossPoise = 4;
@@ -66,6 +71,9 @@ struct FWardenFighterState
     // in the chain, running cut while sprinting, else the first cut.
     int32 NextPlayerMove() const;
     bool CancelOpen(EWardenAction Requested, int32 MoveIndex) const;
+    // Player only: movement input may end this action's late recovery and walk on.
+    bool MoveCancelOpen() const;
+    bool CancelIntoMove();
     bool Alive() const { return Health > 0 && Action != EWardenAction::Dead; }
     bool Ready() const { return Alive() && Action == EWardenAction::Ready && Gap == 0; }
     bool Invulnerable() const;

@@ -47,7 +47,7 @@ bool FWardenSprintTest::RunTest(const FString&)
     P->StepFighter(FVector::ForwardVector,true);
     TestTrue(TEXT("Roll can start from sprint"),P->BeginAction(EWardenAction::Dodge,0,FVector::RightVector));
     const float RollStamina=P->Fight.Stamina;
-    for(int32 I=0;I<36;++I) { P->StepFighter(FVector::ForwardVector,true); TestFalse(TEXT("Sprint cannot override roll commitment"),P->Fight.Sprinting); P->Fight.Advance(); }
+    for(int32 I=0;I<WardenRules::RollMoveCancel;++I) { P->StepFighter(FVector::ForwardVector,true); TestFalse(TEXT("Sprint cannot override roll commitment"),P->Fight.Sprinting); P->Fight.Advance(); }
     TestTrue(TEXT("Shift does not drain stamina during roll"),FMath::IsNearlyEqual(P->Fight.Stamina,RollStamina,.01f));
     FWardenFighterState S;
     for(int32 I=0;I<600;++I) { S.UpdateSprint(true,true); S.Advance(); }
@@ -138,14 +138,22 @@ bool FWardenRollTest::RunTest(const FString&)
         TestFalse(TEXT("Greatsword cannot cancel the roll"),P->BeginAction(EWardenAction::Strike));
         FWardenFighterState Probe=P->Fight; Probe.Stamina=100;
         TestEqual(TEXT("Rolling thrust opens only after protection"),Probe.Request(EWardenAction::Strike,WardenRules::RollAttack),T>=WardenRules::RollAttackOpen);
-        P->StepFighter(FVector::ForwardVector); MaxError=FMath::Max(MaxError,P->GripError); P->Fight.Advance();
+        // No stick input: the roll runs its full course (input would walk out from age 34).
+        P->StepFighter(FVector::ZeroVector); MaxError=FMath::Max(MaxError,P->GripError); P->Fight.Advance();
     }
     TestEqual(TEXT("Twenty-six fixed protection ticks"),Protected,WardenRules::DodgeInvulnerableEnd-WardenRules::DodgeInvulnerableStart);
-    TestTrue(TEXT("Roll travels 320 cm along committed input, not later input"),P->GetActorLocation().Equals(FVector(0,320,95),.1));
+    TestTrue(TEXT("Roll travels 320 cm along its committed direction"),P->GetActorLocation().Equals(FVector(0,320,95),.1));
     AddInfo(FString::Printf(TEXT("Roll max grip error %.3f cm"),MaxError));
     TestTrue(TEXT("Roll maintains finite grip"),FMath::IsFinite(MaxError) && MaxError<3);
     TestFalse(TEXT("Recovery gap remains committed"),P->Fight.Ready());
     TestTrue(TEXT("Directional roll returns to facing without a yaw snap"),P->VisualBody->GetRelativeRotation().Quaternion().Equals(FRotator(0,-90,0).Quaternion(),.001));
+    // Later stick input cannot steer the roll; it can only walk out after age 34.
+    P->SetActorLocation(FVector(0,0,95)); P->ResetFighter(false); P->BeginAction(EWardenAction::Dodge,0,FVector::RightVector);
+    for(int32 T=0;T<WardenRules::RollMoveCancel;++T) { P->StepFighter(FVector::ForwardVector); P->Fight.Advance(); }
+    TestTrue(TEXT("Stick input does not steer the committed roll"),FMath::Abs(P->GetActorLocation().X)<.1f);
+    TestEqual(TEXT("Still rolling until the move-cancel age"),int32(P->Fight.Action),int32(EWardenAction::Dodge));
+    P->StepFighter(FVector::ForwardVector);
+    TestEqual(TEXT("Stick input walks out of the roll's end"),int32(P->Fight.Action),int32(EWardenAction::Ready));
     CloseWorld(W); return true;
 }
 FUNDAMENTAL_TEST(FWardenRollContinuityTest,"BossLab.Fundamentals.DirectionalRollPoseContinuity");
@@ -329,24 +337,29 @@ bool FWardenGaitTest::RunTest(const FString&)
 FUNDAMENTAL_TEST(FWardenStrikePlantTest,"BossLab.Fundamentals.MovingStrikeSupportFoot");
 bool FWardenStrikePlantTest::RunTest(const FString&)
 {
-    auto* W=NewWorld(); auto* P=Fighter(W,FVector(0,0,95)); float MaxSlide=0,MaxLanding=0;
+    auto* W=NewWorld(); auto* P=Fighter(W,FVector(0,0,95)); float MaxSlide=0,MaxLanding=0,MaxSkid=0;
     for(int32 Phase:{20,35,50,65})
     {
         P->SetActorLocation(FVector(0,0,95)); P->ResetFighter(false);
         const float StandingHeight=P->VisualBody->GetBoneLocationByName(TEXT("foot_r"),EBoneSpaces::WorldSpace).Z;
         for(int32 I=0;I<Phase;++I) P->StepFighter(FVector::ForwardVector);
-        const FVector Anchor=P->VisualBody->GetBoneLocationByName(TEXT("foot_r"),EBoneSpaces::WorldSpace);
+        const FVector Start=P->VisualBody->GetBoneLocationByName(TEXT("foot_r"),EBoneSpaces::WorldSpace);
+        FVector Anchor=Start; bool Settled=false;
         P->BeginAction(EWardenAction::Strike,0,FVector::ForwardVector);
         for(int32 I=0;I<30;++I)
         {
             P->StepFighter(FVector::ZeroVector);
             const FVector Foot=P->VisualBody->GetBoneLocationByName(TEXT("foot_r"),EBoneSpaces::WorldSpace);
-            MaxSlide=FMath::Max(MaxSlide,float(FVector::Dist2D(Foot,Anchor)));
+            // Run momentum skids into the swing (by design); after the skid the support
+            // foot must hold.
+            if(!Settled && P->MoveVelocity.IsNearlyZero()) { Settled=true; Anchor=Foot; MaxSkid=FMath::Max(MaxSkid,float(FVector::Dist2D(Foot,Start))); }
+            if(Settled) MaxSlide=FMath::Max(MaxSlide,float(FVector::Dist2D(Foot,Anchor)));
             if(I==29) MaxLanding=FMath::Max(MaxLanding,FMath::Abs(float(Foot.Z)-StandingHeight));
             P->Fight.Advance();
         }
     }
-    AddInfo(FString::Printf(TEXT("Four moving entries: support foot drift %.3f cm; height error versus standing ankle %.3f cm"),MaxSlide,MaxLanding));
+    AddInfo(FString::Printf(TEXT("Four moving entries: momentum skid up to %.1f cm, then support foot drift %.3f cm; height error versus standing ankle %.3f cm"),MaxSkid,MaxSlide,MaxLanding));
+    TestTrue(TEXT("Run momentum carries into the swing"),MaxSkid>5);
     TestTrue(TEXT("Support foot does not skate during a moving-entry windup"),MaxSlide<3);
     TestTrue(TEXT("Raised walking foot settles to its standing ankle height"),MaxLanding<1.5f);
     CloseWorld(W); return true;
