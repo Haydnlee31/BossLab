@@ -1,0 +1,48 @@
+{
+  "protected": {
+    "checked": 43,
+    "mismatches": []
+  },
+  "delivery": {
+    "checked": 16,
+    "mismatches": []
+  },
+  "support_min_recomputed_m": 16.387718835869787,
+  "spawn_separation_m": 7.5,
+  "floor_rays": 81,
+  "floor_z_range_m": [
+    0.0,
+    5.960464477539063e-08
+  ],
+  "nearest_nonfloor": {
+    "radius_m": 13.057845897296348,
+    "object": "EXISTING envelope memorial pier base"
+  },
+  "scene_sha256": "8aebd21390fd89399f0a86624f2dce7d663c2f3161fa85d1f3780e2d86b98b54",
+  "source_sha256": "010e38ffbb3c061027d2af1f2dbc90d7f8ada7cf0d60ed5ec34c27204b56fc34",
+  "images": {
+    "annotated-plan.png": [
+      1280,
+      1280
+    ],
+    "gameplay-height.png": [
+      1280,
+      800
+    ],
+    "hero-entry.png": [
+      1280,
+      800
+    ],
+    "near-boundary-inward.png": [
+      1280,
+      800
+    ],
+    "side-architecture.png": [
+      1280,
+      800
+    ]
+  },
+  "free_bytes": 29950246912,
+  "verdict": "Ready for human studio layout review only; no Unreal gameplay/camera/FPS acceptance",
+  "no_heavy_jobs_or_runtime_tests": true
+}

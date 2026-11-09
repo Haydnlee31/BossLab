@@ -1,5 +1,7 @@
 # BossLab: The Warden
 
+**Arena branch:** [Court of the Last Witness](docs/ARENA_DESIGN_01.md) is a new editable Blender draft for the Funeral Regent. [Actual preview](artifacts/art/arena-design-01/candidate-03/hero-entry.png) · [Floor plan](artifacts/art/arena-design-01/candidate-03/annotated-plan.png). It is not integrated into Unreal yet; this branch also retains the newer [Claude revamp](docs/CLAUDE_REVAMP.md) work.
+
 An original boss-duel prototype. **The active project is the Unreal third-person arena**; the dependency-free browser version is an earlier, runnable reference.
 
 ## Current handoff —2026-11-09

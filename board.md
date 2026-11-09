@@ -206,3 +206,7 @@ WARDEN-CAGE: scoped technical topology/sole checks complete, neutral visual gate
 WARDEN-FOCAL: actualsharedlandmark study3candidates/15renders complete, **construction gate failed**. Current interpolation workflow inadequate for referencecraftsmanship. Next bounded method: explicitfacialquadpatches and closedcranial-envelope hood; prove silhouette/fit before yoke. Game/cage/V13 preserved.
 
 HANDOFF-GIT: done. Initialsourcecommit dff9e01 pushedmain and remoteverified; cleanbrowserexport24/24tests+doctor. Cleanup receipt and source-only Unrealrestore documented. No currentbossart acceptance or newUnrealbuild implied.
+
+## Arena design01
+
+ARENA-01: draft complete; rootbranch/artdirection/enginefeasibility/techartBlender/independentQA.5finalviews, latest2scenes, geometryaudit,43protectedfilesunchanged. Next humanlayoutreview then opt-inUEgraybox camera/combat/FPS. No currentgamechanges.

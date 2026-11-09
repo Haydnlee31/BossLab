@@ -1,0 +1,10 @@
+{
+  "status": "Standalone architectural draft ready for human layout review; no Unreal integration",
+  "protected_count": 43,
+  "changed_protected": [],
+  "actual_renders": 12,
+  "final_renders": 5,
+  "free_bytes": 29949632512,
+  "game_tests_rerun": false,
+  "reason": "No gameplay source or assets changed; source compile and actual Blender saved-scene audit performed"
+}

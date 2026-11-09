@@ -1,3 +1,10 @@
+## Arena design01 —2026-11-09
+
+- [x] Branch from currentrevamp, source/character preservation, art/combat-space/engine proposals.
+- [x] ActualBlenderarchitecture, final5views, editablelatest2scenes andsavedgeometryaudit.
+- [x] Art/QA review as studio draft; no runtime claims.
+- [ ] Human layout review, then opt-in Unrealgraybox and camera/combat/performance checks.
+
 ## Repository handoff —2026-11-09
 
 - [x] Scoped checkpoint/cache prune with hash manifest; active dependencies retained.

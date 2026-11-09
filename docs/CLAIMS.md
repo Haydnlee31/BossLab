@@ -1,3 +1,7 @@
+## Arena design01 — studio evidence only
+
+Actualeditablearena and5finalrenders exist. Scoped floor/clearance audit passes;43currentgame/config/Revampfiles unchanged. No new Unreal arena, playabletest/FPSresult, hook/skullability orAIintegration claimed. ExistingClaude-revamp improvements remain intact; older characterfailures below are historical.
+
 ## Publication handoff —2026-11-09
 
 New browser24/24tests anddoctor pass; source-safe staging audit passes scoped checks. Cleanup1113files132,840,630bytes, original activegame retained. GitHub source handoff does not certify clean-clone Unreal build or accepted boss art. No new Unreal/AI results.

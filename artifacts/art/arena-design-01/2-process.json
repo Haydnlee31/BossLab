@@ -1,0 +1,32 @@
+{
+  "mode": "2",
+  "start": 1794203258.721051,
+  "before": {
+    "free_bytes": 31090401280,
+    "project_bytes": 3727654912
+  },
+  "command": [
+    "/Users/haydn/Documents/BossLab/unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender",
+    "-b",
+    "-t",
+    "2",
+    "--factory-startup",
+    "--python-exit-code",
+    "1",
+    "--python",
+    "/Users/haydn/Documents/BossLab/unreal/art-studio/source/arena_design_01.py",
+    "--",
+    "2"
+  ],
+  "child_pid": 81354,
+  "child_process_group": 81354,
+  "signal_attempts": [],
+  "exit_code": 0,
+  "reason": null,
+  "seconds": 277.67255902290344,
+  "after": {
+    "free_bytes": 29982105600,
+    "project_bytes": 3733135360
+  },
+  "log": "artifacts/art/arena-design-01/2-1794203258.log"
+}

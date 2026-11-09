@@ -1,0 +1,2116 @@
+{
+  "scene_before_camera_restore_sha256": "5d77bfb94a744bba05d43e4abd3d293f4d9513be605ca2b5ee07df2987d9774e",
+  "scene_sha256": "8aebd21390fd89399f0a86624f2dce7d663c2f3161fa85d1f3780e2d86b98b54",
+  "source_sha256": "010e38ffbb3c061027d2af1f2dbc90d7f8ada7cf0d60ed5ec34c27204b56fc34",
+  "geometry_digest_before_after_camera_restore": "0da32cfc2af911b8df8683bc613893304d32a42ec5fe883a6b181cc22db0665b",
+  "visible_evaluated_triangles": 133314,
+  "objects_total": 771,
+  "closest_nonfloor_geometry": {
+    "radius_m": 13.057845897296348,
+    "object": "EXISTING envelope memorial pier base"
+  },
+  "radius12_8_clear_in_sampled_geometry": true,
+  "scope": "all visible evaluated nonfloor mesh/curve triangles clipped toZ0..3m and projectedXY polygon distance; excludes hidden plan annotations/height rulers and floor slab/inlays; not UEcollision/camera or dynamic gameplay certification",
+  "inlay_vertex_z_range_inside_R12_8_m": [
+    0.0010000000474974513,
+    0.0010000000474974513
+  ],
+  "slab_vertical_ray_samples": [
+    {
+      "xy": [
+        0.0,
+        0.0
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        3.0,
+        0.0
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        2.77163859753386,
+        1.1480502970952693
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        2.121320343559643,
+        2.1213203435596424
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        1.1480502970952695,
+        2.77163859753386
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        1.8369701987210297e-16,
+        3.0
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -1.1480502970952693,
+        2.77163859753386
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -2.1213203435596424,
+        2.121320343559643
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -2.77163859753386,
+        1.1480502970952697
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -3.0,
+        3.6739403974420594e-16
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -2.7716385975338604,
+        -1.148050297095269
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -2.121320343559643,
+        -2.1213203435596424
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -1.148050297095271,
+        -2.7716385975338595
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -5.51091059616309e-16,
+        -3.0
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        1.14805029709527,
+        -2.77163859753386
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        2.121320343559642,
+        -2.121320343559643
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        2.7716385975338595,
+        -1.148050297095271
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        6.0,
+        0.0
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        5.54327719506772,
+        2.2961005941905386
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        4.242640687119286,
+        4.242640687119285
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        2.296100594190539,
+        5.54327719506772
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        3.6739403974420594e-16,
+        6.0
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -2.2961005941905386,
+        5.54327719506772
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -4.242640687119285,
+        4.242640687119286
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -5.54327719506772,
+        2.2961005941905395
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -6.0,
+        7.347880794884119e-16
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -5.543277195067721,
+        -2.296100594190538
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -4.242640687119286,
+        -4.242640687119285
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -2.296100594190542,
+        -5.543277195067719
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -1.102182119232618e-15,
+        -6.0
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        2.29610059419054,
+        -5.54327719506772
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        4.242640687119284,
+        -4.242640687119286
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        5.543277195067719,
+        -2.296100594190542
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        9.0,
+        0.0
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        8.31491579260158,
+        3.444150891285808
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        6.3639610306789285,
+        6.363961030678928
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        3.4441508912858083,
+        8.31491579260158
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        5.51091059616309e-16,
+        9.0
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -3.4441508912858074,
+        8.31491579260158
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -6.363961030678928,
+        6.3639610306789285
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -8.31491579260158,
+        3.444150891285809
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -9.0,
+        1.102182119232618e-15
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -8.314915792601582,
+        -3.444150891285807
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -6.363961030678929,
+        -6.363961030678928
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -3.444150891285813,
+        -8.314915792601578
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        -1.6532731788489267e-15,
+        -9.0
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        3.44415089128581,
+        -8.31491579260158
+      ],
+      "z": 5.960464477539063e-08
+    },
+    {
+      "xy": [
+        6.363961030678926,
+        -6.363961030678929
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        8.314915792601578,
+        -3.4441508912858136
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        12.0,
+        0.0
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        11.08655439013544,
+        4.592201188381077
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        8.485281374238571,
+        8.48528137423857
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        4.592201188381078,
+        11.08655439013544
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        7.347880794884119e-16,
+        12.0
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -4.592201188381077,
+        11.08655439013544
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -8.48528137423857,
+        8.485281374238571
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -11.08655439013544,
+        4.592201188381079
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -12.0,
+        1.4695761589768238e-15
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -11.086554390135442,
+        -4.592201188381076
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -8.485281374238571,
+        -8.48528137423857
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -4.592201188381084,
+        -11.086554390135438
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -2.204364238465236e-15,
+        -12.0
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        4.59220118838108,
+        -11.08655439013544
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        8.485281374238568,
+        -8.485281374238571
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        11.086554390135438,
+        -4.592201188381084
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        12.8,
+        0.0
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        11.825658016144471,
+        4.89834793427315
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        9.05096679918781,
+        9.050966799187808
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        4.898347934273151,
+        11.825658016144471
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        7.837739514543061e-16,
+        12.8
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -4.898347934273149,
+        11.825658016144471
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -9.050966799187808,
+        9.05096679918781
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -11.825658016144471,
+        4.898347934273151
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -12.8,
+        1.5675479029086122e-15
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -11.825658016144473,
+        -4.898347934273148
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -9.05096679918781,
+        -9.050966799187808
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -4.898347934273157,
+        -11.825658016144468
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        -2.351321854362918e-15,
+        -12.8
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        4.898347934273152,
+        -11.82565801614447
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        9.050966799187806,
+        -9.05096679918781
+      ],
+      "z": 0.0
+    },
+    {
+      "xy": [
+        11.825658016144468,
+        -4.898347934273158
+      ],
+      "z": 0.0
+    }
+  ],
+  "slab_sample_scope": "81 vertical rays through evaluated slab across center and5rings, not arbitrary continuous surface proof",
+  "bounded_geometry": [
+    {
+      "name": "closed threshold gate at existing wall",
+      "inner_radius_in_0_to_3m_height_band": 13.325000893197378
+    },
+    {
+      "name": "existing-line stone arena boundary",
+      "inner_radius_in_0_to_3m_height_band": 13.325000231172083
+    },
+    {
+      "name": "boundary capstone",
+      "inner_radius_in_0_to_3m_height_band": 13.265000273571163
+    },
+    {
+      "name": "existing-line stone arena boundary.001",
+      "inner_radius_in_0_to_3m_height_band": 13.325000320634963
+    },
+    {
+      "name": "boundary capstone.001",
+      "inner_radius_in_0_to_3m_height_band": 13.265000255597656
+    },
+    {
+      "name": "existing-line stone arena boundary.002",
+      "inner_radius_in_0_to_3m_height_band": 13.324999748072523
+    },
+    {
+      "name": "boundary capstone.002",
+      "inner_radius_in_0_to_3m_height_band": 13.265000111809597
+    },
+    {
+      "name": "existing-line stone arena boundary.003",
+      "inner_radius_in_0_to_3m_height_band": 13.325000034353746
+    },
+    {
+      "name": "boundary capstone.003",
+      "inner_radius_in_0_to_3m_height_band": 13.265000399385713
+    },
+    {
+      "name": "existing-line stone arena boundary.004",
+      "inner_radius_in_0_to_3m_height_band": 13.324999748072523
+    },
+    {
+      "name": "boundary capstone.004",
+      "inner_radius_in_0_to_3m_height_band": 13.265000111809597
+    },
+    {
+      "name": "existing-line stone arena boundary.005",
+      "inner_radius_in_0_to_3m_height_band": 13.325000320634963
+    },
+    {
+      "name": "boundary capstone.005",
+      "inner_radius_in_0_to_3m_height_band": 13.265000255597656
+    },
+    {
+      "name": "existing-line stone arena boundary.006",
+      "inner_radius_in_0_to_3m_height_band": 13.325000141709204
+    },
+    {
+      "name": "boundary capstone.006",
+      "inner_radius_in_0_to_3m_height_band": 13.265000633041304
+    },
+    {
+      "name": "existing-line stone arena boundary.007",
+      "inner_radius_in_0_to_3m_height_band": 13.325000893197378
+    },
+    {
+      "name": "boundary capstone.007",
+      "inner_radius_in_0_to_3m_height_band": 13.265000399385713
+    },
+    {
+      "name": "existing-line stone arena boundary.008",
+      "inner_radius_in_0_to_3m_height_band": 13.325000231172083
+    },
+    {
+      "name": "boundary capstone.008",
+      "inner_radius_in_0_to_3m_height_band": 13.265000273571163
+    },
+    {
+      "name": "existing-line stone arena boundary.009",
+      "inner_radius_in_0_to_3m_height_band": 13.325000177494356
+    },
+    {
+      "name": "boundary capstone.009",
+      "inner_radius_in_0_to_3m_height_band": 13.265000255597656
+    },
+    {
+      "name": "existing-line stone arena boundary.010",
+      "inner_radius_in_0_to_3m_height_band": 13.324999318650677
+    },
+    {
+      "name": "boundary capstone.010",
+      "inner_radius_in_0_to_3m_height_band": 13.264999105293137
+    },
+    {
+      "name": "existing-line stone arena boundary.011",
+      "inner_radius_in_0_to_3m_height_band": 13.325000034353746
+    },
+    {
+      "name": "boundary capstone.011",
+      "inner_radius_in_0_to_3m_height_band": 13.265000399385713
+    },
+    {
+      "name": "existing-line stone arena boundary.012",
+      "inner_radius_in_0_to_3m_height_band": 13.324999318650677
+    },
+    {
+      "name": "boundary capstone.012",
+      "inner_radius_in_0_to_3m_height_band": 13.264999105293137
+    },
+    {
+      "name": "existing-line stone arena boundary.013",
+      "inner_radius_in_0_to_3m_height_band": 13.325000320634963
+    },
+    {
+      "name": "boundary capstone.013",
+      "inner_radius_in_0_to_3m_height_band": 13.265000255597656
+    },
+    {
+      "name": "existing-line stone arena boundary.014",
+      "inner_radius_in_0_to_3m_height_band": 13.325000141709204
+    },
+    {
+      "name": "boundary capstone.014",
+      "inner_radius_in_0_to_3m_height_band": 13.265000633041304
+    },
+    {
+      "name": "closed threshold gate at existing wall.001",
+      "inner_radius_in_0_to_3m_height_band": 13.324999748073294
+    },
+    {
+      "name": "existing-line stone arena boundary.015",
+      "inner_radius_in_0_to_3m_height_band": 13.325000141709204
+    },
+    {
+      "name": "boundary capstone.015",
+      "inner_radius_in_0_to_3m_height_band": 13.265000273571163
+    },
+    {
+      "name": "existing-line stone arena boundary.016",
+      "inner_radius_in_0_to_3m_height_band": 13.325000320634963
+    },
+    {
+      "name": "boundary capstone.016",
+      "inner_radius_in_0_to_3m_height_band": 13.265000255597656
+    },
+    {
+      "name": "existing-line stone arena boundary.017",
+      "inner_radius_in_0_to_3m_height_band": 13.324999748072523
+    },
+    {
+      "name": "boundary capstone.017",
+      "inner_radius_in_0_to_3m_height_band": 13.265000111809597
+    },
+    {
+      "name": "existing-line stone arena boundary.018",
+      "inner_radius_in_0_to_3m_height_band": 13.325000034353746
+    },
+    {
+      "name": "boundary capstone.018",
+      "inner_radius_in_0_to_3m_height_band": 13.264999824233472
+    },
+    {
+      "name": "existing-line stone arena boundary.019",
+      "inner_radius_in_0_to_3m_height_band": 13.324999748072523
+    },
+    {
+      "name": "boundary capstone.019",
+      "inner_radius_in_0_to_3m_height_band": 13.265000111809597
+    },
+    {
+      "name": "existing-line stone arena boundary.020",
+      "inner_radius_in_0_to_3m_height_band": 13.325000320634963
+    },
+    {
+      "name": "boundary capstone.020",
+      "inner_radius_in_0_to_3m_height_band": 13.265000039915567
+    },
+    {
+      "name": "existing-line stone arena boundary.021",
+      "inner_radius_in_0_to_3m_height_band": 13.325000141709204
+    },
+    {
+      "name": "boundary capstone.021",
+      "inner_radius_in_0_to_3m_height_band": 13.265000633041304
+    },
+    {
+      "name": "existing-line stone arena boundary.022",
+      "inner_radius_in_0_to_3m_height_band": 13.325000893197378
+    },
+    {
+      "name": "boundary capstone.022",
+      "inner_radius_in_0_to_3m_height_band": 13.265000399385713
+    },
+    {
+      "name": "existing-line stone arena boundary.023",
+      "inner_radius_in_0_to_3m_height_band": 13.325000141709204
+    },
+    {
+      "name": "boundary capstone.023",
+      "inner_radius_in_0_to_3m_height_band": 13.265000633041304
+    },
+    {
+      "name": "existing-line stone arena boundary.024",
+      "inner_radius_in_0_to_3m_height_band": 13.325000320634963
+    },
+    {
+      "name": "boundary capstone.024",
+      "inner_radius_in_0_to_3m_height_band": 13.265000615067796
+    },
+    {
+      "name": "existing-line stone arena boundary.025",
+      "inner_radius_in_0_to_3m_height_band": 13.324999318650677
+    },
+    {
+      "name": "boundary capstone.025",
+      "inner_radius_in_0_to_3m_height_band": 13.264999105293137
+    },
+    {
+      "name": "existing-line stone arena boundary.026",
+      "inner_radius_in_0_to_3m_height_band": 13.324999748072523
+    },
+    {
+      "name": "boundary capstone.026",
+      "inner_radius_in_0_to_3m_height_band": 13.265000111809597
+    },
+    {
+      "name": "existing-line stone arena boundary.027",
+      "inner_radius_in_0_to_3m_height_band": 13.324999748072523
+    },
+    {
+      "name": "boundary capstone.027",
+      "inner_radius_in_0_to_3m_height_band": 13.265000111809597
+    },
+    {
+      "name": "existing-line stone arena boundary.028",
+      "inner_radius_in_0_to_3m_height_band": 13.32499996278344
+    },
+    {
+      "name": "boundary capstone.028",
+      "inner_radius_in_0_to_3m_height_band": 13.265000255597656
+    },
+    {
+      "name": "existing-line stone arena boundary.029",
+      "inner_radius_in_0_to_3m_height_band": 13.325000141709204
+    },
+    {
+      "name": "boundary capstone.029",
+      "inner_radius_in_0_to_3m_height_band": 13.265000273571163
+    },
+    {
+      "name": "EXISTING envelope memorial pier shaft",
+      "inner_radius_in_0_to_3m_height_band": 13.097846143866496
+    },
+    {
+      "name": "EXISTING envelope memorial pier base",
+      "inner_radius_in_0_to_3m_height_band": 13.057845897296348
+    },
+    {
+      "name": "EXISTING envelope memorial pier shaft.001",
+      "inner_radius_in_0_to_3m_height_band": 13.097846143866496
+    },
+    {
+      "name": "EXISTING envelope memorial pier base.001",
+      "inner_radius_in_0_to_3m_height_band": 13.05784648157299
+    },
+    {
+      "name": "EXISTING envelope memorial pier shaft.002",
+      "inner_radius_in_0_to_3m_height_band": 13.095548592721725
+    },
+    {
+      "name": "EXISTING envelope memorial pier base.002",
+      "inner_radius_in_0_to_3m_height_band": 13.057845897296348
+    },
+    {
+      "name": "EXISTING envelope memorial pier shaft.003",
+      "inner_radius_in_0_to_3m_height_band": 13.097846143866496
+    },
+    {
+      "name": "EXISTING envelope memorial pier base.003",
+      "inner_radius_in_0_to_3m_height_band": 13.05784648157299
+    },
+    {
+      "name": "EXISTING envelope memorial pier shaft.004",
+      "inner_radius_in_0_to_3m_height_band": 13.095548592721725
+    },
+    {
+      "name": "EXISTING envelope memorial pier base.004",
+      "inner_radius_in_0_to_3m_height_band": 13.057845897296348
+    },
+    {
+      "name": "EXISTING envelope memorial pier shaft.005",
+      "inner_radius_in_0_to_3m_height_band": 13.097846143866496
+    },
+    {
+      "name": "EXISTING envelope memorial pier base.005",
+      "inner_radius_in_0_to_3m_height_band": 13.05784648157299
+    },
+    {
+      "name": "EXISTING envelope memorial pier shaft.006",
+      "inner_radius_in_0_to_3m_height_band": 13.095548592721725
+    },
+    {
+      "name": "EXISTING envelope memorial pier base.006",
+      "inner_radius_in_0_to_3m_height_band": 13.057845897296348
+    },
+    {
+      "name": "EXISTING envelope memorial pier shaft.007",
+      "inner_radius_in_0_to_3m_height_band": 13.097846143866496
+    },
+    {
+      "name": "EXISTING envelope memorial pier base.007",
+      "inner_radius_in_0_to_3m_height_band": 13.05784648157299
+    },
+    {
+      "name": "great judgment apse arch jamb",
+      "inner_radius_in_0_to_3m_height_band": 17.185400956032193
+    },
+    {
+      "name": "great judgment apse arch jamb.001",
+      "inner_radius_in_0_to_3m_height_band": 17.185400956032193
+    },
+    {
+      "name": "great apse bronze inset jamb",
+      "inner_radius_in_0_to_3m_height_band": 17.134018326337323
+    },
+    {
+      "name": "great apse bronze inset jamb.001",
+      "inner_radius_in_0_to_3m_height_band": 17.134018326337323
+    },
+    {
+      "name": "enclosed outer wall bay",
+      "inner_radius_in_0_to_3m_height_band": 17.45000094438348
+    },
+    {
+      "name": "masonry belt course",
+      "inner_radius_in_0_to_3m_height_band": 17.25999979065578
+    },
+    {
+      "name": "masonry belt course.001",
+      "inner_radius_in_0_to_3m_height_band": 17.25999979065578
+    },
+    {
+      "name": "octagonal pier plinth",
+      "inner_radius_in_0_to_3m_height_band": 16.403317536357633
+    },
+    {
+      "name": "clustered stone pier",
+      "inner_radius_in_0_to_3m_height_band": 16.671954897516603
+    },
+    {
+      "name": "engaged slender shaft",
+      "inner_radius_in_0_to_3m_height_band": 16.66208114326508
+    },
+    {
+      "name": "engaged slender shaft.001",
+      "inner_radius_in_0_to_3m_height_band": 17.13614335147351
+    },
+    {
+      "name": "octagonal pier plinth.001",
+      "inner_radius_in_0_to_3m_height_band": 16.403317536357633
+    },
+    {
+      "name": "clustered stone pier.001",
+      "inner_radius_in_0_to_3m_height_band": 16.671954897516603
+    },
+    {
+      "name": "engaged slender shaft.002",
+      "inner_radius_in_0_to_3m_height_band": 16.66208114326508
+    },
+    {
+      "name": "engaged slender shaft.003",
+      "inner_radius_in_0_to_3m_height_band": 17.13614335147351
+    },
+    {
+      "name": "pointed tribunal arcade jamb",
+      "inner_radius_in_0_to_3m_height_band": 16.798880651627165
+    },
+    {
+      "name": "pointed tribunal arcade jamb.001",
+      "inner_radius_in_0_to_3m_height_band": 16.798880651627165
+    },
+    {
+      "name": "bronze inner arch fillet jamb",
+      "inner_radius_in_0_to_3m_height_band": 16.76077019615169
+    },
+    {
+      "name": "bronze inner arch fillet jamb.001",
+      "inner_radius_in_0_to_3m_height_band": 16.76077019615169
+    },
+    {
+      "name": "enclosed outer wall bay.001",
+      "inner_radius_in_0_to_3m_height_band": 17.44999919552514
+    },
+    {
+      "name": "masonry belt course.005",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "masonry belt course.006",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "octagonal pier plinth.002",
+      "inner_radius_in_0_to_3m_height_band": 16.41076664832508
+    },
+    {
+      "name": "clustered stone pier.002",
+      "inner_radius_in_0_to_3m_height_band": 16.677353792620426
+    },
+    {
+      "name": "engaged slender shaft.004",
+      "inner_radius_in_0_to_3m_height_band": 16.66370973423786
+    },
+    {
+      "name": "engaged slender shaft.005",
+      "inner_radius_in_0_to_3m_height_band": 17.137959776427937
+    },
+    {
+      "name": "octagonal pier plinth.003",
+      "inner_radius_in_0_to_3m_height_band": 16.410765980028767
+    },
+    {
+      "name": "clustered stone pier.003",
+      "inner_radius_in_0_to_3m_height_band": 16.667831659926623
+    },
+    {
+      "name": "engaged slender shaft.006",
+      "inner_radius_in_0_to_3m_height_band": 16.660734392445175
+    },
+    {
+      "name": "engaged slender shaft.007",
+      "inner_radius_in_0_to_3m_height_band": 17.134858795020545
+    },
+    {
+      "name": "pointed tribunal arcade jamb.002",
+      "inner_radius_in_0_to_3m_height_band": 16.798881545756387
+    },
+    {
+      "name": "pointed tribunal arcade jamb.003",
+      "inner_radius_in_0_to_3m_height_band": 16.79888092128519
+    },
+    {
+      "name": "bronze inner arch fillet jamb.002",
+      "inner_radius_in_0_to_3m_height_band": 16.760769812082128
+    },
+    {
+      "name": "bronze inner arch fillet jamb.003",
+      "inner_radius_in_0_to_3m_height_band": 16.76076947068695
+    },
+    {
+      "name": "recessed burial opening",
+      "inner_radius_in_0_to_3m_height_band": 17.357058476103347
+    },
+    {
+      "name": "niche slab lip",
+      "inner_radius_in_0_to_3m_height_band": 17.064251484945217
+    },
+    {
+      "name": "recessed burial opening.001",
+      "inner_radius_in_0_to_3m_height_band": 17.35706001454834
+    },
+    {
+      "name": "niche slab lip.002",
+      "inner_radius_in_0_to_3m_height_band": 17.064251708494268
+    },
+    {
+      "name": "enclosed outer wall bay.002",
+      "inner_radius_in_0_to_3m_height_band": 17.45000094438348
+    },
+    {
+      "name": "masonry belt course.010",
+      "inner_radius_in_0_to_3m_height_band": 17.260000674710753
+    },
+    {
+      "name": "masonry belt course.011",
+      "inner_radius_in_0_to_3m_height_band": 17.260000674710753
+    },
+    {
+      "name": "octagonal pier plinth.004",
+      "inner_radius_in_0_to_3m_height_band": 16.40331842297907
+    },
+    {
+      "name": "clustered stone pier.004",
+      "inner_radius_in_0_to_3m_height_band": 16.669642348088445
+    },
+    {
+      "name": "engaged slender shaft.008",
+      "inner_radius_in_0_to_3m_height_band": 16.661280003132216
+    },
+    {
+      "name": "engaged slender shaft.009",
+      "inner_radius_in_0_to_3m_height_band": 17.13546767145081
+    },
+    {
+      "name": "octagonal pier plinth.005",
+      "inner_radius_in_0_to_3m_height_band": 16.40331842297907
+    },
+    {
+      "name": "clustered stone pier.005",
+      "inner_radius_in_0_to_3m_height_band": 16.669642348088445
+    },
+    {
+      "name": "engaged slender shaft.010",
+      "inner_radius_in_0_to_3m_height_band": 16.661280003132216
+    },
+    {
+      "name": "engaged slender shaft.011",
+      "inner_radius_in_0_to_3m_height_band": 17.13546767145081
+    },
+    {
+      "name": "pointed tribunal arcade jamb.004",
+      "inner_radius_in_0_to_3m_height_band": 16.798881602526496
+    },
+    {
+      "name": "pointed tribunal arcade jamb.005",
+      "inner_radius_in_0_to_3m_height_band": 16.798881602526496
+    },
+    {
+      "name": "bronze inner arch fillet jamb.004",
+      "inner_radius_in_0_to_3m_height_band": 16.76077083626761
+    },
+    {
+      "name": "bronze inner arch fillet jamb.005",
+      "inner_radius_in_0_to_3m_height_band": 16.76077083626761
+    },
+    {
+      "name": "recessed burial opening.002",
+      "inner_radius_in_0_to_3m_height_band": 17.357059574992643
+    },
+    {
+      "name": "niche slab lip.004",
+      "inner_radius_in_0_to_3m_height_band": 17.064252714464967
+    },
+    {
+      "name": "recessed burial opening.003",
+      "inner_radius_in_0_to_3m_height_band": 17.357059574992643
+    },
+    {
+      "name": "niche slab lip.006",
+      "inner_radius_in_0_to_3m_height_band": 17.064252714464967
+    },
+    {
+      "name": "enclosed outer wall bay.003",
+      "inner_radius_in_0_to_3m_height_band": 17.44999919552514
+    },
+    {
+      "name": "masonry belt course.015",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "masonry belt course.016",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "octagonal pier plinth.006",
+      "inner_radius_in_0_to_3m_height_band": 16.410765980028767
+    },
+    {
+      "name": "clustered stone pier.006",
+      "inner_radius_in_0_to_3m_height_band": 16.667831659926623
+    },
+    {
+      "name": "engaged slender shaft.012",
+      "inner_radius_in_0_to_3m_height_band": 16.660734392445175
+    },
+    {
+      "name": "engaged slender shaft.013",
+      "inner_radius_in_0_to_3m_height_band": 17.134858795020545
+    },
+    {
+      "name": "octagonal pier plinth.007",
+      "inner_radius_in_0_to_3m_height_band": 16.41076664832508
+    },
+    {
+      "name": "clustered stone pier.007",
+      "inner_radius_in_0_to_3m_height_band": 16.677353792620426
+    },
+    {
+      "name": "engaged slender shaft.014",
+      "inner_radius_in_0_to_3m_height_band": 16.66370973423786
+    },
+    {
+      "name": "engaged slender shaft.015",
+      "inner_radius_in_0_to_3m_height_band": 17.137959776427937
+    },
+    {
+      "name": "pointed tribunal arcade jamb.006",
+      "inner_radius_in_0_to_3m_height_band": 16.79888092128519
+    },
+    {
+      "name": "pointed tribunal arcade jamb.007",
+      "inner_radius_in_0_to_3m_height_band": 16.798881545756387
+    },
+    {
+      "name": "bronze inner arch fillet jamb.006",
+      "inner_radius_in_0_to_3m_height_band": 16.76076947068695
+    },
+    {
+      "name": "bronze inner arch fillet jamb.007",
+      "inner_radius_in_0_to_3m_height_band": 16.760769812082128
+    },
+    {
+      "name": "recessed burial opening.004",
+      "inner_radius_in_0_to_3m_height_band": 17.35706001454834
+    },
+    {
+      "name": "niche slab lip.008",
+      "inner_radius_in_0_to_3m_height_band": 17.064251708494268
+    },
+    {
+      "name": "recessed burial opening.005",
+      "inner_radius_in_0_to_3m_height_band": 17.357058476103347
+    },
+    {
+      "name": "niche slab lip.010",
+      "inner_radius_in_0_to_3m_height_band": 17.064251484945217
+    },
+    {
+      "name": "enclosed outer wall bay.004",
+      "inner_radius_in_0_to_3m_height_band": 17.45000094438348
+    },
+    {
+      "name": "masonry belt course.020",
+      "inner_radius_in_0_to_3m_height_band": 17.25999979065578
+    },
+    {
+      "name": "masonry belt course.021",
+      "inner_radius_in_0_to_3m_height_band": 17.25999979065578
+    },
+    {
+      "name": "octagonal pier plinth.008",
+      "inner_radius_in_0_to_3m_height_band": 16.403317536357633
+    },
+    {
+      "name": "clustered stone pier.008",
+      "inner_radius_in_0_to_3m_height_band": 16.671954897516603
+    },
+    {
+      "name": "engaged slender shaft.016",
+      "inner_radius_in_0_to_3m_height_band": 16.66208114326508
+    },
+    {
+      "name": "engaged slender shaft.017",
+      "inner_radius_in_0_to_3m_height_band": 17.13614335147351
+    },
+    {
+      "name": "octagonal pier plinth.009",
+      "inner_radius_in_0_to_3m_height_band": 16.403317536357633
+    },
+    {
+      "name": "clustered stone pier.009",
+      "inner_radius_in_0_to_3m_height_band": 16.671954897516603
+    },
+    {
+      "name": "engaged slender shaft.018",
+      "inner_radius_in_0_to_3m_height_band": 16.66208114326508
+    },
+    {
+      "name": "engaged slender shaft.019",
+      "inner_radius_in_0_to_3m_height_band": 17.13614335147351
+    },
+    {
+      "name": "pointed tribunal arcade jamb.008",
+      "inner_radius_in_0_to_3m_height_band": 16.798880651627165
+    },
+    {
+      "name": "pointed tribunal arcade jamb.009",
+      "inner_radius_in_0_to_3m_height_band": 16.798880651627165
+    },
+    {
+      "name": "bronze inner arch fillet jamb.008",
+      "inner_radius_in_0_to_3m_height_band": 16.76077019615169
+    },
+    {
+      "name": "bronze inner arch fillet jamb.009",
+      "inner_radius_in_0_to_3m_height_band": 16.76077019615169
+    },
+    {
+      "name": "recessed burial opening.006",
+      "inner_radius_in_0_to_3m_height_band": 17.35705867785256
+    },
+    {
+      "name": "niche slab lip.012",
+      "inner_radius_in_0_to_3m_height_band": 17.064250907734568
+    },
+    {
+      "name": "recessed burial opening.007",
+      "inner_radius_in_0_to_3m_height_band": 17.35705867785256
+    },
+    {
+      "name": "niche slab lip.014",
+      "inner_radius_in_0_to_3m_height_band": 17.064250907734568
+    },
+    {
+      "name": "enclosed outer wall bay.005",
+      "inner_radius_in_0_to_3m_height_band": 17.449997993184933
+    },
+    {
+      "name": "masonry belt course.025",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "masonry belt course.026",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "octagonal pier plinth.010",
+      "inner_radius_in_0_to_3m_height_band": 16.41076664832508
+    },
+    {
+      "name": "clustered stone pier.010",
+      "inner_radius_in_0_to_3m_height_band": 16.677353792620426
+    },
+    {
+      "name": "engaged slender shaft.020",
+      "inner_radius_in_0_to_3m_height_band": 16.66370973423786
+    },
+    {
+      "name": "engaged slender shaft.021",
+      "inner_radius_in_0_to_3m_height_band": 17.137959776427937
+    },
+    {
+      "name": "octagonal pier plinth.011",
+      "inner_radius_in_0_to_3m_height_band": 16.410765980028767
+    },
+    {
+      "name": "clustered stone pier.011",
+      "inner_radius_in_0_to_3m_height_band": 16.667831659926623
+    },
+    {
+      "name": "engaged slender shaft.022",
+      "inner_radius_in_0_to_3m_height_band": 16.660734392445175
+    },
+    {
+      "name": "engaged slender shaft.023",
+      "inner_radius_in_0_to_3m_height_band": 17.134858795020545
+    },
+    {
+      "name": "pointed tribunal arcade jamb.010",
+      "inner_radius_in_0_to_3m_height_band": 16.798881545756387
+    },
+    {
+      "name": "pointed tribunal arcade jamb.011",
+      "inner_radius_in_0_to_3m_height_band": 16.79888092128519
+    },
+    {
+      "name": "bronze inner arch fillet jamb.010",
+      "inner_radius_in_0_to_3m_height_band": 16.760769812082128
+    },
+    {
+      "name": "bronze inner arch fillet jamb.011",
+      "inner_radius_in_0_to_3m_height_band": 16.76076947068695
+    },
+    {
+      "name": "recessed burial opening.008",
+      "inner_radius_in_0_to_3m_height_band": 17.357058476103347
+    },
+    {
+      "name": "niche slab lip.016",
+      "inner_radius_in_0_to_3m_height_band": 17.064251596719743
+    },
+    {
+      "name": "recessed burial opening.009",
+      "inner_radius_in_0_to_3m_height_band": 17.35706001454834
+    },
+    {
+      "name": "niche slab lip.018",
+      "inner_radius_in_0_to_3m_height_band": 17.064251708494268
+    },
+    {
+      "name": "enclosed outer wall bay.006",
+      "inner_radius_in_0_to_3m_height_band": 17.45000094438348
+    },
+    {
+      "name": "masonry belt course.030",
+      "inner_radius_in_0_to_3m_height_band": 17.260000674710753
+    },
+    {
+      "name": "masonry belt course.031",
+      "inner_radius_in_0_to_3m_height_band": 17.260000674710753
+    },
+    {
+      "name": "octagonal pier plinth.012",
+      "inner_radius_in_0_to_3m_height_band": 16.40331842297907
+    },
+    {
+      "name": "clustered stone pier.012",
+      "inner_radius_in_0_to_3m_height_band": 16.669642348088445
+    },
+    {
+      "name": "engaged slender shaft.024",
+      "inner_radius_in_0_to_3m_height_band": 16.661280003132216
+    },
+    {
+      "name": "engaged slender shaft.025",
+      "inner_radius_in_0_to_3m_height_band": 17.13546767145081
+    },
+    {
+      "name": "octagonal pier plinth.013",
+      "inner_radius_in_0_to_3m_height_band": 16.40331842297907
+    },
+    {
+      "name": "clustered stone pier.013",
+      "inner_radius_in_0_to_3m_height_band": 16.669642348088445
+    },
+    {
+      "name": "engaged slender shaft.026",
+      "inner_radius_in_0_to_3m_height_band": 16.661280003132216
+    },
+    {
+      "name": "engaged slender shaft.027",
+      "inner_radius_in_0_to_3m_height_band": 17.13546767145081
+    },
+    {
+      "name": "pointed tribunal arcade jamb.012",
+      "inner_radius_in_0_to_3m_height_band": 16.798881602526496
+    },
+    {
+      "name": "pointed tribunal arcade jamb.013",
+      "inner_radius_in_0_to_3m_height_band": 16.798881602526496
+    },
+    {
+      "name": "bronze inner arch fillet jamb.012",
+      "inner_radius_in_0_to_3m_height_band": 16.76077083626761
+    },
+    {
+      "name": "bronze inner arch fillet jamb.013",
+      "inner_radius_in_0_to_3m_height_band": 16.76077083626761
+    },
+    {
+      "name": "recessed burial opening.010",
+      "inner_radius_in_0_to_3m_height_band": 17.357059574992643
+    },
+    {
+      "name": "niche slab lip.020",
+      "inner_radius_in_0_to_3m_height_band": 17.064252714464967
+    },
+    {
+      "name": "recessed burial opening.011",
+      "inner_radius_in_0_to_3m_height_band": 17.357059574992643
+    },
+    {
+      "name": "niche slab lip.022",
+      "inner_radius_in_0_to_3m_height_band": 17.064252714464967
+    },
+    {
+      "name": "enclosed outer wall bay.007",
+      "inner_radius_in_0_to_3m_height_band": 17.44999853970322
+    },
+    {
+      "name": "masonry belt course.035",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "masonry belt course.036",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "octagonal pier plinth.014",
+      "inner_radius_in_0_to_3m_height_band": 16.410765980028767
+    },
+    {
+      "name": "clustered stone pier.014",
+      "inner_radius_in_0_to_3m_height_band": 16.667831659926623
+    },
+    {
+      "name": "engaged slender shaft.028",
+      "inner_radius_in_0_to_3m_height_band": 16.660734392445175
+    },
+    {
+      "name": "engaged slender shaft.029",
+      "inner_radius_in_0_to_3m_height_band": 17.134858795020545
+    },
+    {
+      "name": "octagonal pier plinth.015",
+      "inner_radius_in_0_to_3m_height_band": 16.41076664832508
+    },
+    {
+      "name": "clustered stone pier.015",
+      "inner_radius_in_0_to_3m_height_band": 16.677353792620426
+    },
+    {
+      "name": "engaged slender shaft.030",
+      "inner_radius_in_0_to_3m_height_band": 16.66370973423786
+    },
+    {
+      "name": "engaged slender shaft.031",
+      "inner_radius_in_0_to_3m_height_band": 17.137959776427937
+    },
+    {
+      "name": "pointed tribunal arcade jamb.014",
+      "inner_radius_in_0_to_3m_height_band": 16.79888092128519
+    },
+    {
+      "name": "pointed tribunal arcade jamb.015",
+      "inner_radius_in_0_to_3m_height_band": 16.798881545756387
+    },
+    {
+      "name": "bronze inner arch fillet jamb.014",
+      "inner_radius_in_0_to_3m_height_band": 16.76076947068695
+    },
+    {
+      "name": "bronze inner arch fillet jamb.015",
+      "inner_radius_in_0_to_3m_height_band": 16.760769812082128
+    },
+    {
+      "name": "recessed burial opening.012",
+      "inner_radius_in_0_to_3m_height_band": 17.35706001454834
+    },
+    {
+      "name": "niche slab lip.024",
+      "inner_radius_in_0_to_3m_height_band": 17.064251708494268
+    },
+    {
+      "name": "recessed burial opening.013",
+      "inner_radius_in_0_to_3m_height_band": 17.357058476103347
+    },
+    {
+      "name": "niche slab lip.026",
+      "inner_radius_in_0_to_3m_height_band": 17.064251484945217
+    },
+    {
+      "name": "enclosed outer wall bay.008",
+      "inner_radius_in_0_to_3m_height_band": 17.449999195525795
+    },
+    {
+      "name": "masonry belt course.040",
+      "inner_radius_in_0_to_3m_height_band": 17.25999979065578
+    },
+    {
+      "name": "masonry belt course.041",
+      "inner_radius_in_0_to_3m_height_band": 17.25999979065578
+    },
+    {
+      "name": "octagonal pier plinth.016",
+      "inner_radius_in_0_to_3m_height_band": 16.403317536357633
+    },
+    {
+      "name": "clustered stone pier.016",
+      "inner_radius_in_0_to_3m_height_band": 16.671954897516603
+    },
+    {
+      "name": "engaged slender shaft.032",
+      "inner_radius_in_0_to_3m_height_band": 16.66208114326508
+    },
+    {
+      "name": "engaged slender shaft.033",
+      "inner_radius_in_0_to_3m_height_band": 17.13614335147351
+    },
+    {
+      "name": "octagonal pier plinth.017",
+      "inner_radius_in_0_to_3m_height_band": 16.403317536357633
+    },
+    {
+      "name": "clustered stone pier.017",
+      "inner_radius_in_0_to_3m_height_band": 16.671954897516603
+    },
+    {
+      "name": "engaged slender shaft.034",
+      "inner_radius_in_0_to_3m_height_band": 16.66208114326508
+    },
+    {
+      "name": "engaged slender shaft.035",
+      "inner_radius_in_0_to_3m_height_band": 17.13614335147351
+    },
+    {
+      "name": "pointed tribunal arcade jamb.016",
+      "inner_radius_in_0_to_3m_height_band": 16.798880651627165
+    },
+    {
+      "name": "pointed tribunal arcade jamb.017",
+      "inner_radius_in_0_to_3m_height_band": 16.798880651627165
+    },
+    {
+      "name": "bronze inner arch fillet jamb.016",
+      "inner_radius_in_0_to_3m_height_band": 16.76077019615169
+    },
+    {
+      "name": "bronze inner arch fillet jamb.017",
+      "inner_radius_in_0_to_3m_height_band": 16.76077019615169
+    },
+    {
+      "name": "enclosed outer wall bay.009",
+      "inner_radius_in_0_to_3m_height_band": 17.44999919552514
+    },
+    {
+      "name": "masonry belt course.045",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "masonry belt course.046",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "octagonal pier plinth.018",
+      "inner_radius_in_0_to_3m_height_band": 16.41076664832508
+    },
+    {
+      "name": "clustered stone pier.018",
+      "inner_radius_in_0_to_3m_height_band": 16.677353792620426
+    },
+    {
+      "name": "engaged slender shaft.036",
+      "inner_radius_in_0_to_3m_height_band": 16.66370973423786
+    },
+    {
+      "name": "engaged slender shaft.037",
+      "inner_radius_in_0_to_3m_height_band": 17.137959776427937
+    },
+    {
+      "name": "octagonal pier plinth.019",
+      "inner_radius_in_0_to_3m_height_band": 16.410765980028767
+    },
+    {
+      "name": "clustered stone pier.019",
+      "inner_radius_in_0_to_3m_height_band": 16.667831659926623
+    },
+    {
+      "name": "engaged slender shaft.038",
+      "inner_radius_in_0_to_3m_height_band": 16.660734392445175
+    },
+    {
+      "name": "engaged slender shaft.039",
+      "inner_radius_in_0_to_3m_height_band": 17.134858795020545
+    },
+    {
+      "name": "pointed tribunal arcade jamb.018",
+      "inner_radius_in_0_to_3m_height_band": 16.798881545756387
+    },
+    {
+      "name": "pointed tribunal arcade jamb.019",
+      "inner_radius_in_0_to_3m_height_band": 16.79888092128519
+    },
+    {
+      "name": "bronze inner arch fillet jamb.018",
+      "inner_radius_in_0_to_3m_height_band": 16.760769812082128
+    },
+    {
+      "name": "bronze inner arch fillet jamb.019",
+      "inner_radius_in_0_to_3m_height_band": 16.76076947068695
+    },
+    {
+      "name": "recessed burial opening.014",
+      "inner_radius_in_0_to_3m_height_band": 17.357058476103347
+    },
+    {
+      "name": "niche slab lip.028",
+      "inner_radius_in_0_to_3m_height_band": 17.064251484945217
+    },
+    {
+      "name": "recessed burial opening.015",
+      "inner_radius_in_0_to_3m_height_band": 17.35706001454834
+    },
+    {
+      "name": "niche slab lip.030",
+      "inner_radius_in_0_to_3m_height_band": 17.064251708494268
+    },
+    {
+      "name": "enclosed outer wall bay.010",
+      "inner_radius_in_0_to_3m_height_band": 17.450000507168912
+    },
+    {
+      "name": "masonry belt course.050",
+      "inner_radius_in_0_to_3m_height_band": 17.260000674710753
+    },
+    {
+      "name": "masonry belt course.051",
+      "inner_radius_in_0_to_3m_height_band": 17.260000674710753
+    },
+    {
+      "name": "octagonal pier plinth.020",
+      "inner_radius_in_0_to_3m_height_band": 16.40331842297907
+    },
+    {
+      "name": "clustered stone pier.020",
+      "inner_radius_in_0_to_3m_height_band": 16.669642348088445
+    },
+    {
+      "name": "engaged slender shaft.040",
+      "inner_radius_in_0_to_3m_height_band": 16.661280003132216
+    },
+    {
+      "name": "engaged slender shaft.041",
+      "inner_radius_in_0_to_3m_height_band": 17.13546767145081
+    },
+    {
+      "name": "octagonal pier plinth.021",
+      "inner_radius_in_0_to_3m_height_band": 16.40331842297907
+    },
+    {
+      "name": "clustered stone pier.021",
+      "inner_radius_in_0_to_3m_height_band": 16.669642348088445
+    },
+    {
+      "name": "engaged slender shaft.042",
+      "inner_radius_in_0_to_3m_height_band": 16.661280003132216
+    },
+    {
+      "name": "engaged slender shaft.043",
+      "inner_radius_in_0_to_3m_height_band": 17.13546767145081
+    },
+    {
+      "name": "pointed tribunal arcade jamb.020",
+      "inner_radius_in_0_to_3m_height_band": 16.798881602526496
+    },
+    {
+      "name": "pointed tribunal arcade jamb.021",
+      "inner_radius_in_0_to_3m_height_band": 16.798881602526496
+    },
+    {
+      "name": "bronze inner arch fillet jamb.020",
+      "inner_radius_in_0_to_3m_height_band": 16.760769925880517
+    },
+    {
+      "name": "bronze inner arch fillet jamb.021",
+      "inner_radius_in_0_to_3m_height_band": 16.76077083626761
+    },
+    {
+      "name": "recessed burial opening.016",
+      "inner_radius_in_0_to_3m_height_band": 17.357059574992643
+    },
+    {
+      "name": "niche slab lip.032",
+      "inner_radius_in_0_to_3m_height_band": 17.064252714464967
+    },
+    {
+      "name": "recessed burial opening.017",
+      "inner_radius_in_0_to_3m_height_band": 17.357059574992643
+    },
+    {
+      "name": "niche slab lip.034",
+      "inner_radius_in_0_to_3m_height_band": 17.064252714464967
+    },
+    {
+      "name": "enclosed outer wall bay.011",
+      "inner_radius_in_0_to_3m_height_band": 17.44999853970322
+    },
+    {
+      "name": "masonry belt course.055",
+      "inner_radius_in_0_to_3m_height_band": 17.25999945913515
+    },
+    {
+      "name": "masonry belt course.056",
+      "inner_radius_in_0_to_3m_height_band": 17.259998685586996
+    },
+    {
+      "name": "octagonal pier plinth.022",
+      "inner_radius_in_0_to_3m_height_band": 16.410765980028767
+    },
+    {
+      "name": "clustered stone pier.022",
+      "inner_radius_in_0_to_3m_height_band": 16.667831659926623
+    },
+    {
+      "name": "engaged slender shaft.044",
+      "inner_radius_in_0_to_3m_height_band": 16.660734392445175
+    },
+    {
+      "name": "engaged slender shaft.045",
+      "inner_radius_in_0_to_3m_height_band": 17.134858795020545
+    },
+    {
+      "name": "octagonal pier plinth.023",
+      "inner_radius_in_0_to_3m_height_band": 16.41076664832508
+    },
+    {
+      "name": "clustered stone pier.023",
+      "inner_radius_in_0_to_3m_height_band": 16.677353792620426
+    },
+    {
+      "name": "engaged slender shaft.046",
+      "inner_radius_in_0_to_3m_height_band": 16.66370973423786
+    },
+    {
+      "name": "engaged slender shaft.047",
+      "inner_radius_in_0_to_3m_height_band": 17.137959776427937
+    },
+    {
+      "name": "pointed tribunal arcade jamb.022",
+      "inner_radius_in_0_to_3m_height_band": 16.798881829606923
+    },
+    {
+      "name": "pointed tribunal arcade jamb.023",
+      "inner_radius_in_0_to_3m_height_band": 16.798881545756387
+    },
+    {
+      "name": "bronze inner arch fillet jamb.022",
+      "inner_radius_in_0_to_3m_height_band": 16.76076947068695
+    },
+    {
+      "name": "bronze inner arch fillet jamb.023",
+      "inner_radius_in_0_to_3m_height_band": 16.760769812082128
+    },
+    {
+      "name": "recessed burial opening.018",
+      "inner_radius_in_0_to_3m_height_band": 17.35706001454834
+    },
+    {
+      "name": "niche slab lip.036",
+      "inner_radius_in_0_to_3m_height_band": 17.064251708494268
+    },
+    {
+      "name": "recessed burial opening.019",
+      "inner_radius_in_0_to_3m_height_band": 17.357058476103347
+    },
+    {
+      "name": "niche slab lip.038",
+      "inner_radius_in_0_to_3m_height_band": 17.064251484945217
+    },
+    {
+      "name": "enclosed outer wall bay.012",
+      "inner_radius_in_0_to_3m_height_band": 17.45000094438348
+    },
+    {
+      "name": "masonry belt course.060",
+      "inner_radius_in_0_to_3m_height_band": 17.25999979065578
+    },
+    {
+      "name": "masonry belt course.061",
+      "inner_radius_in_0_to_3m_height_band": 17.25999979065578
+    },
+    {
+      "name": "octagonal pier plinth.024",
+      "inner_radius_in_0_to_3m_height_band": 16.403317536357633
+    },
+    {
+      "name": "clustered stone pier.024",
+      "inner_radius_in_0_to_3m_height_band": 16.671954897516603
+    },
+    {
+      "name": "engaged slender shaft.048",
+      "inner_radius_in_0_to_3m_height_band": 16.66208114326508
+    },
+    {
+      "name": "engaged slender shaft.049",
+      "inner_radius_in_0_to_3m_height_band": 17.13614335147351
+    },
+    {
+      "name": "octagonal pier plinth.025",
+      "inner_radius_in_0_to_3m_height_band": 16.403317536357633
+    },
+    {
+      "name": "clustered stone pier.025",
+      "inner_radius_in_0_to_3m_height_band": 16.671954897516603
+    },
+    {
+      "name": "engaged slender shaft.050",
+      "inner_radius_in_0_to_3m_height_band": 16.66208114326508
+    },
+    {
+      "name": "engaged slender shaft.051",
+      "inner_radius_in_0_to_3m_height_band": 17.13614335147351
+    },
+    {
+      "name": "pointed tribunal arcade jamb.024",
+      "inner_radius_in_0_to_3m_height_band": 16.798880651627165
+    },
+    {
+      "name": "pointed tribunal arcade jamb.025",
+      "inner_radius_in_0_to_3m_height_band": 16.798880651627165
+    },
+    {
+      "name": "bronze inner arch fillet jamb.024",
+      "inner_radius_in_0_to_3m_height_band": 16.76077019615169
+    },
+    {
+      "name": "bronze inner arch fillet jamb.025",
+      "inner_radius_in_0_to_3m_height_band": 16.76077019615169
+    },
+    {
+      "name": "recessed burial opening.020",
+      "inner_radius_in_0_to_3m_height_band": 17.35705867785256
+    },
+    {
+      "name": "niche slab lip.040",
+      "inner_radius_in_0_to_3m_height_band": 17.064250907734568
+    },
+    {
+      "name": "recessed burial opening.021",
+      "inner_radius_in_0_to_3m_height_band": 17.35705867785256
+    },
+    {
+      "name": "niche slab lip.042",
+      "inner_radius_in_0_to_3m_height_band": 17.064250907734568
+    },
+    {
+      "name": "enclosed outer wall bay.013",
+      "inner_radius_in_0_to_3m_height_band": 17.449998867614184
+    },
+    {
+      "name": "masonry belt course.065",
+      "inner_radius_in_0_to_3m_height_band": 17.259998906600757
+    },
+    {
+      "name": "masonry belt course.066",
+      "inner_radius_in_0_to_3m_height_band": 17.259998354066347
+    },
+    {
+      "name": "octagonal pier plinth.026",
+      "inner_radius_in_0_to_3m_height_band": 16.41076664832508
+    },
+    {
+      "name": "clustered stone pier.026",
+      "inner_radius_in_0_to_3m_height_band": 16.677353792620426
+    },
+    {
+      "name": "engaged slender shaft.052",
+      "inner_radius_in_0_to_3m_height_band": 16.66370973423786
+    },
+    {
+      "name": "engaged slender shaft.053",
+      "inner_radius_in_0_to_3m_height_band": 17.137959776427937
+    },
+    {
+      "name": "octagonal pier plinth.027",
+      "inner_radius_in_0_to_3m_height_band": 16.410765980028767
+    },
+    {
+      "name": "clustered stone pier.027",
+      "inner_radius_in_0_to_3m_height_band": 16.667831659926623
+    },
+    {
+      "name": "engaged slender shaft.054",
+      "inner_radius_in_0_to_3m_height_band": 16.660734392445175
+    },
+    {
+      "name": "engaged slender shaft.055",
+      "inner_radius_in_0_to_3m_height_band": 17.134858795020545
+    },
+    {
+      "name": "pointed tribunal arcade jamb.026",
+      "inner_radius_in_0_to_3m_height_band": 16.798881545756387
+    },
+    {
+      "name": "pointed tribunal arcade jamb.027",
+      "inner_radius_in_0_to_3m_height_band": 16.798881829606923
+    },
+    {
+      "name": "bronze inner arch fillet jamb.026",
+      "inner_radius_in_0_to_3m_height_band": 16.760769812082128
+    },
+    {
+      "name": "bronze inner arch fillet jamb.027",
+      "inner_radius_in_0_to_3m_height_band": 16.76076947068695
+    },
+    {
+      "name": "recessed burial opening.022",
+      "inner_radius_in_0_to_3m_height_band": 17.357058366214414
+    },
+    {
+      "name": "niche slab lip.044",
+      "inner_radius_in_0_to_3m_height_band": 17.064251484945217
+    },
+    {
+      "name": "recessed burial opening.023",
+      "inner_radius_in_0_to_3m_height_band": 17.35706001454834
+    },
+    {
+      "name": "niche slab lip.046",
+      "inner_radius_in_0_to_3m_height_band": 17.064251708494268
+    },
+    {
+      "name": "enclosed outer wall bay.014",
+      "inner_radius_in_0_to_3m_height_band": 17.450000069954335
+    },
+    {
+      "name": "masonry belt course.070",
+      "inner_radius_in_0_to_3m_height_band": 17.25999979065578
+    },
+    {
+      "name": "masonry belt course.071",
+      "inner_radius_in_0_to_3m_height_band": 17.259998906600757
+    },
+    {
+      "name": "octagonal pier plinth.028",
+      "inner_radius_in_0_to_3m_height_band": 16.40331842297907
+    },
+    {
+      "name": "clustered stone pier.028",
+      "inner_radius_in_0_to_3m_height_band": 16.669642348088445
+    },
+    {
+      "name": "engaged slender shaft.056",
+      "inner_radius_in_0_to_3m_height_band": 16.661280003132216
+    },
+    {
+      "name": "engaged slender shaft.057",
+      "inner_radius_in_0_to_3m_height_band": 17.13546767145081
+    },
+    {
+      "name": "octagonal pier plinth.029",
+      "inner_radius_in_0_to_3m_height_band": 16.40331842297907
+    },
+    {
+      "name": "clustered stone pier.029",
+      "inner_radius_in_0_to_3m_height_band": 16.669642348088445
+    },
+    {
+      "name": "engaged slender shaft.058",
+      "inner_radius_in_0_to_3m_height_band": 16.661280003132216
+    },
+    {
+      "name": "engaged slender shaft.059",
+      "inner_radius_in_0_to_3m_height_band": 17.13546767145081
+    },
+    {
+      "name": "pointed tribunal arcade jamb.028",
+      "inner_radius_in_0_to_3m_height_band": 16.798881602526496
+    },
+    {
+      "name": "pointed tribunal arcade jamb.029",
+      "inner_radius_in_0_to_3m_height_band": 16.798881602526496
+    },
+    {
+      "name": "bronze inner arch fillet jamb.028",
+      "inner_radius_in_0_to_3m_height_band": 16.760769925880517
+    },
+    {
+      "name": "bronze inner arch fillet jamb.029",
+      "inner_radius_in_0_to_3m_height_band": 16.76077083626761
+    },
+    {
+      "name": "recessed burial opening.024",
+      "inner_radius_in_0_to_3m_height_band": 17.357060454104026
+    },
+    {
+      "name": "niche slab lip.048",
+      "inner_radius_in_0_to_3m_height_band": 17.064252714464967
+    },
+    {
+      "name": "recessed burial opening.025",
+      "inner_radius_in_0_to_3m_height_band": 17.357059574992643
+    },
+    {
+      "name": "niche slab lip.050",
+      "inner_radius_in_0_to_3m_height_band": 17.064252714464967
+    },
+    {
+      "name": "enclosed outer wall bay.015",
+      "inner_radius_in_0_to_3m_height_band": 17.449999086221492
+    },
+    {
+      "name": "masonry belt course.075",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "masonry belt course.076",
+      "inner_radius_in_0_to_3m_height_band": 17.259999569642027
+    },
+    {
+      "name": "octagonal pier plinth.030",
+      "inner_radius_in_0_to_3m_height_band": 16.410765980028767
+    },
+    {
+      "name": "clustered stone pier.030",
+      "inner_radius_in_0_to_3m_height_band": 16.667831659926623
+    },
+    {
+      "name": "engaged slender shaft.060",
+      "inner_radius_in_0_to_3m_height_band": 16.660734392445175
+    },
+    {
+      "name": "engaged slender shaft.061",
+      "inner_radius_in_0_to_3m_height_band": 17.134858795020545
+    },
+    {
+      "name": "octagonal pier plinth.031",
+      "inner_radius_in_0_to_3m_height_band": 16.41076664832508
+    },
+    {
+      "name": "clustered stone pier.031",
+      "inner_radius_in_0_to_3m_height_band": 16.677353792620426
+    },
+    {
+      "name": "engaged slender shaft.062",
+      "inner_radius_in_0_to_3m_height_band": 16.66370973423786
+    },
+    {
+      "name": "engaged slender shaft.063",
+      "inner_radius_in_0_to_3m_height_band": 17.137959776427937
+    },
+    {
+      "name": "pointed tribunal arcade jamb.030",
+      "inner_radius_in_0_to_3m_height_band": 16.79888092128519
+    },
+    {
+      "name": "pointed tribunal arcade jamb.031",
+      "inner_radius_in_0_to_3m_height_band": 16.798881545756387
+    },
+    {
+      "name": "bronze inner arch fillet jamb.030",
+      "inner_radius_in_0_to_3m_height_band": 16.76076947068695
+    },
+    {
+      "name": "bronze inner arch fillet jamb.031",
+      "inner_radius_in_0_to_3m_height_band": 16.760769812082128
+    },
+    {
+      "name": "recessed burial opening.026",
+      "inner_radius_in_0_to_3m_height_band": 17.35706001454834
+    },
+    {
+      "name": "niche slab lip.052",
+      "inner_radius_in_0_to_3m_height_band": 17.064251708494268
+    },
+    {
+      "name": "recessed burial opening.027",
+      "inner_radius_in_0_to_3m_height_band": 17.357058476103347
+    },
+    {
+      "name": "niche slab lip.054",
+      "inner_radius_in_0_to_3m_height_band": 17.064251596719743
+    },
+    {
+      "name": "high apse plinth behind barrier",
+      "inner_radius_in_0_to_3m_height_band": 15.100000323365062
+    },
+    {
+      "name": "apse stair 0",
+      "inner_radius_in_0_to_3m_height_band": 14.300000192068673
+    },
+    {
+      "name": "apse stair 1",
+      "inner_radius_in_0_to_3m_height_band": 14.77999982325408
+    }
+  ],
+  "active_opening_camera": "hero-entry restored; no geometry changes",
+  "no_runtime_tests": true
+}

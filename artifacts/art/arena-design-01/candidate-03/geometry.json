@@ -1,0 +1,286 @@
+{
+  "units": "metres; +X apse, -X entry, floorZ0",
+  "status": "original Blender concept only, NOT gameplay/collision/FPS tested",
+  "primary_tactical_guide_radius_m": 12.0,
+  "proposed_clear_disk_radius_m": 12.8,
+  "floor_radius_m": 14,
+  "existing_wall": {
+    "count": 32,
+    "center_radius_m": 13.6,
+    "dimensions_radial_tangent_height_m": [
+      0.55,
+      2.8,
+      2.6
+    ],
+    "inner_face_m": 13.325
+  },
+  "existing_pillar": {
+    "count": 8,
+    "center_radius_m": 13.6,
+    "radius_m": 0.55,
+    "inner_extent_m": 13.05
+  },
+  "nominal_inner_boundary_band_m": [
+    12.8,
+    13.05
+  ],
+  "camera_boom_reference_m": [
+    5,
+    6.2
+  ],
+  "camera_clearance": "not certified; existing collision probes remain necessary; band is NOT a full unobstructed boom",
+  "new_supports": [
+    {
+      "center_m": [
+        16.8,
+        -2.65
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        16.8,
+        2.65
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        16.535287241957107,
+        3.9808009025785984
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        14.50706505042213,
+        8.877362424888418
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        13.75322689407835,
+        10.005560953789647
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        10.005560953789649,
+        13.753226894078349
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        8.87736242488842,
+        14.50706505042213
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        3.9808009025786,
+        16.535287241957107
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        2.650000000000001,
+        16.8
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -2.649999999999999,
+        16.8
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -3.9808009025785975,
+        16.535287241957104
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -8.877362424888418,
+        14.50706505042213
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -10.005560953789647,
+        13.75322689407835
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -13.753226894078349,
+        10.005560953789649
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -14.50706505042213,
+        8.877362424888421
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -16.535287241957107,
+        3.980800902578601
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -16.8,
+        2.650000000000002
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -16.8,
+        -2.6499999999999977
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -16.535287241957107,
+        -3.980800902578596
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -14.507065050422131,
+        -8.877362424888418
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -13.753226894078352,
+        -10.005560953789647
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -10.00556095378965,
+        -13.753226894078349
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -8.877362424888428,
+        -14.507065050422124
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -3.9808009025786086,
+        -16.535287241957104
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        -2.650000000000003,
+        -16.8
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        2.649999999999997,
+        -16.8
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        3.9808009025786033,
+        -16.535287241957104
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        8.877362424888421,
+        -14.507065050422128
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        10.005560953789645,
+        -13.753226894078352
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        13.753226894078347,
+        -10.00556095378965
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        14.507065050422124,
+        -8.877362424888428
+      ],
+      "radius_m": 0.62
+    },
+    {
+      "center_m": [
+        16.535287241957104,
+        -3.9808009025786095
+      ],
+      "radius_m": 0.62
+    }
+  ],
+  "min_new_support_inner_radius_m": 16.387718835869787,
+  "spawn_references_m": {
+    "player": [
+      -4.5,
+      0,
+      0.95
+    ],
+    "boss": [
+      3,
+      0,
+      1.28
+    ]
+  },
+  "oculus": "sealed opaque ivory geometry, diameter8.1m atZ16.17m; deliberate larger disk than early3.5mbrief",
+  "floor_inlay": "coplanar flat mesh inlays atZ0.001m; no thickness/raised curve geometry; runtime transfer untested",
+  "height_proxies": "simple1.8mplayer/2.43mboss rulers, NOT actual characters or exact skeletal bounds",
+  "empty_throne_center_m": [
+    17.1,
+    2.2,
+    3.7
+  ],
+  "throne_offset_reason": "tangential+2.2m avoids original+X pillar occlusion; collider unchanged",
+  "new_support_radius_scope": "full plinth radius.62m, not shaft only",
+  "throne_and_blue_reliquaries": "outside existing barrier; three passive empty chambers, not skull character assets",
+  "scoped_all_geometry_clearance": {
+    "radius_m": 13.057845897296348,
+    "object": "EXISTING envelope memorial pier base"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "status": "frozen standalone concept draft; not runtime validated",
+  "final_views": 5,
+  "files": [
+    {
+      "path": "unreal/art-studio/source/arena_design_01.py",
+      "bytes": 16961,
+      "sha256": "010e38ffbb3c061027d2af1f2dbc90d7f8ada7cf0d60ed5ec34c27204b56fc34"
+    },
+    {
+      "path": "unreal/art-studio/source/arena_design_01_audit.py",
+      "bytes": 4917,
+      "sha256": "adfa4d28636ab00b92591f583b48e7c4dbbe6c4ad3a55caf2a37095e8357ec50"
+    },
+    {
+      "path": "scripts/bosslab-arena-design-01",
+      "bytes": 3247,
+      "sha256": "75f3088d1faa4ec959fad7f017fa7893796f18e80b952ff1944aebf612665717"
+    },
+    {
+      "path": "scripts/bosslab-arena-design-01-audit",
+      "bytes": 3253,
+      "sha256": "03161835af4bec1bcc0ed20f801358dbafbb8cb05a0e0775058eef964dd7c3cd"
+    },
+    {
+      "path": "unreal/art-studio/arena-design-01/court-last-witness-03.blend",
+      "bytes": 5644316,
+      "sha256": "8aebd21390fd89399f0a86624f2dce7d663c2f3161fa85d1f3780e2d86b98b54"
+    },
+    {
+      "path": "docs/art/arena-design-01-techart.md",
+      "bytes": 5375,
+      "sha256": "1fedd4b4325b3e5a703fda7b6c3221bb36ebe41a48686f2db2742a4b996e9db2"
+    },
+    {
+      "path": "artifacts/art/arena-design-01/index.html",
+      "bytes": 4468,
+      "sha256": "ece2516aa57138d12950ce823c5f6071bf893acec49935633691084f8a4b4d1e"
+    },
+    {
+      "path": "artifacts/art/arena-design-01/scene-retention.json",
+      "bytes": 287,
+      "sha256": "56a60b331943dcc3a76b6d956d68a1eb5b777bbee352594379a79fc0768a8e09"
+    },
+    {
+      "path": "artifacts/art/arena-design-01/candidate-03/geometry.json",
+      "bytes": 5517,
+      "sha256": "d508539044e5cca7830c7880d4192b95b1d46203fbd26892f998f8b9cb1635fa"
+    },
+    {
+      "path": "artifacts/art/arena-design-01/candidate-03/gameplay-height.png",
+      "bytes": 1295296,
+      "sha256": "c8bfd0164b052953b9976f09ac2f06f5e6b457afacc33d866a0ae5d293bf467d",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "path": "artifacts/art/arena-design-01/candidate-03/saved-scene-audit.json",
+      "bytes": 56357,
+      "sha256": "e8d18b0d3f3a96a031fe21eacacd4fe8076fde872848d89deb57d8d9e3852ee4"
+    },
+    {
+      "path": "artifacts/art/arena-design-01/candidate-03/hero-entry.png",
+      "bytes": 1263487,
+      "sha256": "ed4bc33c145ba2a3f3abbb8cf8b5da1bd2b7362e26eedef70db8dd8c9a1be807",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "path": "artifacts/art/arena-design-01/candidate-03/readback.json",
+      "bytes": 1027,
+      "sha256": "50dc865a690022ebcceb064f0bd9815be5e288281dbc2673701487893e4966a0"
+    },
+    {
+      "path": "artifacts/art/arena-design-01/candidate-03/annotated-plan.png",
+      "bytes": 2003106,
+      "sha256": "3203bf64689322f4ee1d50e49153a340f1f829bf6fec9d0e1311a261e7165be8",
+      "dimensions": [
+        1280,
+        1280
+      ]
+    },
+    {
+      "path": "artifacts/art/arena-design-01/candidate-03/side-architecture.png",
+      "bytes": 1308193,
+      "sha256": "1d99525bd0f48b305939c85f6da5efbaf1b9ecc9cbe3b5742e84dbd98eeb38c5",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "path": "artifacts/art/arena-design-01/candidate-03/near-boundary-inward.png",
+      "bytes": 1235614,
+      "sha256": "e44e60a724dd34a3b516b556e87b17136ede1f49b7185dcba8964f68bfc2c61d",
+      "dimensions": [
+        1280,
+        800
+      ]
+    }
+  ]
+}

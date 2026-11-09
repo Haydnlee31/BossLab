@@ -1,0 +1,79 @@
+{
+  "scene_sha256": "5d77bfb94a744bba05d43e4abd3d293f4d9513be605ca2b5ee07df2987d9774e",
+  "source_sha256": "010e38ffbb3c061027d2af1f2dbc90d7f8ada7cf0d60ed5ec34c27204b56fc34",
+  "objects": 771,
+  "meshes": 651,
+  "cameras": [
+    [
+      "hero-entry",
+      [
+        -11.6,
+        -1.2,
+        1.75
+      ],
+      [
+        16.6,
+        0,
+        5
+      ],
+      22
+    ],
+    [
+      "gameplay-height",
+      [
+        -9,
+        -3,
+        2.35
+      ],
+      [
+        4,
+        0,
+        2
+      ],
+      23.46
+    ],
+    [
+      "side-architecture",
+      [
+        0,
+        -11.5,
+        3.3
+      ],
+      [
+        0,
+        0,
+        10.5
+      ],
+      22
+    ],
+    [
+      "near-boundary-inward",
+      [
+        11.8,
+        2.2,
+        1.75
+      ],
+      [
+        -4,
+        0,
+        2.5
+      ],
+      24
+    ],
+    [
+      "annotated-plan",
+      [
+        0,
+        0,
+        45
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      45
+    ]
+  ],
+  "no_runtime_changes": true
+}
