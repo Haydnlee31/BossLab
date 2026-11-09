@@ -44,12 +44,12 @@ float g=saturate(M.z); float blood=saturate(M.z-1);
 col*=1-.35*min(g,1);
 col=lerp(col,float3(.07,.012,.01),blood*.7);
 // Wet stone darkens; the puddle itself is nearly black so it shows reflections, not a tint.
-col=lerp(col,col*.16,M.y);
+col=lerp(col,col*.42,M.y);
 return col;
 '''
 ROUGH_CODE = '''
 float r=lerp(Rc.x,Rf.x,M.x)+.05+M.w*.15;
-return lerp(r,.16,M.y);
+return lerp(r,.1,M.y);
 '''
 NORMAL_CODE = '''
 float3 s=normalize(lerp(Sc.xyz,Sf.xyz,M.x));

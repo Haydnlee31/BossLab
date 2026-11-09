@@ -224,7 +224,9 @@ void AWardenArenaMode::AnimateEffects(float Seconds)
     if(auto* Runes=Player->SwordRunes.Get()) Runes->SetScalarParameterValue(TEXT("Glow"),Glow);
     if(auto* L=V.SwordLight.Get())
     {
-        const bool Has=Player->Greatsword.IsValid();
+        // Only while swinging or flashing: an always-on light following the player costs a
+        // lighting pass every frame; the runes still glow without it.
+        const bool Has=Player->Greatsword.IsValid() && (Swinging || V.RuneFlash>0);
         L->SetVisibility(Has);
         if(Has) { L->SetWorldLocation(Player->BladePoint(.45f)); L->SetIntensity(140*Glow); }
     }

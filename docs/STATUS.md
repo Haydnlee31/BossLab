@@ -1,3 +1,15 @@
+## Overnight 3D and refinement run (2026-11-10, branch regent-moveset-01)
+
+- **Player:** a Blender-modelled enchanted greatsword with rune glow, a blade light and a swing trail.
+- **Boss:** the new Witness Circle, a phase-two fan volley, skull soul-fire trails, a readable 1.4 s stagger with 2.5× criticals, and Regent eye glow.
+- **Map:** a layered floor with baked masks, a raised door dais and an upper gallery.
+- **Fixed:** the primitive blade showing under the modelled weapons.
+- **Generation:** the TRELLIS skull was rejected (flat relief), and the free quota is about one run a day.
+- **Tests:** native suite 33/33.
+- **Not done:** benchmarks were confounded by macOS background jobs.
+
+See [OVERNIGHT_2026-11-10.md](OVERNIGHT_2026-11-10.md).
+
 ## Hit feedback, blood, running jump attack, free flask (2026-11-10, branch regent-moveset-01)
 
 - **Running jump attack:** an input follow-up slot keeps jump-then-attack in order, so a running jump attack works.

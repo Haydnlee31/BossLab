@@ -123,7 +123,7 @@ def blood(name, code, seed):
     col = mel.create_material_expression(mat, unreal.MaterialExpressionConstant3Vector, -400, 0)
     # Crimson enough to read against dark costumes in the dim hall (0.2 read as black).
     # 0.75 read slightly pink in the capture; deeper crimson still reads on dark costumes.
-    col.set_editor_property('constant', unreal.LinearColor(.2, .006, .004, 1) if seed else unreal.LinearColor(.5, .012, .008, 1))
+    col.set_editor_property('constant', unreal.LinearColor(.09, .003, .002, 1) if seed else unreal.LinearColor(.5, .012, .008, 1))
     mel.connect_material_property(col, '', unreal.MaterialProperty.MP_EMISSIVE_COLOR)
     mel.connect_material_property(node, '', unreal.MaterialProperty.MP_OPACITY)
     mel.recompile_material(mat)

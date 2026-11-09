@@ -27,7 +27,8 @@ def smooth(e0, e1, v):
 r = np.hypot(X, Y)
 edge = fbm(X / 180, Y / 180) * 120
 ring = smooth(360, 430, r + edge) * (1 - smooth(1080, 1160, r + edge))
-pud = np.clip(smooth(.66, .74, fbm(X / 330 + 11.3, Y / 330 + 11.3)) * (.45 + .55 * fbm(X / 90, Y / 90)) * 1.5, 0, 1)
+# Soft edges: hard-edged dark ovals read as holes in the floor.
+pud = np.clip(smooth(.6, .76, fbm(X / 330 + 11.3, Y / 330 + 11.3)) * (.45 + .55 * fbm(X / 90, Y / 90)) * 1.3, 0, 1)
 grime = smooth(.45, .85, fbm(X / 260 + 4.2, Y / 260 + 4.2))
 # Cracks: voronoi edge distance on a 140 cm lattice.
 cx, cy = X / 140, Y / 140; icx, icy = np.floor(cx), np.floor(cy)
