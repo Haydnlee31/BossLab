@@ -111,7 +111,9 @@ void AWardenChallenger::DressFighter()
         if(C->ComponentHasTag(TEXT("V13Trial"))) C->SetVisibility(!bBoss && !Revamp && bV13Outfit);
         else if(C->ComponentHasTag(TEXT("Ashbound"))) C->SetVisibility(!bBoss && !Revamp && !bV13Outfit);
         // Revamp costumes carry their own crown/armour; both fighters keep the engine sword.
-        else if(N.StartsWith(TEXT("Sword"))) C->SetVisibility(bBoss || Revamp);
+        // The primitive blade stays hidden under a modelled weapon (Regent estoc, player
+        // greatsword); re-showing it here made both blades draw after every reset.
+        else if(N.StartsWith(TEXT("Sword"))) C->SetVisibility((bBoss || Revamp) && !bRegent && !(!bBoss && Greatsword.IsValid()));
         else if(N==TEXT("Crown") || N==TEXT("Crest") || N.StartsWith(TEXT("Shoulder")) || N==TEXT("Mantle") || N==TEXT("Seal")) C->SetVisibility(bBoss && !Revamp);
     }
 

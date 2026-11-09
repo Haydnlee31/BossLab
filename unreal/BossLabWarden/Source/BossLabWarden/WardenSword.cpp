@@ -126,6 +126,9 @@ void AWardenChallenger::DressGreatsword()
     // contact sweeps are unchanged. Falls back to the primitive blade when absent.
     auto* Mesh=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/Sword/SM_Greatsword"),nullptr,LOAD_Quiet|LOAD_NoWarn);
     if(!Mesh) return;
+    // Dressing can run before BeginPlay creates the primitive blade; create it first so the
+    // hide below always finds it (the primitive parts otherwise showed through the new sword).
+    CreateSword();
     for(const TCHAR* Name:{TEXT("SwordBlade"),TEXT("SwordRidge"),TEXT("SwordTip"),TEXT("SwordGuard"),TEXT("SwordGrip"),TEXT("SwordPommel")})
         if(auto* C=FindObject<UStaticMeshComponent>(this,Name)) C->SetVisibility(false);
     UStaticMeshComponent* Blade=FindObject<UStaticMeshComponent>(this,TEXT("PlayerGreatsword"));

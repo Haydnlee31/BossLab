@@ -1,7 +1,8 @@
 """Rebuild the dungeon floor material with layered ground detail.
 
 Run: ./scripts/bosslab-unreal python unreal/art-studio/source/arena/ue_import_floor.py
-(after ue_import_dungeon.py, whose Poly Haven textures it reuses). Replaces
+(after ue_import_dungeon.py, whose Poly Haven textures it reuses, and after
+bake_floor_masks.py, whose mask texture it imports). Replaces
 /Game/BossLab/Dungeon/M_DungeonFloor (local, not committed). World-space layers:
   - cobbles in the ritual centre and the outer band; large worn flagstones in the fight
     ring between them, with a noisy boundary;
@@ -27,30 +28,14 @@ def custom(mat, code, inputs, out_type, x, y):
     node.set_editor_property('inputs', pins)
     return node
 
-NOISE = '''
-float h(float2 p){ return frac(sin(dot(p,float2(127.1,311.7)))*43758.5453); }
-float vn(float2 p){ float2 i=floor(p), f=frac(p); f=f*f*(3-2*f);
-  return lerp(lerp(h(i),h(i+float2(1,0)),f.x),lerp(h(i+float2(0,1)),h(i+float2(1,1)),f.x),f.y); }
-float fbm(float2 p){ return vn(p)*.55+vn(p*2.03+7.1)*.3+vn(p*4.1+3.3)*.15; }
-'''
-# x: flagstone ring mix, y: puddle, z: grime, w: crack. (Helper functions must be declared
-# inside the custom node body via a struct trick; HLSL allows local struct methods.)
+# The masks are baked offline by bake_floor_masks.py (R ring, G puddle, B grime/blood,
+# A crack): one texture lookup instead of ~100 noise evaluations per floor pixel.
 MASK_CODE = '''
-struct F {
-''' + NOISE + '''
-};
-F f;
-float2 p=P.xy; float r=length(p);
-float edge=f.fbm(p/180)*120;
-float ring=smoothstep(360,430,r+edge)*(1-smoothstep(1080,1160,r+edge));
-float pud=smoothstep(.66,.74,f.fbm(p/330+11.3))*(.45+.55*f.fbm(p/90));
-pud=saturate(pud*1.5);
-float grime=smoothstep(.45,.85,f.fbm(p/260+4.2));
-float2 c=p/140; float2 ic=floor(c); float d1=9,d2=9;
-for(int y=-1;y<=1;y++) for(int x=-1;x<=1;x++){ float2 o=float2(x,y); float2 q=ic+o+float2(f.h(ic+o),f.h(ic+o+5.1))-c; float d=dot(q,q); if(d<d1){d2=d1;d1=d;} else if(d<d2) d2=d; }
-float crack=(1-smoothstep(0,.035,sqrt(d2)-sqrt(d1)))*smoothstep(.55,.7,f.fbm(p/200+8.8));
-float blood=smoothstep(.7,.78,f.fbm(p/120+21.7))*(1-smoothstep(250,700,r));
-return float4(ring,pud,grime+blood*4,crack);
+float b=T.z;
+return float4(T.x,T.y,b<=.5 ? b*2 : 1+(b-.5)*2,T.w);
+'''
+MASK_UV_CODE = '''
+return float2(P.x/2900+.5,.5-P.y/2900);
 '''
 BASE_CODE = '''
 float3 col=lerp(Dc.rgb*float3(.34,.31,.29),Df.rgb*float3(.3,.28,.27),M.x);
@@ -106,8 +91,22 @@ def samples(stem, coords, y):
     return out
 cob = samples('cobblestone_pavement', uv(240, 0), 0)
 flag = samples('castle_wall_varriation', uv(330, 800), 800)
-mask = custom(mat, MASK_CODE, ['P'], unreal.CustomMaterialOutputType.CMOT_FLOAT4, -1200, -400)
-mel.connect_material_expressions(wp, '', mask, 'P')
+task = unreal.AssetImportTask()
+task.filename = os.path.join(ROOT, 'artifacts/art/overnight-2026-11-10/T_DungeonFloorMasks.png')
+task.destination_path = DEST; task.destination_name = 'T_DungeonFloorMasks'; task.automated = True; task.replace_existing = True; task.save = False
+tools.import_asset_tasks([task])
+masks = unreal.load_asset(f'{DEST}/T_DungeonFloorMasks')
+masks.set_editor_property('compression_settings', unreal.TextureCompressionSettings.TC_MASKS)
+masks.set_editor_property('srgb', False)
+masks.set_editor_property('address_x', unreal.TextureAddress.TA_CLAMP); masks.set_editor_property('address_y', unreal.TextureAddress.TA_CLAMP)
+eal.save_asset(f'{DEST}/T_DungeonFloorMasks', only_if_is_dirty=False)
+muv = custom(mat, MASK_UV_CODE, ['P'], unreal.CustomMaterialOutputType.CMOT_FLOAT2, -1500, -400)
+mel.connect_material_expressions(wp, '', muv, 'P')
+mtex = mel.create_material_expression(mat, unreal.MaterialExpressionTextureSample, -1300, -400)
+mtex.set_editor_property('texture', masks); mtex.set_editor_property('sampler_type', unreal.MaterialSamplerType.SAMPLERTYPE_MASKS)
+mel.connect_material_expressions(muv, '', mtex, 'UVs')
+mask = custom(mat, MASK_CODE, ['T'], unreal.CustomMaterialOutputType.CMOT_FLOAT4, -1100, -400)
+mel.connect_material_expressions(mtex, 'RGBA', mask, 'T')
 base = custom(mat, BASE_CODE, ['Dc', 'Df', 'M'], unreal.CustomMaterialOutputType.CMOT_FLOAT3, -700, 0)
 for src, pin in ((cob['d'], 'Dc'), (flag['d'], 'Df'), (mask, 'M')): mel.connect_material_expressions(src, 'RGB' if pin != 'M' else '', base, pin)
 rough = custom(mat, ROUGH_CODE, ['Rc', 'Rf', 'M'], unreal.CustomMaterialOutputType.CMOT_FLOAT1, -700, 300)

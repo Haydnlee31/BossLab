@@ -125,7 +125,9 @@ void AWardenArenaMode::AnimateEffects(float Seconds)
     {
         const float Flash=Since>=0 && Since<.9f ? FMath::Sin(PI*FMath::Min(1.f,Since/.9f))*(1-Since/.9f*.4f) : 0;
         L->SetWorldLocation(Player->GetActorLocation()+FVector(0,0,20));
-        L->SetIntensity((Drinking ? 600.f : 0.f)+5000.f*Flash);
+        const float Intensity=(Drinking ? 600.f : 0.f)+5000.f*Flash;
+        // A dark light still costs a lighting pass: hide it between drinks.
+        L->SetVisibility(Intensity>0); L->SetIntensity(Intensity);
     }
 
     // Landing dust and camera kick: a jump attack's impact at the blade, a plain jump at the feet.
