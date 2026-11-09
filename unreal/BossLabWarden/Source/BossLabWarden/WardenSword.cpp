@@ -330,7 +330,16 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     const float Recoil=Fight.ImpactTicks>0 ? FMath::Sin(PI*float(18-Fight.ImpactTicks)/18) : 0;
     // Armored hits still read through the torso, but never alter the sword's
     // active arc. Poise breaks and player flinches get a complete hurt pose.
-    if(Fight.Action==EWardenAction::Hurt)
+    float Stagger=0;
+    if(Fight.Action==EWardenAction::Hurt && bBoss)
+    {
+        // Stance broken: the boss buckles forward, blade dropped, hips sunk, and holds it
+        // until three quarters of the stagger - the window for a critical blow.
+        const float U=float(Fight.Age)/WardenRules::BossHurtTicks;
+        Stagger=Smooth(U/.12f)*(1-Smooth((U-.75f)/.25f));
+        Key=Blend(Guard,{FVector(22,18,72),FVector(.55f,.2f,-.8f).GetSafeNormal(),12,30},Stagger);
+    }
+    else if(Fight.Action==EWardenAction::Hurt)
     {
         const float U=float(Fight.Age)/(bBoss?WardenRules::BossHurtTicks:WardenRules::HurtTicks);
         const float Weight=Smooth(U/.17f)*(1-Smooth((U-.32f)/.68f));
@@ -355,7 +364,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const float Weight=1-Settle;
         const FVector Shift=Fight.Action==EWardenAction::Strike
             ? FVector(FMath::Lerp(-7.f,9.f,Drive)*Load*Weight,FMath::Lerp(4.f,-3.f,Drive)*Load*Weight,-9*Load*Weight)
-            : FVector(6*HitFront*Recoil,6*HitSide*Recoil,-32*Tuck-6*Landing-4*Recoil);
+            : FVector(6*HitFront*Recoil,6*HitSide*Recoil,-32*Tuck-6*Landing-4*Recoil-20*Stagger);
         Local[Pelvis].AddToTranslation(MeshPoint(Shift)); Rebuild(Pelvis);
         const float HipTurn=Fight.Action==EWardenAction::Strike ? FMath::Lerp(-22.f,26.f,Drive)*Load*Weight : Key.Twist*.2f;
         SetRotation(Pelvis,FQuat(FVector::UpVector,FMath::DegreesToRadians(-HipTurn))*CS[Pelvis].GetRotation());

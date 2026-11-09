@@ -571,6 +571,7 @@ void AWardenArenaMode::BuildRegentView()
     V.Eyes=Set(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Sphere")),Load(TEXT("/Game/BossLab/Regent/Props/M_RegentLanternCore"),TEXT("Jade")),WardenRegent::Skulls*2);
     V.Fire=Set(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Plane")),Load(TEXT("/Game/BossLab/Regent/M_RegentFlame"),TEXT("Jade")),FWardenRegentView::Flames);
     V.Glint=Set(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Plane")),Load(TEXT("/Game/BossLab/Regent/Props/M_RegentLanternCore"),TEXT("Jade")),2);
+    V.EyeGlow=Set(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Sphere")),Load(TEXT("/Game/BossLab/Regent/Props/M_RegentLanternCore"),TEXT("Jade")),2);
     UMaterialInterface* Rune=Load(TEXT("/Game/BossLab/Regent/M_RegentRune"),TEXT("Jade"));
     for(int32 I=0;I<FWardenRegentView::Discs;++I)
     {
@@ -660,6 +661,18 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
                 Flame(Pos-Facing.GetSafeNormal()*K*20-FVector(0,0,8),(34-6*K)*1.f,(70-12*K)*1.f,S*13+K);
     }
 
+    // Soul-fire eyes in the mask (brighter in phase two), hidden while vanished.
+    {
+        const FVector HeadAt=Warden->VisualBody->GetBoneLocationByName(TEXT("head"),EBoneSpaces::WorldSpace);
+        const FQuat Facing=Warden->GetActorQuat();
+        const float Heat=(Regent.PhaseTwo ? 1.4f : 1.f)*(.85f+.15f*FMath::Sin(Seconds*7));
+        for(int32 E=0;E<2;++E)
+        {
+            const FVector EyeAt=HeadAt+Facing.RotateVector(FVector(13,E ? 4.5f : -4.5f,6)*Warden->GetActorScale3D().X);
+            if(V.EyeGlow.IsValid()) Set(V.EyeGlow.Get(),E,Gone?Hidden:FTransform(FRotator::ZeroRotator,EyeAt,FVector(.03f*Heat)));
+            if(!Gone && Regent.PhaseTwo) Flame(EyeAt+FVector(0,0,2),10,18*Heat,E+500);
+        }
+    }
     // Blade glint: the classic tell, a star flash on the estoc point just before a thrust.
     int32 GlintAt=-1;
     if(Striking && (Kind(F.Move)==EKind::Blade || F.Move==AshStep))
@@ -737,7 +750,7 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
     for(int32 I=Used;I<V.Disc.Num();++I) if(auto* D=V.Disc[I].Get()) D->SetVisibility(false);
     while(Fire.Num()<FWardenRegentView::Flames) Fire.Add(Hidden);
     V.Fire->BatchUpdateInstancesTransforms(0,Fire,true,true);
-    for(auto* C:{V.Censer.Get(),V.Chain.Get(),V.Bones.Get(),V.Eyes.Get(),V.Glint.Get()}) C->MarkRenderStateDirty();
+    for(auto* C:{V.Censer.Get(),V.Chain.Get(),V.Bones.Get(),V.Eyes.Get(),V.Glint.Get(),V.EyeGlow.Get()}) C->MarkRenderStateDirty();
 
     // Second phase: the hall's fire turns to soul fire (dungeon arena only).
     if(bDungeon && Regent.PhaseTwo!=V.bBlueHall)

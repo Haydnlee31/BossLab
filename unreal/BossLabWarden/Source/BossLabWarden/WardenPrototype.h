@@ -235,7 +235,7 @@ struct FWardenRegentView
 {
     static constexpr int32 Links=72, Flames=220, Discs=14;
     TWeakObjectPtr<AActor> Owner;
-    TWeakObjectPtr<class UInstancedStaticMeshComponent> Censer, Chain, Bones, Eyes, Fire, Glint;
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> Censer, Chain, Bones, Eyes, Fire, Glint, EyeGlow;
     bool bLantern=false, bLinks=false, bSkull=false;   // local props found (else primitives)
     TArray<TWeakObjectPtr<class UStaticMeshComponent>> Disc;
     TArray<TWeakObjectPtr<class UMaterialInstanceDynamic>> DiscMaterial;
