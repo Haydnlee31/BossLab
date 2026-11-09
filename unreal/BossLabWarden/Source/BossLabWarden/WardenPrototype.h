@@ -222,7 +222,7 @@ struct FWardenEffects
     float TrailTime[TrailSamples]={};
     int32 TrailNext=0;
     float RuneFlash=0;
-    int32 FlashFor=0;
+    int32 FlashFor=0, SwingFor=-1;
     int32 HealFor=-1, DustFor=-1;
     float HealAt=-100, DustTime=-100, DustScale=1;
     FVector DustAt=FVector::ZeroVector;
@@ -266,6 +266,7 @@ public:
     void BuildEffects();
     void AnimateEffects(float Seconds);
     void RecentDamageAdd(float Amount,float Seconds);
+    void EffectSound(const TCHAR* Name,const FVector& At,float Volume);
     // Hit-stop ticks left and camera shake strength (presentation) after a landed blow.
     int32 HitStop=0;
     // Test-only pilot: when set, replaces keyboard intent and may queue player actions.

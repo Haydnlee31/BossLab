@@ -374,6 +374,23 @@ void AWardenPrototypeHUD::DrawHUD()
     if(Mode->Player->bV13Outfit) DrawText(TEXT("V13 TEST | Approximate rigid fitting / simplified materials"),FColor(230,192,125),32,258);
     if(Mode->Player->bRevampOutfit) DrawText(TEXT("REVAMP TEST | Generated characters / distance-weighted skin, no cloth sim"),FColor(230,192,125),32,258);
     if(Mode->bCaptureFrames) DrawText(TEXT("ENGINE FRAME CAPTURE / fixed 30 fps / not a real-time benchmark"),FColor(230,192,125),32,184);
+    // The boss's name as the fight opens (fades in and out over four seconds) and an Elden
+    // Ring-style golden banner when it falls.
+    auto Banner=[&](const TCHAR* Text,const TCHAR* Sub,float Alpha,FColor Colour,float Top)
+    {
+        if(Alpha<=0) return;
+        float TW=0,TH=0; GetTextSize(Text,TW,TH,nullptr,2.6f);
+        DrawRect(FLinearColor(0,0,0,.45f*Alpha),0,H*Top,W,H*.14f);
+        DrawText(Text,FColor(Colour.R,Colour.G,Colour.B,uint8(255*Alpha)),(W-TW)*.5f,H*(Top+.02f),nullptr,2.6f);
+        if(Sub) { float SW=0,SH=0; GetTextSize(Sub,SW,SH,nullptr,1.1f); DrawText(Sub,FColor(200,205,210,uint8(220*Alpha)),(W-SW)*.5f,H*(Top+.02f)+TH+4,nullptr,1.1f); }
+    };
+    if(!Mode->bMotionStudy && !Mode->bOutfitStudy && !Mode->bRegentStudy && !Mode->bGaitStudy && B.Alive() && P.Alive())
+    {
+        const float T=Mode->CombatTick/60.f;
+        Banner(Mode->bRegent?TEXT("THE FUNERAL REGENT"):TEXT("THE WARDEN"),Mode->bRegent?TEXT("Keeper of the Last Rites"):TEXT("Gaoler of the Ring"),FMath::Clamp(T/.6f,0.f,1.f)*FMath::Clamp((4-T)/.8f,0.f,1.f),FColor(230,200,140),.42f);
+    }
+    // Above the results panel, which opens in the middle of the screen.
+    if(!B.Alive() && P.Alive()) Banner(TEXT("GREAT ENEMY FELLED"),nullptr,FMath::Clamp(Mode->Warden->DeathAge/24.f,0.f,1.f),FColor(235,190,95),.14f);
     if(Mode->bMotionStudy)
     {
         DrawText(Mode->RollStudyGroup<0?TEXT("SCRIPTED MOTION STUDY / normal stamina and commitment"):

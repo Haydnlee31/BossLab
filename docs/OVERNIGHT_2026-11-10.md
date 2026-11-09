@@ -70,6 +70,18 @@ Everything is on branch `regent-moveset-01`. Imported Unreal assets stay local, 
 - **Fight floor:** still flat by design. Movement, jumps and tests assume one ground height, so playable elevation needs ground-following movement and step-up first.
 - **Dungeon check:** 1,165 instances, 0 colliding, 0 inside the wall line.
 
+## Extension (03:42–03:50): sound and presentation
+
+- **Greatsword sound.** [make_combat_audio.py](../unreal/art-studio/source/effects/make_combat_audio.py) synthesises five original cues, imported by [ue_import_combat_audio.py](../unreal/art-studio/source/effects/ue_import_combat_audio.py) into `/Game/BossLab/Effects/Audio` (local):
+  - `SwordWhooshLight` and `SwordWhooshHeavy`: swing whooshes at the start of contact, heavier for the finisher and the running cut;
+  - `SwordSlam`: the jump attack's landing;
+  - `SwordHit` plus `RuneHum`: a blow landing on the boss;
+  - `SwordHit`, quieter: you being hit.
+
+  They have not been listened to, only generated and wired.
+- **Boss title card.** The boss's name and an epithet ("THE FUNERAL REGENT, Keeper of the Last Rites") fade in and out over the first 4 s of a fight (`boss-title-card-sheet.png`).
+- **Victory banner.** "GREAT ENEMY FELLED" in gold when the boss dies. The first version overlapped the results panel; it now sits above it (`great-enemy-felled.png`).
+
 ## Optimisation and verification
 
 - **Tests:** native suite **33/33** after every change.

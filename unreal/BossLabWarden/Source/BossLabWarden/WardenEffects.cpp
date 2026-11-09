@@ -12,6 +12,9 @@
 #include "Materials/MaterialInterface.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundWave.h"
+#include "Sound/SoundAttenuation.h"
 
 namespace
 {
@@ -64,6 +67,16 @@ void AWardenArenaMode::BuildEffects()
     V.SwordLight=Blade;
 }
 
+void AWardenArenaMode::EffectSound(const TCHAR* Name,const FVector& At,float Volume)
+{
+    if(bMuted || !GetWorld()->GetFirstPlayerController()) return;
+    auto* Sound=LoadObject<USoundWave>(nullptr,*(FString(TEXT("/Game/BossLab/Effects/Audio/"))+Name),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    if(!Sound) return;
+    auto* Attenuation=NewObject<USoundAttenuation>(this);
+    Attenuation->Attenuation.bAttenuate=true; Attenuation->Attenuation.bSpatialize=true;
+    Attenuation->Attenuation.AttenuationShapeExtents=FVector(200); Attenuation->Attenuation.FalloffDistance=2400;
+    UGameplayStatics::PlaySoundAtLocation(this,Sound,At,Volume,1.f,0.f,Attenuation);
+}
 void AWardenArenaMode::RecentDamageAdd(float Amount,float Seconds)
 {
     auto& V=Effects;
@@ -136,6 +149,7 @@ void AWardenArenaMode::AnimateEffects(float Seconds)
     {
         V.DustFor=F.AttackInstance; V.DustAt=Player->BladePoint(.9f); V.DustAt.Z=Feet.Z; V.DustAt+=FVector(0,0,2);
         V.DustTime=Seconds; V.DustScale=1; Shake=FMath::Max(Shake,.65f);
+        EffectSound(TEXT("SwordSlam"),V.DustAt,.9f);
     }
     if(V.bAirborne && Player->AirLift<1 && F.Action!=EWardenAction::Strike)
     { V.DustAt=Feet+FVector(0,0,2); V.DustTime=Seconds; V.DustScale=.45f; Shake=FMath::Max(Shake,.15f); }
@@ -159,6 +173,7 @@ void AWardenArenaMode::AnimateEffects(float Seconds)
         AWardenChallenger* Who=Bleeders[K];
         if(!Who || Who->BleedCount==V.SeenBleed[K]) continue;
         V.SeenBleed[K]=Who->BleedCount;
+        if(K==0) EffectSound(TEXT("SwordHit"),Who->BleedAt,.55f);
         auto& B=V.Burst[V.NextBurst]; V.NextBurst=(V.NextBurst+1)%FWardenEffects::Bursts;
         B.Start=Seconds; B.At=Who->BleedAt; B.Seed=Who->BleedCount*31+K*7;
         B.Dir=(Who->BleedDir*.6f+Who->ImpactDir*.8f).GetSafeNormal(); B.Scale=Who->GetActorScale3D().X;
@@ -218,7 +233,19 @@ void AWardenArenaMode::AnimateEffects(float Seconds)
         Glow=FMath::Lerp(Glow,Def.Stance>=2 ? 3.2f : 2.2f,Wind);
         if(F.Active()) Glow=Def.Stance>=2 ? 5.f : 3.6f;
     }
-    if(Warden && Warden->BleedCount!=V.FlashFor) { V.FlashFor=Warden->BleedCount; V.RuneFlash=1; }
+    if(Warden && Warden->BleedCount!=V.FlashFor)
+    {
+        V.FlashFor=Warden->BleedCount; V.RuneFlash=1;
+        EffectSound(TEXT("SwordHit"),Warden->BleedAt,.8f);
+        if(Player->Greatsword.IsValid()) EffectSound(TEXT("RuneHum"),Player->BladePoint(.5f),.4f);
+    }
+    // Swing sound at the start of contact: heavier for the finisher and the running cut.
+    if(Swinging && F.Age>=F.Definition().Windup-2 && V.SwingFor!=F.AttackInstance && F.Move!=WardenRules::JumpAttack)
+    {
+        V.SwingFor=F.AttackInstance;
+        const bool Heavy=F.Move==WardenRules::CutThree || F.Move==WardenRules::RunAttack;
+        EffectSound(Heavy ? TEXT("SwordWhooshHeavy") : TEXT("SwordWhooshLight"),Player->BladePoint(.7f),Heavy ? .8f : .6f);
+    }
     V.RuneFlash=FMath::Max(0.f,V.RuneFlash-GetWorld()->GetDeltaSeconds()*3);
     Glow+=4*V.RuneFlash;
     if(auto* Runes=Player->SwordRunes.Get()) Runes->SetScalarParameterValue(TEXT("Glow"),Glow);
