@@ -52,6 +52,68 @@ Editor-game only (`play`, `capture`, `benchmark`, `test`); package modes reject 
 
   Reports: `benchmark-final-{dungeon,original}.json`. Diagnostic runs showed nearly all of the extra cost is the dynamic lights. With lights removed the dungeon matched the original arena (17.8 ms). The flame cards cost about 3 ms. Two changes cut the cost: removing 8 cube-shadowed brazier lights (48 shadow views per frame) and stopping scenery from casting into the key light's shadow. This is not isolated and makes no 60 FPS claim.
 
+## Props and souls-style pass (2026-11-09, later)
+
+Owner asked for more props, more refinement and a more souls-like feel.
+
+- **Modelled CC0 props** from [Poly Haven](https://polyhaven.com), about 50 MB of glTF in `artifacts/art/arena-dungeon-2026-11-09/props/` (local):
+  - `gothic_statue`, `large_castle_door`, `large_iron_gate`;
+  - `kite_shield`, `ornate_medieval_mace`, `ornate_war_hammer`;
+  - `brass_candleholders`, `rock_moss_set_01`.
+
+  `antique_estoc` was downloaded and prepared too, but nothing places it yet.
+
+  The project disables engine plugins by default, so Unreal has no glTF importer. [prep_props.py](../unreal/art-studio/source/arena/prep_props.py) therefore converts the props in project-local Blender:
+  - joins parts and sets each pivot at the base centre;
+  - decimates the heavy pieces (gate 38k to 20k triangles, candelabra 32k to 12k, rocks to 4k);
+  - exports FBX plus a material-to-texture map.
+
+  [ue_import_props.py](../unreal/art-studio/source/arena/ue_import_props.py) runs in editor mode. It imports at 100× scale (Blender metres; at 1/100 scale the importer's vertex weld collapsed thin parts) and deletes the folder first, because a replace import reuses the old scale. It builds one PBR material per texture set; glTF normal maps are OpenGL, so their green channel is flipped.
+- **Layout.** The front of each prop faces +Y, so yaw = bay angle + 90° turns it toward the arena.
+  - **Doors:** bay 0 (+X, behind the boss) holds a sealed great door in a stone portal. Bay 8 (−X, the entry) holds the same door behind a fog wall.
+  - **Cells:** even bays hold iron-gated cells; bays 4 and 12 are collapsed into mossy rubble.
+  - **Statues:** odd bays hold 3.2 m guardian statues on plinths, with a dropped shield and mace or war hammer.
+  - **Candle shrines:** sit on the parapet top in front of each statue.
+  - **Banners:** every bay has a tattered banner on an iron rod.
+- **Procedural materials:**
+  - `M_DungeonBanner`: masked dark wool with a weave, soot, a torn hem, moth holes and a slow world-position sway.
+  - `M_DungeonFogGate`: translucent swirling mist. Colour and opacity are separate custom nodes; a float4 split through component masks left opacity unconnected, so the wall rendered opaque.
+  - `M_DungeonShaft`: an additive cone that fades by world height.
+  - `M_DungeonDust`: dim unlit motes.
+- **Light and grade.**
+  - **Key light:** now cool moonlight (2,000,000 unitless) through a ceiling oculus, still the only shadow caster, with a visible shaft and 90 drifting dust motes.
+  - **Braziers:** reduced to 60,000.
+  - **Grade:** muted (saturation 0.86, contrast 1.12, cool shadow gain, grain 0.18, bloom 0.75).
+- **Capture.** `./scripts/bosslab-unreal capture tour` is a new capture-only mode: the motion-study setup with the camera yawing 1.6° per frame, pitched up 10°.
+- **Mistakes found by inspecting captures and fixed:**
+  - banners and fog wall rendered edge-on;
+  - opaque fog wall;
+  - materials looked up in the wrong folder;
+  - rock roughness sampler type;
+  - glare from close braziers;
+  - oversized dust.
+
+### Verified
+
+- **Tests:** the default suite passes 22/22. `BossLab.Arena.DungeonIsPresentationOnly` reports 1,030 instances, 17 lights, 0 colliding and nothing raised inside the wall line; additive light effects and sub-5 cm motes are excluded from that check. `RevampTrial` passes 1/1 in the dungeon.
+- **Captures inspected:** `props-tour-sheet.png`, `props-tour-frame-{023,046,115,161}.png`, `props-exchange-sheet.png`, `props-gameplay-frame-250.png`.
+- **Benchmark:** 720p, performance preset, revamp characters, back to back, with load average about 12–17 (much quieter than the earlier runs):
+
+  | Run | Mean | p95 | Approx. FPS |
+  |---|---|---|---|
+  | Dungeon | 18.17 ms | 25.48 ms | ~55 |
+  | Original arena | 16.70 ms | 16.77 ms | 60 |
+
+  Reports: `props-benchmark-{dungeon,original}.json`. This is a shared machine, not isolated, and makes no locked-60 claim. Most of the earlier 26 vs 18 ms gap was machine load.
+- **Storage:** one capture was stopped by the 24 GiB reserve guard. Work resumed after the owner freed space.
+
+### Remaining limits
+
+- The fight camera rarely shows the banners, ceiling or entry fog wall; the tour capture does.
+- The arch struts are still straight primitive beams, and the braziers are cones.
+- The props are generic CC0 pieces, not bespoke to the Regent. The statue reads golden in firelight.
+- The fog wall is decoration only, with no gate behaviour.
+
 ## Limits and next steps
 
 - **Light cost.** The remaining cost is about 8 ms, from the 17 lights. The options trade look for frames:

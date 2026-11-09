@@ -1,0 +1,706 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "Lees-Laptop.local",
+			"instance": "5F467355284EC8C2E2D06790BB06986D",
+			"instanceName": "Lees-Laptop.local-51888",
+			"platform": "MacEditor",
+			"oSVersion": "macOS 26.6.2 25G83",
+			"model": "Default",
+			"gPU": "Apple M3",
+			"cPUModel": "Apple M3",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.11.09-09.30.29",
+	"succeeded": 22,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 2.1537458896636963,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "DungeonIsPresentationOnly",
+			"fullTestPath": "BossLab.Arena.DungeonIsPresentationOnly",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.042936749756336212,
+			"dateTime": "2026.11.09-09.30.27",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Dungeon: 1030 instances, 17 lights (17 flickering), 0 colliding, 0 inside wall line.",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.27"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ActualBladeContactAndWallOcclusion",
+			"fullTestPath": "BossLab.Fundamentals.ActualBladeContactAndWallOcclusion",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.1353207528591156,
+			"dateTime": "2026.11.09-09.30.27",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ActualLocomotionStride",
+			"fullTestPath": "BossLab.Fundamentals.ActualLocomotionStride",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.030852250754833221,
+			"dateTime": "2026.11.09-09.30.27",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Blend axes: Direction [-180,180], Speed [0,600]",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.27"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Actual forward gait foot excursion: 92.149 cm",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.27"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "BoundedInputBufferWithoutCancel",
+			"fullTestPath": "BossLab.Fundamentals.BoundedInputBufferWithoutCancel",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.034725166857242584,
+			"dateTime": "2026.11.09-09.30.27",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "CloseCameraFullBodyFraming",
+			"fullTestPath": "BossLab.Fundamentals.CloseCameraFullBodyFraming",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.024750996381044388,
+			"dateTime": "2026.11.09-09.30.27",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Close camera: max vertical NDC 0.751; minimum center separation 61.466 px at720p",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.27"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ControlsAndDebugConflict",
+			"fullTestPath": "BossLab.Fundamentals.ControlsAndDebugConflict",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.0084451660513877869,
+			"dateTime": "2026.11.09-09.30.27",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "CostsRecoveryHealingAndDeath",
+			"fullTestPath": "BossLab.Fundamentals.CostsRecoveryHealingAndDeath",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.0082354582846164703,
+			"dateTime": "2026.11.09-09.30.27",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "DirectionalRollPoseContinuity",
+			"fullTestPath": "BossLab.Fundamentals.DirectionalRollPoseContinuity",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.058467917144298553,
+			"dateTime": "2026.11.09-09.30.27",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Eight directions, varied facing: max joint step 41.669 cm; exit 0.555 cm; lowest head 20.000 cm; lowest blade 19.533 cm",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.27"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "FixedRehearsalAndFramePartition",
+			"fullTestPath": "BossLab.Fundamentals.FixedRehearsalAndFramePartition",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.40787801146507263,
+			"dateTime": "2026.11.09-09.30.27",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "GroundedTravelAndAcceleration",
+			"fullTestPath": "BossLab.Fundamentals.GroundedTravelAndAcceleration",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.031478628516197205,
+			"dateTime": "2026.11.09-09.30.28",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "HurtPoiseAndProtection",
+			"fullTestPath": "BossLab.Fundamentals.HurtPoiseAndProtection",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.008510250598192215,
+			"dateTime": "2026.11.09-09.30.28",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "LockedAndUnlockedEightWayRollRequests",
+			"fullTestPath": "BossLab.Fundamentals.LockedAndUnlockedEightWayRollRequests",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.12282245606184006,
+			"dateTime": "2026.11.09-09.30.28",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "16 ordinary queued rolls: eight headings with lock on and off, each 300 cm and 28 stamina",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.28"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "MovingStrikeSupportFoot",
+			"fullTestPath": "BossLab.Fundamentals.MovingStrikeSupportFoot",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.044649876654148102,
+			"dateTime": "2026.11.09-09.30.28",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Four moving entries: support foot drift 0.000 cm; height error versus standing ankle 0.002 cm",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.28"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "PauseMenuFreezeAndInputReset",
+			"fullTestPath": "BossLab.Fundamentals.PauseMenuFreezeAndInputReset",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.025010831654071808,
+			"dateTime": "2026.11.09-09.30.28",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RollCommitmentTravelAndProtection",
+			"fullTestPath": "BossLab.Fundamentals.RollCommitmentTravelAndProtection",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.025930039584636688,
+			"dateTime": "2026.11.09-09.30.28",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Roll max grip error 0.000 cm",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.28"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "RollInvulnerabilityActualBladeBoundary",
+			"fullTestPath": "BossLab.Fundamentals.RollInvulnerabilityActualBladeBoundary",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.039902128279209137,
+			"dateTime": "2026.11.09-09.30.28",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Roll age 3: contact 1, damage 1, health 208",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.28"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Roll age 4: contact 1, damage 0, health 240",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.28"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Roll age 17: contact 1, damage 0, health 240",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.28"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Roll age 18: contact 1, damage 1, health 208",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.28"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "SprintTravelStaminaAndCommitment",
+			"fullTestPath": "BossLab.Fundamentals.SprintTravelStaminaAndCommitment",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.037587456405162811,
+			"dateTime": "2026.11.09-09.30.28",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "One second: walk 336.000cm, sprint 483.667cm; normal fixed-step costs",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.28"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "TwoHandGripAndAuthoredArc",
+			"fullTestPath": "BossLab.Fundamentals.TwoHandGripAndAuthoredArc",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.043131999671459198,
+			"dateTime": "2026.11.09-09.30.28",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "All sword poses: max grip error 0.000 cm; max per-tick tip travel 64.538 cm",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.28"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Minimum middle-of-cut blade travel 20.037 cm/tick",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.28"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "FramePartitionAndWallCollision",
+			"fullTestPath": "BossLab.Movement.FramePartitionAndWallCollision",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.0086372494697570801,
+			"dateTime": "2026.11.09-09.30.28",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "AssemblyMaterialsAndContact",
+			"fullTestPath": "BossLab.Outfit.AssemblyMaterialsAndContact",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.99782830476760864,
+			"dateTime": "2026.11.09-09.30.28",
+			"entries": [
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "Cape section2 materialAshOxblood actualRGBA (R=0.110000,G=0.018000,B=0.023000,A=1.000000)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.28"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "26 parts, 15448 rendered triangles, 39 sections; eight-direction roll minimum vertex Z -0.000cm (AshBootL)",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "AshHelmet minimum -0.000",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "AshCrest minimum -0.000",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "AshAbdominalLames minimum -0.000",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "AshBelt minimum -0.000",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "AshVambraceL minimum -0.000",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "AshBootL minimum -0.000",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "AshTassetL minimum -0.000",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "AshCapeL minimum -0.000",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "AshPauldronR minimum -0.000",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "AshBootR minimum -0.000",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				},
+				{
+					"event":
+					{
+						"type": "Info",
+						"message": "AshCapeR minimum -0.000",
+						"context": "",
+						"artifact": "00000000000000000000000000000000"
+					},
+					"filename": "",
+					"lineNumber": -1,
+					"timestamp": "2026.11.09-09.30.29"
+				}
+			],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "ActorCollisionLifecycle",
+			"fullTestPath": "BossLab.Preflight.ActorCollisionLifecycle",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.0085744597017765045,
+			"dateTime": "2026.11.09-09.30.29",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "EditorSubsystems",
+			"fullTestPath": "BossLab.Preflight.EditorSubsystems",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"5F467355284EC8C2E2D06790BB06986D"
+			],
+			"duration": 0.0080699585378170013,
+			"dateTime": "2026.11.09-09.30.29",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

@@ -7,6 +7,7 @@
 #include "Engine/Engine.h"
 #include "EngineUtils.h"
 #include "Misc/AutomationTest.h"
+#include "Materials/MaterialInterface.h"
 #if WITH_DEV_AUTOMATION_TESTS
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDungeonArenaTest,"BossLab.Arena.DungeonIsPresentationOnly",(EAutomationTestFlags::EditorContext|EAutomationTestFlags::ClientContext)|EAutomationTestFlags::EngineFilter)
 bool FDungeonArenaTest::RunTest(const FString&)
@@ -33,7 +34,11 @@ bool FDungeonArenaTest::RunTest(const FString&)
                     FTransform T; I->GetInstanceTransform(K,T,true); ++Instances;
                     // Nothing raised may stand on the fight floor: inside the wall line
                     // only flush inlays (<1 cm) and overhead pieces (>4 m) are allowed.
+                    // Light effects (additive shaft) and sub-5 cm dust motes are not obstacles.
+                    const auto* M=I->GetMaterial(0);
+                    if(!I->GetStaticMesh() || (M && M->GetBlendMode()==BLEND_Additive)) continue;
                     const FBox B=I->GetStaticMesh()->GetBounds().GetBox().TransformBy(T);
+                    if(B.GetSize().GetMax()<5) continue;
                     if(FVector2D(T.GetLocation()).Size()<1330 && B.Max.Z>1 && B.Min.Z<400) ++Inside;
                 }
         }

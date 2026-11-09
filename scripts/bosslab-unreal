@@ -88,6 +88,8 @@ def main():
                 cmd += ['-BossLabOutfitStudy', '-BossLabExportOutfit']
             if 'motion' in sys.argv[2:]:
                 cmd += ['-BossLabMotionStudy']
+            if 'tour' in sys.argv[2:]:
+                cmd += ['-BossLabMotionStudy', '-BossLabArenaTour']
             for name, group in [('rolls-cardinal', 0), ('rolls-diagonal', 1)]:
                 if name in sys.argv[2:]:
                     cmd += ['-BossLabRollStudy=' + str(group)]
@@ -144,6 +146,8 @@ def main():
                 cmd += ['-BossLabOutfitStudy', '-BossLabExportOutfit']
             if 'motion' in sys.argv[2:]:
                 cmd += ['-BossLabMotionStudy']
+            if 'tour' in sys.argv[2:]:
+                cmd += ['-BossLabMotionStudy', '-BossLabArenaTour']
             for name, group in [('rolls-cardinal', 0), ('rolls-diagonal', 1)]:
                 if name in sys.argv[2:]:
                     cmd += ['-BossLabRollStudy=' + str(group)]

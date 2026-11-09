@@ -1,0 +1,316 @@
+{
+ "SM_Statue": {
+  "slots": [
+   "gothic_statue"
+  ],
+  "materials": [
+   "M_Prop_gothic_statue"
+  ],
+  "size_cm": [
+   147.7,
+   156.4,
+   174.0
+  ],
+  "min_cm": [
+   -73.9,
+   -78.2,
+   -0.0
+  ],
+  "triangles": 27739
+ },
+ "SM_CastleDoor": {
+  "slots": [
+   "large_castle_door"
+  ],
+  "materials": [
+   "M_Prop_large_castle_door"
+  ],
+  "size_cm": [
+   201.2,
+   29.6,
+   296.5
+  ],
+  "min_cm": [
+   -100.6,
+   -14.8,
+   -0.0
+  ],
+  "triangles": 12640
+ },
+ "SM_IronGate": {
+  "slots": [
+   "large_iron_gate"
+  ],
+  "materials": [
+   "M_Prop_large_iron_gate"
+  ],
+  "size_cm": [
+   295.0,
+   9.7,
+   292.9
+  ],
+  "min_cm": [
+   -147.5,
+   -4.9,
+   -0.0
+  ],
+  "triangles": 20000
+ },
+ "SM_KiteShield": {
+  "slots": [
+   "kite_shield_body",
+   "kite_shield_clamps_and_trim"
+  ],
+  "materials": [
+   "M_Prop_kite_shield_body",
+   "M_Prop_kite_shield_clamps_and_trim"
+  ],
+  "size_cm": [
+   54.3,
+   13.5,
+   139.4
+  ],
+  "min_cm": [
+   -27.2,
+   -6.7,
+   -0.0
+  ],
+  "triangles": 10306
+ },
+ "SM_Mace": {
+  "slots": [
+   "ornate_medieval_mace"
+  ],
+  "materials": [
+   "M_Prop_ornate_medieval_mace"
+  ],
+  "size_cm": [
+   9.5,
+   10.2,
+   63.0
+  ],
+  "min_cm": [
+   -4.8,
+   -5.1,
+   0.0
+  ],
+  "triangles": 5999
+ },
+ "SM_WarHammer": {
+  "slots": [
+   "ornate_war_hammer"
+  ],
+  "materials": [
+   "M_Prop_ornate_war_hammer"
+  ],
+  "size_cm": [
+   14.4,
+   3.5,
+   71.1
+  ],
+  "min_cm": [
+   -7.2,
+   -1.7,
+   -0.0
+  ],
+  "triangles": 5192
+ },
+ "SM_Estoc": {
+  "slots": [
+   "antique_estoc"
+  ],
+  "materials": [
+   "M_Prop_antique_estoc"
+  ],
+  "size_cm": [
+   37.2,
+   14.9,
+   149.2
+  ],
+  "min_cm": [
+   -18.6,
+   -7.5,
+   -0.0
+  ],
+  "triangles": 8246
+ },
+ "SM_CandleSmall": {
+  "slots": [
+   "brass_candleholders_01",
+   "brass_candleholders_flame"
+  ],
+  "materials": [
+   "M_Prop_brass_candleholders_01",
+   "M_Prop_brass_candleholders_flame"
+  ],
+  "size_cm": [
+   9.7,
+   9.7,
+   36.6
+  ],
+  "min_cm": [
+   -4.9,
+   -4.9,
+   -0.0
+  ],
+  "triangles": 2372
+ },
+ "SM_CandleTriple": {
+  "slots": [
+   "brass_candleholders_02",
+   "brass_candleholders_candles",
+   "brass_candleholders_flame"
+  ],
+  "materials": [
+   "M_Prop_brass_candleholders_02",
+   "M_Prop_brass_candleholders_candles",
+   "M_Prop_brass_candleholders_flame"
+  ],
+  "size_cm": [
+   26.1,
+   9.7,
+   40.1
+  ],
+  "min_cm": [
+   -13.1,
+   -4.9,
+   -0.0
+  ],
+  "triangles": 7404
+ },
+ "SM_Candelabra": {
+  "slots": [
+   "brass_candleholders_03",
+   "brass_candleholders_flame"
+  ],
+  "materials": [
+   "M_Prop_brass_candleholders_03",
+   "M_Prop_brass_candleholders_flame"
+  ],
+  "size_cm": [
+   40.8,
+   36.5,
+   83.5
+  ],
+  "min_cm": [
+   -20.4,
+   -18.2,
+   -0.0
+  ],
+  "triangles": 12000
+ },
+ "SM_Rock01": {
+  "slots": [
+   "rock_moss_set_01"
+  ],
+  "materials": [
+   "M_Prop_rock_moss_set_01"
+  ],
+  "size_cm": [
+   224.0,
+   336.5,
+   146.9
+  ],
+  "min_cm": [
+   -112.0,
+   -168.3,
+   0.0
+  ],
+  "triangles": 3999
+ },
+ "SM_Rock02": {
+  "slots": [
+   "rock_moss_set_01"
+  ],
+  "materials": [
+   "M_Prop_rock_moss_set_01"
+  ],
+  "size_cm": [
+   265.4,
+   326.4,
+   126.3
+  ],
+  "min_cm": [
+   -132.7,
+   -163.2,
+   -0.0
+  ],
+  "triangles": 4000
+ },
+ "SM_Rock03": {
+  "slots": [
+   "rock_moss_set_01"
+  ],
+  "materials": [
+   "M_Prop_rock_moss_set_01"
+  ],
+  "size_cm": [
+   210.9,
+   208.0,
+   110.0
+  ],
+  "min_cm": [
+   -105.4,
+   -104.0,
+   0.0
+  ],
+  "triangles": 4000
+ },
+ "SM_Rock04": {
+  "slots": [
+   "rock_moss_set_01"
+  ],
+  "materials": [
+   "M_Prop_rock_moss_set_01"
+  ],
+  "size_cm": [
+   212.6,
+   196.5,
+   176.9
+  ],
+  "min_cm": [
+   -106.3,
+   -98.2,
+   -0.0
+  ],
+  "triangles": 4000
+ },
+ "SM_Rock05": {
+  "slots": [
+   "rock_moss_set_01"
+  ],
+  "materials": [
+   "M_Prop_rock_moss_set_01"
+  ],
+  "size_cm": [
+   181.8,
+   300.1,
+   120.7
+  ],
+  "min_cm": [
+   -90.9,
+   -150.0,
+   -0.0
+  ],
+  "triangles": 4000
+ },
+ "SM_Rock06": {
+  "slots": [
+   "rock_moss_set_01"
+  ],
+  "materials": [
+   "M_Prop_rock_moss_set_01"
+  ],
+  "size_cm": [
+   212.5,
+   275.8,
+   126.0
+  ],
+  "min_cm": [
+   -106.2,
+   -137.9,
+   -0.0
+  ],
+  "triangles": 3999
+ }
+}

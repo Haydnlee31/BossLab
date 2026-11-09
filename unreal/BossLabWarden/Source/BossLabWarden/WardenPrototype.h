@@ -148,6 +148,7 @@ struct FWardenDungeon
     TArray<TWeakObjectPtr<class ULightComponent>> Lights;
     TArray<float> Base;
     TWeakObjectPtr<class UInstancedStaticMeshComponent> Embers;
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> Dust;
     TArray<FVector> EmberSources;
 };
 
@@ -177,6 +178,7 @@ public:
     int32 CaptureFrame=0, CaptureCount=180;
     FString ReviewTrace=TEXT("tick,player_action,player_age,player_health,stamina,boss_action,boss_age,boss_health,boss_poise,distance_cm\n");
     bool bMotionStudy=false;
+    bool bArenaTour=false;  // capture-only slow 360° look around the arena
     bool bOutfitStudy=false;
     int32 RollStudyGroup=-1;
     FString MotionStudyTrace=TEXT("tick,action,age,stamina,grip_error_cm,x,y,z,protected\n");

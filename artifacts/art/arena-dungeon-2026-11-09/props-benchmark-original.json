@@ -1,0 +1,12 @@
+{
+ "kind": "actual wall-clock frame intervals; active gameplay, 180 warmup frames excluded",
+ "width": 1280,
+ "height": 720,
+ "samples": 3286,
+ "mean_ms": 16.7018,
+ "p95_ms": 16.768,
+ "demo_tick": 3600,
+ "editor_binary": true,
+ "load_before": "17.01 13.79 17.26",
+ "load_after": "9.89 12.41 16.42"
+}

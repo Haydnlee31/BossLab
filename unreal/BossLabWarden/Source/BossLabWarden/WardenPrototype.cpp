@@ -178,7 +178,7 @@ void AWardenChallenger::Tick(float DeltaSeconds)
     }
     View.Pitch = FMath::Clamp(FRotator::NormalizeAxis(View.Pitch),-55.f,25.f);
     if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>(); Mode && Mode->bTitle) View=FRotator(-12,0,0);
-    if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>(); Mode && Mode->bMotionStudy) View=FRotator(-12,-40,0);
+    if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>(); Mode && Mode->bMotionStudy) View=Mode->bArenaTour?FRotator(10,Mode->CaptureFrame*1.6f,0):FRotator(-12,-40,0);
     View.Roll = 0;
     Controller->SetControlRotation(View);
 }
@@ -270,6 +270,7 @@ void AWardenArenaMode::BeginPlay()
     if(bCaptureFrames && (FParse::Param(FCommandLine::Get(),TEXT("BossLabMotionStudy")) || FParse::Value(FCommandLine::Get(),TEXT("BossLabRollStudy="),RollStudyGroup)))
     {
         bMotionStudy=true; bRehearsal=false; bScriptedPlayer=false; Player->SetLocked(false);
+        bArenaTour=FParse::Param(FCommandLine::Get(),TEXT("BossLabArenaTour"));
         if(auto* PC=World->GetFirstPlayerController()) PC->SetControlRotation(FRotator(-12,-40,0));
     }
     if(bCaptureFrames && FParse::Param(FCommandLine::Get(),TEXT("BossLabOutfitStudy")))

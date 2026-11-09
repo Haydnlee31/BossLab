@@ -28,8 +28,11 @@ namespace Dungeon
 constexpr float PillarTop=540, OuterWall=1560, Height=1350, Piers=16;
 UMaterialInterface* Mat(const TCHAR* Name)
 {
-    const FString Path=FString(Name).StartsWith(TEXT("MI_"))?FString(TEXT("/Game/BossLab/Materials/"))+Name:FString(TEXT("/Game/BossLab/Dungeon/"))+Name;
-    return LoadObject<UMaterialInterface>(nullptr,*Path);
+    if(FString(Name).StartsWith(TEXT("MI_"))) return LoadObject<UMaterialInterface>(nullptr,*(FString(TEXT("/Game/BossLab/Materials/"))+Name));
+    // Stone/flame from ue_import_dungeon.py; banner/fog/shaft/dust from ue_import_props.py.
+    for(const TCHAR* Folder:{TEXT("/Game/BossLab/Dungeon/"),TEXT("/Game/BossLab/Dungeon/Props/")})
+        if(auto* M=LoadObject<UMaterialInterface>(nullptr,*(FString(Folder)+Name),nullptr,LOAD_Quiet|LOAD_NoWarn)) return M;
+    return nullptr;
 }
 FVector Radial(float A,float R,float Z) { return FVector(FMath::Cos(A)*R,FMath::Sin(A)*R,Z); }
 float Hash(int32 I) { return FMath::Frac(FMath::Sin(I*12.9898f)*43758.5453f); }
@@ -55,7 +58,8 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
         auto* Owner=World->SpawnActor<AActor>();
         auto* C=NewObject<UInstancedStaticMeshComponent>(Owner);
         Owner->SetRootComponent(C);
-        C->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,Mesh)); C->SetMaterial(0,Mat(Material));
+        C->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,Mesh));
+        if(Material) C->SetMaterial(0,Mat(Material));
         C->SetCollisionEnabled(ECollisionEnabled::NoCollision); C->SetCanEverAffectNavigation(false);
         // Only the key light casts shadows and no scenery sits in its cone; each set spans
         // the whole hall, so letting it cast would redraw every instance into that map.
@@ -77,6 +81,17 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
     auto* Fire=Set(TEXT("/Engine/BasicShapes/Plane"),TEXT("M_DungeonFlame"));
     auto Box=[](UInstancedStaticMeshComponent* C,FVector Centre,FVector Size,FRotator Rotation)
     { C->AddInstance(FTransform(Rotation,Centre,Size/100),true); };
+    // CC0 Poly Haven props (ue_import_props.py): pivot at base centre, front faces +Y, so
+    // yaw = bay angle + 90 turns the front toward the arena. One instanced set per mesh.
+    TMap<FString,UInstancedStaticMeshComponent*> Props;
+    auto Prop=[&](const TCHAR* Name,FVector Base,FRotator Rotation,FVector Scale)
+    {
+        UInstancedStaticMeshComponent*& C=Props.FindOrAdd(Name);
+        if(!C) C=Set(*(FString(TEXT("/Game/BossLab/Dungeon/Props/"))+Name),nullptr);
+        C->AddInstance(FTransform(Rotation,Base,Scale),true);
+    };
+    auto* Banner=Set(TEXT("/Engine/BasicShapes/Plane"),TEXT("M_DungeonBanner"));
+    auto* FogGate=Set(TEXT("/Engine/BasicShapes/Plane"),TEXT("M_DungeonFogGate"));
     // Crossed vertical cards, base at Base; yaw jitter keeps neighbours from lining up.
     auto Flame=[&](FVector Base,float Width,float Tall,int32 Cards,int32 Seed)
     {
@@ -128,16 +143,47 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
         // Ribs from each pier top to the central boss of the vault.
         const FVector From=Radial(A,OuterWall-80,Height-20), To=Radial(A,230,Height+250);
         Box(Pier,(From+To)*.5f,FVector(FVector::Dist(From,To),55,60),(To-From).Rotation());
-        // Barred cells in alternate bays, torches on every pier face.
-        if(I%2==0)
+        // Bays: 0 is the sealed great door behind the boss (+X), 8 the entry door with its
+        // fog wall (-X), other even bays barred cells (4 and 12 collapsed into rubble), odd
+        // bays guardian statues with candle shrines on the parapet in front.
+        const float MidYaw=FMath::RadiansToDegrees(Mid), Face=MidYaw+90;
+        const bool Door=I==0 || I==8;
+        if(Door)
         {
-            for(float Side:{-1.f,1.f}) Box(Pier,Centre+Tangent*Side*190+FVector(0,0,220)-Radial(Mid,40,0),FVector(80,60,440),FRotator(0,FMath::RadiansToDegrees(Mid),0));
-            Box(Pier,Centre+FVector(0,0,470)-Radial(Mid,40,0),FVector(80,440,60),FRotator(0,FMath::RadiansToDegrees(Mid),0));
-            for(int32 B=-4;B<=4;++B)
-                Box(IronRound,Centre+Tangent*B*38+FVector(0,0,220)-Radial(Mid,55,0),FVector(7,7,440),FRotator::ZeroRotator);
-            for(float Z:{120.f,330.f})
-                Box(Iron,Centre+FVector(0,0,Z)-Radial(Mid,55,0),FVector(6,340,10),FRotator(0,FMath::RadiansToDegrees(Mid),0));
+            for(float Side:{-1.f,1.f}) Box(Pier,Centre+Tangent*Side*235+FVector(0,0,290)-Radial(Mid,30,0),FVector(90,70,660),FRotator(0,MidYaw,0));
+            Box(Pier,Centre+FVector(0,0,650)-Radial(Mid,30,0),FVector(90,560,80),FRotator(0,MidYaw,0));
+            Prop(TEXT("SM_CastleDoor"),Centre-Radial(Mid,15,0)+FVector(0,0,-40),FRotator(0,Face,0),FVector(2.05f,2,2.05f));
+            if(I==8) Box(FogGate,Centre-Radial(Mid,75,0)+FVector(0,0,-40+320),FVector(450,640,100),FRotator(0,Face,90));
         }
+        else if(I%2==0 && (I==4 || I==12))
+        {
+            for(int32 K=0;K<4;++K)
+                Prop(*FString::Printf(TEXT("SM_Rock0%d"),1+(I+K)%6),Centre-Radial(Mid,40+K*25,0)+Tangent*(K-1.5f)*120+FVector(0,0,-40+K%2*60),
+                     FRotator(Hash(I*9+K)*20-10,Hash(I*5+K)*360,Hash(I*3+K)*20-10),FVector(.75f+Hash(I+K)*.35f));
+        }
+        else if(I%2==0)
+        {
+            for(float Side:{-1.f,1.f}) Box(Pier,Centre+Tangent*Side*190+FVector(0,0,220)-Radial(Mid,40,0),FVector(80,60,440),FRotator(0,MidYaw,0));
+            Box(Pier,Centre+FVector(0,0,470)-Radial(Mid,40,0),FVector(80,440,60),FRotator(0,MidYaw,0));
+            Prop(TEXT("SM_IronGate"),Centre-Radial(Mid,45,0)+FVector(0,0,-40),FRotator(0,Face,0),FVector(1.08f,1,1.45f));
+        }
+        else
+        {
+            const FVector Plinth=Radial(Mid,1475,0);
+            Box(Pier,Plinth+FVector(0,0,80),FVector(230,320,240),FRotator(0,MidYaw,0));
+            Prop(TEXT("SM_Statue"),Plinth+FVector(0,0,200),FRotator(0,Face,0),FVector(1.85f));
+            Prop(TEXT("SM_KiteShield"),Plinth+Tangent*120-Radial(Mid,70,0)+FVector(0,0,200),FRotator(-18,Face+15,0),FVector(1));
+            Prop(I%4==1?TEXT("SM_Mace"):TEXT("SM_WarHammer"),Plinth-Tangent*115-Radial(Mid,85,0)+FVector(0,0,203),FRotator(0,Face+60,-88),FVector(1.1f));
+            // Shrine on the parapet top (2.6 m) in front of the statue.
+            const FVector Ledge=Radial(Mid,1362,260);
+            Prop(TEXT("SM_Candelabra"),Ledge,FRotator(0,Hash(I)*360,0),FVector(1));
+            Prop(TEXT("SM_CandleTriple"),Ledge+Tangent*55,FRotator(0,Face+Hash(I+1)*40,0),FVector(1));
+            Prop(TEXT("SM_CandleSmall"),Ledge-Tangent*45,FRotator::ZeroRotator,FVector(1));
+            Prop(TEXT("SM_CandleSmall"),Ledge-Tangent*70+Radial(Mid,8,0),FRotator::ZeroRotator,FVector(.8f));
+        }
+        // Tattered banner on an iron rod in every bay.
+        Box(Banner,Radial(Mid,OuterWall-12,790),FVector(170,440,100),FRotator(0,Face,90));
+        Box(IronRound,Radial(Mid,OuterWall-14,1015),FVector(5,5,210),FRotator(90,Face,0));
         const FVector Torch=Radial(A,OuterWall-150,420);
         Box(Iron,Torch-Radial(A,-30,40),FVector(60,10,10),FRotator(-35,Yaw+180,0));
         Box(IronRound,Torch,FVector(22,22,18),FRotator::ZeroRotator);
@@ -170,7 +216,7 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
         Flame(Top+FVector(0,0,52),150,250,3,I*13+1);
         // Shadowless: eight cube-shadowed point lights cost 48 shadow views per frame;
         // the overhead key light carries the fighters' shadows instead.
-        Light(Top+FVector(0,0,190),80000,2000,FireColor,false);
+        Light(Top+FVector(0,0,190),60000,2000,FireColor,false);
         Out.EmberSources.Add(Top+FVector(0,0,90));
     }
 
@@ -184,11 +230,21 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
         if(I%2==0) { Box(IronRound,Radial(A,280,Ring+20),FVector(12,12,22),FRotator::ZeroRotator); Flame(Radial(A,280,Ring+30),16,38,2,I+400); }
         if(I%6==0) Box(IronRound,Radial(A,275,(Ring+Height+230)*.5f),FVector(5,5,Height+230-Ring),FRotator::ZeroRotator);
     }
-    auto* Key=World->SpawnActor<ASpotLight>(FVector(0,0,Ring-20),FRotator(-90,0,0));
+    // Cool moonlight through a broken oculus is the fighters' key and only shadow caster;
+    // the fire supplies warm rims. A soft additive cone and drifting dust mark the shaft.
+    const float Oculus=Height+278;
+    auto* Key=World->SpawnActor<ASpotLight>(FVector(0,0,Oculus-30),FRotator(-90,0,0));
     auto* KeyC=CastChecked<USpotLightComponent>(Key->GetLightComponent());
-    KeyC->SetMobility(EComponentMobility::Movable); KeyC->SetIntensity(450000); KeyC->SetAttenuationRadius(2400);
-    KeyC->SetOuterConeAngle(58); KeyC->SetInnerConeAngle(30); KeyC->SetLightColor(FLinearColor(1,.62,.36)); KeyC->SetCastShadows(true);
-    Out.Lights.Add(KeyC); Out.Base.Add(450000);
+    KeyC->SetMobility(EComponentMobility::Movable); KeyC->SetIntensity(2000000); KeyC->SetAttenuationRadius(2600);
+    KeyC->SetOuterConeAngle(44); KeyC->SetInnerConeAngle(16); KeyC->SetLightColor(FLinearColor(.62,.74,1)); KeyC->SetCastShadows(true);
+    Out.Lights.Add(KeyC); Out.Base.Add(2000000);
+    auto* Sky=Set(Cylinder,TEXT("M_DungeonDust"));
+    Box(Sky,FVector(0,0,Oculus),FVector(340,340,4),FRotator::ZeroRotator);
+    auto* Shaft=Set(TEXT("/Engine/BasicShapes/Cone"),TEXT("M_DungeonShaft"));
+    Box(Shaft,FVector(0,0,Oculus*.5f),FVector(1300,1300,Oculus),FRotator::ZeroRotator);
+    auto* Dust=Set(Sphere,TEXT("M_DungeonDust"));
+    for(int32 I=0;I<90;++I) Dust->AddInstance(FTransform(FRotator::ZeroRotator,FVector(0,0,100),FVector(.006f)),true);
+    Out.Dust=Dust;
 
     // Embers: tiny glowing motes rising from the braziers (animated in AnimateDungeon).
     auto* Embers=Set(Sphere,TEXT("MI_Amber"));
@@ -204,8 +260,12 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
     Post->bUnbound=true;
     Post->GetBrushComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     Post->Settings.bOverride_VignetteIntensity=true; Post->Settings.VignetteIntensity=.55f;
-    Post->Settings.bOverride_BloomIntensity=true; Post->Settings.BloomIntensity=1.1f;
-    Post->Settings.bOverride_ColorSaturation=true; Post->Settings.ColorSaturation=FVector4(1,.96,.92,1);
+    Post->Settings.bOverride_BloomIntensity=true; Post->Settings.BloomIntensity=.75f;
+    // Muted, gritty grade: lower saturation, firmer contrast, cool shadows, light grain.
+    Post->Settings.bOverride_ColorSaturation=true; Post->Settings.ColorSaturation=FVector4(.86,.84,.82,1);
+    Post->Settings.bOverride_ColorContrast=true; Post->Settings.ColorContrast=FVector4(1.12,1.12,1.12,1);
+    Post->Settings.bOverride_ColorGainShadows=true; Post->Settings.ColorGainShadows=FVector4(.92,.97,1.08,1);
+    Post->Settings.bOverride_FilmGrainIntensity=true; Post->Settings.FilmGrainIntensity=.18f;
 }
 
 // Presentation-time flicker and embers; the fixed combat step never reads these.
@@ -219,6 +279,17 @@ void AWardenArenaMode::AnimateDungeon(FWardenDungeon& D,float T)
             const float Flicker=1+.10f*FMath::Sin(T*7.3f+P)+.07f*FMath::Sin(T*13.1f+P*1.7f)+.05f*FMath::Sin(T*23.f+P*.3f);
             L->SetIntensity(D.Base[I]*(L->IsA<USpotLightComponent>()?1+(Flicker-1)*.3f:Flicker));
         }
+    if(auto* Dust=D.Dust.Get())
+    {
+        TArray<FTransform> Motes; Motes.SetNum(Dust->GetInstanceCount());
+        for(int32 I=0;I<Motes.Num();++I)
+        {
+            const float Z=FMath::Frac(Hash(I+40)+T*.012f*(.5f+Hash(I+41)))*1500+80;
+            const float R=FMath::Sqrt(Hash(I+42))*(120+Z*.32f), A=Hash(I+43)*2*PI+T*.05f;
+            Motes[I]=FTransform(FRotator::ZeroRotator,FVector(FMath::Cos(A)*R,FMath::Sin(A)*R,Z)+FVector(FMath::Sin(T*.4f+I),FMath::Cos(T*.3f+I*.5f),0)*25,FVector(.006f));
+        }
+        Dust->BatchUpdateInstancesTransforms(0,Motes,true,true);
+    }
     auto* E=D.Embers.Get();
     if(!E || D.EmberSources.IsEmpty()) return;
     TArray<FTransform> Motes; Motes.SetNum(E->GetInstanceCount());
