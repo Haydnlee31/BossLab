@@ -293,7 +293,14 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             GripError=FMath::Max(GripError,FVector::Distance(CS[Hand].GetLocation()+Finger*7,Grip));
         }
     }
-    VisualBody->BoneSpaceTransforms=Local;
+    if(Local.Num()<Ref.GetNum())
+    {
+        // Revamp swing-chain bones follow the mannequin's; SwingCloth sets them below.
+        TArray<FTransform> Full=Local;
+        for(int32 I=Local.Num();I<Ref.GetNum();++I) Full.Add(VisualBody->BoneSpaceTransforms.IsValidIndex(I)?VisualBody->BoneSpaceTransforms[I]:Ref.GetRefBonePose()[I]);
+        VisualBody->BoneSpaceTransforms=MoveTemp(Full);
+    }
+    else VisualBody->BoneSpaceTransforms=Local;
     VisualBody->RefreshBoneTransforms();
     FQuat Rotation=FRotator(0,-90,0).Quaternion(); FVector Origin(0,0,-95);
     if(Fight.Action==EWardenAction::Dodge || Fight.Action==EWardenAction::Dead)
@@ -322,4 +329,5 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     SwordRoot->SetRelativeTransform(SwordFrame);
     VisualBody->UpdateComponentToWorld(); SwordRoot->UpdateComponentToWorld();
     UpdateAshbound(Travel);
+    SwingCloth(CS);
 }

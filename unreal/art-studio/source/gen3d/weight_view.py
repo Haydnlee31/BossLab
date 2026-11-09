@@ -1,7 +1,7 @@
 """Render a rigged .blend coloured by each vertex's dominant bone family.
 
 blender -b -P weight_view.py -- <rig.blend> <out_prefix>   (writes -front/-side/-back PNGs)
-red = arms/hands, green = legs/feet, blue = spine/neck/clavicles, yellow = pelvis, white = head.
+magenta = cape/robe swing chains, red = arms/hands, green = legs/feet, blue = spine/neck/clavicles, yellow = pelvis, white = head.
 """
 import bpy, math, sys
 from mathutils import Vector
@@ -13,6 +13,8 @@ mesh = next(o for o in scene.objects if o.type == 'MESH')
 names = {g.index: g.name for g in mesh.vertex_groups}
 
 def family(n):
+    if n.startswith('cape_'):
+        return (.8, .2, 1)
     if n.startswith(('upperarm', 'lowerarm', 'hand')) or n.split('_')[0] in ('index', 'middle', 'ring', 'pinky', 'thumb'):
         return (1, .1, .1)
     if n.startswith(('thigh', 'calf', 'foot', 'ball')):

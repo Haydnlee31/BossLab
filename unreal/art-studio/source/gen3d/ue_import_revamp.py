@@ -1,8 +1,12 @@
 """Import the rigged revamp characters as skeletal meshes on SK_Mannequin.
 
-Run headless: ./scripts/bosslab-unreal python unreal/art-studio/source/gen3d/ue_import_revamp.py
-Creates /Game/BossLab/Revamp/{SKM_RevampPlayer, SKM_RevampRegent}, their textures and
-one masked material each (base colour + roughness/metal).
+Run in the editor: ./scripts/bosslab-unreal editor unreal/art-studio/source/gen3d/ue_import_revamp.py
+(creating a new skeleton makes the FBX importer report through Slate, which asserts in
+headless commandlets; the script quits the editor when done).
+Creates /Game/BossLab/Revamp/{SKM_RevampPlayer, SKM_RevampRegent}, each on its own
+skeleton (the mannequin's bones followed by the cape/robe swing chains), their textures
+and two materials each: opaque "Solid" for armour and masked "Cloth" for faces that use
+the base-colour alpha (torn edges).
 """
 import json, os
 import unreal
@@ -13,7 +17,6 @@ DEST = '/Game/BossLab/Revamp'
 tools = unreal.AssetToolsHelpers.get_asset_tools()
 mel = unreal.MaterialEditingLibrary
 eal = unreal.EditorAssetLibrary
-skeleton = unreal.load_asset('/Game/Characters/Mannequins/Meshes/SK_Mannequin')
 report = {}
 
 def import_task(filename, name, options=None):
@@ -41,12 +44,13 @@ def get_or_create(name, cls, factory):
         raise RuntimeError('could not create ' + path)
     return asset
 
-def character_material(name, base_tex, mr_tex):
+def character_material(name, base_tex, mr_tex, masked):
     # Direct texture samples, one material per character: headless compiles do not
     # register instance parameters reliably, which left instances on default textures.
+    # Two-sided either way: the generated cloth is often a single sheet.
     mat = get_or_create(name, unreal.Material, unreal.MaterialFactoryNew())
     mel.delete_all_material_expressions(mat)
-    mat.set_editor_property('blend_mode', unreal.BlendMode.BLEND_MASKED)
+    mat.set_editor_property('blend_mode', unreal.BlendMode.BLEND_MASKED if masked else unreal.BlendMode.BLEND_OPAQUE)
     mat.set_editor_property('two_sided', True)
     mat.set_editor_property('opacity_mask_clip_value', 0.5)
     # Standalone -game cannot add usage flags at runtime; without this it renders the default material.
@@ -57,7 +61,8 @@ def character_material(name, base_tex, mr_tex):
     mr.set_editor_property('texture', mr_tex)
     mr.set_editor_property('sampler_type', unreal.MaterialSamplerType.SAMPLERTYPE_MASKS)
     mel.connect_material_property(base, 'RGB', unreal.MaterialProperty.MP_BASE_COLOR)
-    mel.connect_material_property(base, 'A', unreal.MaterialProperty.MP_OPACITY_MASK)
+    if masked:
+        mel.connect_material_property(base, 'A', unreal.MaterialProperty.MP_OPACITY_MASK)
     mel.connect_material_property(mr, 'G', unreal.MaterialProperty.MP_ROUGHNESS)
     mel.connect_material_property(mr, 'B', unreal.MaterialProperty.MP_METALLIC)
     mel.recompile_material(mat)
@@ -67,11 +72,17 @@ for key, stem in (('player', 'SKM_RevampPlayer'), ('regent', 'SKM_RevampRegent')
     folder = os.path.join(RIG, key)
     base_tex = texture(os.path.join(folder, f'{stem}_BaseColor.png'), f'T_{stem[4:]}_BaseColor', True)
     mr_tex = texture(os.path.join(folder, f'{stem}_MetalRough.png'), f'T_{stem[4:]}_MetalRough', False)
-    mi = character_material(f'M_{stem[4:]}', base_tex, mr_tex)
+    solid = character_material(f'M_{stem[4:]}', base_tex, mr_tex, False)
+    cloth = character_material(f'M_{stem[4:]}Cloth', base_tex, mr_tex, True)
+    # The swing chains change the skeleton, so rebuild the mesh and its own skeleton
+    # from scratch rather than reimporting onto the old asset.
+    for old in (stem, stem + '_Skeleton'):
+        if eal.does_asset_exist(f'{DEST}/{old}'):
+            eal.delete_asset(f'{DEST}/{old}')
 
     ui = unreal.FbxImportUI()
     ui.import_mesh = True; ui.import_as_skeletal = True; ui.mesh_type_to_import = unreal.FBXImportType.FBXIT_SKELETAL_MESH
-    ui.skeleton = skeleton
+    ui.skeleton = None
     ui.import_materials = False; ui.import_textures = False; ui.import_animations = False
     ui.create_physics_asset = False
     sm = ui.skeletal_mesh_import_data
@@ -85,12 +96,14 @@ for key, stem in (('player', 'SKM_RevampPlayer'), ('regent', 'SKM_RevampRegent')
         continue
     slots = []
     for m in mesh.get_editor_property('materials'):
-        slots.append(unreal.SkeletalMaterial(material_interface=mi, material_slot_name=m.get_editor_property('material_slot_name')))
+        name = m.get_editor_property('material_slot_name')
+        slots.append(unreal.SkeletalMaterial(material_interface=cloth if 'Cloth' in str(name) else solid, material_slot_name=name))
     mesh.set_editor_property('materials', slots)
     mesh_mats = [str(m.get_editor_property('material_interface').get_path_name()) if m.get_editor_property('material_interface') else None
                  for m in mesh.get_editor_property('materials')]
     b = mesh.get_bounds()
     report[key] = {'imported': paths, 'skeleton': mesh.get_editor_property('skeleton').get_path_name(),
+                   'slots': [str(m.get_editor_property('material_slot_name')) for m in mesh.get_editor_property('materials')],
                    'materials': mesh_mats, 'bounds_extent': [b.box_extent.x, b.box_extent.y, b.box_extent.z],
                    'bounds_origin': [b.origin.x, b.origin.y, b.origin.z]}
 
@@ -101,3 +114,4 @@ for old in ('M_RevampCharacter', 'MI_RevampPlayer', 'MI_RevampRegent'):
 eal.save_directory(DEST, only_if_is_dirty=False, recursive=True)
 json.dump(report, open(os.path.join(RIG, 'ue-import-report.json'), 'w'), indent=1)
 unreal.log('BOSSLAB revamp import ' + json.dumps(report))
+unreal.SystemLibrary.quit_editor()

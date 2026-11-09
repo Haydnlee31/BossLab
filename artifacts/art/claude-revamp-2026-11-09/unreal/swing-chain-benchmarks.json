@@ -1,0 +1,30 @@
+{
+ "date": "2026-11-09",
+ "preset": "performance",
+ "resolution": "1280x720",
+ "note": "Back-to-back editor -game runs on a shared machine (Chrome/VS Code/animated wallpaper running; load average shown). Not isolated; no locked-60 claim.",
+ "revamp_loaded_crashreporters": {
+  "samples": 2426,
+  "mean_ms": 22.2348,
+  "p95_ms": 34.0425,
+  "load_average": "~29, two leftover CrashReportClient processes at ~88% CPU each"
+ },
+ "revamp_after_cleanup": {
+  "samples": 3052,
+  "mean_ms": 17.9354,
+  "p95_ms": 25.085,
+  "load_average": "24->23"
+ },
+ "original": {
+  "samples": 3258,
+  "mean_ms": 16.8477,
+  "p95_ms": 16.8425,
+  "load_average": "~11"
+ },
+ "revamp": {
+  "samples": 3145,
+  "mean_ms": 17.419,
+  "p95_ms": 22.3619,
+  "load_average": "10->17"
+ }
+}

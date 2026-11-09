@@ -3,9 +3,14 @@
   "imported": [
    "/Game/BossLab/Revamp/SKM_RevampPlayer.SKM_RevampPlayer"
   ],
-  "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin",
+  "skeleton": "/Game/BossLab/Revamp/SKM_RevampPlayer_Skeleton.SKM_RevampPlayer_Skeleton",
+  "slots": [
+   "Solid",
+   "Cloth"
+  ],
   "materials": [
-   "/Game/BossLab/Revamp/M_RevampPlayer.M_RevampPlayer"
+   "/Game/BossLab/Revamp/M_RevampPlayer.M_RevampPlayer",
+   "/Game/BossLab/Revamp/M_RevampPlayerCloth.M_RevampPlayerCloth"
   ],
   "bounds_extent": [
    45.037193298339844,
@@ -22,9 +27,14 @@
   "imported": [
    "/Game/BossLab/Revamp/SKM_RevampRegent.SKM_RevampRegent"
   ],
-  "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin",
+  "skeleton": "/Game/BossLab/Revamp/SKM_RevampRegent_Skeleton.SKM_RevampRegent_Skeleton",
+  "slots": [
+   "Solid",
+   "Cloth"
+  ],
   "materials": [
-   "/Game/BossLab/Revamp/M_RevampRegent.M_RevampRegent"
+   "/Game/BossLab/Revamp/M_RevampRegent.M_RevampRegent",
+   "/Game/BossLab/Revamp/M_RevampRegentCloth.M_RevampRegentCloth"
   ],
   "bounds_extent": [
    45.968801498413086,

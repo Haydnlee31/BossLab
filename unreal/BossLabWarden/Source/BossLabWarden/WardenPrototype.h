@@ -23,6 +23,14 @@ struct FWardenOutfitSupport
     TArray<FVector> Vertices;
 };
 
+// Presentation-only cape/robe chain on the revamp costumes (see WardenRevamp.cpp).
+struct FWardenSwingChain
+{
+    TArray<int32> Bones;
+    int32 Anchor=INDEX_NONE;
+    TArray<FVector> Pos,Prev;
+};
+
 UCLASS()
 class BOSSLABWARDEN_API AWardenChallenger : public APawn
 {
@@ -66,6 +74,8 @@ public:
     bool bV13Outfit=false;
     bool DressRevamp();
     bool bRevampOutfit=false;
+    TArray<FWardenSwingChain> SwingChains;
+    void SwingCloth(const TArray<FTransform>& CS);
     FString V13SourceHash;
     void UpdateAshbound(const FVector& Travel);
     int32 OutfitTriangles=0;
