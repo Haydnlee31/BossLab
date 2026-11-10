@@ -1,0 +1,11 @@
+{
+ "space": "black-forest-labs/FLUX.1-schnell",
+ "prompt": "A single ancient human skull with its lower jaw, viewed from the side at a 45 degree angle so the temple, cheekbone and back of the cranium are clearly visible, weathered grey-ivory bone with dark grime in the cracks and sutures, chipped teeth, isolated on a plain flat light grey background, centered, whole skull in frame filling most of the image, studio product photograph, soft even diffuse lighting, sharp detail, no text",
+ "seed": 7,
+ "steps": 4,
+ "size": [
+  1024,
+  1024
+ ],
+ "seconds": 8
+}

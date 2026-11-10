@@ -1,0 +1,11 @@
+{
+ "space": "black-forest-labs/FLUX.1-schnell",
+ "prompt": "A single ancient human skull with its lower jaw, three-quarter front view, aged ivory bone with hairline cracks, chipped teeth, deep eye sockets, isolated on a plain flat light grey background, centered, whole skull in frame filling most of the image, studio product photograph, soft even diffuse lighting, no shadows, sharp detail, no text",
+ "seed": 11,
+ "steps": 4,
+ "size": [
+  1024,
+  1024
+ ],
+ "seconds": 8
+}
