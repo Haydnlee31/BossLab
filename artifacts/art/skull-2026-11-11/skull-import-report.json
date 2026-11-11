@@ -1,0 +1,23 @@
+{
+ "SM_RegentSkullGen": {
+  "size_cm": [
+   22.0,
+   15.0,
+   19.3
+  ],
+  "min_cm": [
+   -11.0,
+   -7.5,
+   -9.7
+  ],
+  "triangles": 8997,
+  "material": "M_RegentSkullGen"
+ },
+ "SM_RegentSkull (interim)": {
+  "size_cm": [
+   19.9,
+   13.5,
+   18.0
+  ]
+ }
+}

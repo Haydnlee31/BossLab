@@ -1,0 +1,17 @@
+{
+ "triangles_source": 284035,
+ "triangles": 9000,
+ "yaw": 90.0,
+ "textures": [
+  {
+   "material": "Material_0",
+   "node": "BASE COLOR",
+   "path": "/Users/haydn/Documents/BossLab/artifacts/art/skull-2026-11-11/prep/T_RegentSkullGen_0.png"
+  },
+  {
+   "material": "Material_0",
+   "node": "METALLIC ROUGHNESS",
+   "path": "/Users/haydn/Documents/BossLab/artifacts/art/skull-2026-11-11/prep/T_RegentSkullGen_1.png"
+  }
+ ]
+}

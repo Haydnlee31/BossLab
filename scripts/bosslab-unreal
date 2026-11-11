@@ -16,7 +16,7 @@ ENGINE = Path(os.environ.get('BOSSLAB_UE_ROOT', '/Users/Shared/Epic Games/UE_5.8
 EVIDENCE = ROOT / 'artifacts/unreal'
 CACHE = ROOT / 'unreal/.cache'
 GIB = 1024 ** 3
-RESERVE = 24 * GIB
+RESERVE = 15 * GIB  # Owner lowered from 24 GiB on 2026-11-11
 LIMIT = 10_000_000_000  # Owner-approved total work budget, decimal 10 GB
 
 def storage():

@@ -566,8 +566,12 @@ void AWardenArenaMode::BuildRegentView()
     V.bLantern=Lantern;
     V.Chain=Set(Mesh(TEXT("SM_RegentLink"),TEXT("/Engine/BasicShapes/Cube"),Link),Link?nullptr:Load(TEXT("none"),TEXT("BlackIron")),FWardenRegentView::Links);
     V.bLinks=Link;
-    V.Bones=Set(Mesh(TEXT("SM_RegentSkull"),TEXT("/Engine/BasicShapes/Sphere"),Skull),Skull?nullptr:Load(TEXT("/Game/BossLab/Regent/M_RegentBone"),TEXT("Stone")),WardenRegent::Skulls);
-    V.bSkull=Skull;
+    // The generated skull (its own material) wins over the interim one when imported.
+    UStaticMesh* GenSkull=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/Regent/Skull/SM_RegentSkullGen"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    if(GenSkull) Skull=true;
+    V.Bones=GenSkull ? Set(GenSkull,nullptr,WardenRegent::Skulls)
+                     : Set(Mesh(TEXT("SM_RegentSkull"),TEXT("/Engine/BasicShapes/Sphere"),Skull),Skull?nullptr:Load(TEXT("/Game/BossLab/Regent/M_RegentBone"),TEXT("Stone")),WardenRegent::Skulls);
+    V.bSkull=Skull; V.bGenSkull=GenSkull!=nullptr;
     V.Eyes=Set(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Sphere")),Load(TEXT("/Game/BossLab/Regent/Props/M_RegentLanternCore"),TEXT("Jade")),WardenRegent::Skulls*2);
     V.Fire=Set(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Plane")),Load(TEXT("/Game/BossLab/Regent/M_RegentFlame"),TEXT("Jade")),FWardenRegentView::Flames);
     V.Glint=Set(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Plane")),Load(TEXT("/Game/BossLab/Regent/Props/M_RegentLanternCore"),TEXT("Jade")),2);
@@ -641,7 +645,8 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
     // Witness skulls: orbit while ready (bobbing, facing the player), fly as projectiles,
     // re-form over the last second of regrowth. Eyes burn brighter during the volley call.
     const bool Calling=Striking && F.Move==Volley && F.Age<F.Definition().Windup;
-    const float SkullScale=V.bSkull?1.4f:.3f;
+    // The generated skull is 22 cm long against the interim 19.9 cm; keep the same size on screen.
+    const float SkullScale=V.bGenSkull?1.27f:V.bSkull?1.4f:.3f;
     for(int32 S=0;S<Skulls;++S)
     {
         FVector Pos=BossAt+SkullOrbit(S,T)+FVector(0,0,6*FMath::Sin(Seconds*2.1f+S*2));

@@ -29,7 +29,8 @@ bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 before = sum(len(p.vertices) - 2 for p in skull.data.polygons)
 m = skull.modifiers.new('decimate', 'DECIMATE'); m.ratio = min(1.0, 9000 / max(1, before))
 bpy.ops.object.modifier_apply(modifier=m.name)
-skull.rotation_euler = (0, 0, math.radians(YAW))
+# The glTF importer leaves objects in quaternion mode, where rotation_euler is ignored.
+skull.rotation_mode = 'XYZ'; skull.rotation_euler = (0, 0, math.radians(YAW))
 bpy.ops.object.transform_apply(rotation=True)
 vs = [v.co for v in skull.data.vertices]
 lo = Vector((min(v.x for v in vs), min(v.y for v in vs), min(v.z for v in vs)))
@@ -43,7 +44,13 @@ for slot in skull.data.materials:
         for n in slot.node_tree.nodes:
             if n.type == 'TEX_IMAGE' and n.image:
                 path = os.path.join(OUT, f'T_RegentSkullGen_{len(textures)}.png')
-                n.image.filepath_raw = path; n.image.file_format = 'PNG'; n.image.save()
+                # image.save() keeps the glTF's embedded format (WebP), which Unreal rejects;
+                # copy the pixels into a fresh PNG image instead (same colour space, no transform).
+                src = n.image; w, h = src.size
+                png = bpy.data.images.new(f'png_{len(textures)}', w, h, alpha=True)
+                png.colorspace_settings.name = src.colorspace_settings.name
+                png.pixels = src.pixels[:]
+                png.filepath_raw = path; png.file_format = 'PNG'; png.save()
                 textures.append({'material': slot.name, 'node': n.label or n.name, 'path': path})
 bpy.ops.object.select_all(action='DESELECT'); skull.select_set(True)
 bpy.ops.export_scene.fbx(filepath=os.path.join(OUT, 'SM_RegentSkullGen.fbx'), use_selection=True, apply_unit_scale=True,
