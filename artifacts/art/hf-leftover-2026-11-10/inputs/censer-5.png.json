@@ -1,0 +1,11 @@
+{
+ "space": "black-forest-labs/FLUX.1-schnell",
+ "prompt": "A single ornate gothic funeral censer lantern hanging from a short ring, blackened iron cage with pierced arched windows and a pointed spire cap, tarnished bronze bands and finials, glass panes, empty, isolated on a plain flat light grey background, centered, whole object in frame, three-quarter view, studio product photograph, soft even diffuse lighting, sharp detail, no chain, no text",
+ "seed": 5,
+ "steps": 4,
+ "size": [
+  1024,
+  1024
+ ],
+ "seconds": 12
+}
