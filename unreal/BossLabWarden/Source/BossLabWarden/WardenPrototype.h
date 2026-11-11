@@ -129,7 +129,7 @@ public:
     FWardenFighterState Fight;
     bool bBoss = false;
     EWardenAction PendingAction = EWardenAction::Ready;
-    int32 PendingAge=0;
+    int32 PendingAge=0, PendingHeld=0;   // ticks waited while allowed / while still committed
     FVector PendingDirection=FVector::ZeroVector;
     FVector CommittedDirection = FVector::ForwardVector;
     FVector StrikeOrigin = FVector::ZeroVector;

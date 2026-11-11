@@ -37,6 +37,10 @@ namespace WardenRules
     // A broken boss stance staggers it long enough to punish (Elden Ring stance break), and
     // blows landed on a staggered boss deal critical damage.
     inline constexpr int32 InputBufferTicks = 18, HurtTicks = 18, BossHurtTicks = 84;
+    // Elden Ring style buffering: a press made while committed (wind-up, contact, hurt)
+    // waits for the first tick it is allowed (a roll comes out at the recovery-cancel point)
+    // instead of expiring, up to this long; after that the usual InputBufferTicks apply.
+    inline constexpr int32 HeldInputTicks = 64;
     inline constexpr float StaggerCritical = 2.5f;
     inline constexpr int32 RegenDelayTicks = 30, BossRegenDelayTicks = 42, BossPoise = 4;
     // The flask costs no stamina (as in Elden Ring); only the drinking time commits you.

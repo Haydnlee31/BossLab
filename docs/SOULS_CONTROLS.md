@@ -159,3 +159,34 @@ The owner reported three problems: they couldn't run, jump and attack together; 
 - **Animation.** Attack and jump poses are procedural keys on the mannequin. There is no new animation clip.
 - **Not built:** heavy (R2) or charged attacks, guarding, parrying, backsteps, ripostes or stance-break criticals.
 - **Bot fairness.** The beatability bot is frame-perfect. It shows the fight can be won; it does not measure how hard it is for a person.
+
+## Held input buffering (2026-11-11)
+
+- **Owner report:** "once u attack you are stucked until the attack is over then u can roll".
+- **Cause:** the roll-cancel point was already early, 8 ticks after the hit frames. But a buffered press expired after 18 ticks (0.3 s), and a greatsword wind-up plus hit lasts 0.6–0.77 s. A roll pressed early in the swing was silently dropped, so the player had to press again after the swing.
+- **How Elden Ring does it:**
+  - [The official combat guide](https://www.bandainamcoent.com/news/elden-ring-introduction-part-4-combat-guide) says you cannot dodge until the attack animation allows it, and a pressed action is "queued and performed at the next available chance".
+  - [Community PvP frame data](https://docs.google.com/document/d/1dTJsUb28vCvyTeQZPOMY5KFei4MG9TfLqHzkrvPzvXQ/mobilebasic) lists "Recovery to Dodge" after the active frames: 3 frames at 30 fps for a thrusting-sword R1, and 10 frames (about 0.33 s) for a greatsword 2H R1.
+  - So a wind-up is committed, and responsiveness comes from the buffer.
+- **Change:**
+  - **Held, not dropped:** a press made while the current action cannot yet be cancelled into it (wind-up, contact, hurt, a drink) no longer ages out. It fires on the first allowed tick, up to `HeldInputTicks` = 64 (1.07 s). Once the action could run, the usual 18-tick window applies.
+  - **Roll direction:** a buffered roll takes the stick direction at the moment it comes out, falling back to the direction at the press.
+  - **Unchanged:** wind-ups stay committed (no feint), and cancel points are unchanged.
+- **Timings:**
+
+  | Move | Roll available from | Total |
+  |---|---|---|
+  | Cut I | 0.80 s | 1.13 s |
+  | Cut II | 0.73 s | 1.07 s |
+  | Cut III | 0.90 s | 1.40 s |
+  | Jump attack | 0.93 s | 1.20 s |
+  | Rolling thrust | 0.50 s | 0.90 s |
+  | Running cut | 0.67 s | 1.10 s |
+
+  Roll availability is the hit end plus 0.13 s; for the jump attack it is plus 0.40 s.
+- **Tests:** `BoundedInputBufferWithoutCancel` now checks three things:
+  - a wind-up roll is held and fires on exactly the first recovery-cancel tick;
+  - the swing is never cancelled before that;
+  - a roll pressed at the start of a drink expires instead of firing late.
+
+  Native suite 33/33, including `ReactiveBotCanWin`. Not owner-tested.

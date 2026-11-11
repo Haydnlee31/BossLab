@@ -245,10 +245,27 @@ bool FWardenInputBufferTest::RunTest(const FString&)
     for(int32 I=0;I<5;++I) M->FixedStep();
     TestEqual(TEXT("Late roll input executes after recovery"),int32(M->Player->Fight.Action),int32(EWardenAction::Dodge));
     TestEqual(TEXT("Buffered request consumed once"),int32(M->Player->PendingAction),int32(EWardenAction::Ready));
+    // Elden Ring style: a roll pressed in the wind-up cannot cancel it, but it is held and
+    // comes out on the first recovery-cancel tick instead of being lost.
     M->ResetEncounter(); M->Player->BeginAction(EWardenAction::Strike,0,FVector::ForwardVector); M->Player->PendingAction=EWardenAction::Dodge;
-    for(int32 I=0;I<WardenRules::InputBufferTicks+2;++I) M->FixedStep();
-    TestEqual(TEXT("Early roll cannot cancel sword"),int32(M->Player->Fight.Action),int32(EWardenAction::Strike));
-    TestEqual(TEXT("Old buffered input expires after the buffer window"),int32(M->Player->PendingAction),int32(EWardenAction::Ready));
+    M->Player->PendingDirection=FVector::RightVector;
+    int32 RolledAt=-1;
+    for(int32 I=0;I<WardenRules::HeldInputTicks && RolledAt<0;++I)
+    {
+        const int32 Age=M->Player->Fight.Age;
+        M->FixedStep();
+        if(M->Player->Fight.Action==EWardenAction::Dodge) RolledAt=Age+1;
+        else TestEqual(TEXT("Early roll cannot cancel the committed swing"),int32(M->Player->Fight.Action),int32(EWardenAction::Strike));
+    }
+    TestTrue(TEXT("Roll pressed in the wind-up is held, not dropped"),RolledAt>0);
+    TestFalse(TEXT("Held roll waits for the recovery-cancel point"),WardenRules::RecoveryCancelOpen(0,RolledAt-2));
+    TestTrue(TEXT("Held roll fires on the first cancel tick"),WardenRules::RecoveryCancelOpen(0,RolledAt-1));
+    // Held input is still bounded: a roll pressed at the start of a drink (never cancellable)
+    // expires instead of firing a second later.
+    M->ResetEncounter(); M->Player->Fight.Health=50; M->Player->BeginAction(EWardenAction::Heal,0,FVector::ForwardVector); M->Player->PendingAction=EWardenAction::Dodge;
+    for(int32 I=0;I<WardenRules::HeldInputTicks+2;++I) M->FixedStep();
+    TestEqual(TEXT("Held input expires after the held window"),int32(M->Player->PendingAction),int32(EWardenAction::Ready));
+    TestTrue(TEXT("No late roll from an expired press"),M->Player->Fight.Action!=EWardenAction::Dodge);
     for(int32 Remaining=0;Remaining<=4;++Remaining)
     {
         M->ResetEncounter(); M->Player->BeginAction(EWardenAction::Strike,0,FVector::ForwardVector);

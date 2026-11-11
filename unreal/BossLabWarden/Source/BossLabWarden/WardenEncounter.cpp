@@ -38,7 +38,7 @@ void AWardenChallenger::ResetFighter(bool Boss)
     FootLocked[0]=FootLocked[1]=false; FootRelease[0]=FootRelease[1]=1; FootLow[0]=FootLow[1]=1e9f;
     Fight.IsBoss = Boss;
     Fight.Health = Fight.MaxHealth = Boss ? 240.f : 100.f;
-    PendingAction = EWardenAction::Ready; PendingAge=0; PendingDirection=FVector::ZeroVector; PresentedAction = -1;
+    PendingAction = EWardenAction::Ready; PendingAge=0; PendingHeld=0; PendingDirection=FVector::ZeroVector; PresentedAction = -1;
     HitFlash = RejectFlash = DeathAge = 0; MoveVelocity=FVector::ZeroVector;
     Accumulator = 0; MotionBase.Empty();
     if(Locomotion) Body->PlayAnimation(Locomotion,true);
@@ -429,7 +429,10 @@ void AWardenArenaMode::FixedStep()
     if (Player->PendingAction != EWardenAction::Ready)
     {
         const auto Action = Player->PendingAction;
-        const FVector Aim = Action == EWardenAction::Dodge ? (bScriptedPlayer?Intent:Player->PendingDirection) : (Player->IsLocked() || bScriptedPlayer) ? Warden->GetActorLocation()-Player->GetActorLocation() : Player->GetActorForwardVector();
+        // A buffered roll goes where the stick points when it comes out (as in Elden Ring),
+        // falling back to the direction held at the press.
+        const FVector Live = bScriptedPlayer ? Intent : Player->MoveIntent();
+        const FVector Aim = Action == EWardenAction::Dodge ? (bScriptedPlayer||!Live.IsNearlyZero()?Live:Player->PendingDirection) : (Player->IsLocked() || bScriptedPlayer) ? Warden->GetActorLocation()-Player->GetActorLocation() : Player->GetActorForwardVector();
         const bool Accepted=Player->BeginAction(Action,Action==EWardenAction::Strike ? Player->Fight.NextPlayerMove() : 0,Action==EWardenAction::Jump ? Intent : Aim);
         const bool Rejected=Player->Fight.Ready() && !Accepted;
         if(Rejected)
@@ -438,9 +441,14 @@ void AWardenArenaMode::FixedStep()
             LastEvent=Player->Fight.Stamina<(Action==EWardenAction::Dodge?WardenRules::DodgeCost:Action==EWardenAction::Strike?Player->Fight.StrikeCostOf(Player->Fight.NextPlayerMove()):Action==EWardenAction::Jump?WardenRules::JumpCost:WardenRules::HealCost)
                 ? TEXT("Not enough stamina.") : Action==EWardenAction::Heal ? TEXT("Heal unavailable: full health or no charges.") : TEXT("Still recovering.");
         }
-        if(Accepted || Rejected || ++Player->PendingAge>WardenRules::InputBufferTicks)
+        // While the current action cannot yet be cancelled into this one, the press is held
+        // (bounded) rather than aged out, so it fires on the first allowed tick.
+        const int32 Index=Action==EWardenAction::Strike ? Player->Fight.NextPlayerMove() : 0;
+        const bool Held=!Accepted && !Rejected && !Player->Fight.Ready() && !Player->Fight.CancelOpen(Action,Index);
+        const bool Expired=Held ? ++Player->PendingHeld>WardenRules::HeldInputTicks : ++Player->PendingAge>WardenRules::InputBufferTicks;
+        if(Accepted || Rejected || Expired)
         {
-            Player->PendingAction=EWardenAction::Ready; Player->PendingAge=0;
+            Player->PendingAction=EWardenAction::Ready; Player->PendingAge=0; Player->PendingHeld=0;
             // The queued follow-up (an attack pressed right after a jump or roll) becomes
             // the buffered input once its lead action has started.
             if(Accepted && Player->FollowAction!=EWardenAction::Ready) Player->PendingAction=Player->FollowAction;
