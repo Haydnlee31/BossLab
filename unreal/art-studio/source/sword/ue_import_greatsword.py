@@ -66,8 +66,12 @@ def steel():
     pos = mel.create_material_expression(mat, unreal.MaterialExpressionLocalPosition, -900, 0)
     node = custom(mat, STEEL_CODE, ['P'], unreal.CustomMaterialOutputType.CMOT_FLOAT3, -650, 0)
     mel.connect_material_expressions(pos, '', node, 'P')
-    r = mel.create_material_expression(mat, unreal.MaterialExpressionComponentMask, -400, 0); r.set_editor_property('r', True)
-    g = mel.create_material_expression(mat, unreal.MaterialExpressionComponentMask, -400, 150); g.set_editor_property('g', True)
+    # Set every channel explicitly: a new ComponentMask defaults to R+G, which made the base
+    # colour float2 x float3 and the material silently fell back to the default.
+    r = mel.create_material_expression(mat, unreal.MaterialExpressionComponentMask, -400, 0)
+    g = mel.create_material_expression(mat, unreal.MaterialExpressionComponentMask, -400, 150)
+    for mask, keep in ((r, 'r'), (g, 'g')):
+        for ch in 'rgba': mask.set_editor_property(ch, ch == keep)
     mel.connect_material_expressions(node, '', r, ''); mel.connect_material_expressions(node, '', g, '')
     tint = mel.create_material_expression(mat, unreal.MaterialExpressionMultiply, -200, 0)
     mel.connect_material_expressions(r, '', tint, 'A'); mel.connect_material_expressions(const(mat, (1, 1, 1.06), -400, -150), '', tint, 'B')

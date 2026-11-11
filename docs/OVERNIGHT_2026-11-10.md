@@ -116,3 +116,5 @@ All runs below are at 720p with the performance preset, the Regent and the revam
 - **Playable elevation:** ground-following movement with step-up and slopes, then a raised dais or sunken ring on the fight floor.
 - **Performance:** benchmark on a quiet machine. If the full build is below 60, the first suspects are the dynamic lights (the 17 dungeon lights, plus the censer and sword).
 - **Feel:** owner playtest of everything above.
+
+**Correction (2026-11-11):** `M_SwordSteel` failed to compile until 2026-11-11 (ComponentMask channel defaults), so the greatsword evidence above shows the blade with the engine default material; see `artifacts/art/soulfire-runes-2026-11-11/README.md`.

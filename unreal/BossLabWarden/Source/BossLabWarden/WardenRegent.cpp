@@ -610,7 +610,17 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
     {
         if(Fire.Num()>=FWardenRegentView::Flames || Tall<1) return;
         const float Yaw=(Eye-Base).Rotation().Yaw-90+FMath::Sin(Seed*1.7f+Seconds*.5f)*8;
-        Fire.Add(FTransform(FRotator(0,Yaw,90),Base+FVector(0,0,Tall*.5f),FVector(Width,Tall,100)/100));
+        // 1.3x wider than the tongue itself: M_RegentFlame keeps a soft halo around it.
+        Fire.Add(FTransform(FRotator(0,Yaw,90),Base+FVector(0,0,Tall*.5f),FVector(Width*1.3f,Tall,100)/100));
+    };
+    // A flame card whose tongue points along TipDir, turned to the camera. The flame's base
+    // is at the card's +Y end, so the card's Y axis runs against TipDir.
+    auto Streak=[&](const FVector& Base,const FVector& TipDir,float Width,float Length)
+    {
+        if(Fire.Num()>=FWardenRegentView::Flames || Length<1 || TipDir.IsNearlyZero()) return;
+        const FVector Y=TipDir.GetSafeNormal();
+        const FQuat Q=FRotationMatrix::MakeFromYZ(-Y,(Eye-Base).GetSafeNormal()).ToQuat();
+        Fire.Add(FTransform(Q,Base+Y*Length*.5f,FVector(Width*1.3f,Length,100)/100));
     };
     auto Set=[](UInstancedStaticMeshComponent* C,int32 I,const FTransform& X) { C->UpdateInstanceTransform(I,X,true,false,true); };
     const FTransform Hidden(FRotator::ZeroRotator,BossAt,FVector::ZeroVector);
@@ -659,11 +669,16 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
         Set(V.Bones.Get(),S,FTransform(Look,Pos,FVector(SkullScale*Size)));
         for(int32 E=0;E<2;++E)
             Set(V.Eyes.Get(),S*2+E,FTransform(Look,Pos+Look.RotateVector(FVector(7.5f,E?3.f:-3.f,1)*SkullScale)*Size,FVector((Calling?.05f:.035f)*Size)));
-        if(Size>.2f) Flame(Pos+FVector(0,0,10*SkullScale/1.4f),30*Size,(Calling?100:45)*Size,S+20);
-        // Soul-fire trail streaming behind a flying skull.
+        if(Size>.2f) Flame(Pos+FVector(0,0,10*SkullScale/1.4f),32*Size,(Calling?110:55)*Size,S+20);
+        // Soul-fire trail: one long tongue streaming back along the flight line, with two
+        // short licks rising off it, instead of a row of upright cones.
         if(InFlight)
-            for(int32 K=1;K<=4;++K)
-                Flame(Pos-Facing.GetSafeNormal()*K*20-FVector(0,0,8),(34-6*K)*1.f,(70-12*K)*1.f,S*13+K);
+        {
+            const FVector Back=-Facing.GetSafeNormal();
+            Streak(Pos-Back*6,Back+FVector(0,0,.12f),38,150+20*FMath::Sin(Seconds*17+S));
+            Streak(Pos,Back+FVector(0,0,.35f),22,75);
+            for(int32 K=1;K<=2;++K) Flame(Pos+Back*K*45-FVector(0,0,4),24-6*K,40-10*K,S*13+K);
+        }
     }
 
     // Soul-fire eyes in the mask (brighter in phase two), hidden while vanished.
@@ -698,14 +713,34 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
     // Floor marks and fire: pools burn, furrow marks warm up then erupt, the ash-step
     // destination and the pyre blast radius are drawn before they resolve.
     int32 Used=0;
-    auto Disc=[&](const FVector& Centre,float Radius,float Intensity,FLinearColor Tint)
+    // Reveal (0-1) draws the rune mandala in with an angular sweep.
+    auto Disc=[&](const FVector& Centre,float Radius,float Intensity,FLinearColor Tint,float Reveal=1)
     {
         if(Used>=V.Disc.Num()) return;
         auto* D=V.Disc[Used].Get(); auto* M=V.DiscMaterial[Used].Get(); ++Used;
-        D->SetWorldLocationAndRotation(FVector(Centre.X,Centre.Y,1.5f),FRotator::ZeroRotator);
+        D->SetWorldLocationAndRotation(FVector(Centre.X,Centre.Y,1.5f+.2f*Used),FRotator::ZeroRotator);
         D->SetWorldScale3D(FVector(Radius/50,Radius/50,.01f)); D->SetVisibility(true);
         M->SetScalarParameterValue(TEXT("Radius"),Radius); M->SetScalarParameterValue(TEXT("Intensity"),Intensity); M->SetVectorParameterValue(TEXT("Tint"),Tint);
+        M->SetScalarParameterValue(TEXT("Reveal"),Reveal);
     };
+    // Summoning circle under the Regent while a spell is called; it draws itself in over
+    // the first 60% of the wind-up and fades just after release.
+    if(Striking && Kind(F.Move)==EKind::Cast && !Gone)
+    {
+        const float Wind=F.Definition().Windup, Age=F.Age;
+        const float Fade=1-FMath::Clamp((Age-Wind)/12.f,0.f,1.f);
+        if(Fade>0) Disc(BossAt,175,(.6f+.6f*FMath::Clamp(Age/Wind,0.f,1.f))*Fade,FLinearColor(.2,.5,1),FMath::Clamp(Age/(Wind*.6f),0.f,1.f));
+    }
+    // Witness Circle: the mandala forms under the player as the skulls take their orbit.
+    {
+        int32 Orbit=0;
+        for(const auto& K:Regent.Flying) Orbit=FMath::Max(Orbit,K.Orbit);
+        if(Orbit>0 && Player)
+        {
+            const float U=1-Orbit/float(CircleOrbitTicks);
+            Disc(Player->GetActorLocation(),CircleRadius,.5f+.9f*U*U,FLinearColor(.25,.45,1),FMath::Clamp(U*1.6f,0.f,1.f));
+        }
+    }
     for(int32 I=0;I<Regent.Hazards.Num();++I)
     {
         const auto& H=Regent.Hazards[I];
