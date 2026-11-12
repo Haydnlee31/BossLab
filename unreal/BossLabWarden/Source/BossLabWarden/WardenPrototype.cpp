@@ -262,9 +262,9 @@ void AWardenArenaMode::BeginPlay()
     }
     DressArena();
     BuildEffects();
-    SetupAudio();
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabRegent"))) EnableRegent();
     bRegentPhaseTwoStart=bRegent && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegentPhaseTwo"));
+    SetupAudio();
     ResetEncounter();
     bTitle=true;
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabCapture")))
@@ -412,6 +412,8 @@ void AWardenPrototypeHUD::DrawHUD()
         DrawText(TEXT("Two-handed greatsword. Fixed attack rehearsal. AI deferred."),FColor(180,195,200),W*.24f,H*.59f);
         DrawText(TEXT("Tab target / Space roll / Shift sprint / Esc menu."),FColor(180,195,200),W*.24f,H*.64f);
         DrawText(TEXT("F6: watch a labeled development player"),FColor(130,210,215),W*.24f,H*.69f);
+        // CC BY attribution for the sounds in use (see CREDITS.md).
+        DrawText(TEXT("Sound: \"Ghost Manifestation 1\" by OGsoundFX, \"Scattered Ghost\" by qubodup (CC BY); belarathbone, Kenney (CC0)"),FColor(120,130,135),W*.24f,H*.72f,nullptr,.8f);
     }
     if (auto* Player = Cast<AWardenChallenger>(GetOwningPawn()); Player && Player->IsLocked() && !Mode->bPaused)
     {

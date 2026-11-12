@@ -27,7 +27,7 @@ bool FWardenAudioVariationTest::RunTest(const FString&)
         const TPair<const TCHAR*,int32> Events[]={{TEXT("SwordWhooshLight"),5},{TEXT("SwordWhooshHeavy"),4},{TEXT("SwordHit"),5},{TEXT("SwordSlam"),3},
             {TEXT("RuneHum"),3},{TEXT("BodyHit"),5},{TEXT("GearSwing"),4},{TEXT("RollCloth"),4},{TEXT("StepStone"),8},{TEXT("StepHeavy"),5},
             {TEXT("LandHeavy"),3},{TEXT("FlaskDrink"),3},{TEXT("RegentBell"),3},{TEXT("RegentWhoosh"),4},{TEXT("RegentThrust"),4},
-            {TEXT("RegentSkull"),4},{TEXT("RegentBlink"),3},{TEXT("RegentEruption"),3},{TEXT("RegentPyre"),2},{TEXT("RegentWakes"),3},
+            {TEXT("RegentSkull"),5},{TEXT("RegentSkullDive"),3},{TEXT("RegentWhisper"),4},{TEXT("RegentCast"),4},{TEXT("RegentCastLong"),2},{TEXT("RegentChoir"),3},{TEXT("MusicBoss"),1},{TEXT("RegentBlink"),3},{TEXT("RegentEruption"),3},{TEXT("RegentPyre"),2},{TEXT("RegentWakes"),3},
             {TEXT("AmbDungeon"),1},{TEXT("AmbFire"),1}};
         for(const auto& E:Events) TestEqual(FString::Printf(TEXT("%s variations"),E.Key),M->SfxVariations(E.Key,nullptr).Num(),E.Value);
     }

@@ -344,6 +344,11 @@ void AWardenArenaMode::RegentResolve()
         if(F.Move==AshStep && (A==AshVanish || A==AshAppear)) RegentSound(TEXT("RegentBlink"),A==AshVanish ? BossAt : R.AshTarget,.6f);
         if(F.Move==Wakes && A==1) RegentSound(TEXT("RegentWakes"),BossAt,.55f);
         if(F.Move==Pyre && Since==0) RegentSound(TEXT("RegentPyre"),BossAt,.8f);
+        // Casting is heard before it is seen to resolve: whispers swell into the release while
+        // the summoning circle draws itself (the Pyre's longer wind-up gets the long swell and
+        // the choir of the dead).
+        if(Kind(F.Move)==EKind::Cast && A==1) RegentSound(TEXT("RegentCast"),BossAt,.75f);
+        if(F.Move==Pyre && A==1) { RegentSound(TEXT("RegentCastLong"),BossAt,.8f); RegentSound(TEXT("RegentChoir"),BossAt,.55f); }
         switch(F.Move)
         {
         case Wakes:
@@ -391,6 +396,8 @@ void AWardenArenaMode::RegentResolve()
                         K.Orbit=CircleOrbitTicks; K.OrbitAngle=S*120.f;
                         R.Flying.Add(K); R.Regrow[S]=SkullRegrowPhaseTwo;
                         RegentSound(TEXT("RegentSkull"),K.Position,.3f);
+                        RegentSound(TEXT("RegentChoir"),Player->GetActorLocation(),.5f);
+                        RegentSound(TEXT("RegentWhisper"),Player->GetActorLocation()+FVector(0,0,70),.6f);
                     }
             break;
         case Furrow:
@@ -432,7 +439,7 @@ void AWardenArenaMode::RegentResolve()
             if(--K.Orbit==0)
             {
                 K.Velocity=(Target-(K.Position+Step)).GetSafeNormal()*CircleDiveSpeed;
-                RegentSound(TEXT("RegentSkull"),K.Position,.25f);
+                RegentSound(TEXT("RegentSkullDive"),K.Position,.6f);
             }
         }
         else if(K.Homing)

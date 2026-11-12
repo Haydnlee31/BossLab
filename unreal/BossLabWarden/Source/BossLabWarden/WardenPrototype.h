@@ -286,6 +286,9 @@ public:
     TArray<float> AmbienceVolume;
     bool bAmbienceMuted=false;
     TMap<FString,int32> RegentSoundTick;   // last combat tick each Regent sound played
+    TWeakObjectPtr<class UAudioComponent> MusicComponent;
+    float MusicTarget=-1, MusicPitch=1;
+    float MusicLevel() const;
     // Hit-stop ticks left and camera shake strength (presentation) after a landed blow.
     int32 HitStop=0;
     // Test-only pilot: when set, replaces keyboard intent and may queue player actions.

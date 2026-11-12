@@ -1,7 +1,7 @@
 """Import the layered game sound set (make_game_audio.py) to /Game/BossLab/Sound.
 
 Run: ./scripts/bosslab-unreal python unreal/art-studio/source/audio/ue_import_game_audio.py
-Input: artifacts/audio-2026-11-12/out (<Name>_<n>.wav). Ambience beds (Amb*) are set to loop.
+Input: artifacts/audio-2026-11-12/out (<Name>_<n>.wav). Ambience beds (Amb*) and the music bed (Music*) are set to loop.
 Local, not committed, like the other imported assets. The game picks a random variation per
 play (AWardenArenaMode::PlaySfx) and falls back to the older single sounds when absent.
 """
@@ -27,7 +27,7 @@ done, loops = [], []
 for t in tasks:
     sound = unreal.load_asset(f'{DEST}/{t.destination_name}')
     if not sound: continue
-    if t.destination_name.startswith('Amb'):
+    if t.destination_name.startswith(('Amb', 'Music')):
         sound.set_editor_property('looping', True); loops.append(t.destination_name)
     done.append(t.destination_name)
 eal.save_directory(DEST, only_if_is_dirty=False, recursive=True)

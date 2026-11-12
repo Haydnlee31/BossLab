@@ -581,38 +581,46 @@
   "loop": false
  },
  "RegentSkull_0": {
-  "seconds": 0.9,
+  "seconds": 0.95,
   "layers": [
-   "organic fire bed (flutter roar, wood-grain crackle 18/s)",
-   "fire whoosh (rpg_cloth1 -7 st + opening low-pass noise)",
-   "impactWood_light_000 +3 st (bone clack)"
+   "fs_scream 2.6s +2 st (shriek)",
+   "fs_scream -12 st (weight)",
+   "fire whoosh",
+   "wood-grain crackle",
+   "impactWood_light_000 +3 st"
   ],
   "loop": false
  },
  "RegentSkull_1": {
-  "seconds": 0.9,
+  "seconds": 0.95,
   "layers": [
-   "organic fire bed (flutter roar, wood-grain crackle 18/s)",
-   "fire whoosh (rpg_cloth2 -8 st + opening low-pass noise)",
-   "impactWood_light_001 +3 st (bone clack)"
+   "fs_scream 3.9s +3 st (shriek)",
+   "fs_scream -12 st (weight)",
+   "fire whoosh",
+   "wood-grain crackle",
+   "impactWood_light_001 +3 st"
   ],
   "loop": false
  },
  "RegentSkull_2": {
-  "seconds": 0.9,
+  "seconds": 0.95,
   "layers": [
-   "organic fire bed (flutter roar, wood-grain crackle 18/s)",
-   "fire whoosh (rpg_cloth3 -9 st + opening low-pass noise)",
-   "impactWood_light_002 +3 st (bone clack)"
+   "fs_scream 5.1s +4 st (shriek)",
+   "fs_scream -12 st (weight)",
+   "fire whoosh",
+   "wood-grain crackle",
+   "impactWood_light_002 +3 st"
   ],
   "loop": false
  },
  "RegentSkull_3": {
-  "seconds": 0.9,
+  "seconds": 0.95,
   "layers": [
-   "organic fire bed (flutter roar, wood-grain crackle 18/s)",
-   "fire whoosh (rpg_cloth4 -7 st + opening low-pass noise)",
-   "impactWood_light_003 +3 st (bone clack)"
+   "fs_scream 6.6s +5 st (shriek)",
+   "fs_scream -12 st (weight)",
+   "fire whoosh",
+   "wood-grain crackle",
+   "impactWood_light_003 +3 st"
   ],
   "loop": false
  },
@@ -734,5 +742,171 @@
    "organic brazier bed (flutter roar, wood-grain crackle 7/s)"
   ],
   "loop": true
+ },
+ "RegentSkull_4": {
+  "seconds": 0.95,
+  "layers": [
+   "fs_scream 8.0s +2 st (shriek)",
+   "fs_scream -12 st (weight)",
+   "fire whoosh",
+   "wood-grain crackle",
+   "impactWood_light_004 +3 st"
+  ],
+  "loop": false
+ },
+ "RegentSkullDive_0": {
+  "seconds": 0.85,
+  "layers": [
+   "fs_scream 3.0s gliding x0.85->1.45",
+   "fire whoosh",
+   "fs_scream -12 st"
+  ],
+  "loop": false
+ },
+ "RegentSkullDive_1": {
+  "seconds": 0.85,
+  "layers": [
+   "fs_scream 5.2s gliding x0.85->1.45",
+   "fire whoosh",
+   "fs_scream -12 st"
+  ],
+  "loop": false
+ },
+ "RegentSkullDive_2": {
+  "seconds": 0.85,
+  "layers": [
+   "fs_scream 7.4s gliding x0.85->1.45",
+   "fire whoosh",
+   "fs_scream -12 st"
+  ],
+  "loop": false
+ },
+ "RegentWhisper_0": {
+  "seconds": 2.2,
+  "layers": [
+   "fs_whispers 10.6s",
+   "same -5 st doubled",
+   "smeared tail"
+  ],
+  "loop": false
+ },
+ "RegentWhisper_1": {
+  "seconds": 2.2,
+  "layers": [
+   "fs_whispers 29.2s",
+   "same -5 st doubled",
+   "smeared tail"
+  ],
+  "loop": false
+ },
+ "RegentWhisper_2": {
+  "seconds": 2.2,
+  "layers": [
+   "fs_whispers 43.4s",
+   "same -5 st doubled",
+   "smeared tail"
+  ],
+  "loop": false
+ },
+ "RegentWhisper_3": {
+  "seconds": 2.2,
+  "layers": [
+   "fs_whispers 61.5s",
+   "same -5 st doubled",
+   "smeared tail"
+  ],
+  "loop": false
+ },
+ "RegentCast_0": {
+  "seconds": 1.22,
+  "layers": [
+   "fs_whispers 20s smeared + reversed (swell)",
+   "opening low-pass riser",
+   "fs_scatteredghost -12 st drone",
+   "soul-fire bloom on release"
+  ],
+  "loop": false
+ },
+ "RegentCast_1": {
+  "seconds": 1.22,
+  "layers": [
+   "fs_whispers 33s smeared + reversed (swell)",
+   "opening low-pass riser",
+   "fs_scatteredghost -12 st drone",
+   "soul-fire bloom on release"
+  ],
+  "loop": false
+ },
+ "RegentCast_2": {
+  "seconds": 1.22,
+  "layers": [
+   "fs_whispers 46s smeared + reversed (swell)",
+   "opening low-pass riser",
+   "fs_scatteredghost -12 st drone",
+   "soul-fire bloom on release"
+  ],
+  "loop": false
+ },
+ "RegentCast_3": {
+  "seconds": 1.22,
+  "layers": [
+   "fs_whispers 59s smeared + reversed (swell)",
+   "opening low-pass riser",
+   "fs_scatteredghost -12 st drone",
+   "soul-fire bloom on release"
+  ],
+  "loop": false
+ },
+ "RegentCastLong_0": {
+  "seconds": 1.72,
+  "layers": [
+   "fs_whispers 28s smeared + reversed (swell)",
+   "opening low-pass riser",
+   "fs_scatteredghost -12 st drone",
+   "soul-fire bloom on release"
+  ],
+  "loop": false
+ },
+ "RegentCastLong_1": {
+  "seconds": 1.72,
+  "layers": [
+   "fs_whispers 41s smeared + reversed (swell)",
+   "opening low-pass riser",
+   "fs_scatteredghost -12 st drone",
+   "soul-fire bloom on release"
+  ],
+  "loop": false
+ },
+ "RegentChoir_0": {
+  "seconds": 3.2,
+  "layers": [
+   "fs_scatteredghost 6s -3 st",
+   "smeared tail"
+  ],
+  "loop": false
+ },
+ "RegentChoir_1": {
+  "seconds": 3.2,
+  "layers": [
+   "fs_scatteredghost 24s -3 st",
+   "smeared tail"
+  ],
+  "loop": false
+ },
+ "RegentChoir_2": {
+  "seconds": 3.2,
+  "layers": [
+   "fs_scatteredghost 42s -3 st",
+   "smeared tail"
+  ],
+  "loop": false
+ },
+ "MusicBoss_0": {
+  "seconds": 63.0,
+  "layers": [
+   "fs_scatteredghost_stereo 1.5-68.5 s, 4 s crossfade loop"
+  ],
+  "loop": true,
+  "channels": 2
  }
 }

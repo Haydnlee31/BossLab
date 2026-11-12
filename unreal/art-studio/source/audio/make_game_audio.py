@@ -294,5 +294,87 @@ save('AmbDungeon_0', loopable(room + wind + drips, 2), ['brown-noise room tone',
 crackle = fire(10, 180, 7, 99) * .6
 save('AmbFire_0', loopable(crackle, 2), ['organic brazier bed (flutter roar, wood-grain crackle 7/s)'], .6, loop=True)
 
+# --- Voices of the dead (Freesound sources the owner downloaded; see CREDITS.md) ----------
+# Research recipe: the scary layer is a human voice made "recognisable but wrong" (reversed,
+# smeared, pitched); a high shriek over a low copy reads as something large; casting is a
+# charge-up (reversed swell / riser / drone) that peaks on the release.
+def smear(x, seconds, seed):
+    # Cheap reverb-like smear: FFT convolution with a decaying noise burst.
+    r = np.random.default_rng(seed); ir = r.standard_normal(int(SR * seconds)) * np.exp(-np.linspace(0, 6, int(SR * seconds)))
+    n = len(x) + len(ir); y = np.fft.irfft(np.fft.rfft(x, n) * np.fft.rfft(ir, n), n)
+    return y / (np.abs(y).max() + 1e-9)
+
+def varispeed(x, start, end, seconds):
+    # Pitch glide: playback rate moves from start to end over the output length.
+    n = int(SR * seconds); rate = np.linspace(start, end, n)
+    idx = np.cumsum(rate); idx = idx[idx < len(x) - 1]
+    return np.interp(idx, np.arange(len(x)), x)
+
+def fade(x, a, r):
+    return x * env(len(x), a, r, 1.5)
+
+def stereo_save(name, lr, layers, peak=.7, fade_s=4.0):
+    # Music bed: seamless stereo loop (tail crossfaded into the head).
+    n = int(SR * fade_s); head, body = lr[:n].copy(), lr[n:].copy()
+    w = np.linspace(0, 1, n)[:, None]; body[-n:] = body[-n:] * (1 - w) + head * w
+    body = body / (np.abs(body).max() + 1e-9) * peak
+    with wave.open(os.path.join(OUT, name + '.wav'), 'wb') as f:
+        f.setnchannels(2); f.setsampwidth(2); f.setframerate(SR)
+        f.writeframes((np.clip(body, -1, 1) * 32767).astype(np.int16).tobytes())
+    manifest[name] = {'seconds': round(len(body) / SR, 3), 'layers': layers, 'loop': True, 'channels': 2}
+
+if os.path.exists(os.path.join(SRC, 'fs_scream.wav')):
+    scream, whispers, ghost = load('fs_scream'), load('fs_whispers'), load('fs_scatteredghost')
+    vr = np.random.default_rng(77)
+    def slice_(x, at, seconds): return x[int(SR * at):int(SR * (at + seconds))].copy()
+    # Skull launch: a shriek (scream slice pitched up), the same slice an octave down for weight,
+    # the fire rush and crackle, and the bone clack.
+    for k in range(5):
+        at = 2.2 + 1.4 * k + vr.uniform(0, .5); sec = .62 + .06 * (k % 3)
+        cry = fade(pitch(slice_(scream, at, sec * 1.3), 2 + k % 4), .015, .35)
+        low = fade(pitch(slice_(scream, at, sec * .6), -12), .02, .3)
+        rush = fire_whoosh(.9, 40 + k); crack = crackles(.9, 14, np.random.default_rng(50 + k))
+        bone = pitch(load(pick('impact_impactWood_light', k)), 3)
+        save(f'RegentSkull_{k}', mix(.95, (cry, 0, 1), (low, 0, .35), (rush, 0, .55), (crack, 0, .4), (bone, 0, .4)),
+             [f'fs_scream {at:.1f}s +{2 + k % 4} st (shriek)', 'fs_scream -12 st (weight)', 'fire whoosh', 'wood-grain crackle', pick('impactWood_light', k) + ' +3 st'], .75)
+    # Witness Circle dive: the scream glides upward as the skulls converge.
+    for k in range(3):
+        at = 3.0 + 2.2 * k
+        cry = fade(varispeed(slice_(scream, at, 1.4), .85, 1.45, .8), .01, .25)
+        save(f'RegentSkullDive_{k}', mix(.85, (cry, 0, 1), (fire_whoosh(.85, 60 + k), 0, .5), (pitch(slice_(scream, at, .5), -12), 0, .25)),
+             [f'fs_scream {at:.1f}s gliding x0.85->1.45', 'fire whoosh', 'fs_scream -12 st'], .8)
+    # Orbiting skulls: smeared, doubled whispers.
+    for k in range(4):
+        at = 9 + 17 * k + vr.uniform(0, 4)
+        w = slice_(whispers, at, 1.6); w = w / (np.abs(w).max() + 1e-9)
+        dbl = pitch(w, -5)
+        sm = smear(w, .6, k)[:int(SR * 2.2)]
+        save(f'RegentWhisper_{k}', fade(mix(2.2, (w, 0, .8), (dbl, .04, .45), (sm, 0, .5)), .25, .8),
+             [f'fs_whispers {at:.1f}s', 'same -5 st doubled', 'smeared tail'], .6)
+    # Casting: whispers smeared then reversed so they swell INTO the release, an opening
+    # riser and a ghost drone an octave down; a short soul-fire bloom on the release.
+    for name, rise, count in (('RegentCast', .72, 4), ('RegentCastLong', 1.22, 2)):
+        for k in range(count):
+            at = 20 + 13 * k + (8 if rise > 1 else 0)
+            w = slice_(whispers, at, rise); w = w / (np.abs(w).max() + 1e-9)
+            swell = smear(w, .9, 10 + k)[::-1][-int(SR * rise):]
+            swell = swell * np.linspace(0, 1, len(swell)) ** 1.6
+            n = int(SR * rise); u = np.arange(n) / n
+            riser = onepole(rng.standard_normal(n), 300 + 3500 * u ** 2, stages=2) * u ** 2 * 3
+            drone = fade(pitch(slice_(ghost, 5 + 9 * k, rise * 2.2), -12), .2, .1)[:n]
+            bloom = fire_whoosh(.5, 70 + k) * env(int(SR * .5), .005, .45)
+            save(f'{name}_{k}', mix(rise + .5, (swell, 0, 1), (riser, 0, .55), (drone, 0, .5), (bloom, rise - .02, .7)),
+                 [f'fs_whispers {at}s smeared + reversed (swell)', 'opening low-pass riser', 'fs_scatteredghost -12 st drone', 'soul-fire bloom on release'], .75)
+    # Choir of the dead: wailing slices under the Witness Circle and the Pyre.
+    for k in range(3):
+        at = 6 + 18 * k
+        c = fade(pitch(slice_(ghost, at, 3.4), -3), .6, 1.2)
+        save(f'RegentChoir_{k}', mix(3.2, (c, 0, 1), (smear(c, .8, 30 + k)[:int(SR * 3.2)], 0, .35)),
+             [f'fs_scatteredghost {at}s -3 st', 'smeared tail'], .6)
+    # Boss music bed: the Scattered Ghost recording as a seamless stereo loop.
+    with wave.open(os.path.join(SRC, 'fs_scatteredghost_stereo.wav')) as f:
+        lr = np.frombuffer(f.readframes(f.getnframes()), np.int16).astype(np.float64).reshape(-1, 2) / 32768
+    stereo_save('MusicBoss_0', lr[int(SR * 1.5):int(SR * 68.5)], ['fs_scatteredghost_stereo 1.5-68.5 s, 4 s crossfade loop'])
+
 json.dump(manifest, open(os.path.join(OUT, 'manifest.json'), 'w'), indent=1)
 print('BOSSLAB game audio', len(manifest), 'files')

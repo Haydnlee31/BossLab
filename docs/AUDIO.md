@@ -115,3 +115,37 @@ The owner said the audio was "a bit plain" and asked how game audio engineers wo
   | AmbFire | 6.56 | 2.63 |
 
 - **Verification:** native suite 34/34. Not listened to.
+
+## Voices of the dead, casting and boss music (2026-11-12)
+
+- **Owner request:** scarier skulls, an audible cast when the summoning circle appears, research into similar bosses, and permission to download particular sounds.
+- **Research (general horror and game sound design; FromSoftware has published no combat-audio breakdown):**
+  - **Scary layer:** a human voice made "recognisable but wrong" (reversed or smeared whispers, a moan), with a high shriek over a low copy so it reads as something large ([SFX Engine](https://sfxengine.com/blog/ghostly-sounds-effects), [A Sound Effect](https://www.asoundeffect.com/how-to-create-horror-sound-effects), [SYFY](https://www.syfy.com/syfy-wire/horror-sounds-what-makes-something-scary-jurassic-park-last-of-us)).
+  - **Spells:** split into a charge-up (reversed swell, riser, drone) and a release ([Game Developer](https://www.gamedeveloper.com/audio/making-of-rpg-magic-2-sound-pack)).
+- **Sources:** the owner approved and downloaded three Freesound sounds. Licences were checked on each page; attribution is in [CREDITS.md](../CREDITS.md) and on the title screen.
+  - "Ghost Manifestation 1": CC BY 4.0.
+  - "Scattered Ghost": CC BY.
+  - belarathbone's whispers: CC0.
+- **Decoding:** [decode_freesound.py](../unreal/art-studio/source/audio/decode_freesound.py) decodes them with Blender's `aud`, to mono plus a stereo copy for the music.
+- **New and rebuilt events** (in `make_game_audio.py`, which now builds 98 files):
+
+  | Event | Trigger | Variations | Layers |
+  |---|---|---|---|
+  | RegentCast | spell wind-up start (Volley, Furrow, Circle), with the summoning circle | 4 | whispers smeared then reversed so they swell into the release; opening low-pass riser; Scattered Ghost an octave down as a drone; soul-fire bloom at 0.72 s. Loudness rises about 10× across the wind-up. |
+  | RegentCastLong | Funeral Pyre wind-up start | 2 | the same, rising over 1.22 s |
+  | RegentSkull (rebuilt) | skull launch | 5 | scream slice pitched up 2–5 semitones (shriek), the same slice an octave down (weight), fire whoosh, wood-grain crackle, bone clack |
+  | RegentSkullDive | Witness Circle dive | 3 | scream gliding upward (×0.85 → ×1.45), fire whoosh, low copy |
+  | RegentWhisper | Witness Circle orbit begins (at the player) | 4 | whispers, a doubled copy 5 semitones down, smeared tail |
+  | RegentChoir | Witness Circle orbit; Pyre wind-up | 3 | Scattered Ghost slices 3 semitones down with long fades, smeared tail |
+  | MusicBoss | under every boss fight (2D stereo loop, 63 s) | 1 | Scattered Ghost 1.5–68.5 s, 4 s crossfade; the seam is below one typical sample step |
+
+- **Music behaviour:**
+  - **Levels:** 0.34 under the Regent and 0.26 under the Warden.
+  - **Phase two:** swells to 0.5 at pitch ×0.92, which is deeper.
+  - **Boss death:** fades out over 4 s, and returns on a fresh encounter.
+  - **Mute:** muting silences it.
+- **Verification:**
+  - **Tests:** native suite 34/34. The variation test now also checks the counts for the 7 new events.
+  - **Real run** in phase two with the audio device on: "reverb hall, 7 ambience beds, music on", with no BossLab audio errors.
+  - **Benchmark:** 16.69 ms mean / 16.74 ms p95 at 720p.
+  - **Not listened to.**

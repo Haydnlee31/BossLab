@@ -114,11 +114,34 @@ void AWardenArenaMode::SetupAudio()
                 if(auto* C=UGameplayStatics::SpawnSoundAtLocation(this,Fire,Fires[I],FRotator::ZeroRotator,.5f,FMath::FRandRange(.9f,1.08f),FMath::FRandRange(0.f,7.f),Falloff,nullptr,false))
                 { AmbienceVolume.Add(C->VolumeMultiplier); Ambience.Add(C); }
         }
-    UE_LOG(LogTemp,Display,TEXT("BOSSLAB audio: reverb %s, %d ambience beds, %d variations across 5 sample events"),bDungeon?TEXT("hall"):TEXT("court"),Ambience.Num(),Loaded);
+    // Boss music: the Scattered Ghost bed loops under the fight (MusicBoss), deeper and louder
+    // in the Regent's second phase, and fades out when the boss falls (UpdateAudio).
+    if(USoundBase* Music=Bed(TEXT("MusicBoss")))
+        if(auto* C=UGameplayStatics::SpawnSound2D(this,Music,MusicLevel(),1,0,nullptr,true,false))
+        { C->FadeIn(4.f,MusicLevel()); MusicComponent=C; }
+    UE_LOG(LogTemp,Display,TEXT("BOSSLAB audio: reverb %s, %d ambience beds, music %s, %d variations across 5 sample events"),bDungeon?TEXT("hall"):TEXT("court"),Ambience.Num(),MusicComponent.IsValid()?TEXT("on"):TEXT("absent"),Loaded);
+}
+
+float AWardenArenaMode::MusicLevel() const
+{
+    const bool Living=Warden && Warden->Fight.Alive();
+    if(bMuted || !Living) return 0;
+    return bRegent ? (Regent.PhaseTwo ? .5f : .34f) : .26f;
 }
 
 void AWardenArenaMode::UpdateAudio()
 {
+    if(auto* C=MusicComponent.Get())
+    {
+        const float Level=MusicLevel(), Pitch=bRegent && Regent.PhaseTwo ? .92f : 1.f;
+        if(!FMath::IsNearlyEqual(Level,MusicTarget) || !FMath::IsNearlyEqual(Pitch,MusicPitch))
+        {
+            // Swell into phase two, fall away with the boss, return on a fresh encounter.
+            C->AdjustVolume(Level>MusicTarget ? 2.5f : 4.f,FMath::Max(Level,.0001f));
+            C->SetPitchMultiplier(Pitch);
+            MusicTarget=Level; MusicPitch=Pitch;
+        }
+    }
     // Mute applies to the looping beds as well as one-shots.
     if(bAmbienceMuted==bMuted) return;
     bAmbienceMuted=bMuted;
