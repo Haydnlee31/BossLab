@@ -163,3 +163,10 @@ The owner asked to "rectify all the problems, gradually refine the moves". The o
 - **Poses.** Procedural keys, not authored animation. The revamp Regent mesh still has its generated robe, and the chain clips through it in places.
 - **Performance:** only measured on a loaded machine (above).
 - **AI.** None: fixed sequence only. No learning, model or adaptation is connected.
+
+## Raise the Dead and censer floor contact (2026-11-12)
+
+- **Raise the Dead:** a new move (index 16, in both phases) raises two slow skeletons that fall in three blows.
+- **Censer:** the Censer Arc dips onto the floor and drags slowly, and the Grave Bell grinds back after its slam. Both use the same timing as before, with sparks and a scrape.
+
+See [artifacts/art/raise-censer-2026-11-12/README.md](../artifacts/art/raise-censer-2026-11-12/README.md).

@@ -282,6 +282,64 @@ for k in range(3):
     roar = (fire(1.6, 340, 20, 30 + k) + fire_whoosh(1.6, 30 + k) * .7) * env(int(SR * 1.6), .25, .8)
     save(f'RegentWakes_{k}', roar, ['organic rolling fire (flutter, wood-grain crackle 20/s)', 'fire whoosh'], .7)
 
+# --- Raised skeletons ---------------------------------------------------------------------------
+def knock(freq, decay, r):
+    # Dry bone clack: a resonant ring at freq excited by a 2 ms noise burst, dying in ~decay s.
+    n = int(SR * decay * 3); s = np.arange(n) / SR
+    burst = np.zeros(n); b = int(SR * .002); burst[:b] = r.standard_normal(b)
+    ring = bandpass(burst, freq, 7, stages=1) * np.exp(-s / decay)
+    return ring / (np.abs(ring).max() + 1e-9)
+
+def rattle(seconds, per_second, seed, lo=10, hi=17):
+    # Loose bones: dense short grains of light wood/generic impacts pitched up.
+    r = np.random.default_rng(seed); out = np.zeros(int(SR * seconds))
+    sources = [pick('impact_impactWood_light', j) for j in range(5)] + [pick('impact_impactGeneric_light', j) for j in range(5)]
+    for _ in range(int(seconds * per_second)):
+        g = pitch(load(sources[r.integers(len(sources))]), r.uniform(lo, hi))[:int(SR * r.uniform(.02, .06))]
+        g = g * np.exp(-np.linspace(0, 6, len(g))); at = int(r.uniform(0, max(1e-3, seconds - .06)) * SR)
+        k_ = knock(r.uniform(1400, 3200), r.uniform(.006, .014), r)
+        level = r.uniform(.2, 1)
+        out[at:at + len(g)] += g / (np.abs(g).max() + 1e-9) * level * .5
+        out[at:at + len(k_)] += k_[:len(out) - at] * level
+    # Bone is clacky and bright (the wood recordings are low): lift everything above 2 kHz.
+    return treble(out, 10, 2000)
+for k in range(3):
+    earth = pitch(load(pick('impact_impactMining', k)), -4)
+    save(f'SkeletonRise_{k}', mix(1.1, (earth, 0, 1), (rattle(1.0, 22, 200 + k) * env(int(SR * 1.0), .1, .3), .1, .8), (fire_whoosh(.6, 210 + k), 0, .3)),
+         [pick('impactMining', k) + ' -4 st', 'bone rattle 22/s', 'soul-fire breath'], .85)
+for k in range(5):
+    step = treble(pitch(load(pick('impact_impactWood_light', k)), 5), 8, 1800)
+    kr = np.random.default_rng(230 + k); step = mix(.3, (step / (np.abs(step).max() + 1e-9), 0, .7), (knock(kr.uniform(1500, 2600), .01, kr), .002, 1))
+    save(f'SkeletonStep_{k}', mix(.3, (step, 0, 1), (rattle(.25, 18, 220 + k), .01, .35)), [pick('impactWood_light', k) + ' +5 st, +8 dB treble', 'bone rattle'], .6)
+for k in range(3):
+    swish = whoosh(.45, 500 + 80 * k, 2200, 220, 0)
+    save(f'SkeletonSwing_{k}', mix(.6, (rattle(.4, 20, 240 + k), 0, .8), (swish, .25, .8)), ['bone rattle (wind-up)', 'procedural swish @0.25 s'], .7)
+for k in range(5):
+    crack = treble(pitch(load(pick('impact_impactWood_medium', k)), 6), 9, 1800)
+    kr = np.random.default_rng(250 + k)
+    crack = mix(.4, (crack / (np.abs(crack).max() + 1e-9), 0, .7), (knock(kr.uniform(1800, 2800), .018, kr), 0, 1), (knock(kr.uniform(1200, 1700), .025, kr), .012, .7))
+    punch = pitch(load(pick('impact_impactPunch_medium', k)), -1)
+    save(f'SkeletonHit_{k}', mix(.6, (crack, 0, 1), (punch, 0, .6), (rattle(.4, 30, 260 + k), .02, .6)),
+         [pick('impactWood_medium', k) + ' +6 st, +9 dB treble (bone crack)', pick('impactPunch_medium', k), 'bone rattle'], .9, present=.5)
+for k in range(3):
+    layers = [(rattle(1.2, 40, 280 + k) * env(int(SR * 1.2), .01, .7), 0, 1), (pitch(load(pick('impact_impactWood_heavy', k)), -3), .35, .8), (pitch(load(pick('impact_impactSoft_heavy', k)), -4), .5, .6)]
+    save(f'SkeletonFall_{k}', mix(1.4, *layers), ['bone collapse rattle 40/s', pick('impactWood_heavy', k) + ' -3 st', pick('impactSoft_heavy', k) + ' -4 st'], .9)
+
+# --- Censer grinding the floor ----------------------------------------------------------------
+for k in range(4):
+    clang = pitch(load(pick('impact_impactMetal_heavy', k)), -4)
+    knock = pitch(load(pick('impact_impactMining', k + 1)), -2)
+    r = np.random.default_rng(300 + k); n = int(SR * .75)
+    grit = np.zeros(n)
+    for _ in range(60):
+        g = pitch(load(pick('impact_impactMetal_light', int(r.integers(5)))), r.uniform(4, 10))[:int(SR * r.uniform(.006, .02))]
+        at = int(r.uniform(0, .7) * SR); grit[at:at + len(g)] += g * np.exp(-np.linspace(0, 5, len(g))) * r.uniform(.2, 1)
+    rough = bandpass(r.standard_normal(n), 2600, 1.2) * (1 + .8 * onepole(r.standard_normal(n), 40, stages=2) / .05)
+    rough = rough / (np.abs(rough).max() + 1e-9) * env(n, .02, .35)
+    chain = pitch(load('rpg_handleCoins' if k % 2 else 'rpg_handleCoins2'), -2)[:n]; chain = np.pad(chain, (0, n - len(chain))) * env(n, .02, .3)
+    save(f'CenserScrape_{k}', mix(.8, (clang, 0, .9), (knock, 0, .5), (grit * env(n, .01, .3), .02, .8), (rough, .02, .45), (chain, .01, .35)),
+         [pick('impactMetal_heavy', k) + ' -4 st (clang)', pick('impactMining', k + 1) + ' -2 st', '60 metal grains (grit)', 'rough friction band 2.6 kHz', 'chain jingle'], .9)
+
 # --- Ambience beds (seamless loops: crossfade the tail into the head) -------------------------
 def loopable(x, fade):
     n = int(SR * fade); head, body = x[:n], x[n:]
@@ -394,6 +452,21 @@ if os.path.exists(os.path.join(SRC, 'fs_scream.wav')):
         c = fade(pitch(slice_(ghost, at, 3.4), -3), .6, 1.2)
         save(f'RegentChoir_{k}', mix(3.2, (c, 0, 1), (smear(c, .8, 30 + k)[:int(SR * 3.2)], 0, .35)),
              [f'fs_scatteredghost {at}s -3 st', 'smeared tail'], .6)
+    # Raise the Dead: an audible whispered chant (two voices, the second 5 st down), lifted
+    # treble so it cuts through, a rising ghost drone, and a ground crack on the release
+    # (1.17 s, when the skeletons claw out). Kept clear of the louder skull cues.
+    for k in range(3):
+        at = 30 + 14 * k
+        w = slice_(whispers, at, 1.3); w = w / (np.abs(w).max() + 1e-9)
+        two = pitch(slice_(whispers, at + 7, 1.6), -5); two = two / (np.abs(two).max() + 1e-9)
+        chant = treble(fade(mix(1.3, (w, 0, 1), (two, .06, .7)), .15, .2), 6)
+        tail = smear(chant, .7, 80 + k)[:int(SR * 1.9)]
+        n = int(SR * 1.2); u = np.arange(n) / n
+        drone = fade(pitch(slice_(ghost, 12 + 7 * k, 3.0), -12), .3, .1)[:n] * u
+        crack = pitch(load(pick('impact_impactMining', k + 1)), -10)
+        save(f'RegentRaise_{k}', mix(2.0, (chant, 0, 1), (tail, 0, .35), (drone, 0, .45), (crack, 1.17, .9), (sub(80, 35, .6, 6), 1.17, .4)),
+             [f'fs_whispers {at}s + {at + 7}s -5 st (two voices), +6 dB treble', 'smeared tail', 'fs_scatteredghost -12 st rising drone', pick('impactMining', k + 1) + ' -10 st crack @1.17 s'], .95, drive=1.4)
+
     # Boss music bed: the Scattered Ghost recording as a seamless stereo loop.
     with wave.open(os.path.join(SRC, 'fs_scatteredghost_stereo.wav')) as f:
         lr = np.frombuffer(f.readframes(f.getnframes()), np.int16).astype(np.float64).reshape(-1, 2) / 32768

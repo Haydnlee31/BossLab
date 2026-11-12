@@ -7,7 +7,7 @@
 // encounter, policies and tests never select them.
 namespace WardenRegent
 {
-    enum EMove : int32 { Thrust=3, Rite, Arc, Bell, Volley, Drift, Dash, Furrow, AshStep, Pyre, Wakes, HeldThrust, Circle, End };
+    enum EMove : int32 { Thrust=3, Rite, Arc, Bell, Volley, Drift, Dash, Furrow, AshStep, Pyre, Wakes, HeldThrust, Circle, Raise, End };
     enum class EKind : uint8 { Blade, Censer, Cast, Move, Vanish, Ring, Transition };
     inline constexpr int32 First=Thrust, Count=End-Thrust;
     inline constexpr int32 Skulls=3, MaxPools=4, AshVanish=20, AshAppear=44;
@@ -23,6 +23,15 @@ namespace WardenRegent
     // Witness Circle (phase two): the skulls circle the player, then converge together.
     inline constexpr int32 CircleOrbitTicks=54;
     inline constexpr float CircleRadius=320, CircleDiveSpeed=860;
+    // Raise the Dead: two slow skeletons climb out of rune circles beside the Regent. Any three
+    // blows fell one; each blow staggers it. They crumble after SkeletonLife, and the Regent
+    // does not raise more while any stand.
+    inline constexpr int32 RaisedSkeletons=2, SkeletonHits=3;
+    inline constexpr int32 SkeletonRise=54, SkeletonWindup=42, SkeletonActive=8, SkeletonRecover=50, SkeletonStagger=20, SkeletonFall=60, SkeletonLife=1800;
+    inline constexpr float SkeletonSpeed=95, SkeletonTurnDegrees=3, SkeletonReach=150, SkeletonArcDegrees=60, SkeletonDamage=14, SkeletonBody=40, SkeletonSpacing=90;
+    // Censer floor contact (0-1): the Arc's sweep dips and slows on the floor; the Bell drags
+    // back along it after the slam. Engine-owned like the censer path itself.
+    float CenserGround(int32 Move,int32 Age,bool Striking);
 
     const FWardenStrike& Strike(int32 Index);
     inline bool IsRegent(int32 Move) { return Move>=First && Move<End; }
@@ -54,6 +63,16 @@ struct FRegentSkull
     float OrbitAngle=0;
     bool Homing=true, Passed=false;
 };
+enum class ERegentSkeletonState : uint8 { Rise, Walk, Windup, Strike, Recover, Stagger, Fall };
+struct FRegentSkeleton
+{
+    FVector Position=FVector::ZeroVector;
+    float Yaw=0;
+    ERegentSkeletonState State=ERegentSkeletonState::Rise;
+    int32 Age=0, Life=0, Hits=0, LastHitBy=-1, Id=0;
+    bool Struck=false;
+    bool Standing() const { return State!=ERegentSkeletonState::Fall; }
+};
 enum class ERegentHazard : uint8 { Pool, Eruption, Mark };
 struct FRegentHazard
 {
@@ -74,6 +93,11 @@ struct FWardenRegentState
     TArray<FRegentHazard> Hazards;
     FVector FurrowOrigin=FVector::ZeroVector, FurrowDirection=FVector::ForwardVector;
     FVector AshTarget=FVector::ZeroVector;
+    TArray<FRegentSkeleton> Skeletons;
+    FVector RaiseAt[WardenRegent::RaisedSkeletons];
+    int32 NextSkeletonId=0;
+    bool CenserGrounded=false;
+    int32 StandingSkeletons() const { int32 N=0; for(const auto& S:Skeletons) N+=S.Standing(); return N; }
     int32 ReadySkulls() const { int32 N=0; for(int32 R:Regrow) N+=R==0; return N; }
     float PoolArea(int32 Tick) const;
 };

@@ -245,6 +245,18 @@ struct FWardenRegentView
     TWeakObjectPtr<class UPointLightComponent> Glow;
     TArray<FLinearColor> HallColors;
     bool bBlueHall=false;
+    // Raised skeletons (greybox: gaunt bone-white mannequin, generated skull head, soul-fire eyes).
+    static constexpr int32 DeadSlots=4, Sparks=48;
+    TArray<TWeakObjectPtr<class USkeletalMeshComponent>> Dead;
+    TArray<TWeakObjectPtr<class UStaticMeshComponent>> DeadSkull;
+    TArray<int32> DeadId, DeadClip;
+    TWeakObjectPtr<class UAnimSequence> DeadWalk, DeadAttack;
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> DeadEyes, Spark;
+    // Censer floor sparks (presentation ring buffer, world seconds).
+    struct FSpark { float Start=-100; FVector At=FVector::ZeroVector, Velocity=FVector::ZeroVector; };
+    FSpark SparkBuffer[Sparks];
+    int32 NextSpark=0;
+    float LastSparkTime=0;
 };
 
 UCLASS()

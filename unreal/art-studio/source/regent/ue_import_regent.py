@@ -4,7 +4,8 @@ Run: ./scripts/bosslab-unreal python unreal/art-studio/source/regent/ue_import_r
 Writes /Game/BossLab/Regent (local, not committed, like the Dungeon assets):
   M_RegentFlame  unlit additive soul-fire card (warped tongue, halo, embers, HDR blue palette)
   M_RegentRune   unlit additive spell mandala; MID params Radius (cm), Intensity, Tint, Reveal
-  M_RegentBone   lit ivory for the greybox skulls
+  M_RegentSpark  unlit additive censer floor spark streak
+  M_RegentBone   lit ivory for the greybox skulls (and the raised skeletons)
 No textures. See docs/REGENT_MOVESET.md.
 """
 import json, os
@@ -227,6 +228,67 @@ def rune():
     mel.recompile_material(mat)
     report['M_RegentRune'] = {'blend': 'additive unlit', 'params': ['Radius', 'Intensity', 'Tint', 'Reveal'], 'style': 'rune mandala'}
 
+# Censer floor sparks: a hot streak, white-orange at the head (the card's +Y end, uv.y = 1,
+# which the game points along the direction of travel) cooling to red along the tail.
+SPARK_CODE = '''
+float2 uv=UV.xy;
+float across=1-abs(uv.x-.5)*2; across=across*across;
+float along=uv.y;
+float3 col=lerp(float3(2.0,.35,.05),float3(6,3.2,1.2),along*along);
+return col*across*(.25+.75*along);
+'''
+
+def spark():
+    mat = get_or_create('M_RegentSpark')
+    unlit_additive(mat)
+    uv = mel.create_material_expression(mat, unreal.MaterialExpressionTextureCoordinate, -700, 0)
+    node = custom(mat, SPARK_CODE, ['UV'], unreal.CustomMaterialOutputType.CMOT_FLOAT3, -400, 0)
+    mel.connect_material_expressions(uv, '', node, 'UV')
+    mel.connect_material_property(node, '', unreal.MaterialProperty.MP_EMISSIVE_COLOR)
+    mel.recompile_material(mat)
+    report['M_RegentSpark'] = {'blend': 'additive unlit', 'colour': 'white-orange head, red tail'}
+
+# Raised skeleton (greybox over the mannequin): grimy grey bone, dark gaps between procedural
+# ribs across the chest with soul fire glowing inside, and a cold blue rim so it reads as
+# undead rather than as skin under warm torchlight. P = local position (cm, feet at 0).
+DEAD_BASE = '''
+float3 p=P.xyz;
+// Ribs only on the torso front-to-back band, not on arms hanging beside it (|x| > 17 cm).
+float chest=smoothstep(98,108,p.z)*(1-smoothstep(142,150,p.z))*(1-smoothstep(14,18,abs(p.x)));
+float ribs=smoothstep(-.35,.05,sin(p.z*.6));
+float gaps=chest*(1-ribs);
+float grime=frac(sin(dot(floor(p*.09),float3(12.9898,78.233,37.719)))*43758.5453);
+// Charred, cold, dark bone: under warm torchlight anything paler reads as bare skin on the
+// mannequin's smooth limbs, so the greybox reads as a dark undead silhouette instead.
+float3 bone=float3(.075,.075,.085)*(.7+.3*grime);
+return lerp(bone,float3(.01,.01,.015),gaps*.95);
+'''
+DEAD_GLOW = '''
+float3 p=P.xyz;
+float chest=smoothstep(98,108,p.z)*(1-smoothstep(142,150,p.z))*(1-smoothstep(14,18,abs(p.x)));
+float gaps=chest*(1-smoothstep(-.35,.05,sin(p.z*.6)));
+float flick=.8+.2*sin(Tm.x*9+p.z*.2);
+// A faint ember of soul fire inside the ribcage and a cold rim; not a lit stripe.
+return float3(.02,.1,.5)*gaps*flick*.15+float3(.03,.1,.45)*pow(saturate(F.x),2.5);
+'''
+
+def dead():
+    mat = get_or_create('M_RegentDead')
+    mat.set_editor_property('used_with_skeletal_mesh', True)
+    pos = mel.create_material_expression(mat, unreal.MaterialExpressionLocalPosition, -900, 0)
+    base = custom(mat, DEAD_BASE, ['P'], unreal.CustomMaterialOutputType.CMOT_FLOAT3, -500, 0)
+    mel.connect_material_expressions(pos, '', base, 'P')
+    mel.connect_material_property(base, '', unreal.MaterialProperty.MP_BASE_COLOR)
+    rough = mel.create_material_expression(mat, unreal.MaterialExpressionConstant, -500, 200); rough.set_editor_property('r', .75)
+    mel.connect_material_property(rough, '', unreal.MaterialProperty.MP_ROUGHNESS)
+    fres = mel.create_material_expression(mat, unreal.MaterialExpressionFresnel, -900, 400)
+    time = mel.create_material_expression(mat, unreal.MaterialExpressionTime, -900, 550)
+    glow = custom(mat, DEAD_GLOW, ['P', 'F', 'Tm'], unreal.CustomMaterialOutputType.CMOT_FLOAT3, -500, 400)
+    for src, pin in ((pos, 'P'), (fres, 'F'), (time, 'Tm')): mel.connect_material_expressions(src, '', glow, pin)
+    mel.connect_material_property(glow, '', unreal.MaterialProperty.MP_EMISSIVE_COLOR)
+    mel.recompile_material(mat)
+    report['M_RegentDead'] = {'base': 'grey bone, rib gaps', 'emissive': 'soul fire between ribs, blue rim'}
+
 def bone():
     mat = get_or_create('M_RegentBone')
     mat.set_editor_property('used_with_instanced_static_meshes', True)
@@ -242,7 +304,7 @@ def bone():
     mel.recompile_material(mat)
     report['M_RegentBone'] = {'base': [.62, .57, .47], 'roughness': .62}
 
-flame(); rune(); bone()
+flame(); rune(); spark(); dead(); bone()
 eal.save_directory(DEST, only_if_is_dirty=False, recursive=True)
 out = os.path.join(ROOT, 'artifacts/art/regent-moveset-2026-11-09')
 os.makedirs(out, exist_ok=True)

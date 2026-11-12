@@ -174,4 +174,83 @@ bool FRegentPoseTest::RunTest(const FString&)
     }
     CloseWorld(W); return true;
 }
+REGENT_TEST(FRegentSkeletonTest,"BossLab.Regent.RaisedSkeletonsWalkSwingAndFallInThreeBlows");
+bool FRegentSkeletonTest::RunTest(const FString&)
+{
+    using namespace WardenRegent;
+    using ES=ERegentSkeletonState;
+    TestEqual(TEXT("Raise the Dead deals no direct damage"),WardenRules::Strike(Raise).Damage,0.f);
+    TestTrue(TEXT("Skeleton swing telegraph >= 0.6 s"),SkeletonWindup>=36);
+    // Summon: two skeletons rise beside the Regent at the release and walk slowly.
+    auto* W=NewWorld(); auto* M=RegentArena(W);
+    M->bScriptedPlayer=false; M->Regent.Waiting=1000000;
+    M->Warden->SetActorLocation(FVector(0,0,128)); M->Warden->SetActorRotation(FRotator::ZeroRotator);
+    M->Player->SetActorLocation(FVector(900,0,95));
+    M->Warden->BeginAction(EWardenAction::Strike,Raise,FVector::ForwardVector);
+    for(int32 T=0;T<WardenRules::Strike(Raise).Windup+2;++T) M->FixedStep();
+    TestEqual(TEXT("Two skeletons rise"),M->Regent.Skeletons.Num(),RaisedSkeletons);
+    for(int32 T=0;T<SkeletonRise+2;++T) M->FixedStep();
+    TestTrue(TEXT("Risen skeletons walk"),M->Regent.Skeletons.Num()==2 && M->Regent.Skeletons[0].State==ES::Walk);
+    const FVector Before=M->Regent.Skeletons[0].Position;
+    for(int32 T=0;T<60;++T) M->FixedStep();
+    const float Moved=FVector::Dist2D(Before,M->Regent.Skeletons[0].Position);
+    TestTrue(FString::Printf(TEXT("Skeletons are slow (%.0f cm in 1 s)"),Moved),Moved>40 && Moved<=SkeletonSpeed+15);
+    CloseWorld(W);
+    // One skeleton next to a standing player hurts; a roll timed on its wind-up does not.
+    auto Swing=[&](bool Roll)
+    {
+        auto* W2=NewWorld(); auto* M2=RegentArena(W2);
+        M2->bScriptedPlayer=false; M2->Regent.Waiting=1000000;
+        M2->Warden->SetActorLocation(FVector(-900,0,128));
+        M2->Player->SetActorLocation(FVector(120,0,95));
+        FRegentSkeleton S; S.Position=FVector(0,0,0); S.State=ES::Walk; S.Id=1; M2->Regent.Skeletons.Add(S);
+        float Taken=0;
+        for(int32 T=0;T<SkeletonWindup+SkeletonActive+30;++T)
+        {
+            const auto& K=M2->Regent.Skeletons[0];
+            if(Roll && K.State==ES::Windup && K.Age==SkeletonWindup-6) { M2->Player->PendingAction=EWardenAction::Dodge; M2->Player->PendingDirection=FVector::RightVector; }
+            M2->FixedStep();
+        }
+        Taken=M2->Player->Fight.MaxHealth-M2->Player->Fight.Health;
+        CloseWorld(W2); return Taken;
+    };
+    const float Still=Swing(false), Rolled=Swing(true);
+    AddInfo(FString::Printf(TEXT("Skeleton swing: standing takes %.0f, timed roll takes %.0f"),Still,Rolled));
+    TestTrue(TEXT("Skeleton swing hurts a player who stands still"),Still>0);
+    TestEqual(TEXT("A timed roll beats the skeleton swing"),Rolled,0.f);
+    // Three separate blows fell a skeleton; each earlier blow staggers it.
+    auto* W3=NewWorld(); auto* M3=RegentArena(W3);
+    M3->bScriptedPlayer=false; M3->Regent.Waiting=1000000;
+    M3->Warden->SetActorLocation(FVector(-900,0,128));
+    M3->Player->SetActorLocation(FVector(-130,0,95)); M3->Player->SetActorRotation(FRotator::ZeroRotator);
+    FRegentSkeleton S; S.Position=FVector(0,0,0); S.State=ES::Walk; S.Id=1; S.Yaw=180; M3->Regent.Skeletons.Add(S);
+    int32 Staggers=0;
+    for(int32 Blow=0;Blow<SkeletonHits;++Blow)
+    {
+        M3->Player->Fight.Stamina=100; M3->Player->Fight.Gap=0;
+        TestTrue(TEXT("Blow starts"),M3->Player->BeginAction(EWardenAction::Strike,WardenRules::CutOne,FVector::ForwardVector));
+        for(int32 T=0;T<WardenRules::Strike(WardenRules::CutOne,false).Total()+12;++T)
+        {
+            M3->FixedStep();
+            if(M3->Regent.Skeletons.Num() && M3->Regent.Skeletons[0].State==ES::Stagger && M3->Regent.Skeletons[0].Age==1) ++Staggers;
+        }
+        if(Blow<SkeletonHits-1) TestTrue(FString::Printf(TEXT("Still standing after %d blows"),Blow+1),M3->Regent.Skeletons.Num()==1 && M3->Regent.Skeletons[0].Standing());
+        // Reset between blows: a recovered skeleton would otherwise start its own swing and
+        // (legitimately) interrupt the next cut.
+        M3->Player->SetActorLocation(FVector(-130,0,95));
+        if(M3->Regent.Skeletons.Num() && M3->Regent.Skeletons[0].Standing())
+        { auto& K=M3->Regent.Skeletons[0]; K.Position=FVector::ZeroVector; K.State=ES::Walk; K.Age=0; K.Yaw=180; }
+    }
+    TestEqual(TEXT("Earlier blows stagger"),Staggers,SkeletonHits-1);
+    TestTrue(TEXT("Third blow fells it"),M3->Regent.Skeletons.Num()==0 || !M3->Regent.Skeletons[0].Standing());
+    CloseWorld(W3);
+    // Censer floor contact keeps the move timing: contact still spans the same ticks.
+    int32 ArcGround=0, BellGround=0;
+    for(int32 A=0;A<WardenRules::Strike(Arc).Total();++A) ArcGround+=CenserGround(Arc,A,true)>.5f;
+    for(int32 A=0;A<WardenRules::Strike(Bell).Total();++A) BellGround+=CenserGround(Bell,A,true)>.5f;
+    AddInfo(FString::Printf(TEXT("Censer on the floor: Arc %d ticks, Bell %d ticks"),ArcGround,BellGround));
+    TestTrue(TEXT("Arc touches the floor briefly"),ArcGround>=4 && ArcGround<=16);
+    TestTrue(TEXT("Bell grinds along the floor"),BellGround>=15);
+    return true;
+}
 #endif

@@ -11,6 +11,9 @@
 #include "Components/PoseableMeshComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/SpotLightComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Animation/AnimSequence.h"
+#include "Animation/AnimSingleNodeInstance.h"
 #include "Materials/MaterialInterface.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Engine/StaticMesh.h"
@@ -49,6 +52,8 @@ const FWardenStrike& WardenRegent::Strike(int32 Index)
         {TEXT("HELD THRUST"),TEXT("RegentBlade"),TEXT("hand_r"),58,10,44,0,0,1,22,7,120},
         // The three skulls circle the player, then converge from three sides at once.
         {TEXT("WITNESS CIRCLE"),TEXT("RegentCast"),TEXT("hand_l"),36,20,50,0,0,1,18,0,0},
+        // A whispered chant raises two skeletons from rune circles (no direct damage).
+        {TEXT("RAISE THE DEAD"),TEXT("RegentCast"),TEXT("hand_l"),70,10,56,0,0,1,0,0,0},
     };
     check(IsRegent(Index));
     return Moves[Index-First];
@@ -59,7 +64,7 @@ WardenRegent::EKind WardenRegent::Kind(int32 Move)
     {
         case Thrust: case Rite: case Dash: case HeldThrust: return EKind::Blade;
         case Arc: case Bell: return EKind::Censer;
-        case Volley: case Furrow: case Circle: return EKind::Cast;
+        case Volley: case Furrow: case Circle: case Raise: return EKind::Cast;
         case Drift: return EKind::Move;
         case AshStep: return EKind::Vanish;
         case Pyre: return EKind::Ring;
@@ -99,6 +104,16 @@ FVector WardenRegent::CenserOffset(int32 Move,int32 Age,bool Striking)
     if(Move==Arc)
     {
         const FVector Start=Ring(-100,400,-30), Finish=Ring(95,400,-30);
+        if(Age>=D.Windup && Age<D.Windup+D.Active)
+        {
+            // The sweep dips onto the floor mid-swing and drags there at about 40% speed,
+            // then speeds back up; the contact window and its timing are unchanged.
+            const float S=Smooth(float(Age-D.Windup)/D.Active);
+            const float P=S-.6f*FMath::Sin(2*PI*(S-.5f))/(2*PI);
+            FVector At=Ring(FMath::Lerp(-100.f,95.f,P),400,-30);
+            At.Z=FMath::Lerp(-30.f,-84.f,CenserGround(Move,Age,Striking));
+            return At;
+        }
         if(Age<D.Windup)
         {
             // Whirl overhead, widening, then drop to the sweep start behind the left side.
@@ -106,7 +121,6 @@ FVector WardenRegent::CenserOffset(int32 Move,int32 Age,bool Striking)
             const FVector Whirl=FVector(0,-20,150)+Ring(-Age*14.f,40+90*U,0);
             return FMath::Lerp(FMath::Lerp(Rest,Whirl,Smooth(U/.25f)),Start,Smooth((U-.75f)/.25f));
         }
-        if(Age<D.Windup+D.Active) return Ring(FMath::Lerp(-100.f,95.f,Smooth(float(Age-D.Windup)/D.Active)),400,-30);
         return FMath::Lerp(Finish,Rest,Smooth(float(Age-D.Windup-D.Active)/D.Recovery));
     }
     if(Move==Bell)
@@ -119,9 +133,27 @@ FVector WardenRegent::CenserOffset(int32 Move,int32 Age,bool Striking)
             const float U=Smooth(float(Age-D.Windup+1)/4);
             return High*FMath::Square(1-U)+Mid*2*U*(1-U)+Impact*U*U;
         }
-        return FMath::Lerp(Impact,Rest,Smooth((float(Age-D.Windup-D.Active)/D.Recovery-.35f)/.65f));
+        // After the slam the censer grinds slowly back along the floor, then lifts away.
+        const float U=float(Age-D.Windup-D.Active)/D.Recovery;
+        const FVector Drag(250,-15,-84);
+        if(U<.35f) return FMath::Lerp(Impact,Drag,Smooth(U/.35f)*.9f+.1f*U/.35f);
+        return FMath::Lerp(Drag,Rest,Smooth((U-.35f)/.65f));
     }
     return Rest;
+}
+float WardenRegent::CenserGround(int32 Move,int32 Age,bool Striking)
+{
+    if(!Striking || (Move!=Arc && Move!=Bell)) return 0;
+    const auto& D=Strike(Move);
+    if(Move==Arc)
+    {
+        if(Age<D.Windup || Age>=D.Windup+D.Active) return 0;
+        const float S=Smooth(float(Age-D.Windup)/D.Active);
+        const float P=S-.6f*FMath::Sin(2*PI*(S-.5f))/(2*PI);
+        return Smooth((P-.3f)/.12f)*(1-Smooth((P-.62f)/.12f));
+    }
+    const int32 From=D.Windup+3, To=D.Windup+D.Active+int32(.35f*D.Recovery);
+    return Age>=From && Age<To ? 1.f : 0.f;
 }
 FVector WardenRegent::SkullOrbit(int32 Slot,int32 Tick)
 {
@@ -136,6 +168,7 @@ FVector2D WardenRegent::Band(int32 Move)
         case Arc: return {0,440};
         case Bell: return {160,430};
         case Volley: return {250,5000};
+        case Raise: return {200,5000};
         case Drift: return {0,320};
         case Dash: return {400,1300};
         case Furrow: return {280,1300};
@@ -149,7 +182,7 @@ int32 WardenRegent::Pause(int32 Move)
     {
         case Drift: return 0;
         case Volley: case AshStep: return 8;
-        case Circle: return 30;
+        case Circle: case Raise: return 30;
         case Thrust: case HeldThrust: return 18;
         case Arc: case Furrow: case Wakes: return 24;
         case Bell: case Dash: return 32;
@@ -279,10 +312,11 @@ void AWardenArenaMode::RegentDecide(FVector& BossDirection)
     if(!R.PhaseTwo && F.Health<=PhaseTwoHealth) { Commit(Wakes); return; }
     // Fixed rehearsal sequence, labelled as such: no learning, no input reading. Each
     // step walks into its distance band, commits, or is skipped after four seconds.
-    static const int32 One[]={Thrust,Arc,Volley,Rite,HeldThrust,Drift,Dash,Bell,Furrow};
-    static const int32 Two[]={AshStep,Rite,Pyre,HeldThrust,Volley,Dash,Arc,Circle,Furrow,Bell,Thrust,Drift};
+    static const int32 One[]={Thrust,Arc,Volley,Rite,Raise,HeldThrust,Drift,Dash,Bell,Furrow};
+    static const int32 Two[]={AshStep,Rite,Pyre,HeldThrust,Volley,Raise,Dash,Arc,Circle,Furrow,Bell,Thrust,Drift};
     const int32 Next=R.PhaseTwo ? Two[R.Step%UE_ARRAY_COUNT(Two)] : One[R.Step%UE_ARRAY_COUNT(One)];
     if((Next==Volley || Next==Circle) && R.ReadySkulls()==0) { ++R.Step; R.Seeking=0; return; }
+    if(Next==Raise && R.StandingSkeletons()>0) { ++R.Step; R.Seeking=0; return; }
     const FVector2D B=Band(Next);
     // A player who stays close cannot lock out the ranged rites: after backing off for
     // three quarters of a second the Regent commits from where it stands.
@@ -347,7 +381,9 @@ void AWardenArenaMode::RegentResolve()
         // Casting is heard before it is seen to resolve: whispers swell into the release while
         // the summoning circle draws itself (the Pyre's longer wind-up gets the long swell and
         // the choir of the dead).
-        if(Kind(F.Move)==EKind::Cast && A==1) RegentSound(TEXT("RegentCast"),BossAt,.75f);
+        if(Kind(F.Move)==EKind::Cast && F.Move!=Raise && A==1) RegentSound(TEXT("RegentCast"),BossAt,.75f);
+        // Raise the Dead has its own whispered chant, kept clear of louder cues.
+        if(F.Move==Raise && A==1) RegentSound(TEXT("RegentRaise"),BossAt,1.f);
         if(F.Move==Pyre && A==1) { RegentSound(TEXT("RegentCastLong"),BossAt,.8f); RegentSound(TEXT("RegentChoir"),BossAt,.55f); }
         switch(F.Move)
         {
@@ -399,6 +435,25 @@ void AWardenArenaMode::RegentResolve()
                         RegentSound(TEXT("RegentChoir"),Player->GetActorLocation(),.5f);
                         RegentSound(TEXT("RegentWhisper"),Player->GetActorLocation()+FVector(0,0,70),.6f);
                     }
+            break;
+        case Raise:
+            // Rune circles mark where the dead will rise; they climb out on the release.
+            if(A==1)
+                for(int32 K=0;K<RaisedSkeletons;++K)
+                {
+                    FVector At=BossAt+Yaw.RotateVector(FVector(130,K ? 230.f : -230.f,0)); At.Z=0;
+                    const float Out=FVector2D(At).Size();
+                    if(Out>ArenaRadius-120) At*=(ArenaRadius-120)/Out;
+                    R.RaiseAt[K]=At;
+                }
+            if(Since==0)
+                for(int32 K=0;K<RaisedSkeletons;++K)
+                {
+                    FRegentSkeleton S; S.Position=R.RaiseAt[K]; S.Id=++R.NextSkeletonId;
+                    S.Yaw=(Player->GetActorLocation()-S.Position).Rotation().Yaw;
+                    R.Skeletons.Add(S);
+                    RegentSound(TEXT("SkeletonRise"),S.Position,.9f);
+                }
             break;
         case Furrow:
             if(Since==0) { R.FurrowOrigin=BossAt; R.FurrowDirection=Warden->CommittedDirection.GetSafeNormal2D(); }
@@ -467,6 +522,75 @@ void AWardenArenaMode::RegentResolve()
         }
         K.Position=Next;
         if(Gone) R.Flying.RemoveAt(I);
+    }
+    // Censer floor contact: one clang-and-scrape as it meets the floor (presentation only).
+    {
+        const float Ground=CenserGround(F.Move,F.Age,F.Action==EWardenAction::Strike && IsRegent(F.Move));
+        if(Ground>.5f && !R.CenserGrounded) { FVector At=Warden->CenserWorld(); At.Z=8; RegentSound(TEXT("CenserScrape"),At,1.f); }
+        if(Ground>.5f) R.CenserGrounded=true; else if(Ground<.2f) R.CenserGrounded=false;
+    }
+    // Raised skeletons: rise, shamble toward the player, telegraph a swing, stagger when hit,
+    // fall after three blows or when their time is up. Engine-owned like the skulls.
+    for(int32 I=R.Skeletons.Num()-1;I>=0;--I)
+    {
+        auto& S=R.Skeletons[I]; ++S.Age; ++S.Life;
+        using ES=ERegentSkeletonState;
+        auto Enter=[&](ES State) { S.State=State; S.Age=0; S.Struck=false; };
+        const FVector To=FVector(Target.X-S.Position.X,Target.Y-S.Position.Y,0);
+        const float Distance=To.Size();
+        auto Turn=[&](float MaxDegrees)
+        {
+            const float Want=To.Rotation().Yaw;
+            S.Yaw+=FMath::Clamp(FMath::FindDeltaAngleDegrees(S.Yaw,Want),-MaxDegrees,MaxDegrees);
+        };
+        if(S.State==ES::Fall) { if(S.Age>=SkeletonFall) R.Skeletons.RemoveAt(I); continue; }
+        if(S.Life>=SkeletonLife || !Warden->Fight.Alive()) { Enter(ES::Fall); RegentSound(TEXT("SkeletonFall"),S.Position,.8f); continue; }
+        // Player blows: any blade sample passing through the body during contact, once per swing.
+        if(S.State!=ES::Rise && Player->Fight.Action==EWardenAction::Strike && Player->Fight.Active() && S.LastHitBy!=Player->Fight.AttackInstance)
+        {
+            const float Reach=SkeletonBody+Player->Fight.Definition().Radius*Player->GetActorScale3D().X;
+            for(int32 K=0;K<5;++K)
+            {
+                const FVector P=Player->HitPoint(K);
+                if(P.Z>-10 && P.Z<200 && FVector::Dist2D(P,S.Position)<Reach)
+                {
+                    S.LastHitBy=Player->Fight.AttackInstance;
+                    Impact(3,.2f);
+                    if(++S.Hits>=SkeletonHits) { Enter(ES::Fall); RegentSound(TEXT("SkeletonFall"),S.Position,1.f); LastEvent=TEXT("A raised skeleton falls apart."); }
+                    else { Enter(ES::Stagger); RegentSound(TEXT("SkeletonHit"),S.Position+FVector(0,0,100),.9f); }
+                    break;
+                }
+            }
+            if(S.State==ES::Fall) continue;
+        }
+        switch(S.State)
+        {
+        case ES::Rise: if(S.Age>=SkeletonRise) Enter(ES::Walk); break;
+        case ES::Stagger: if(S.Age>=SkeletonStagger) Enter(ES::Walk); break;
+        case ES::Walk:
+        {
+            Turn(SkeletonTurnDegrees);
+            if(Distance<SkeletonReach && FMath::Abs(FMath::FindDeltaAngleDegrees(S.Yaw,To.Rotation().Yaw))<30) { Enter(ES::Windup); RegentSound(TEXT("SkeletonSwing"),S.Position+FVector(0,0,120),.7f); break; }
+            // Shamble forward, keeping a little room from the other dead and the player.
+            FVector Step=FRotator(0,S.Yaw,0).Vector()*SkeletonSpeed*WardenRules::Step*(Distance>SkeletonReach-30 ? 1.f : 0.f);
+            for(const auto& O:R.Skeletons)
+                if(&O!=&S && O.Standing() && FVector::Dist2D(O.Position,S.Position)<SkeletonSpacing)
+                    Step+=(S.Position-O.Position).GetSafeNormal2D()*40*WardenRules::Step;
+            S.Position+=FVector(Step.X,Step.Y,0);
+            const float Out=FVector2D(S.Position).Size();
+            if(Out>ArenaRadius-60) S.Position*=(ArenaRadius-60)/Out;
+            if(S.Age%33==0) RegentSound(TEXT("SkeletonStep"),S.Position,.45f);
+            break;
+        }
+        case ES::Windup: Turn(1); if(S.Age>=SkeletonWindup) Enter(ES::Strike); break;
+        case ES::Strike:
+            if(!S.Struck && Player->Fight.Alive() && Distance<SkeletonReach+30 && FMath::Abs(FMath::FindDeltaAngleDegrees(S.Yaw,To.Rotation().Yaw))<SkeletonArcDegrees)
+                if(!Player->Fight.Invulnerable() && Hurt(SkeletonDamage,true,TEXT("A raised skeleton struck. Roll its slow swing, then cut it down."))) S.Struck=true;
+            if(S.Age>=SkeletonActive) Enter(ES::Recover);
+            break;
+        case ES::Recover: if(S.Age>=SkeletonRecover) Enter(ES::Walk); break;
+        default: break;
+        }
     }
     // Fire pools burn without flinching (chip damage); furrow eruptions hit once.
     for(auto& H:R.Hazards)
@@ -600,6 +724,29 @@ void AWardenArenaMode::BuildRegentView()
     Light->SetIntensity(1600); Light->SetAttenuationRadius(420); Light->SetLightColor(FLinearColor(.3,.55,1));
     Light->SetCastShadows(false); Light->RegisterComponent(); Owner->AddInstanceComponent(Light);
     V.Glow=Light;
+    // Raised skeletons: hidden mannequin slots shown while the Regent's dead stand.
+    V.DeadWalk=LoadObject<UAnimSequence>(nullptr,TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Fwd"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    V.DeadAttack=LoadObject<UAnimSequence>(nullptr,TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_Attack_02"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    USkeletalMesh* Manny=LoadObject<USkeletalMesh>(nullptr,TEXT("/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    UStaticMesh* DeadHead=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/Regent/Skull/SM_RegentSkullGen"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    UMaterialInterface* BoneMat=Load(TEXT("/Game/BossLab/Regent/M_RegentBone"),TEXT("Stone"));
+    UMaterialInterface* DeadMat=LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/BossLab/Regent/M_RegentDead"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    for(int32 I=0;I<FWardenRegentView::DeadSlots;++I)
+    {
+        auto* C=NewObject<USkeletalMeshComponent>(Owner);
+        C->SetupAttachment(Root); C->SetSkeletalMesh(Manny); C->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        C->VisibilityBasedAnimTickOption=EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+        C->SetCastShadow(true); C->RegisterComponent(); Owner->AddInstanceComponent(C);
+        for(int32 M=0;M<C->GetNumMaterials();++M) C->SetMaterial(M,DeadMat ? DeadMat : BoneMat);
+        C->SetVisibility(false);
+        auto* H=NewObject<UStaticMeshComponent>(Owner);
+        H->SetStaticMesh(DeadHead ? DeadHead : LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Sphere")));
+        if(!DeadHead) H->SetMaterial(0,BoneMat);
+        Prepare(H); H->SetVisibility(false);
+        V.Dead.Add(C); V.DeadSkull.Add(H); V.DeadId.Add(-1); V.DeadClip.Add(-1);
+    }
+    V.DeadEyes=Set(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Sphere")),Load(TEXT("/Game/BossLab/Regent/Props/M_RegentLanternCore"),TEXT("Jade")),FWardenRegentView::DeadSlots*2);
+    V.Spark=Set(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Plane")),Load(TEXT("/Game/BossLab/Regent/M_RegentSpark"),TEXT("Amber")),FWardenRegentView::Sparks);
 }
 void AWardenArenaMode::AnimateRegentView(float Seconds)
 {
@@ -799,10 +946,104 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
             Flame(FVector(BossAt.X,BossAt.Y,0)+Ring(K*20.f+Seconds*40,Spread*(.9f+.2f*Jitter),0),85+30*Jitter,(70+70*Jitter)*Swell*(.85f+.15f*FMath::Sin(Seconds*9+K)),K+300);
         }
     }
+    // Raise the Dead: rune circles draw in where the dead will rise, then glow under them.
+    if(Striking && F.Move==Raise)
+        for(int32 K=0;K<RaisedSkeletons;++K)
+            Disc(Regent.RaiseAt[K],115,.9f+.5f*FMath::Clamp(float(F.Age)/F.Definition().Windup,0.f,1.f),FLinearColor(.3,.55,1),FMath::Clamp(F.Age/(F.Definition().Windup*.7f),0.f,1.f));
+    {
+        using ES=ERegentSkeletonState;
+        TSet<int32> Shown;
+        for(int32 Slot=0;Slot<V.Dead.Num();++Slot)
+        {
+            auto* C=V.Dead[Slot].Get(); auto* H=V.DeadSkull[Slot].Get();
+            if(!C || !H) continue;
+            // Keep a slot bound to the same skeleton for its life.
+            const FRegentSkeleton* S=nullptr;
+            for(const auto& K:Regent.Skeletons) if(K.Id==V.DeadId[Slot]) S=&K;
+            if(!S) for(const auto& K:Regent.Skeletons)
+            {
+                bool Bound=false; for(int32 Id:V.DeadId) Bound|=Id==K.Id;
+                if(!Bound) { V.DeadId[Slot]=K.Id; S=&K; break; }
+            }
+            if(!S)
+            {
+                V.DeadId[Slot]=-1; C->SetVisibility(false); H->SetVisibility(false);
+                for(int32 E=0;E<2;++E) Set(V.DeadEyes.Get(),Slot*2+E,Hidden);
+                continue;
+            }
+            const float Age=S->Age;
+            // Rise: climb out of the floor; Fall: slump and sink; Stagger: rock back.
+            float Sink=0, Lean=0, Roll=0;
+            if(S->State==ES::Rise) { const float U=Smooth(Age/SkeletonRise); Sink=-175*(1-U); Lean=25*(1-U); Disc(S->Position,115,1.2f*(1-U),FLinearColor(.3,.55,1)); }
+            if(S->State==ES::Fall) { const float U=Smooth(Age/SkeletonFall); Sink=-150*U; Lean=-55*U; Roll=20*U; }
+            if(S->State==ES::Stagger) Lean=-14*FMath::Sin(PI*FMath::Clamp(Age/SkeletonStagger,0.f,1.f));
+            const FRotator Facing(0,S->Yaw,0);
+            C->SetWorldLocationAndRotation(S->Position+FVector(0,0,Sink),(Facing.Quaternion()*FRotator(Lean,0,Roll).Quaternion()*FRotator(0,-90,0).Quaternion()));
+            C->SetWorldScale3D(FVector(.72f,.72f,1.f));   // gaunt
+            C->SetVisibility(true);
+            // Clip: shambling walk at ~65% speed; the attack clip scrubbed to the swing beats.
+            const bool Swing=S->State==ES::Windup || S->State==ES::Strike || S->State==ES::Recover;
+            UAnimSequence* Clip=Swing ? V.DeadAttack.Get() : V.DeadWalk.Get();
+            if(Clip)
+            {
+                const int32 ClipKey=Swing ? 1 : 0;
+                if(V.DeadClip[Slot]!=ClipKey) { C->PlayAnimation(Clip,!Swing); V.DeadClip[Slot]=ClipKey; }
+                if(auto* N=C->GetSingleNodeInstance())
+                {
+                    const float Len=Clip->GetPlayLength();
+                    float ClipTime=0;
+                    if(S->State==ES::Windup) ClipTime=.42f*Len*Smooth(Age/SkeletonWindup);
+                    else if(S->State==ES::Strike) ClipTime=FMath::Lerp(.42f,.6f,Age/SkeletonActive)*Len;
+                    else if(S->State==ES::Recover) ClipTime=FMath::Lerp(.6f,1.f,Age/SkeletonRecover)*Len;
+                    else if(S->State==ES::Walk) ClipTime=FMath::Fmod(Seconds*.65f+S->Id*.37f,Len);
+                    else ClipTime=FMath::Fmod(S->Id*.37f,Len);
+                    N->SetPlayRate(0); N->SetPosition(ClipTime,false);
+                }
+            }
+            // Skull head over the mannequin head, soul-fire eyes, a small flame on the crown.
+            const FQuat Look=Facing.Quaternion()*FRotator(-Lean*.5f,0,0).Quaternion();
+            // Large enough to swallow the mannequin head and sit slightly forward of it.
+            const FVector HeadAt=C->GetBoneLocation(TEXT("head"))+FVector(0,0,8)+Look.RotateVector(FVector(4,0,0));
+            H->SetWorldLocationAndRotation(HeadAt,Look); H->SetWorldScale3D(FVector(1.45f)); H->SetVisibility(true);
+            const float Alive=S->State==ES::Fall ? 1-Smooth(Age/20) : 1;
+            for(int32 E=0;E<2;++E)
+                Set(V.DeadEyes.Get(),Slot*2+E,FTransform(Look,HeadAt+Look.RotateVector(FVector(8.5f,E ? 3.2f : -3.2f,1.5f)*1.45f/1.27f),FVector(.045f*Alive)));
+            if(Alive>.1f) Flame(HeadAt+FVector(0,0,10),18*Alive,(S->State==ES::Windup ? 55 : 32)*Alive,S->Id*17);
+        }
+    }
+    // Censer floor sparks: a spray from the lantern's base while it grinds the floor.
+    {
+        const float Ground=CenserGround(F.Move,F.Age,Striking);
+        const float Dt=FMath::Clamp(Seconds-V.LastSparkTime,0.f,.1f); V.LastSparkTime=Seconds;
+        if(Ground>.5f && !Gone)
+        {
+            const FVector Base=Head+Along.RotateVector(FVector(0,0,V.bGenCenser ? -52.f : -32.f));
+            const FVector Drag=(Head-Hand).GetSafeNormal2D();
+            for(int32 K=0;K<FMath::CeilToInt(Dt*180);++K)
+            {
+                auto& P=V.SparkBuffer[V.NextSpark]; V.NextSpark=(V.NextSpark+1)%FWardenRegentView::Sparks;
+                const FVector Side=FVector::CrossProduct(Drag,FVector::UpVector);
+                P.Start=Seconds; P.At=FVector(Base.X,Base.Y,4);
+                P.Velocity=-Drag*FMath::FRandRange(80.f,320.f)+Side*FMath::FRandRange(-260.f,260.f)+FVector(0,0,FMath::FRandRange(120.f,380.f));
+            }
+        }
+        for(int32 K=0;K<FWardenRegentView::Sparks;++K)
+        {
+            const auto& P=V.SparkBuffer[K]; const float Life=Seconds-P.Start;
+            if(Life<0 || Life>.42f || !V.Spark.IsValid()) { if(V.Spark.IsValid()) Set(V.Spark.Get(),K,Hidden); continue; }
+            const FVector Vel=P.Velocity+FVector(0,0,-980*Life);
+            const FVector SparkAt=P.At+P.Velocity*Life+FVector(0,0,-490*Life*Life);
+            if(SparkAt.Z<0) { Set(V.Spark.Get(),K,Hidden); continue; }
+            const FVector Dir=Vel.GetSafeNormal();
+            const FQuat Q=FRotationMatrix::MakeFromYZ(Dir,(Eye-SparkAt).GetSafeNormal()).ToQuat();
+            const float SparkFade=1-Life/.42f, SparkLength=4+Vel.Size()*.035f;
+            Set(V.Spark.Get(),K,FTransform(Q,SparkAt,FVector(.025f*SparkFade,SparkLength/100,1)));
+        }
+    }
     for(int32 I=Used;I<V.Disc.Num();++I) if(auto* D=V.Disc[I].Get()) D->SetVisibility(false);
     while(Fire.Num()<FWardenRegentView::Flames) Fire.Add(Hidden);
     V.Fire->BatchUpdateInstancesTransforms(0,Fire,true,true);
-    for(auto* C:{V.Censer.Get(),V.Chain.Get(),V.Bones.Get(),V.Eyes.Get(),V.Glint.Get(),V.EyeGlow.Get()}) C->MarkRenderStateDirty();
+    for(auto* C:{V.Censer.Get(),V.Chain.Get(),V.Bones.Get(),V.Eyes.Get(),V.Glint.Get(),V.EyeGlow.Get(),V.DeadEyes.Get(),V.Spark.Get()}) if(C) C->MarkRenderStateDirty();
 
     // Second phase: the hall's fire turns to soul fire (dungeon arena only).
     if(bDungeon && Regent.PhaseTwo!=V.bBlueHall)
