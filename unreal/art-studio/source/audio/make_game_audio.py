@@ -29,6 +29,13 @@ def pitch(x, semitones):
     idx = np.arange(0, len(x) - 1, r)
     return np.interp(idx, np.arange(len(x)), x)
 
+def varispeed(x, start, end, seconds):
+    # Pitch glide: playback rate moves from start to end over the output length.
+    n = int(SR * seconds); rate = np.linspace(start, end, n)
+    idx = np.cumsum(rate); idx = idx[idx < len(x) - 1]
+    return np.interp(idx, np.arange(len(x)), x)
+
+
 def onepole(x, cutoff, high=False, stages=1):
     # One-pole low/high-pass; stages > 1 cascades it for a steeper (-6 dB/oct per stage) slope.
     for _ in range(stages - 1): x = _onepole(x, cutoff, high)
@@ -282,6 +289,21 @@ for k in range(3):
     roar = (fire(1.6, 340, 20, 30 + k) + fire_whoosh(1.6, 30 + k) * .7) * env(int(SR * 1.6), .25, .8)
     save(f'RegentWakes_{k}', roar, ['organic rolling fire (flutter, wood-grain crackle 20/s)', 'fire whoosh'], .7)
 
+# --- Procession Dash --------------------------------------------------------------------------
+# Charge: soul fire swelling through the 0.8 s wind-up with the estoc's blade ring rising in it.
+for k in range(3):
+    n = int(SR * .85); u = np.arange(n) / n
+    swell = (fire(.85, 260, 16, 400 + k) + fire_whoosh(.85, 410 + k) * .8) * u ** 1.6
+    ring = load(f'rpg_drawKnife{k % 3 + 1}'); ring = ring / (np.abs(ring).max() + 1e-9)
+    ring = varispeed(np.tile(ring, 3), .8, 1.25, .85) * u ** 2
+    save(f'RegentDashCharge_{k}', mix(.9, (swell, 0, 1), (ring, 0, .45)), ['soul-fire swell (fire bed + whoosh), rising', f'rpg_drawKnife{k % 3 + 1} gliding x0.8->1.25 (blade ring)'], .85)
+# Launch: a stomp, a deep air rush, a fire roar and a sub thump.
+for k in range(3):
+    stomp = pitch(load(pick('impact_impactSoft_heavy', k + 1)), -5); scrape = pitch(load(pick('impact_footstep_concrete', k)), -3)
+    rush = whoosh(.6, 180 + 30 * k, 1400, 160, 0)
+    save(f'RegentDash_{k}', mix(1.0, (stomp, 0, .9), (scrape, .01, .6), (rush, .02, 1), (fire_whoosh(.8, 420 + k), .04, .8), (sub(90, 40, .5, 7), 0, .5)),
+         [pick('impactSoft_heavy', k + 1) + ' -5 st (stomp)', pick('footstep_concrete', k) + ' -3 st', 'deep air rush', 'fire whoosh', 'sub'], .95, present=.5)
+
 # --- Raised skeletons ---------------------------------------------------------------------------
 def knock(freq, decay, r):
     # Dry bone clack: a resonant ring at freq excited by a 2 ms noise burst, dying in ~decay s.
@@ -369,12 +391,6 @@ def smear(x, seconds, seed):
     r = np.random.default_rng(seed); ir = r.standard_normal(int(SR * seconds)) * np.exp(-np.linspace(0, 6, int(SR * seconds)))
     n = len(x) + len(ir); y = np.fft.irfft(np.fft.rfft(x, n) * np.fft.rfft(ir, n), n)
     return y / (np.abs(y).max() + 1e-9)
-
-def varispeed(x, start, end, seconds):
-    # Pitch glide: playback rate moves from start to end over the output length.
-    n = int(SR * seconds); rate = np.linspace(start, end, n)
-    idx = np.cumsum(rate); idx = idx[idx < len(x) - 1]
-    return np.interp(idx, np.arange(len(x)), x)
 
 def fade(x, a, r):
     return x * env(len(x), a, r, 1.5)

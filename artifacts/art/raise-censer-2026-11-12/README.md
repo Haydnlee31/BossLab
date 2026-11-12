@@ -39,3 +39,20 @@ The owner asked for a summon move (two slow skeletons, killable in three hits) u
   - the Arc is on the floor 8 ticks and the Bell 30.
 - **Sequence:** all 14 Regent moves occur in the long sequence test, and `ReactiveBotCanWin` still passes.
 - **Not yet done:** the result has not been owner-tested, and nothing has been listened to.
+
+## Procession Dash effects (same day)
+
+The owner asked for more effects on the dash stab. All of these are presentation only; the dash rules and timing are unchanged.
+
+- **Wind-up (0.8 s):**
+  - soul fire gathers on the estoc (four flames along the blade growing toward the strike);
+  - five rune marks light in sequence along the floor, showing the dash line and length (140–740 cm);
+  - `RegentDashCharge` plays: a rising soul-fire swell with the blade ring gliding ×0.8 → ×1.25.
+- **Release:**
+  - `RegentDash` replaces the generic thrust cue: stomp, deep air rush, fire whoosh and sub, plus a small camera kick;
+  - three soul-fire streaks trail the body;
+  - orange sparks whip off the estoc tip;
+  - the camera shakes if the Regent passes within 3 m.
+- **After:** each mark erupts in flame for 0.7 s once passed, and a ring of flames flares where the dash stops (0.6 s).
+- **Evidence:** `procession-dash-effects.png` (wind-up marks, wake, eruptions, stop ring).
+- **Verification:** native suite 35/35.

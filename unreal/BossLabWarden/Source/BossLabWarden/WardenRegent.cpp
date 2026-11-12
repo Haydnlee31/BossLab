@@ -371,7 +371,10 @@ void AWardenArenaMode::RegentResolve()
         // Sound: one cue per readable beat (presentation only; never affects resolution).
         const FVector Head=Warden->CenserWorld();
         if(Kind(F.Move)==EKind::Blade || F.Move==AshStep)
-            if(Since==0 || (F.Move==Rite && (Since==20 || Since==56))) RegentSound(TEXT("RegentThrust"),BossAt,.5f);
+            if((Since==0 && F.Move!=Dash) || (F.Move==Rite && (Since==20 || Since==56))) RegentSound(TEXT("RegentThrust"),BossAt,.5f);
+        // Procession Dash: a charge that swells through the wind-up, then a heavy launch.
+        if(F.Move==Dash && A==1) RegentSound(TEXT("RegentDashCharge"),BossAt,.8f);
+        if(F.Move==Dash && Since==0) { RegentSound(TEXT("RegentDash"),BossAt,1.f); Impact(0,.25f); }
         if(F.Move==Arc && (A==12 || Since==-4)) RegentSound(TEXT("RegentWhoosh"),Head,A==12 ? .35f : .7f);
         if(F.Move==Bell && A==20) RegentSound(TEXT("RegentWhoosh"),Head,.4f);
         if(F.Move==Drift && A==2) RegentSound(TEXT("RegentWhoosh"),BossAt,.3f);
@@ -1009,6 +1012,72 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
             for(int32 E=0;E<2;++E)
                 Set(V.DeadEyes.Get(),Slot*2+E,FTransform(Look,HeadAt+Look.RotateVector(FVector(8.5f,E ? 3.2f : -3.2f,1.5f)*1.45f/1.27f),FVector(.045f*Alive)));
             if(Alive>.1f) Flame(HeadAt+FVector(0,0,10),18*Alive,(S->State==ES::Windup ? 55 : 32)*Alive,S->Id*17);
+        }
+    }
+    // Procession Dash: soul fire gathers on the estoc and rune marks light the path through
+    // the wind-up; on the release a fire wake streams behind the Regent, each mark erupts as
+    // it is passed, sparks whip off the blade, and a ring flares where the dash stops.
+    {
+        const bool Dashing=Striking && F.Move==Dash;
+        const auto& DD=WardenRegent::Strike(Dash);
+        const int32 Since=F.Age-DD.Windup;
+        if(Dashing && Warden->Fight.AttackInstance!=V.DashFor)
+        { V.DashFor=Warden->Fight.AttackInstance; for(float& P:V.DashPassed) P=-100; V.DashStopAt=-100; }
+        if(Dashing && Since<0)
+        {
+            V.DashFrom=FVector(BossAt.X,BossAt.Y,0);
+            V.DashDir=Warden->CommittedDirection.GetSafeNormal2D().IsNearlyZero() ? Warden->GetActorForwardVector().GetSafeNormal2D() : Warden->CommittedDirection.GetSafeNormal2D();
+            const float U=FMath::Clamp(float(F.Age)/DD.Windup,0.f,1.f);
+            for(int32 K=0;K<4;++K)
+            {
+                const float OnBlade=.35f+.2f*K;
+                Flame(Warden->BladePoint(OnBlade)-FVector(0,0,6),(10+8*U)*(1.f-.1f*K),(14+50*U*U)*(1.f-.15f*K),K+700);
+            }
+            for(int32 K=0;K<FWardenRegentView::DashMarks;++K)
+            {
+                const float Show=FMath::Clamp(U*1.4f-K*.18f,0.f,1.f);
+                if(Show>0) Disc(V.DashFrom+V.DashDir*(140+150*K),48,.6f+.6f*Show,FLinearColor(.3,.55,1),Show);
+            }
+        }
+        if(Dashing && Since>=0)
+        {
+            const float Travel=FVector::DotProduct(FVector(BossAt.X,BossAt.Y,0)-V.DashFrom,V.DashDir);
+            for(int32 K=0;K<FWardenRegentView::DashMarks;++K)
+                if(V.DashPassed[K]<0 && Travel>=140+150*K) V.DashPassed[K]=Seconds;
+            if(Since<DD.Active)
+            {
+                // Wake: long tongues streaming back from the body, plus sparks off the blade.
+                const FVector Back=-V.DashDir;
+                for(int32 K=0;K<3;++K)
+                    Streak(BossAt+FVector(0,0,40+35*K),Back+FVector(0,0,.08f),70-12*K,260+40*FMath::Sin(Seconds*13+K));
+                const FVector Tip=Warden->BladePoint(1);
+                for(int32 K=0;K<3;++K)
+                {
+                    auto& P=V.SparkBuffer[V.NextSpark]; V.NextSpark=(V.NextSpark+1)%FWardenRegentView::Sparks;
+                    P.Start=Seconds; P.At=Tip;
+                    P.Velocity=Back*FMath::FRandRange(250.f,600.f)+FVector(FMath::FRandRange(-120.f,120.f),FMath::FRandRange(-120.f,120.f),FMath::FRandRange(60.f,260.f));
+                }
+                if(Player && FVector::Dist2D(Player->GetActorLocation(),BossAt)<300) Shake=FMath::Max(Shake,.3f);
+            }
+            else if(V.DashStopAt<0) V.DashStopAt=Seconds;
+        }
+        // Marks erupt for 0.7 s after being passed; the stop ring flares for 0.6 s.
+        for(int32 K=0;K<FWardenRegentView::DashMarks;++K)
+        {
+            const float Age=Seconds-V.DashPassed[K];
+            if(Age<0 || Age>.7f) continue;
+            const float Burn=FMath::Sin(PI*Age/.7f);
+            const FVector Mark=V.DashFrom+V.DashDir*(140+150*K);
+            Disc(Mark,48,1.2f*Burn,FLinearColor(.3,.55,1));
+            for(int32 J=0;J<2;++J) Flame(Mark+FVector(J ? 18 : -18,0,0),45,(90+40*J)*Burn,K*7+J+720);
+        }
+        {
+            const float Age=Seconds-V.DashStopAt;
+            if(Age>=0 && Age<.6f)
+            {
+                const float Burn=FMath::Sin(PI*Age/.6f);
+                for(int32 K=0;K<8;++K) Flame(FVector(BossAt.X,BossAt.Y,0)+Ring(K*45.f,70+90*Age,0),50,110*Burn,K+740);
+            }
         }
     }
     // Censer floor sparks: a spray from the lantern's base while it grinds the floor.

@@ -727,6 +727,66 @@
   ],
   "loop": false
  },
+ "RegentDashCharge_0": {
+  "seconds": 0.9,
+  "layers": [
+   "soul-fire swell (fire bed + whoosh), rising",
+   "rpg_drawKnife1 gliding x0.8->1.25 (blade ring)"
+  ],
+  "loop": false
+ },
+ "RegentDashCharge_1": {
+  "seconds": 0.9,
+  "layers": [
+   "soul-fire swell (fire bed + whoosh), rising",
+   "rpg_drawKnife2 gliding x0.8->1.25 (blade ring)"
+  ],
+  "loop": false
+ },
+ "RegentDashCharge_2": {
+  "seconds": 0.9,
+  "layers": [
+   "soul-fire swell (fire bed + whoosh), rising",
+   "rpg_drawKnife3 gliding x0.8->1.25 (blade ring)"
+  ],
+  "loop": false
+ },
+ "RegentDash_0": {
+  "seconds": 1.0,
+  "layers": [
+   "impactSoft_heavy_001 -5 st (stomp)",
+   "footstep_concrete_000 -3 st",
+   "deep air rush",
+   "fire whoosh",
+   "sub",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
+ "RegentDash_1": {
+  "seconds": 1.0,
+  "layers": [
+   "impactSoft_heavy_002 -5 st (stomp)",
+   "footstep_concrete_001 -3 st",
+   "deep air rush",
+   "fire whoosh",
+   "sub",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
+ "RegentDash_2": {
+  "seconds": 1.0,
+  "layers": [
+   "impactSoft_heavy_003 -5 st (stomp)",
+   "footstep_concrete_002 -3 st",
+   "deep air rush",
+   "fire whoosh",
+   "sub",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
  "SkeletonRise_0": {
   "seconds": 1.1,
   "layers": [

@@ -255,6 +255,11 @@ struct FWardenRegentView
     // Censer floor sparks (presentation ring buffer, world seconds).
     struct FSpark { float Start=-100; FVector At=FVector::ZeroVector, Velocity=FVector::ZeroVector; };
     FSpark SparkBuffer[Sparks];
+    // Procession Dash: path frozen at the release, the time each floor mark was passed.
+    static constexpr int32 DashMarks=5;
+    FVector DashFrom=FVector::ZeroVector, DashDir=FVector::ForwardVector;
+    float DashPassed[DashMarks]={-100,-100,-100,-100,-100}, DashStopAt=-100;
+    int32 DashFor=-1;
     int32 NextSpark=0;
     float LastSparkTime=0;
 };
