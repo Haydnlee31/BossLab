@@ -169,6 +169,9 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         // Feet ~15 cm from the turning axis travel about 0.26 cm/s per deg/s; 0.5 gives a
         // visible shuffle without a full walking stride.
         const float Turn=FMath::Min(FMath::Abs(TurnRate)*.5f,150.f);
+        // Unlocked, the player always runs on the forward clips and the body turns (souls
+        // style); the backpedal/strafe clips flashed for a few frames on every sharp pivot.
+        if(!bBoss && !IsLocked()) Angle=FMath::Clamp(Angle,-35.f,35.f);
         if(Turn>20 && Turn>Speed) { Speed=Turn; Angle=TurnRate>0 ? 90.f : -90.f; }
         // Speed warping: below the walk samples (300) keep the full walk stride and slow
         // its clock, instead of mixing in idle (a short shuffling stride at full cadence).
@@ -192,7 +195,15 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     // poses authoritative on the fixed simulation step.
     // Only around a change of action (walk/stop/commit): a permanent low-pass also damped
     // every stride, so planted feet skated at ~65% of body speed (AnimationTests).
-    if(Fight.Action!=PosedAction) { PosedAction=Fight.Action; PoseSettle=10; }
+    if(Fight.Action!=PosedAction)
+    {
+        // Landing a plain jump absorbs into the knees (FeelLand, below) instead of standing
+        // straight up out of the air.
+        if(PosedAction==EWardenAction::Jump && !bBoss) FeelLand=1;
+        if((PosedAction==EWardenAction::Dodge || PosedAction==EWardenAction::Jump) && Fight.Action==EWardenAction::Ready && !bBoss && PoseEase==0)
+        { PoseEase=8; EaseGrip=LastGrip; EaseAxis=LastAxis; EaseTwist=LastTwist; EaseLean=LastLean; }
+        PosedAction=Fight.Action; PoseSettle=10;
+    }
     const float Catch=PoseSettle>0 ? FMath::Lerp(1.f,.28f,PoseSettle/10.f) : 1.f;
     if(PoseSettle>0) --PoseSettle;
     if(MotionBase.Num()==Local.Num() && Catch<1)
@@ -317,8 +328,11 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     {
         // Gather, rise with the blade held high, tuck the legs at the top, reach for the floor.
         const float U=float(Fight.Age)/WardenRules::JumpTicks;
-        Key=Blend(Guard,{Guard.Grip+FVector(0,0,16),Guard.Axis,0,-10},FMath::Sin(PI*U));
-        Tuck=.5f*FMath::Sin(PI*U);
+        // Knees pull up hard at the apex and the chest curls over them; the legs reach down
+        // again for the floor in the last third.
+        const float Apex=FMath::Sin(PI*FMath::Clamp(U*1.15f,0.f,1.f));
+        Key=Blend(Guard,{Guard.Grip+FVector(4,0,14),Guard.Axis,0,8},Apex);
+        Tuck=.8f*Apex;
     }
     else if(Fight.Action==EWardenAction::Heal)
     {
@@ -326,11 +340,6 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         // while the left hand brings the flask to the mouth (below).
         const float Hold=Smooth(Fight.Age/12.f)*(1-Smooth((Fight.Age-64)/14.f));
         Key=Blend(Guard,{FVector(22,26,96),FVector(.5,.3,-.8).GetSafeNormal(),-8,4},Hold);
-    }
-    if(Fight.Action==EWardenAction::Ready && PoseEase>0)
-    {
-        Key=Blend({EaseGrip,EaseAxis,EaseTwist,EaseLean},Key,1-PoseEase/8.f);
-        --PoseEase;
     }
     // Locomotion feel (player, presentation only; no capsule, speed or timing change).
     // Smoothed acceleration drives a forward lean on starts, a lean back on hard stops and a
@@ -350,7 +359,9 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         // flapping it back up to the guard.
         // Held for 0.3 s first: a reversal passes through zero speed for ~0.17 s.
         FeelHold=CarryWant<FeelCarry-.05f && FeelMoving ? FeelHold+1 : 0;
-        if(CarryWant>=FeelCarry || FeelHold>18 || !FeelMoving) FeelCarry+=FMath::Clamp(CarryWant-FeelCarry,-Dt*2.f,Dt*2.2f);
+        // Rolls and jumps keep the carry, so rolling out of a run flows straight back into it.
+        const bool CarryKept=Fight.Action==EWardenAction::Dodge || Fight.Action==EWardenAction::Jump;
+        if(!CarryKept && (CarryWant>=FeelCarry || FeelHold>18 || !FeelMoving)) FeelCarry+=FMath::Clamp(CarryWant-FeelCarry,-Dt*2.f,Dt*2.2f);
         const float LeanWant=FeelMoving ? FMath::Clamp(FwdAcc/2400*6,-6.f,5.f)+1.5f*Smooth(Ground/420)+3*FeelCarry : 0;
         const float BankWant=FeelMoving ? FMath::Clamp(SideAcc/980*16,-11.f,11.f) : 0;
         FeelLean=FMath::Lerp(FeelLean,LeanWant,.14f); FeelBank=FMath::Lerp(FeelBank,BankWant,.12f);
@@ -360,8 +371,13 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const FVector Push=FeelMoving ? FVector(-FwdAcc,-SideAcc,0)*.0026f : FVector::ZeroVector;
         FeelSwayVel+=(-160.f*(FeelSway-Push)-17.f*FeelSwayVel)*Dt; FeelSway+=FeelSwayVel*Dt;
         if(!FeelMoving && Fight.Action!=EWardenAction::Ready) FeelSway=FeelSwayVel=FVector::ZeroVector;
+        // Landing absorb: a quick dip over ~0.1 s and a recovery over ~0.3 s.
+        if(FeelLand>0) FeelLand=FMath::Max(0.f,FeelLand-Dt/.4f);
+        const float Absorb=FeelLand>0 ? FMath::Sin(PI*FMath::Pow(1-FeelLand,.6f)) : 0.f;
+        FeelAbsorb=Absorb;
         if(!bBoss && Fight.Action==EWardenAction::Ready)
         {
+            Key.Grip.Z-=8*Absorb; Key.Lean+=7*Absorb;
             const FSwordKey Low{FVector(26,14,100),FVector(.86f,.28f,-.42f).GetSafeNormal(),-6,4};
             const FSwordKey Trail{FVector(4,31,95),FVector(-.72f,.34f,-.5f).GetSafeNormal(),-16,0};
             if(FeelCarry>.001f) Key=FeelCarry<.5f ? Blend(Key,Low,FeelCarry*2) : Blend(Low,Trail,(FeelCarry-.5f)*2);
@@ -369,6 +385,12 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             Key.Axis=(Key.Axis+FVector(FeelSway.X,FeelSway.Y,0)*.035f).GetSafeNormal();
             Key.Lean+=FeelLean;
         }
+    }
+    // After the carry, so cancels and roll/jump exits ease into the carried pose.
+    if(Fight.Action==EWardenAction::Ready && PoseEase>0)
+    {
+        Key=Blend({EaseGrip,EaseAxis,EaseTwist,EaseLean},Key,1-PoseEase/8.f);
+        --PoseEase;
     }
     const float Recoil=Fight.ImpactTicks>0 ? FMath::Sin(PI*float(18-Fight.ImpactTicks)/18) : 0;
     // Armored hits still read through the torso, but never alter the sword's
@@ -408,7 +430,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const FVector Shift=Fight.Action==EWardenAction::Strike
             ? FVector(FMath::Lerp(-7.f,9.f,Drive)*Load*Weight,FMath::Lerp(4.f,-3.f,Drive)*Load*Weight,-9*Load*Weight)
             : FVector(6*HitFront*Recoil,6*HitSide*Recoil,-32*Tuck-6*Landing-4*Recoil-20*Stagger);
-        Local[Pelvis].AddToTranslation(MeshPoint(Shift+FVector(0,FeelBank*.55f,-1.5f*FMath::Abs(FeelBank)/11-3*FeelCarry))); Rebuild(Pelvis);
+        Local[Pelvis].AddToTranslation(MeshPoint(Shift+FVector(0,FeelBank*.55f,-1.5f*FMath::Abs(FeelBank)/11-3*FeelCarry-11*FeelAbsorb))); Rebuild(Pelvis);
         if(FMath::Abs(FeelBank)>.01f) SetRotation(Pelvis,FQuat(MeshPoint(FVector::ForwardVector),FMath::DegreesToRadians(-FeelBank*.45f))*CS[Pelvis].GetRotation());
         const float HipTurn=Fight.Action==EWardenAction::Strike ? FMath::Lerp(-22.f,26.f,Drive)*Load*Weight : Key.Twist*.2f;
         SetRotation(Pelvis,FQuat(FVector::UpVector,FMath::DegreesToRadians(-HipTurn))*CS[Pelvis].GetRotation());
@@ -569,7 +591,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
                 FootRelease[Side]=FMath::Min(1.f,FootRelease[Side]+1/6.f);
                 Pin=FMath::Lerp(FVector(FootReleaseFrom[Side].X,FootReleaseFrom[Side].Y,AnimWorld.Z),AnimWorld,Smooth(FootRelease[Side]));
             }
-            if(Pin.Equals(AnimWorld,.01) && FMath::Abs(FeelBank)<.01f && FeelCarry<.001f) continue;
+            if(Pin.Equals(AnimWorld,.01) && FMath::Abs(FeelBank)<.01f && FeelCarry<.001f && FeelAbsorb<.001f) continue;
             IK(Side?TEXT("thigh_r"):TEXT("thigh_l"),Side?TEXT("calf_r"):TEXT("calf_l"),Side?TEXT("foot_r"):TEXT("foot_l"),MeshWorld.InverseTransformPosition(Pin),MeshPoint(FVector(65,Side?20.f:-20.f,55)));
             SetRotation(Side?FootRI:FootLI,Anim.GetRotation());
         }

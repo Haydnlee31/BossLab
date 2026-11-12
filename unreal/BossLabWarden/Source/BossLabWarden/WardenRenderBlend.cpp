@@ -88,7 +88,7 @@ void AWardenArenaMode::GaitStudyStep(FVector& PlayerIntent,FVector& BossDirectio
 void AWardenArenaMode::FeelStudyStep(FVector& PlayerIntent)
 {
     // Capture-only player feel review, tracked side-on: circle at a run, two hard reversals,
-    // sprint and stop, two rolls, the three-cut chain, a sprint into a running cut, a jump.
+    // sprint and stop, a roll out of a run, two rolls, the three-cut chain, a sprint into a running cut, a jump.
     // Ordinary acceptance and costs; ticks offset by the 2 s capture warm-up.
     const int32 T=CombatTick-120;
     const FVector P=Player->GetActorLocation();
@@ -104,6 +104,7 @@ void AWardenArenaMode::FeelStudyStep(FVector& PlayerIntent)
     else if(T>=410 && T<520) PlayerIntent=Toward(FVector(350,-150,0));
     else if(T>=520 && T<640) PlayerIntent=Toward(FVector(-350,-150,0));
     else if(T>=640 && T<760) { PlayerIntent=Toward(FVector(400,100,0)); Player->SprintHeld=true; }
+    if(T==440) Press(EWardenAction::Dodge,PlayerIntent);   // roll out of a run, keep running
     if(T==820) Press(EWardenAction::Dodge,FVector(0,1,0));
     if(T==880) Press(EWardenAction::Dodge,FVector(-1,0,0));
     if(T==960 || T==985 || T==1010) Press(EWardenAction::Strike);

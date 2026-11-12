@@ -133,6 +133,26 @@ All of these are in `WardenSword.cpp`. They are presentation only: no capsule, s
 - **Idle at its natural rate.** The idle clip now plays at 1.0×. The slow clock only applies through the last 60 cm/s of a stop.
 - **Swings start from the pose you are in.** The player always winds up from the drawn ready pose (`bPoseFromLast`), so a cut from a sprint starts from the trailing carry without a snap to guard.
 
+### Later passes (same session)
+
+- **One-handed sprint.**
+  - Past about 85% of sprint carry, the left hand leaves the hilt and pumps with the run clip's arm swing. The greatsword trails at the right hip.
+  - The left hand returns to the hilt over ~0.1 s for any action and ~0.3 s when slowing.
+  - Seen from a front-quarter camera added to `capture feel` for sprints.
+- **Level gaze and less hunch.**
+  - The sprint lean is reduced to 3°, and acceleration lean is capped at +5°/−6°.
+  - The head counter-pitches up to 7° so the eyes stay level over the run clip's own forward lean.
+- **Jump.**
+  - The knees tuck hard at the apex (tuck 0.8, up from 0.5) with a slight forward curl, and the legs reach down for the floor.
+  - Landing absorbs: hips dip 11 cm, the torso dips and the blade sinks, then everything recovers over 0.4 s. The feet stay planted.
+- **Unlocked pivots.**
+  - The unlocked player stays on the forward clips (blend angle clamped to ±35°) while the body turns, as in souls games.
+  - Every sharp change of direction used to flash the backpedal/strafe clips for a few frames.
+- **Roll and jump exits.**
+  - The carry is held through rolls and jumps, and the exit eases over 8 ticks into the carried pose.
+  - The pose ease now runs after the carry, so cancels also ease into it.
+  - Rolling out of a run flows straight back into the low running carry.
+
 ### Results
 
 - **Native suite:** 35/35.
