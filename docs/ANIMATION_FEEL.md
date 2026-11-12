@@ -104,7 +104,7 @@ The owner said combat still felt stiff compared with Elden Ring, mostly because 
 - a sprint into a running cut;
 - a jump.
 
-It uses the normal action acceptance and costs. Sheets are in `artifacts/art/feel-2026-11-13/`.
+It uses the normal action acceptance and costs. Sheets are in `artifacts/art/feel-2026-11-13/` (local). `final.png` is the overview of the last pass.
 
 ### What was stiff
 
@@ -151,6 +151,7 @@ All of these are in `WardenSword.cpp`. They are presentation only: no capsule, s
 - **Combat-ready idle.**
   - Standing still, the guard angles the blade forward at the foe (about 50° instead of near-vertical), draws the right side back 12° and softens the knees by 3 cm.
   - It blends out within about 0.2 s of moving. Swings from idle wind up from this stance.
+- **Eased facing.** The player's turn keeps its 540°/s top speed but eases into the last ~40° (time constant ~70 ms, minimum 60°/s), instead of stopping dead on the target angle. Boss facing is unchanged.
 - **Roll and jump exits.**
   - The carry is held through rolls and jumps, and the exit eases over 8 ticks into the carried pose.
   - The pose ease now runs after the carry, so cancels also ease into it.

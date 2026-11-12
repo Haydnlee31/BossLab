@@ -116,7 +116,13 @@ void AWardenChallenger::StepFighter(const FVector& Direction, bool SprintRequest
             if (bBoss && Target.IsValid()) Facing = Target->GetActorLocation()-GetActorLocation();
             const float YawBefore=GetActorRotation().Yaw;
             if (!Facing.IsNearlyZero())
-                SetActorRotation(FMath::RInterpConstantTo(GetActorRotation(),FRotator(0,Facing.Rotation().Yaw,0),WardenRules::Step,540.f));
+            {
+                // Same 540 deg/s top speed; the player's turn eases into the last ~40 degrees
+                // (70 ms time constant) instead of stopping dead on the target angle.
+                const float Gap=FMath::Abs(FMath::FindDeltaAngleDegrees(YawBefore,Facing.Rotation().Yaw));
+                const float Rate=bBoss ? 540.f : FMath::Clamp(Gap*14.f,60.f,540.f);
+                SetActorRotation(FMath::RInterpConstantTo(GetActorRotation(),FRotator(0,Facing.Rotation().Yaw,0),WardenRules::Step,Rate));
+            }
             TurnRate=FMath::FindDeltaAngleDegrees(YawBefore,GetActorRotation().Yaw)/WardenRules::Step;
         }
         else if (Fight.Action == EWardenAction::Jump)
