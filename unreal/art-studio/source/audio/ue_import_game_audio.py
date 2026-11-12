@@ -29,6 +29,9 @@ for t in tasks:
     if not sound: continue
     if t.destination_name.startswith(('Amb', 'Music')):
         sound.set_editor_property('looping', True); loops.append(t.destination_name)
+        # Keep beds running while silent (a bed started at zero volume was culled, so the
+        # music never became audible).
+        sound.set_editor_property('virtualization_mode', unreal.VirtualizationMode.PLAY_WHEN_SILENT)
     done.append(t.destination_name)
 eal.save_directory(DEST, only_if_is_dirty=False, recursive=True)
 report = {'imported': len(done), 'loops': loops}

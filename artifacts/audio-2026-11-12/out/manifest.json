@@ -583,7 +583,7 @@
  "RegentSkull_0": {
   "seconds": 0.95,
   "layers": [
-   "fs_scream 2.6s +2 st (shriek)",
+   "fs_scream 2.6s +4 st, screech (octave-up copy, exciter, hiss, +9 dB shelf)",
    "fs_scream -12 st (weight)",
    "fire whoosh",
    "wood-grain crackle",
@@ -594,7 +594,7 @@
  "RegentSkull_1": {
   "seconds": 0.95,
   "layers": [
-   "fs_scream 3.9s +3 st (shriek)",
+   "fs_scream 3.9s +5 st, screech (octave-up copy, exciter, hiss, +9 dB shelf)",
    "fs_scream -12 st (weight)",
    "fire whoosh",
    "wood-grain crackle",
@@ -605,7 +605,7 @@
  "RegentSkull_2": {
   "seconds": 0.95,
   "layers": [
-   "fs_scream 5.1s +4 st (shriek)",
+   "fs_scream 5.1s +6 st, screech (octave-up copy, exciter, hiss, +9 dB shelf)",
    "fs_scream -12 st (weight)",
    "fire whoosh",
    "wood-grain crackle",
@@ -616,7 +616,7 @@
  "RegentSkull_3": {
   "seconds": 0.95,
   "layers": [
-   "fs_scream 6.6s +5 st (shriek)",
+   "fs_scream 6.6s +7 st, screech (octave-up copy, exciter, hiss, +9 dB shelf)",
    "fs_scream -12 st (weight)",
    "fire whoosh",
    "wood-grain crackle",
@@ -746,7 +746,7 @@
  "RegentSkull_4": {
   "seconds": 0.95,
   "layers": [
-   "fs_scream 8.0s +2 st (shriek)",
+   "fs_scream 8.0s +4 st, screech (octave-up copy, exciter, hiss, +9 dB shelf)",
    "fs_scream -12 st (weight)",
    "fire whoosh",
    "wood-grain crackle",
@@ -757,7 +757,7 @@
  "RegentSkullDive_0": {
   "seconds": 0.85,
   "layers": [
-   "fs_scream 3.0s gliding x0.85->1.45",
+   "fs_scream 3.0s gliding x0.85->1.45, screech",
    "fire whoosh",
    "fs_scream -12 st"
   ],
@@ -766,7 +766,7 @@
  "RegentSkullDive_1": {
   "seconds": 0.85,
   "layers": [
-   "fs_scream 5.2s gliding x0.85->1.45",
+   "fs_scream 5.2s gliding x0.85->1.45, screech",
    "fire whoosh",
    "fs_scream -12 st"
   ],
@@ -775,7 +775,7 @@
  "RegentSkullDive_2": {
   "seconds": 0.85,
   "layers": [
-   "fs_scream 7.4s gliding x0.85->1.45",
+   "fs_scream 7.4s gliding x0.85->1.45, screech",
    "fire whoosh",
    "fs_scream -12 st"
   ],

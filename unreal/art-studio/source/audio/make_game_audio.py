@@ -80,11 +80,19 @@ def presence(x, gain=.6):
     # so impacts still read on laptop speakers that cannot reproduce the low body.
     return x + bandpass(x, 1500, .8) * gain * 4
 
-def save(name, x, layers, peak=.9, loop=False, present=0.0):
+def treble(x, db, corner=2500):
+    # High-shelf boost: add a high-passed copy (about +db above the corner).
+    return x + onepole(x, corner, high=True, stages=2) * (10 ** (db / 20) - 1)
+
+def save(name, x, layers, peak=.9, loop=False, present=0.0, drive=1.8):
     # Subsonic high-pass (~45 Hz): rumble no speaker reproduces only eats headroom.
     x = onepole(x, 45, high=True, stages=2)
     if present: x = presence(x, present); layers = layers + [f'presence band x{present}']
-    x = x / (np.max(np.abs(x)) + 1e-9) * peak
+    # Gentle saturation lifts the body of one-shots a few dB (the first mix measured about
+    # -36 dBFS integrated, far under typical game loudness). Loops stay clean.
+    if not loop and drive > 0:
+        x = np.tanh(drive * x / (np.max(np.abs(x)) + 1e-9)) / np.tanh(drive)
+    x = x / (np.max(np.abs(x)) + 1e-9) * max(peak, .8)
     if not loop:
         n = min(len(x), int(SR * .012)); x[-n:] *= np.linspace(1, 0, n)
     with wave.open(os.path.join(OUT, name + '.wav'), 'wb') as w:
@@ -313,6 +321,20 @@ def varispeed(x, start, end, seconds):
 def fade(x, a, r):
     return x * env(len(x), a, r, 1.5)
 
+def screech(x, seed):
+    # The scream recording is a low moan (~2% of its energy above 2.5 kHz), so a treble shelf
+    # alone adds little. Make it shrill: an octave-up copy, an exciter (a distorted high-passed
+    # copy creates upper harmonics the recording lacks), a hiss through teeth that follows the
+    # scream's loudness, then a +9 dB shelf above 2.5 kHz.
+    r = np.random.default_rng(seed)
+    up = pitch(x, 12)[:len(x)]; up = np.pad(up, (0, len(x) - len(up)))
+    hp = onepole(x, 1500, high=True, stages=2)
+    excite = np.tanh(6 * hp / (np.abs(hp).max() + 1e-9))
+    follow = onepole(np.abs(x), 30, stages=2); follow /= follow.max() + 1e-9
+    hiss = bandpass(r.standard_normal(len(x)), 4500, 1.5) * follow
+    y = x / (np.abs(x).max() + 1e-9) + up / (np.abs(up).max() + 1e-9) * .45 + excite * .3 + hiss / (np.abs(hiss).max() + 1e-9) * .3
+    return treble(y, 9)
+
 def stereo_save(name, lr, layers, peak=.7, fade_s=4.0):
     # Music bed: seamless stereo loop (tail crossfaded into the head).
     n = int(SR * fade_s); head, body = lr[:n].copy(), lr[n:].copy()
@@ -331,18 +353,19 @@ if os.path.exists(os.path.join(SRC, 'fs_scream.wav')):
     # the fire rush and crackle, and the bone clack.
     for k in range(5):
         at = 2.2 + 1.4 * k + vr.uniform(0, .5); sec = .62 + .06 * (k % 3)
-        cry = fade(pitch(slice_(scream, at, sec * 1.3), 2 + k % 4), .015, .35)
+        cry = fade(pitch(slice_(scream, at, sec * 1.4), 4 + k % 4), .01, .35)
         low = fade(pitch(slice_(scream, at, sec * .6), -12), .02, .3)
         rush = fire_whoosh(.9, 40 + k); crack = crackles(.9, 14, np.random.default_rng(50 + k))
         bone = pitch(load(pick('impact_impactWood_light', k)), 3)
-        save(f'RegentSkull_{k}', mix(.95, (cry, 0, 1), (low, 0, .35), (rush, 0, .55), (crack, 0, .4), (bone, 0, .4)),
-             [f'fs_scream {at:.1f}s +{2 + k % 4} st (shriek)', 'fs_scream -12 st (weight)', 'fire whoosh', 'wood-grain crackle', pick('impactWood_light', k) + ' +3 st'], .75)
+        cry = screech(cry, k)
+        save(f'RegentSkull_{k}', mix(.95, (cry, 0, 1), (low, 0, .15), (rush, 0, .45), (crack, 0, .35), (bone, 0, .4)),
+             [f'fs_scream {at:.1f}s +{4 + k % 4} st, screech (octave-up copy, exciter, hiss, +9 dB shelf)', 'fs_scream -12 st (weight)', 'fire whoosh', 'wood-grain crackle', pick('impactWood_light', k) + ' +3 st'], .98, drive=3.2)
     # Witness Circle dive: the scream glides upward as the skulls converge.
     for k in range(3):
         at = 3.0 + 2.2 * k
         cry = fade(varispeed(slice_(scream, at, 1.4), .85, 1.45, .8), .01, .25)
-        save(f'RegentSkullDive_{k}', mix(.85, (cry, 0, 1), (fire_whoosh(.85, 60 + k), 0, .5), (pitch(slice_(scream, at, .5), -12), 0, .25)),
-             [f'fs_scream {at:.1f}s gliding x0.85->1.45', 'fire whoosh', 'fs_scream -12 st'], .8)
+        save(f'RegentSkullDive_{k}', mix(.85, (screech(cry, 20 + k), 0, 1), (fire_whoosh(.85, 60 + k), 0, .4), (pitch(slice_(scream, at, .5), -12), 0, .12)),
+             [f'fs_scream {at:.1f}s gliding x0.85->1.45, screech', 'fire whoosh', 'fs_scream -12 st'], .98, drive=3.2)
     # Orbiting skulls: smeared, doubled whispers.
     for k in range(4):
         at = 9 + 17 * k + vr.uniform(0, 4)

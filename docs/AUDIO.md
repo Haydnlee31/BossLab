@@ -149,3 +149,38 @@ The owner said the audio was "a bit plain" and asked how game audio engineers wo
   - **Real run** in phase two with the audio device on: "reverb hall, 7 ambience beds, music on", with no BossLab audio errors.
   - **Benchmark:** 16.69 ms mean / 16.74 ms p95 at 720p.
   - **Not listened to.**
+
+## Loudness fix and screech (2026-11-12, owner: "I don't hear the music at all ... up the audio, I can't hear any of it")
+
+- **Measuring the real output.** `./scripts/bosslab-unreal benchmark 720p record-audio` records the final mix to `artifacts/unreal/audio-mix.wav` via `UAudioMixerBlueprintLibrary::StartRecordingOutput`. [measure_mix.py](../unreal/art-studio/source/audio/measure_mix.py) reports approximate loudness: RMS after a 100 Hz high-pass, in dBFS.
+- **Before:** about −36 dBFS integrated, loudest 3 s at −33, peaks −12.7. Typical game mixes sit near −23 to −16, so the mix was 15–20 dB too quiet.
+- **Music was effectively off.** The bed was spawned at the volume `MusicLevel()` returned at start-up, which could be 0 before the boss existed, and a sound started at zero is culled.
+- **Fixes:**
+  - **Master bus:** +6 dB into a look-ahead limiter at −2 dBFS (`USubmixEffectDynamicsProcessorPreset`).
+  - **Effects master:** ×2.5 (+8 dB) in `PlaySfx`.
+  - **Distance:** the full-volume radius is now a quarter of the falloff, up from 8%. The listener is the camera, several metres behind the player.
+  - **Sources:** gentle saturation on one-shots (tanh, drive 1.8).
+  - **Ambience:** room 0.6, fires 1.0.
+  - **Music:**
+    - spawns at full volume and fades in;
+    - its source is set to play when silent (`virtualization_mode` PLAY_WHEN_SILENT) and it restarts if stopped;
+    - levels 0.8 (Regent), 1.0 (phase two) and 0.6 (Warden).
+- **After:**
+
+  | Run | Integrated | Loudest 3 s | Quietest 3 s |
+  |---|---|---|---|
+  | Phase one | −20.7 dBFS | −15.1 | −30.0 |
+  | Phase two | −19.1 dBFS | −13.6 | −26.4 |
+
+  - **Music:** cross-correlating the recording with the music file finds it 70× above background, at about 9 dB under the source level.
+  - **Overs:** 59 samples (about 1 ms per minute) still touch full scale in the recording. This may be the recording tap rather than the limited output.
+  - **Benchmark:** 16.68 ms mean at 720p.
+- **Scream "in your face":** the recording is a low moan, with about 2% of its energy above 2.5 kHz, so a treble shelf alone barely changed it. The `screech()` chain:
+  - pitch +4–7 semitones;
+  - an octave-up copy;
+  - an exciter (a distorted high-passed copy that creates upper harmonics);
+  - a hiss through teeth that follows the scream's envelope;
+  - a +9 dB shelf above 2.5 kHz, then drive 3.2.
+
+  Skull sounds now carry 22–35% of their energy above 2.5 kHz (was 9–12%), mostly in the 2–5 kHz range the ear is most sensitive to. They are about 8 dB louder, with call volumes of 0.8 (launch) and 1.0 (dive).
+- **Verification:** native suite 34/34. Not listened to by the agent.

@@ -371,7 +371,7 @@ void AWardenArenaMode::RegentResolve()
                             const FVector Aim=(Player->GetActorLocation()-K.Position).GetSafeNormal();
                             K.Velocity=Aim.RotateAngleAxis((Fan-1)*25.f,FVector::UpVector)*SkullSpeed; ++Fan;
                             R.Flying.Add(K); R.Regrow[S]=SkullRegrowPhaseTwo;
-                            RegentSound(TEXT("RegentSkull"),K.Position,.3f);
+                            RegentSound(TEXT("RegentSkull"),K.Position,.8f);
                         }
                 }
                 break;
@@ -383,7 +383,7 @@ void AWardenArenaMode::RegentResolve()
                         FRegentSkull K; K.Slot=S; K.Position=BossAt+SkullOrbit(S,T);
                         K.Velocity=(Player->GetActorLocation()-K.Position).GetSafeNormal()*SkullSpeed;
                         R.Flying.Add(K); R.Regrow[S]=R.PhaseTwo ? SkullRegrowPhaseTwo : SkullRegrow;
-                        RegentSound(TEXT("RegentSkull"),K.Position,.3f);
+                        RegentSound(TEXT("RegentSkull"),K.Position,.8f);
                         break;
                     }
             break;
@@ -395,7 +395,7 @@ void AWardenArenaMode::RegentResolve()
                         FRegentSkull K; K.Slot=S; K.Position=BossAt+SkullOrbit(S,T); K.Homing=false;
                         K.Orbit=CircleOrbitTicks; K.OrbitAngle=S*120.f;
                         R.Flying.Add(K); R.Regrow[S]=SkullRegrowPhaseTwo;
-                        RegentSound(TEXT("RegentSkull"),K.Position,.3f);
+                        RegentSound(TEXT("RegentSkull"),K.Position,.8f);
                         RegentSound(TEXT("RegentChoir"),Player->GetActorLocation(),.5f);
                         RegentSound(TEXT("RegentWhisper"),Player->GetActorLocation()+FVector(0,0,70),.6f);
                     }
@@ -439,7 +439,7 @@ void AWardenArenaMode::RegentResolve()
             if(--K.Orbit==0)
             {
                 K.Velocity=(Target-(K.Position+Step)).GetSafeNormal()*CircleDiveSpeed;
-                RegentSound(TEXT("RegentSkullDive"),K.Position,.6f);
+                RegentSound(TEXT("RegentSkullDive"),K.Position,1.f);
             }
         }
         else if(K.Homing)

@@ -305,7 +305,7 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
     LastFrameTime=Now;
     if(bBenchmark && DemoTick>=3600 && !bBenchmarkSaved)
     {
-        SaveReport(); bBenchmarkSaved=true;
+        SaveReport(); bBenchmarkSaved=true; StopAudioRecording();
         if(auto* PC=GetWorld()->GetFirstPlayerController()) PC->ConsoleCommand(TEXT("quit"));
     }
     if (bPaused || bTitle || !Player || !Warden) { CombatAccumulator = 0; return; }

@@ -163,6 +163,9 @@ def main():
                     cmd += ['-BossLabRollStudy=' + str(group)]
         if mode == 'benchmark':
             cmd += ['-BossLabBenchmark', '-ForceRes']
+            if 'record-audio' in sys.argv[2:]:
+                # Record the final audio mix to artifacts/unreal/audio-mix.wav for loudness checks.
+                cmd += ['-BossLabRecordAudio']
         deadline = 300 if mode in ('test', 'evaluate') else 900 if mode == 'python' else 1800
     # Installed UE ShaderCompiler.cpp reads these Engine INI values before spawning
     # local workers. Eight virtual cores minus seven reserved => one worker here.

@@ -9,6 +9,9 @@
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "AudioMixerBlueprintLibrary.h"
+#include "SubmixEffects/AudioMixerSubmixEffectDynamicsProcessor.h"
+#include "Misc/Paths.h"
 #include "Sound/ReverbEffect.h"
 #include "Sound/SoundAttenuation.h"
 #include "Sound/SoundConcurrency.h"
@@ -60,7 +63,9 @@ void AWardenArenaMode::PlaySfx(const FString& Name,const FVector& At,float Volum
     {
         Attenuation=NewObject<USoundAttenuation>(this);
         Attenuation->Attenuation.bAttenuate=true; Attenuation->Attenuation.bSpatialize=true;
-        Attenuation->Attenuation.AttenuationShapeExtents=FVector(Falloff*.08f);
+        // Full volume within a quarter of the falloff: the listener is the camera, several
+        // metres behind the player, so a small inner radius made everything sound distant.
+        Attenuation->Attenuation.AttenuationShapeExtents=FVector(Falloff*.25f);
         Attenuation->Attenuation.FalloffDistance=Falloff;
         Attenuation->Attenuation.bEnableReverbSend=true;
         SfxKeepAlive.Add(Attenuation);
@@ -75,7 +80,8 @@ void AWardenArenaMode::PlaySfx(const FString& Name,const FVector& At,float Volum
         SfxKeepAlive.Add(Limit);
     }
     const float Pitch=1+FMath::FRandRange(-PitchJitter,PitchJitter);
-    const float Gain=Volume*FMath::FRandRange(.88f,1.f);
+    // Effects master (+8 dB): the first recorded mix sat near -36 dBFS integrated.
+    const float Gain=Volume*SfxMaster*FMath::FRandRange(.88f,1.f);
     UGameplayStatics::PlaySoundAtLocation(this,Sound,At,Gain,Pitch,0.f,Attenuation,Limit);
 }
 
@@ -91,13 +97,20 @@ void AWardenArenaMode::SetupAudio()
     Reverb->LateGain=1.4f; Reverb->LateDelay=bDungeon ? .04f : .02f;
     Reverb->AirAbsorptionGainHF=.98f; Reverb->RoomRolloffFactor=0;
     SfxKeepAlive.Add(Reverb);
+    // Master bus: +6 dB into a look-ahead limiter at -2 dBFS, so the louder mix never clips.
+    auto* Limiter=NewObject<USubmixEffectDynamicsProcessorPreset>(this);
+    FSubmixEffectDynamicsProcessorSettings Dyn;
+    Dyn.DynamicsProcessorType=ESubmixEffectDynamicsProcessorType::Limiter;
+    Dyn.InputGainDb=6; Dyn.ThresholdDb=-2; Dyn.LookAheadMsec=5; Dyn.AttackTimeMsec=1; Dyn.ReleaseTimeMsec=120;
+    Limiter->SetSettings(Dyn); SfxKeepAlive.Add(Limiter);
+    UAudioMixerBlueprintLibrary::AddMasterSubmixEffect(this,Limiter);
     int32 Loaded=0;
     for(const TCHAR* Name:{TEXT("SwordHit"),TEXT("SwordWhooshLight"),TEXT("StepStone"),TEXT("StepHeavy"),TEXT("RegentBell")}) Loaded+=SfxVariations(Name,nullptr).Num();
     UGameplayStatics::ActivateReverbEffect(this,Reverb,TEXT("BossLabRoom"),1,.8f,.5f);
     // Ambience beds: room tone everywhere; brazier crackle at the dungeon's nearest fires.
     auto Bed=[&](const FString& Name)->USoundBase* { const auto& L=SfxVariations(Name,nullptr); return L.IsEmpty()?nullptr:L[0].Get(); };
     if(USoundBase* Room=Bed(TEXT("AmbDungeon")))
-        if(auto* C=UGameplayStatics::SpawnSound2D(this,Room,bDungeon ? .32f : .18f,1,0,nullptr,true,false))
+        if(auto* C=UGameplayStatics::SpawnSound2D(this,Room,bDungeon ? .6f : .35f,1,0,nullptr,true,false))
         { AmbienceVolume.Add(C->VolumeMultiplier); Ambience.Add(C); }
     if(bDungeon)
         if(USoundBase* Fire=Bed(TEXT("AmbFire")))
@@ -111,22 +124,34 @@ void AWardenArenaMode::SetupAudio()
             Falloff->Attenuation.AttenuationShapeExtents=FVector(80); Falloff->Attenuation.FalloffDistance=1100;
             SfxKeepAlive.Add(Falloff);
             for(int32 I=0;I<FMath::Min(6,Fires.Num());++I)
-                if(auto* C=UGameplayStatics::SpawnSoundAtLocation(this,Fire,Fires[I],FRotator::ZeroRotator,.5f,FMath::FRandRange(.9f,1.08f),FMath::FRandRange(0.f,7.f),Falloff,nullptr,false))
+                if(auto* C=UGameplayStatics::SpawnSoundAtLocation(this,Fire,Fires[I],FRotator::ZeroRotator,1.f,FMath::FRandRange(.9f,1.08f),FMath::FRandRange(0.f,7.f),Falloff,nullptr,false))
                 { AmbienceVolume.Add(C->VolumeMultiplier); Ambience.Add(C); }
         }
     // Boss music: the Scattered Ghost bed loops under the fight (MusicBoss), deeper and louder
     // in the Regent's second phase, and fades out when the boss falls (UpdateAudio).
     if(USoundBase* Music=Bed(TEXT("MusicBoss")))
-        if(auto* C=UGameplayStatics::SpawnSound2D(this,Music,MusicLevel(),1,0,nullptr,true,false))
-        { C->FadeIn(4.f,MusicLevel()); MusicComponent=C; }
+        if(auto* C=UGameplayStatics::SpawnSound2D(this,Music,1,1,0,nullptr,true,false))
+        { C->FadeIn(4.f,FMath::Max(MusicLevel(),.0001f)); MusicComponent=C; MusicTarget=MusicLevel(); }
+    // Benchmark-only: record the final mix so its loudness can be measured offline
+    // (./scripts/bosslab-unreal benchmark record-audio).
+    if(FParse::Param(FCommandLine::Get(),TEXT("BossLabRecordAudio"))) { UAudioMixerBlueprintLibrary::StartRecordingOutput(this,90.f); bRecordingAudio=true; }
     UE_LOG(LogTemp,Display,TEXT("BOSSLAB audio: reverb %s, %d ambience beds, music %s, %d variations across 5 sample events"),bDungeon?TEXT("hall"):TEXT("court"),Ambience.Num(),MusicComponent.IsValid()?TEXT("on"):TEXT("absent"),Loaded);
+}
+
+void AWardenArenaMode::StopAudioRecording()
+{
+    if(!bRecordingAudio) return;
+    bRecordingAudio=false;
+    const FString Dir=FPaths::ConvertRelativePathToFull(FPaths::Combine(FPaths::ProjectDir(),TEXT("../../artifacts/unreal")));
+    UAudioMixerBlueprintLibrary::StopRecordingOutput(this,EAudioRecordingExportType::WavFile,TEXT("audio-mix"),Dir);
+    UE_LOG(LogTemp,Display,TEXT("BOSSLAB audio recording saved to %s/audio-mix.wav"),*Dir);
 }
 
 float AWardenArenaMode::MusicLevel() const
 {
     const bool Living=Warden && Warden->Fight.Alive();
     if(bMuted || !Living) return 0;
-    return bRegent ? (Regent.PhaseTwo ? .5f : .34f) : .26f;
+    return bRegent ? (Regent.PhaseTwo ? 1.f : .8f) : .6f;
 }
 
 void AWardenArenaMode::UpdateAudio()
@@ -134,6 +159,8 @@ void AWardenArenaMode::UpdateAudio()
     if(auto* C=MusicComponent.Get())
     {
         const float Level=MusicLevel(), Pitch=bRegent && Regent.PhaseTwo ? .92f : 1.f;
+        // Restart the bed if anything stopped it (it must never silently stay off).
+        if(!C->IsPlaying() && Level>0) { C->Play(); C->FadeIn(3.f,Level); MusicTarget=Level; }
         if(!FMath::IsNearlyEqual(Level,MusicTarget) || !FMath::IsNearlyEqual(Pitch,MusicPitch))
         {
             // Swell into phase two, fall away with the boss, return on a fresh encounter.

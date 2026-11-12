@@ -289,6 +289,9 @@ public:
     TWeakObjectPtr<class UAudioComponent> MusicComponent;
     float MusicTarget=-1, MusicPitch=1;
     float MusicLevel() const;
+    bool bRecordingAudio=false;
+    float SfxMaster=2.5f;   // effects master gain (+8 dB), see WardenAudio.cpp
+    void StopAudioRecording();
     // Hit-stop ticks left and camera shake strength (presentation) after a landed blow.
     int32 HitStop=0;
     // Test-only pilot: when set, replaces keyboard intent and may queue player actions.
