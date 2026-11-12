@@ -148,6 +148,9 @@ All of these are in `WardenSword.cpp`. They are presentation only: no capsule, s
 - **Unlocked pivots.**
   - The unlocked player stays on the forward clips (blend angle clamped to ±35°) while the body turns, as in souls games.
   - Every sharp change of direction used to flash the backpedal/strafe clips for a few frames.
+- **Combat-ready idle.**
+  - Standing still, the guard angles the blade forward at the foe (about 50° instead of near-vertical), draws the right side back 12° and softens the knees by 3 cm.
+  - It blends out within about 0.2 s of moving. Swings from idle wind up from this stance.
 - **Roll and jump exits.**
   - The carry is held through rolls and jumps, and the exit eases over 8 ticks into the carried pose.
   - The pose ease now runs after the carry, so cancels also ease into it.

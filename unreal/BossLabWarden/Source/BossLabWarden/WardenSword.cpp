@@ -375,9 +375,13 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         if(FeelLand>0) FeelLand=FMath::Max(0.f,FeelLand-Dt/.4f);
         const float Absorb=FeelLand>0 ? FMath::Sin(PI*FMath::Pow(1-FeelLand,.6f)) : 0.f;
         FeelAbsorb=Absorb;
+        FeelIdle+=FMath::Clamp((!bBoss && Fight.Alive() && Fight.Action==EWardenAction::Ready ? 1-Smooth(Ground/120) : 0.f)-FeelIdle,-Dt*5.f,Dt*2.5f);
         if(!bBoss && Fight.Action==EWardenAction::Ready)
         {
             Key.Grip.Z-=8*Absorb; Key.Lean+=7*Absorb;
+            // Standing still: a combat-ready stance (blade angled at the foe, right side drawn
+            // back, knees soft) instead of the upright ceremonial guard. Out as soon as it moves.
+            if(FeelIdle>.001f) Key=Blend(Key,{FVector(32,7,107),FVector(.62f,-.14f,.77f).GetSafeNormal(),-12,6},FeelIdle);
             const FSwordKey Low{FVector(26,14,100),FVector(.86f,.28f,-.42f).GetSafeNormal(),-6,4};
             const FSwordKey Trail{FVector(4,31,95),FVector(-.72f,.34f,-.5f).GetSafeNormal(),-16,0};
             if(FeelCarry>.001f) Key=FeelCarry<.5f ? Blend(Key,Low,FeelCarry*2) : Blend(Low,Trail,(FeelCarry-.5f)*2);
@@ -430,7 +434,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const FVector Shift=Fight.Action==EWardenAction::Strike
             ? FVector(FMath::Lerp(-7.f,9.f,Drive)*Load*Weight,FMath::Lerp(4.f,-3.f,Drive)*Load*Weight,-9*Load*Weight)
             : FVector(6*HitFront*Recoil,6*HitSide*Recoil,-32*Tuck-6*Landing-4*Recoil-20*Stagger);
-        Local[Pelvis].AddToTranslation(MeshPoint(Shift+FVector(0,FeelBank*.55f,-1.5f*FMath::Abs(FeelBank)/11-3*FeelCarry-11*FeelAbsorb))); Rebuild(Pelvis);
+        Local[Pelvis].AddToTranslation(MeshPoint(Shift+FVector(0,FeelBank*.55f,-1.5f*FMath::Abs(FeelBank)/11-3*FeelCarry-11*FeelAbsorb-3*FeelIdle))); Rebuild(Pelvis);
         if(FMath::Abs(FeelBank)>.01f) SetRotation(Pelvis,FQuat(MeshPoint(FVector::ForwardVector),FMath::DegreesToRadians(-FeelBank*.45f))*CS[Pelvis].GetRotation());
         const float HipTurn=Fight.Action==EWardenAction::Strike ? FMath::Lerp(-22.f,26.f,Drive)*Load*Weight : Key.Twist*.2f;
         SetRotation(Pelvis,FQuat(FVector::UpVector,FMath::DegreesToRadians(-HipTurn))*CS[Pelvis].GetRotation());
@@ -591,7 +595,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
                 FootRelease[Side]=FMath::Min(1.f,FootRelease[Side]+1/6.f);
                 Pin=FMath::Lerp(FVector(FootReleaseFrom[Side].X,FootReleaseFrom[Side].Y,AnimWorld.Z),AnimWorld,Smooth(FootRelease[Side]));
             }
-            if(Pin.Equals(AnimWorld,.01) && FMath::Abs(FeelBank)<.01f && FeelCarry<.001f && FeelAbsorb<.001f) continue;
+            if(Pin.Equals(AnimWorld,.01) && FMath::Abs(FeelBank)<.01f && FeelCarry<.001f && FeelAbsorb<.001f && FeelIdle<.001f) continue;
             IK(Side?TEXT("thigh_r"):TEXT("thigh_l"),Side?TEXT("calf_r"):TEXT("calf_l"),Side?TEXT("foot_r"):TEXT("foot_l"),MeshWorld.InverseTransformPosition(Pin),MeshPoint(FVector(65,Side?20.f:-20.f,55)));
             SetRotation(Side?FootRI:FootLI,Anim.GetRotation());
         }

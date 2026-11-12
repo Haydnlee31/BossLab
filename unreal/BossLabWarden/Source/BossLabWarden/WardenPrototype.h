@@ -86,7 +86,7 @@ public:
     float FeelCarry=0, FeelLean=0, FeelBank=0, FeelLook=0;
     int32 FeelHold=0;
     float FeelFree=0;   // left hand off the hilt while sprinting
-    float FeelLand=0, FeelAbsorb=0;   // jump landing absorb (1 at touchdown)
+    float FeelLand=0, FeelAbsorb=0, FeelIdle=0;   // jump landing absorb (1 at touchdown)
     FVector FeelRestChest=FVector::ZeroVector;
     float LastStepSound[2]={-1,-1};   // world seconds of each foot's last footstep sound
     int32 FootForcedReleases=0;   // locks broken by the stretch limit (should stay rare)   // yaw deg/s this step while ready; drives turn-in-place stepping
