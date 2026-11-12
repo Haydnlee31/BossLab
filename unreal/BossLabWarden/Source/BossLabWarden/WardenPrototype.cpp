@@ -262,6 +262,7 @@ void AWardenArenaMode::BeginPlay()
     }
     DressArena();
     BuildEffects();
+    SetupAudio();
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabRegent"))) EnableRegent();
     bRegentPhaseTwoStart=bRegent && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegentPhaseTwo"));
     ResetEncounter();

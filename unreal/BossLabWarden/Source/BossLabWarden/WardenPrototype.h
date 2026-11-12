@@ -80,6 +80,7 @@ public:
     bool FootLocked[2]={false,false};
     FVector FootLock[2], FootReleaseFrom[2], FootAnimPrev[2];
     float FootRelease[2]={1,1}, FootLow[2]={1e9f,1e9f};
+    float LastStepSound[2]={-1,-1};   // world seconds of each foot's last footstep sound
     int32 FootForcedReleases=0;   // locks broken by the stretch limit (should stay rare)   // yaw deg/s this step while ready; drives turn-in-place stepping
     // Render interpolation between fixed steps (WardenRenderBlend.cpp); presentation only.
     struct FStepPose { FVector Location=FVector::ZeroVector; float Yaw=0, Lift=0; FTransform Visual, Sword; TArray<FTransform> Bones; };
@@ -269,6 +270,21 @@ public:
     void AnimateEffects(float Seconds);
     void RecentDamageAdd(float Amount,float Seconds);
     void EffectSound(const TCHAR* Name,const FVector& At,float Volume);
+    // Game audio (WardenAudio.cpp): one path for every one-shot (variation, jitter, voice
+    // limit, distance, reverb send), room reverb and looping ambience beds.
+    void PlaySfx(const FString& Name,const FVector& At,float Volume,float PitchJitter=.05f,float Falloff=2400,const TCHAR* Legacy=nullptr);
+    const TArray<TWeakObjectPtr<class USoundBase>>& SfxVariations(const FString& Name,const TCHAR* Legacy);
+    int32 SfxPick(const FString& Name,int32 Count);
+    void SetupAudio();
+    void UpdateAudio();
+    TMap<FString,TArray<TWeakObjectPtr<class USoundBase>>> SfxBank;
+    TMap<FString,int32> SfxLast;
+    TMap<int32,class USoundAttenuation*> SfxAttenuation;
+    TMap<FString,class USoundConcurrency*> SfxLimit;
+    UPROPERTY() TArray<TObjectPtr<UObject>> SfxKeepAlive;
+    TArray<TWeakObjectPtr<class UAudioComponent>> Ambience;
+    TArray<float> AmbienceVolume;
+    bool bAmbienceMuted=false;
     // Hit-stop ticks left and camera shake strength (presentation) after a landed blow.
     int32 HitStop=0;
     // Test-only pilot: when set, replaces keyboard intent and may queue player actions.

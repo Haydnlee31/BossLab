@@ -477,14 +477,8 @@ void AWardenArenaMode::RegentResolve()
 
 void AWardenArenaMode::RegentSound(const TCHAR* Name,const FVector& At,float Volume)
 {
-    if(bMuted || !GetWorld()->GetFirstPlayerController()) return;
-    auto* Sound=LoadObject<USoundWave>(nullptr,*(FString(TEXT("/Game/BossLab/Regent/Audio/"))+Name),nullptr,LOAD_Quiet|LOAD_NoWarn);
-    if(!Sound) return;
-    auto* Attenuation=NewObject<USoundAttenuation>(this);
-    Attenuation->Attenuation.bAttenuate=true; Attenuation->Attenuation.bSpatialize=true;
-    Attenuation->Attenuation.AttenuationShapeExtents=FVector(300);
-    Attenuation->Attenuation.FalloffDistance=2600;
-    UGameplayStatics::PlaySoundAtLocation(this,Sound,At,Volume,1.f,0.f,Attenuation);
+    // The boss sits a little under the player's own sounds in the mix.
+    PlaySfx(Name,At,Volume*.9f,.04f,2600);
 }
 FVector WardenRegentStudyDistance(int32 Move)
 {

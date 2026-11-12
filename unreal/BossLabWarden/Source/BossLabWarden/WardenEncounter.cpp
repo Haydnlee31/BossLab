@@ -54,7 +54,7 @@ bool AWardenChallenger::BeginAction(EWardenAction Action, int32 Move, FVector Ai
     bPoseFromLast=Before!=EWardenAction::Ready;
     if (Action==EWardenAction::Strike && !bBoss && Move==WardenRules::JumpAttack) JumpAttackLift=AirLift;
     StrikeOrigin=GetActorLocation();
-    PlayCue(Action==EWardenAction::Strike ? 0 : Action==EWardenAction::Heal ? 2 : 3);
+    PlayCue(Action==EWardenAction::Strike ? 0 : Action==EWardenAction::Heal ? 2 : Action==EWardenAction::Jump ? 4 : 3);
     if (Action == EWardenAction::Strike)
     {
         // Carry the actual stance into commitment, including a cut begun mid-stride.
@@ -294,6 +294,7 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
     if(bDungeon) AnimateDungeon(Dungeon,GetWorld()->GetTimeSeconds());
+    UpdateAudio();
     // Regent visuals follow the fixed-step state below; updated after the steps run.
     ON_SCOPE_EXIT { if(bRegent) AnimateRegentView(GetWorld()->GetTimeSeconds()); AnimateEffects(GetWorld()->GetTimeSeconds()); };
     const double Now=FPlatformTime::Seconds();

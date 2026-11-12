@@ -485,7 +485,20 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             const float AnimMove=FVector::Dist2D(AnimWorld,FootAnimPrev[Side]);
             FootAnimPrev[Side]=AnimWorld;
             const bool Planted=Anim.GetLocation().Z<FootLow[Side]+4.f && AnimMove<FMath::Max(1.2f,.6f*float(Travel.Size2D()));
-            if(Planted && !FootLocked[Side] && FootRelease[Side]>=1) { FootLocked[Side]=true; FootLock[Side]=AnimWorld; }
+            if(Planted && !FootLocked[Side] && FootRelease[Side]>=1)
+            {
+                FootLocked[Side]=true; FootLock[Side]=AnimWorld;
+                // Footstep on each plant while moving (not idle settling); render frames can
+                // re-plant within a stride, so one sound per foot per 0.2 s at most.
+                const float Now=GetWorld()->GetTimeSeconds(), Speed=Travel.Size2D()*60.f/FMath::Max(.1f,Scale);
+                if(Speed>60 && Now-LastStepSound[Side]>.2f)
+                    if(auto* M=GetWorld()->GetAuthGameMode<AWardenArenaMode>())
+                    {
+                        LastStepSound[Side]=Now;
+                        const float Pace=FMath::Clamp(Speed/630.f,.4f,1.f);
+                        M->PlaySfx(bBoss ? TEXT("StepHeavy") : TEXT("StepStone"),AnimWorld,(bBoss ? .55f : .4f)*Pace,.07f,bBoss ? 2200 : 1500);
+                    }
+            }
             if(FootLocked[Side] && (!Planted || FVector::Dist2D(FootLock[Side],AnimWorld)>28*Scale))
             { if(Planted) ++FootForcedReleases; FootLocked[Side]=false; FootReleaseFrom[Side]=FootLock[Side]; FootRelease[Side]=0; }
             FVector Pin=AnimWorld;

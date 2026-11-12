@@ -69,13 +69,7 @@ void AWardenArenaMode::BuildEffects()
 
 void AWardenArenaMode::EffectSound(const TCHAR* Name,const FVector& At,float Volume)
 {
-    if(bMuted || !GetWorld()->GetFirstPlayerController()) return;
-    auto* Sound=LoadObject<USoundWave>(nullptr,*(FString(TEXT("/Game/BossLab/Effects/Audio/"))+Name),nullptr,LOAD_Quiet|LOAD_NoWarn);
-    if(!Sound) return;
-    auto* Attenuation=NewObject<USoundAttenuation>(this);
-    Attenuation->Attenuation.bAttenuate=true; Attenuation->Attenuation.bSpatialize=true;
-    Attenuation->Attenuation.AttenuationShapeExtents=FVector(200); Attenuation->Attenuation.FalloffDistance=2400;
-    UGameplayStatics::PlaySoundAtLocation(this,Sound,At,Volume,1.f,0.f,Attenuation);
+    PlaySfx(Name,At,Volume,.05f,2400);
 }
 void AWardenArenaMode::RecentDamageAdd(float Amount,float Seconds)
 {
@@ -152,7 +146,7 @@ void AWardenArenaMode::AnimateEffects(float Seconds)
         EffectSound(TEXT("SwordSlam"),V.DustAt,.9f);
     }
     if(V.bAirborne && Player->AirLift<1 && F.Action!=EWardenAction::Strike)
-    { V.DustAt=Feet+FVector(0,0,2); V.DustTime=Seconds; V.DustScale=.45f; Shake=FMath::Max(Shake,.15f); }
+    { V.DustAt=Feet+FVector(0,0,2); V.DustTime=Seconds; V.DustScale=.45f; Shake=FMath::Max(Shake,.15f); PlaySfx(TEXT("LandHeavy"),V.DustAt,.65f,.05f,1800); }
     V.bAirborne=Player->AirLift>5;
     TArray<FTransform> Dust; Dust.Reserve(FWardenEffects::DustCount);
     const float D=(Seconds-V.DustTime)/.9f;

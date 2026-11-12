@@ -1,0 +1,735 @@
+{
+ "SwordWhooshLight_0": {
+  "seconds": 0.3,
+  "layers": [
+   "procedural band sweep 450-2100 Hz",
+   "air body",
+   "blade sing"
+  ],
+  "loop": false
+ },
+ "SwordWhooshLight_1": {
+  "seconds": 0.325,
+  "layers": [
+   "procedural band sweep 510-2250 Hz",
+   "air body",
+   "blade sing"
+  ],
+  "loop": false
+ },
+ "SwordWhooshLight_2": {
+  "seconds": 0.35,
+  "layers": [
+   "procedural band sweep 570-2400 Hz",
+   "air body",
+   "blade sing"
+  ],
+  "loop": false
+ },
+ "SwordWhooshLight_3": {
+  "seconds": 0.375,
+  "layers": [
+   "procedural band sweep 630-2100 Hz",
+   "air body",
+   "blade sing"
+  ],
+  "loop": false
+ },
+ "SwordWhooshLight_4": {
+  "seconds": 0.4,
+  "layers": [
+   "procedural band sweep 690-2250 Hz",
+   "air body",
+   "blade sing"
+  ],
+  "loop": false
+ },
+ "SwordWhooshHeavy_0": {
+  "seconds": 0.52,
+  "layers": [
+   "procedural band sweep 260-1300 Hz",
+   "rpg_cloth1 -3 st"
+  ],
+  "loop": false
+ },
+ "SwordWhooshHeavy_1": {
+  "seconds": 0.56,
+  "layers": [
+   "procedural band sweep 300-1420 Hz",
+   "rpg_cloth2 -3 st"
+  ],
+  "loop": false
+ },
+ "SwordWhooshHeavy_2": {
+  "seconds": 0.6,
+  "layers": [
+   "procedural band sweep 340-1540 Hz",
+   "rpg_cloth3 -3 st"
+  ],
+  "loop": false
+ },
+ "SwordWhooshHeavy_3": {
+  "seconds": 0.64,
+  "layers": [
+   "procedural band sweep 380-1660 Hz",
+   "rpg_cloth4 -3 st"
+  ],
+  "loop": false
+ },
+ "SwordHit_0": {
+  "seconds": 0.75,
+  "layers": [
+   "impactPunch_heavy_000 -2/-3 st",
+   "rpg_knifeSlice -5 st",
+   "impactPlate_medium_002 -3 st",
+   "sub 110->52 Hz",
+   "noise tail",
+   "presence band x0.6"
+  ],
+  "loop": false
+ },
+ "SwordHit_1": {
+  "seconds": 0.75,
+  "layers": [
+   "impactPunch_heavy_001 -2/-3 st",
+   "rpg_knifeSlice -5 st",
+   "impactPlate_medium_003 -3 st",
+   "sub 110->52 Hz",
+   "noise tail",
+   "presence band x0.6"
+  ],
+  "loop": false
+ },
+ "SwordHit_2": {
+  "seconds": 0.75,
+  "layers": [
+   "impactPunch_heavy_002 -2/-3 st",
+   "rpg_knifeSlice -5 st",
+   "impactPlate_medium_004 -3 st",
+   "sub 110->52 Hz",
+   "noise tail",
+   "presence band x0.6"
+  ],
+  "loop": false
+ },
+ "SwordHit_3": {
+  "seconds": 0.75,
+  "layers": [
+   "impactPunch_heavy_003 -2/-3 st",
+   "rpg_knifeSlice -5 st",
+   "impactPlate_medium_000 -3 st",
+   "sub 110->52 Hz",
+   "noise tail",
+   "presence band x0.6"
+  ],
+  "loop": false
+ },
+ "SwordHit_4": {
+  "seconds": 0.75,
+  "layers": [
+   "impactPunch_heavy_004 -2/-3 st",
+   "rpg_knifeSlice -5 st",
+   "impactPlate_medium_001 -3 st",
+   "sub 110->52 Hz",
+   "noise tail",
+   "presence band x0.6"
+  ],
+  "loop": false
+ },
+ "SwordSlam_0": {
+  "seconds": 1.2,
+  "layers": [
+   "impactMining_000 -5 st",
+   "impactPunch_heavy_003 -6 st",
+   "sub 80->38 Hz",
+   "4x impactGeneric_light debris",
+   "presence band x0.8"
+  ],
+  "loop": false
+ },
+ "SwordSlam_1": {
+  "seconds": 1.2,
+  "layers": [
+   "impactMining_001 -5 st",
+   "impactPunch_heavy_004 -6 st",
+   "sub 80->38 Hz",
+   "4x impactGeneric_light debris",
+   "presence band x0.8"
+  ],
+  "loop": false
+ },
+ "SwordSlam_2": {
+  "seconds": 1.2,
+  "layers": [
+   "impactMining_002 -5 st",
+   "impactPunch_heavy_000 -6 st",
+   "sub 80->38 Hz",
+   "4x impactGeneric_light debris",
+   "presence band x0.8"
+  ],
+  "loop": false
+ },
+ "RuneHum_0": {
+  "seconds": 0.8,
+  "layers": [
+   "detuned partials 660/990/1320/1980 Hz",
+   "bandpassed sparkle"
+  ],
+  "loop": false
+ },
+ "RuneHum_1": {
+  "seconds": 0.8,
+  "layers": [
+   "detuned partials 660/990/1320/1980 Hz",
+   "bandpassed sparkle"
+  ],
+  "loop": false
+ },
+ "RuneHum_2": {
+  "seconds": 0.8,
+  "layers": [
+   "detuned partials 660/990/1320/1980 Hz",
+   "bandpassed sparkle"
+  ],
+  "loop": false
+ },
+ "BodyHit_0": {
+  "seconds": 0.7,
+  "layers": [
+   "impactPunch_heavy_000 -2 st",
+   "impactPlate_light_000 -2 st",
+   "sub 95->50 Hz",
+   "presence band x0.7"
+  ],
+  "loop": false
+ },
+ "BodyHit_1": {
+  "seconds": 0.7,
+  "layers": [
+   "impactPunch_heavy_001 -2 st",
+   "impactPlate_light_001 -2 st",
+   "sub 95->50 Hz",
+   "presence band x0.7"
+  ],
+  "loop": false
+ },
+ "BodyHit_2": {
+  "seconds": 0.7,
+  "layers": [
+   "impactPunch_heavy_002 -2 st",
+   "impactPlate_light_002 -2 st",
+   "sub 95->50 Hz",
+   "presence band x0.7"
+  ],
+  "loop": false
+ },
+ "BodyHit_3": {
+  "seconds": 0.7,
+  "layers": [
+   "impactPunch_heavy_003 -2 st",
+   "impactPlate_light_003 -2 st",
+   "sub 95->50 Hz",
+   "presence band x0.7"
+  ],
+  "loop": false
+ },
+ "BodyHit_4": {
+  "seconds": 0.7,
+  "layers": [
+   "impactPunch_heavy_004 -2 st",
+   "impactPlate_light_004 -2 st",
+   "sub 95->50 Hz",
+   "presence band x0.7"
+  ],
+  "loop": false
+ },
+ "GearSwing_0": {
+  "seconds": 0.6,
+  "layers": [
+   "rpg_cloth1",
+   "rpg_beltHandle -2 st"
+  ],
+  "loop": false
+ },
+ "GearSwing_1": {
+  "seconds": 0.6,
+  "layers": [
+   "rpg_cloth2",
+   "rpg_beltHandle -2 st"
+  ],
+  "loop": false
+ },
+ "GearSwing_2": {
+  "seconds": 0.6,
+  "layers": [
+   "rpg_cloth3",
+   "rpg_beltHandle -2 st"
+  ],
+  "loop": false
+ },
+ "GearSwing_3": {
+  "seconds": 0.6,
+  "layers": [
+   "rpg_cloth4",
+   "rpg_beltHandle -2 st"
+  ],
+  "loop": false
+ },
+ "RollCloth_0": {
+  "seconds": 0.75,
+  "layers": [
+   "rpg_cloth -2 st",
+   "rpg_clothBelt",
+   "impactSoft_heavy_000 -3 st @0.22 s",
+   "concrete scrape @0.30 s",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
+ "RollCloth_1": {
+  "seconds": 0.75,
+  "layers": [
+   "rpg_cloth -2 st",
+   "rpg_clothBelt",
+   "impactSoft_heavy_001 -3 st @0.22 s",
+   "concrete scrape @0.30 s",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
+ "RollCloth_2": {
+  "seconds": 0.75,
+  "layers": [
+   "rpg_cloth -2 st",
+   "rpg_clothBelt",
+   "impactSoft_heavy_002 -3 st @0.22 s",
+   "concrete scrape @0.30 s",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
+ "RollCloth_3": {
+  "seconds": 0.75,
+  "layers": [
+   "rpg_cloth -2 st",
+   "rpg_clothBelt",
+   "impactSoft_heavy_003 -3 st @0.22 s",
+   "concrete scrape @0.30 s",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
+ "StepStone_0": {
+  "seconds": 0.12,
+  "layers": [
+   "impact_footstep_concrete_000 pitched"
+  ],
+  "loop": false
+ },
+ "StepStone_1": {
+  "seconds": 0.127,
+  "layers": [
+   "impact_footstep_concrete_001 pitched"
+  ],
+  "loop": false
+ },
+ "StepStone_2": {
+  "seconds": 0.142,
+  "layers": [
+   "impact_footstep_concrete_002 pitched"
+  ],
+  "loop": false
+ },
+ "StepStone_3": {
+  "seconds": 0.13,
+  "layers": [
+   "impact_footstep_concrete_003 pitched"
+  ],
+  "loop": false
+ },
+ "StepStone_4": {
+  "seconds": 0.142,
+  "layers": [
+   "impact_footstep_concrete_004 pitched"
+  ],
+  "loop": false
+ },
+ "StepStone_5": {
+  "seconds": 0.298,
+  "layers": [
+   "rpg_footstep00 pitched"
+  ],
+  "loop": false
+ },
+ "StepStone_6": {
+  "seconds": 0.299,
+  "layers": [
+   "rpg_footstep03 pitched"
+  ],
+  "loop": false
+ },
+ "StepStone_7": {
+  "seconds": 0.275,
+  "layers": [
+   "rpg_footstep06 pitched"
+  ],
+  "loop": false
+ },
+ "StepHeavy_0": {
+  "seconds": 0.6,
+  "layers": [
+   "footstep_concrete_000 -4 st",
+   "impactSoft_heavy_000 -5 st",
+   "rpg_handleCoins -5 st slice (armour jingle)",
+   "presence band x0.8"
+  ],
+  "loop": false
+ },
+ "StepHeavy_1": {
+  "seconds": 0.6,
+  "layers": [
+   "footstep_concrete_001 -4 st",
+   "impactSoft_heavy_001 -5 st",
+   "rpg_handleCoins -5 st slice (armour jingle)",
+   "presence band x0.8"
+  ],
+  "loop": false
+ },
+ "StepHeavy_2": {
+  "seconds": 0.6,
+  "layers": [
+   "footstep_concrete_002 -4 st",
+   "impactSoft_heavy_002 -5 st",
+   "rpg_handleCoins -5 st slice (armour jingle)",
+   "presence band x0.8"
+  ],
+  "loop": false
+ },
+ "StepHeavy_3": {
+  "seconds": 0.6,
+  "layers": [
+   "footstep_concrete_003 -4 st",
+   "impactSoft_heavy_003 -5 st",
+   "rpg_handleCoins -5 st slice (armour jingle)",
+   "presence band x0.8"
+  ],
+  "loop": false
+ },
+ "StepHeavy_4": {
+  "seconds": 0.6,
+  "layers": [
+   "footstep_concrete_004 -4 st",
+   "impactSoft_heavy_004 -5 st",
+   "rpg_handleCoins -5 st slice (armour jingle)",
+   "presence band x0.8"
+  ],
+  "loop": false
+ },
+ "LandHeavy_0": {
+  "seconds": 0.7,
+  "layers": [
+   "2x footstep_concrete -3 st",
+   "impactSoft_heavy -4 st",
+   "impactPlate_light",
+   "sub",
+   "presence band x0.8"
+  ],
+  "loop": false
+ },
+ "LandHeavy_1": {
+  "seconds": 0.7,
+  "layers": [
+   "2x footstep_concrete -3 st",
+   "impactSoft_heavy -4 st",
+   "impactPlate_light",
+   "sub",
+   "presence band x0.8"
+  ],
+  "loop": false
+ },
+ "LandHeavy_2": {
+  "seconds": 0.7,
+  "layers": [
+   "2x footstep_concrete -3 st",
+   "impactSoft_heavy -4 st",
+   "impactPlate_light",
+   "sub",
+   "presence band x0.8"
+  ],
+  "loop": false
+ },
+ "FlaskDrink_0": {
+  "seconds": 1.6,
+  "layers": [
+   "impactGlass_light_000",
+   "cork pop",
+   "2 procedural gulps",
+   "shimmer 523/784/1046 Hz"
+  ],
+  "loop": false
+ },
+ "FlaskDrink_1": {
+  "seconds": 1.6,
+  "layers": [
+   "impactGlass_light_001",
+   "cork pop",
+   "3 procedural gulps",
+   "shimmer 523/784/1046 Hz"
+  ],
+  "loop": false
+ },
+ "FlaskDrink_2": {
+  "seconds": 1.6,
+  "layers": [
+   "impactGlass_light_002",
+   "cork pop",
+   "2 procedural gulps",
+   "shimmer 523/784/1046 Hz"
+  ],
+  "loop": false
+ },
+ "RegentBell_0": {
+  "seconds": 3.2,
+  "layers": [
+   "impactBell_heavy_000 -9 st",
+   "procedural toll partials"
+  ],
+  "loop": false
+ },
+ "RegentBell_1": {
+  "seconds": 3.2,
+  "layers": [
+   "impactBell_heavy_001 -10 st",
+   "procedural toll partials"
+  ],
+  "loop": false
+ },
+ "RegentBell_2": {
+  "seconds": 3.2,
+  "layers": [
+   "impactBell_heavy_002 -11 st",
+   "procedural toll partials"
+  ],
+  "loop": false
+ },
+ "RegentWhoosh_0": {
+  "seconds": 0.9,
+  "layers": [
+   "procedural heavy sweep",
+   "rpg_handleCoins -3/-4 st (chain rattle)",
+   "rpg_metalLatch -4 st"
+  ],
+  "loop": false
+ },
+ "RegentWhoosh_1": {
+  "seconds": 0.95,
+  "layers": [
+   "procedural heavy sweep",
+   "rpg_handleCoins -3/-4 st (chain rattle)",
+   "rpg_metalLatch -4 st"
+  ],
+  "loop": false
+ },
+ "RegentWhoosh_2": {
+  "seconds": 1.0,
+  "layers": [
+   "procedural heavy sweep",
+   "rpg_handleCoins -3/-4 st (chain rattle)",
+   "rpg_metalLatch -4 st"
+  ],
+  "loop": false
+ },
+ "RegentWhoosh_3": {
+  "seconds": 1.05,
+  "layers": [
+   "procedural heavy sweep",
+   "rpg_handleCoins -3/-4 st (chain rattle)",
+   "rpg_metalLatch -4 st"
+  ],
+  "loop": false
+ },
+ "RegentThrust_0": {
+  "seconds": 0.5,
+  "layers": [
+   "procedural fast thin sweep",
+   "rpg_drawKnife1 (normalised blade scrape)"
+  ],
+  "loop": false
+ },
+ "RegentThrust_1": {
+  "seconds": 0.5,
+  "layers": [
+   "procedural fast thin sweep",
+   "rpg_drawKnife2 (normalised blade scrape)"
+  ],
+  "loop": false
+ },
+ "RegentThrust_2": {
+  "seconds": 0.5,
+  "layers": [
+   "procedural fast thin sweep",
+   "rpg_drawKnife3 (normalised blade scrape)"
+  ],
+  "loop": false
+ },
+ "RegentThrust_3": {
+  "seconds": 0.5,
+  "layers": [
+   "procedural fast thin sweep",
+   "rpg_drawKnife1 (normalised blade scrape)"
+  ],
+  "loop": false
+ },
+ "RegentSkull_0": {
+  "seconds": 0.9,
+  "layers": [
+   "procedural soul-fire",
+   "procedural sweep",
+   "impactWood_light_000 +3 st (bone clack)"
+  ],
+  "loop": false
+ },
+ "RegentSkull_1": {
+  "seconds": 0.9,
+  "layers": [
+   "procedural soul-fire",
+   "procedural sweep",
+   "impactWood_light_001 +3 st (bone clack)"
+  ],
+  "loop": false
+ },
+ "RegentSkull_2": {
+  "seconds": 0.9,
+  "layers": [
+   "procedural soul-fire",
+   "procedural sweep",
+   "impactWood_light_002 +3 st (bone clack)"
+  ],
+  "loop": false
+ },
+ "RegentSkull_3": {
+  "seconds": 0.9,
+  "layers": [
+   "procedural soul-fire",
+   "procedural sweep",
+   "impactWood_light_003 +3 st (bone clack)"
+  ],
+  "loop": false
+ },
+ "RegentBlink_0": {
+  "seconds": 1.3,
+  "layers": [
+   "reversed-style noise swell",
+   "high shimmer",
+   "impactSoft_heavy_000 -7 st"
+  ],
+  "loop": false
+ },
+ "RegentBlink_1": {
+  "seconds": 1.3,
+  "layers": [
+   "reversed-style noise swell",
+   "high shimmer",
+   "impactSoft_heavy_001 -7 st"
+  ],
+  "loop": false
+ },
+ "RegentBlink_2": {
+  "seconds": 1.3,
+  "layers": [
+   "reversed-style noise swell",
+   "high shimmer",
+   "impactSoft_heavy_002 -7 st"
+  ],
+  "loop": false
+ },
+ "RegentEruption_0": {
+  "seconds": 1.4,
+  "layers": [
+   "procedural fire roar",
+   "impactMining_002 -8 st",
+   "sub",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
+ "RegentEruption_1": {
+  "seconds": 1.4,
+  "layers": [
+   "procedural fire roar",
+   "impactMining_003 -8 st",
+   "sub",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
+ "RegentEruption_2": {
+  "seconds": 1.4,
+  "layers": [
+   "procedural fire roar",
+   "impactMining_004 -8 st",
+   "sub",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
+ "RegentPyre_0": {
+  "seconds": 2.6,
+  "layers": [
+   "procedural fire roar",
+   "impactMining_000 -10 st",
+   "sub 70->30 Hz",
+   "impactBell_heavy_003 -12 st",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
+ "RegentPyre_1": {
+  "seconds": 2.6,
+  "layers": [
+   "procedural fire roar",
+   "impactMining_001 -10 st",
+   "sub 70->30 Hz",
+   "impactBell_heavy_004 -12 st",
+   "presence band x0.5"
+  ],
+  "loop": false
+ },
+ "RegentWakes_0": {
+  "seconds": 1.6,
+  "layers": [
+   "procedural rolling fire"
+  ],
+  "loop": false
+ },
+ "RegentWakes_1": {
+  "seconds": 1.6,
+  "layers": [
+   "procedural rolling fire"
+  ],
+  "loop": false
+ },
+ "RegentWakes_2": {
+  "seconds": 1.6,
+  "layers": [
+   "procedural rolling fire"
+  ],
+  "loop": false
+ },
+ "AmbDungeon_0": {
+  "seconds": 24.0,
+  "layers": [
+   "brown-noise room tone",
+   "slow wind band",
+   "random water drips"
+  ],
+  "loop": true
+ },
+ "AmbFire_0": {
+  "seconds": 8.0,
+  "layers": [
+   "procedural brazier crackle and roar"
+  ],
+  "loop": true
+ }
+}

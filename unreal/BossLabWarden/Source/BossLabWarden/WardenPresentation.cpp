@@ -121,15 +121,14 @@ void AWardenChallenger::DressFighter()
 void AWardenChallenger::PlayCue(int32 Cue)
 {
     auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>();
-    if(!Mode || Mode->bMuted || !GetWorld()->GetFirstPlayerController()) return;
-    const TCHAR* Names[]={TEXT("Cue"),TEXT("Impact"),TEXT("Heal"),TEXT("Step")};
-    auto* Sound=LoadObject<USoundWave>(nullptr,*(FString(TEXT("/Game/BossLab/Audio/"))+Names[FMath::Clamp(Cue,0,3)]));
-    if(!Sound) return;
-    auto* Attenuation=NewObject<USoundAttenuation>(this);
-    Attenuation->Attenuation.bAttenuate=true; Attenuation->Attenuation.bSpatialize=true;
-    Attenuation->Attenuation.AttenuationShapeExtents=FVector(150);
-    Attenuation->Attenuation.FalloffDistance=1800;
-    UGameplayStatics::PlaySoundAtLocation(this,Sound,GetActorLocation(),Cue==3?.18f:.35f,1.f,0.f,Attenuation);
+    if(!Mode) return;
+    // Action cues: 0 swing (armour/cloth), 1 body hit, 2 flask, 3 roll, 4 jump; the older
+    // single sounds stand in when the layered set is not imported.
+    const int32 I=FMath::Clamp(Cue,0,4);
+    const TCHAR* Names[]={TEXT("GearSwing"),TEXT("BodyHit"),TEXT("FlaskDrink"),TEXT("RollCloth"),TEXT("GearSwing")};
+    const TCHAR* Legacy[]={TEXT("Cue"),TEXT("Impact"),TEXT("Heal"),TEXT("Step"),TEXT("Step")};
+    const float Volume[]={.4f,bBoss ? .6f : .75f,.6f,.55f,.5f};
+    Mode->PlaySfx(Names[I],GetActorLocation(),Volume[I],.05f,1800,Legacy[I]);
 }
 void AWardenChallenger::ToggleMute()
 { if(auto* M=GetWorld()->GetAuthGameMode<AWardenArenaMode>()) { M->bMuted=!M->bMuted; M->LastEvent=M->bMuted?TEXT("Audio muted"):TEXT("Audio enabled"); } }
