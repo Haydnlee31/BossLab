@@ -177,7 +177,9 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const float Trim=FMath::Abs(Angle)<=90 ? FMath::Lerp(GaitTrim[0],GaitTrim[1],Side) : FMath::Lerp(GaitTrim[1],GaitTrim[2],Back);
         float Param=Speed, Rate=GaitRate*Trim;
         if(Speed>60 && Speed<300) { Param=300; Rate*=Speed/300; }
-        else if(Speed<=60) { Param=Speed*5; Rate*=.2f; }
+        // Standing still the idle clip breathes at its own rate (0.2x froze the stance); the
+        // slow clock only takes over through the last 60 cm/s of a stop.
+        else if(Speed<=60) { Param=Speed*5; Rate*=FMath::Lerp(1.f,.2f,Speed/60); }
         Anim->SetBlendSpacePosition(FVector(Angle,Param,0));
         // Blendspace sample weights and marker clocks require a real delta.
         // SetPosition + TickAnimation(0) left the sample cache at idle even while
@@ -330,6 +332,44 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         Key=Blend({EaseGrip,EaseAxis,EaseTwist,EaseLean},Key,1-PoseEase/8.f);
         --PoseEase;
     }
+    // Locomotion feel (player, presentation only; no capsule, speed or timing change).
+    // Smoothed acceleration drives a forward lean on starts, a lean back on hard stops and a
+    // bank into turns; speed lowers the greatsword (run) and trails it low behind (sprint);
+    // the blade lags the body on a spring. Souls-style carry instead of a welded guard.
+    const bool FeelMoving=!bBoss && Fight.Alive() && Fight.Action==EWardenAction::Ready;
+    {
+        const float Dt=WardenRules::Step;
+        const FVector Vel=Travel/Dt;
+        FVector Acc=(Vel-FeelPrevVel)/Dt; FeelPrevVel=Vel;
+        if(Acc.Size2D()>20000 || !FeelMoving) Acc=FVector::ZeroVector;   // teleports, resets, actions
+        FeelAccel=FMath::Lerp(FeelAccel,Acc,.2f);
+        const float FwdAcc=FVector::DotProduct(FeelAccel,GetActorForwardVector()), SideAcc=FVector::DotProduct(FeelAccel,GetActorRightVector());
+        const float Ground=Vel.Size2D();
+        const float CarryWant=FeelMoving ? Smooth((Ground-300)/330) : 0;
+        // Rises over ~0.45 s; a quick reversal or stutter keeps the blade low instead of
+        // flapping it back up to the guard.
+        // Held for 0.3 s first: a reversal passes through zero speed for ~0.17 s.
+        FeelHold=CarryWant<FeelCarry-.05f && FeelMoving ? FeelHold+1 : 0;
+        if(CarryWant>=FeelCarry || FeelHold>18 || !FeelMoving) FeelCarry+=FMath::Clamp(CarryWant-FeelCarry,-Dt*2.f,Dt*2.2f);
+        const float LeanWant=FeelMoving ? FMath::Clamp(FwdAcc/2400*8,-7.f,8.f)+1.5f*Smooth(Ground/420)+6*FeelCarry : 0;
+        const float BankWant=FeelMoving ? FMath::Clamp(SideAcc/980*16,-11.f,11.f) : 0;
+        FeelLean=FMath::Lerp(FeelLean,LeanWant,.14f); FeelBank=FMath::Lerp(FeelBank,BankWant,.12f);
+        // The head leads a turn (looks where the body is about to go).
+        FeelLook=FMath::Lerp(FeelLook,FeelMoving ? FMath::Clamp(TurnRate*.05f,-22.f,22.f) : 0.f,.15f);
+        // Blade spring: offset against the acceleration, critically under-damped (a small swing).
+        const FVector Push=FeelMoving ? FVector(-FwdAcc,-SideAcc,0)*.0026f : FVector::ZeroVector;
+        FeelSwayVel+=(-160.f*(FeelSway-Push)-17.f*FeelSwayVel)*Dt; FeelSway+=FeelSwayVel*Dt;
+        if(!FeelMoving && Fight.Action!=EWardenAction::Ready) FeelSway=FeelSwayVel=FVector::ZeroVector;
+        if(!bBoss && Fight.Action==EWardenAction::Ready)
+        {
+            const FSwordKey Low{FVector(26,14,100),FVector(.86f,.28f,-.42f).GetSafeNormal(),-6,4};
+            const FSwordKey Trail{FVector(12,25,99),FVector(-.72f,.34f,-.5f).GetSafeNormal(),-16,0};
+            if(FeelCarry>.001f) Key=FeelCarry<.5f ? Blend(Key,Low,FeelCarry*2) : Blend(Low,Trail,(FeelCarry-.5f)*2);
+            Key.Grip+=FeelSway;
+            Key.Axis=(Key.Axis+FVector(FeelSway.X,FeelSway.Y,0)*.035f).GetSafeNormal();
+            Key.Lean+=FeelLean;
+        }
+    }
     const float Recoil=Fight.ImpactTicks>0 ? FMath::Sin(PI*float(18-Fight.ImpactTicks)/18) : 0;
     // Armored hits still read through the torso, but never alter the sword's
     // active arc. Poise breaks and player flinches get a complete hurt pose.
@@ -368,7 +408,8 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const FVector Shift=Fight.Action==EWardenAction::Strike
             ? FVector(FMath::Lerp(-7.f,9.f,Drive)*Load*Weight,FMath::Lerp(4.f,-3.f,Drive)*Load*Weight,-9*Load*Weight)
             : FVector(6*HitFront*Recoil,6*HitSide*Recoil,-32*Tuck-6*Landing-4*Recoil-20*Stagger);
-        Local[Pelvis].AddToTranslation(MeshPoint(Shift)); Rebuild(Pelvis);
+        Local[Pelvis].AddToTranslation(MeshPoint(Shift+FVector(0,FeelBank*.55f,-1.5f*FMath::Abs(FeelBank)/11-3*FeelCarry))); Rebuild(Pelvis);
+        if(FMath::Abs(FeelBank)>.01f) SetRotation(Pelvis,FQuat(MeshPoint(FVector::ForwardVector),FMath::DegreesToRadians(-FeelBank*.45f))*CS[Pelvis].GetRotation());
         const float HipTurn=Fight.Action==EWardenAction::Strike ? FMath::Lerp(-22.f,26.f,Drive)*Load*Weight : Key.Twist*.2f;
         SetRotation(Pelvis,FQuat(FVector::UpVector,FMath::DegreesToRadians(-HipTurn))*CS[Pelvis].GetRotation());
     }
@@ -376,7 +417,8 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     for(const TCHAR* Name:{TEXT("spine_01"),TEXT("spine_02"),TEXT("spine_03"),TEXT("spine_04"),TEXT("spine_05")})
     {
         const int32 I=Index(Name); if(I<0) continue;
-        const FQuat Delta=FQuat(FVector::UpVector,FMath::DegreesToRadians(-Key.Twist*.8f/5))*FQuat(FVector::ForwardVector,FMath::DegreesToRadians(-Key.Lean/5));
+        const FQuat Delta=FQuat(FVector::UpVector,FMath::DegreesToRadians(-Key.Twist*.8f/5))*FQuat(FVector::ForwardVector,FMath::DegreesToRadians(-Key.Lean/5))
+            *FQuat(MeshPoint(FVector::ForwardVector),FMath::DegreesToRadians(-FeelBank*.55f/5));
         SetRotation(I,Delta*CS[I].GetRotation());
     }
     // Counterbalance the gaze instead of welding the head to the chest.
@@ -386,6 +428,9 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         SetRotation(I,FQuat(FVector::UpVector,FMath::DegreesToRadians(Key.Twist*.18f))*
             FQuat(FVector::ForwardVector,FMath::DegreesToRadians(Key.Lean*.13f))*CS[I].GetRotation());
     }
+    if(FMath::Abs(FeelLook)>.05f)
+        for(const TCHAR* Name:{TEXT("neck_01"),TEXT("head")})
+            if(const int32 I=Index(Name); I>=0) SetRotation(I,FQuat(FVector::UpVector,FMath::DegreesToRadians(FeelLook*.5f))*CS[I].GetRotation());
     // The head snaps with the blow, even mid-swing.
     if(Recoil>0)
         for(const TCHAR* Name:{TEXT("neck_01"),TEXT("head")})
@@ -396,6 +441,20 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     if(Drink>0)
         for(const TCHAR* Name:{TEXT("neck_02"),TEXT("head")})
             if(const int32 I=Index(Name); I>=0) SetRotation(I,FQuat(FVector::ForwardVector,FMath::DegreesToRadians(13*Drink))*CS[I].GetRotation());
+    // Hands ride the chest while ready: the stride bob, sway, lean and bank of the torso
+    // carry the hilt with them instead of the blade hanging fixed in front of a moving body.
+    if(!bBoss && Fight.Action==EWardenAction::Ready)
+        if(const int32 Chest=Index(TEXT("spine_05")); Chest>=0)
+        {
+            if(FeelRestChest.IsZero())
+            {
+                FTransform T=FTransform::Identity;
+                for(int32 I=Chest;I>=0;I=Ref.GetParentIndex(I)) T=T*(I==0 ? FTransform(GuardBase[0].GetRotation()) : GuardBase[I]);
+                FeelRestChest=T.GetLocation();
+            }
+            const FVector M=CS[Chest].GetLocation()-FeelRestChest;
+            Key.Grip+=FVector(M.Y,-M.X,M.Z)*.9f;
+        }
     // Shoulder girdle opens under the backswing and reaches across on release.
     // The shared hilt IK below remains responsible for exact palm placement.
     for(int32 Side=0;Side<2;++Side)
@@ -508,7 +567,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
                 FootRelease[Side]=FMath::Min(1.f,FootRelease[Side]+1/6.f);
                 Pin=FMath::Lerp(FVector(FootReleaseFrom[Side].X,FootReleaseFrom[Side].Y,AnimWorld.Z),AnimWorld,Smooth(FootRelease[Side]));
             }
-            if(Pin.Equals(AnimWorld,.01)) continue;
+            if(Pin.Equals(AnimWorld,.01) && FMath::Abs(FeelBank)<.01f && FeelCarry<.001f) continue;
             IK(Side?TEXT("thigh_r"):TEXT("thigh_l"),Side?TEXT("calf_r"):TEXT("calf_l"),Side?TEXT("foot_r"):TEXT("foot_l"),MeshWorld.InverseTransformPosition(Pin),MeshPoint(FVector(65,Side?20.f:-20.f,55)));
             SetRotation(Side?FootRI:FootLI,Anim.GetRotation());
         }

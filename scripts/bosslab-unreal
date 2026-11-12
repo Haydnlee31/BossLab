@@ -153,6 +153,9 @@ def main():
             if 'gait' in sys.argv[2:]:
                 # Side-on scripted locomotion review (walk, backpedal, circle, strafe, turn).
                 cmd += ['-BossLabGaitStudy', '-BossLabCaptureSeconds=24']
+            if 'feel' in sys.argv[2:]:
+                # Side-on player feel review: run, turn, sprint, stop, roll, cut chain, jump.
+                cmd += ['-BossLabFeelStudy', '-BossLabCaptureSeconds=24']
             if 'regent-study' in sys.argv[2:]:
                 # Side-on review of every Regent move; needs BOSSLAB_BOSS=regent.
                 cmd += ['-BossLabRegentStudy', '-BossLabCaptureSeconds=30']

@@ -80,6 +80,12 @@ public:
     bool FootLocked[2]={false,false};
     FVector FootLock[2], FootReleaseFrom[2], FootAnimPrev[2];
     float FootRelease[2]={1,1}, FootLow[2]={1e9f,1e9f};
+    // Locomotion feel (WardenSword.cpp, player, presentation only): smoothed acceleration,
+    // forward lean / turn bank, the speed-driven sword carry and the blade's spring lag.
+    FVector FeelPrevVel=FVector::ZeroVector, FeelAccel=FVector::ZeroVector, FeelSway=FVector::ZeroVector, FeelSwayVel=FVector::ZeroVector;
+    float FeelCarry=0, FeelLean=0, FeelBank=0, FeelLook=0;
+    int32 FeelHold=0;
+    FVector FeelRestChest=FVector::ZeroVector;
     float LastStepSound[2]={-1,-1};   // world seconds of each foot's last footstep sound
     int32 FootForcedReleases=0;   // locks broken by the stretch limit (should stay rare)   // yaw deg/s this step while ready; drives turn-in-place stepping
     // Render interpolation between fixed steps (WardenRenderBlend.cpp); presentation only.
@@ -322,6 +328,9 @@ public:
     // Capture-only side-on locomotion review (-BossLabGaitStudy): scripted walking, no attacks.
     bool bGaitStudy=false;
     void GaitStudyStep(FVector& PlayerIntent,FVector& BossDirection);
+    // Capture-only player feel review (-BossLabFeelStudy): run, turn, sprint, stop, roll, cut.
+    bool bFeelStudy=false;
+    void FeelStudyStep(FVector& PlayerIntent);
     void RegentStudyStep();
     void BuildRegentView();
     void AnimateRegentView(float Seconds);

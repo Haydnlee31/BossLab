@@ -297,6 +297,14 @@ void AWardenArenaMode::BeginPlay()
         RegentStudyCamera=Camera;
         if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
     }
+    if(bCaptureFrames && FParse::Param(FCommandLine::Get(),TEXT("BossLabFeelStudy")))
+    {
+        bFeelStudy=true; bScriptedPlayer=false; bRehearsal=false; Player->SetLocked(false);
+        Player->SetActorLocation(FVector(-350,0,95)); Warden->SetActorLocation(FVector(0,900,128));
+        auto* Camera=World->SpawnActor<ACameraActor>(FVector(-350,-700,230),FRotator(-10,90,0));
+        RegentStudyCamera=Camera;
+        if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
+    }
     if(bCaptureFrames && FParse::Param(FCommandLine::Get(),TEXT("BossLabOutfitStudy")))
     {
         bOutfitStudy=true; bScriptedPlayer=false; bRehearsal=false; bMotionStudy=false; bTitle=false;
@@ -385,7 +393,7 @@ void AWardenPrototypeHUD::DrawHUD()
         DrawText(Text,FColor(Colour.R,Colour.G,Colour.B,uint8(255*Alpha)),(W-TW)*.5f,H*(Top+.02f),nullptr,2.6f);
         if(Sub) { float SW=0,SH=0; GetTextSize(Sub,SW,SH,nullptr,1.1f); DrawText(Sub,FColor(200,205,210,uint8(220*Alpha)),(W-SW)*.5f,H*(Top+.02f)+TH+4,nullptr,1.1f); }
     };
-    if(!Mode->bMotionStudy && !Mode->bOutfitStudy && !Mode->bRegentStudy && !Mode->bGaitStudy && B.Alive() && P.Alive())
+    if(!Mode->bMotionStudy && !Mode->bOutfitStudy && !Mode->bRegentStudy && !Mode->bGaitStudy && !Mode->bFeelStudy && B.Alive() && P.Alive())
     {
         const float T=Mode->CombatTick/60.f;
         Banner(Mode->bRegent?TEXT("THE FUNERAL REGENT"):TEXT("THE WARDEN"),Mode->bRegent?TEXT("Keeper of the Last Rites"):TEXT("Gaoler of the Ring"),FMath::Clamp(T/.6f,0.f,1.f)*FMath::Clamp((4-T)/.8f,0.f,1.f),FColor(230,200,140),.42f);

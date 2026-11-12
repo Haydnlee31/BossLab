@@ -84,3 +84,37 @@ void AWardenArenaMode::GaitStudyStep(FVector& PlayerIntent,FVector& BossDirectio
             FMath::RInterpTo(RegentStudyCamera->GetActorRotation(),Want,WardenRules::Step,4.f));
     }
 }
+
+void AWardenArenaMode::FeelStudyStep(FVector& PlayerIntent)
+{
+    // Capture-only player feel review, tracked side-on: circle at a run, two hard reversals,
+    // sprint and stop, two rolls, the three-cut chain, a sprint into a running cut, a jump.
+    // Ordinary acceptance and costs; ticks offset by the 2 s capture warm-up.
+    const int32 T=CombatTick-120;
+    const FVector P=Player->GetActorLocation();
+    auto Toward=[&](FVector To) { const FVector D=FVector(To.X-P.X,To.Y-P.Y,0); return D.Size()>40 ? D.GetSafeNormal() : FVector::ZeroVector; };
+    auto Press=[&](EWardenAction A,FVector Dir=FVector::ZeroVector) { Player->PendingAction=A; Player->PendingAge=0; Player->PendingHeld=0; if(!Dir.IsNearlyZero()) Player->PendingDirection=Dir; };
+    PlayerIntent=FVector::ZeroVector; Player->SprintHeld=false;
+    Player->Fight.Stamina=FMath::Max(Player->Fight.Stamina,60.f);
+    if(T>=60 && T<360)
+    {
+        const FVector Out=FVector(P.X,P.Y,0).GetSafeNormal();
+        PlayerIntent=(FVector(-Out.Y,Out.X,0)+Out*FMath::Clamp((350-P.Size2D())/150,-1.f,1.f)*.6f).GetSafeNormal();
+    }
+    else if(T>=410 && T<520) PlayerIntent=Toward(FVector(350,-150,0));
+    else if(T>=520 && T<640) PlayerIntent=Toward(FVector(-350,-150,0));
+    else if(T>=640 && T<760) { PlayerIntent=Toward(FVector(400,100,0)); Player->SprintHeld=true; }
+    if(T==820) Press(EWardenAction::Dodge,FVector(0,1,0));
+    if(T==880) Press(EWardenAction::Dodge,FVector(-1,0,0));
+    if(T==960 || T==985 || T==1010) Press(EWardenAction::Strike);
+    if(T>=1130 && T<1230) { PlayerIntent=Toward(FVector(-400,0,0)); Player->SprintHeld=true; }
+    if(T==1215) Press(EWardenAction::Strike);
+    if(T>=1300 && T<1310) PlayerIntent=FVector(1,0,0);
+    if(T==1302) Press(EWardenAction::Jump);
+    if(RegentStudyCamera.IsValid())
+    {
+        const FVector Eye=FVector(P.X,P.Y-430,175), Look=FVector(P.X,P.Y,100);
+        RegentStudyCamera->SetActorLocationAndRotation(FMath::VInterpTo(RegentStudyCamera->GetActorLocation(),Eye,WardenRules::Step,3.f),
+            FMath::RInterpTo(RegentStudyCamera->GetActorRotation(),(Look-Eye).Rotation(),WardenRules::Step,5.f));
+    }
+}

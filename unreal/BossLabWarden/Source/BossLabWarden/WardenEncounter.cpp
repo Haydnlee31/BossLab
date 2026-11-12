@@ -36,6 +36,7 @@ void AWardenChallenger::ResetFighter(bool Boss)
     bBoss = Boss; Fight = FWardenFighterState();
     GroundZ=GetActorLocation().Z; AirLift=JumpAttackLift=0; bPoseFromLast=false; PoseEase=0;
     FootLocked[0]=FootLocked[1]=false; FootRelease[0]=FootRelease[1]=1; FootLow[0]=FootLow[1]=1e9f;
+    FeelPrevVel=FeelAccel=FeelSway=FeelSwayVel=FVector::ZeroVector; FeelCarry=FeelLean=FeelBank=FeelLook=0; FeelHold=0;
     Fight.IsBoss = Boss;
     Fight.Health = Fight.MaxHealth = Boss ? 240.f : 100.f;
     PendingAction = EWardenAction::Ready; PendingAge=0; PendingHeld=0; PendingDirection=FVector::ZeroVector; PresentedAction = -1;
@@ -51,7 +52,9 @@ bool AWardenChallenger::BeginAction(EWardenAction Action, int32 Move, FVector Ai
     if (!Fight.Request(Action,Move)) return false;
     // A cancel (chain cut, rolling thrust, jump attack) starts its pose from the pose it
     // interrupted, not from the guard.
-    bPoseFromLast=Before!=EWardenAction::Ready;
+    // The player also starts from the drawn ready pose: it carries the sword lower and
+    // further back at speed (locomotion carry), so a swing from a sprint winds from there.
+    bPoseFromLast=Before!=EWardenAction::Ready || !bBoss;
     if (Action==EWardenAction::Strike && !bBoss && Move==WardenRules::JumpAttack) JumpAttackLift=AirLift;
     StrikeOrigin=GetActorLocation();
     PlayCue(Action==EWardenAction::Strike ? 0 : Action==EWardenAction::Heal ? 2 : Action==EWardenAction::Jump ? 4 : 3);
@@ -387,6 +390,7 @@ void AWardenArenaMode::FixedStep()
     }
     FVector Intent = Player->MoveIntent();
     if(bGaitStudy) GaitStudyStep(Intent,BossDirection);
+    if(bFeelStudy) FeelStudyStep(Intent);
     if(TestPilot) TestPilot(*this,Intent);
     if(bScriptedPlayer)
     {

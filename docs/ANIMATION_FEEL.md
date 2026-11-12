@@ -90,3 +90,53 @@ The owner said to keep refining wherever I saw room.
 - **Clips.** Strike, roll and Regent poses are still procedural keys. These fixes improve how motion is fed, not authored animation quality.
 - **Sideways foot slip.** The boss's sideways walk is still the weakest case (0.13 after foot locking), because its strafe clip shuffles low.
 - **Default Warden behaviour.** The default Warden now faces the player while repositioning. That changes its look in the default rehearsal, but not its move order, timing or damage; the determinism and rehearsal tests still pass.
+
+## Third round: player locomotion feel (2026-11-13)
+
+The owner said combat still felt stiff compared with Elden Ring, mostly because of the player's movement animation. I added a scripted review capture and made three passes of fixes, each checked against a new capture.
+
+**Review capture:** `BOSSLAB_OUTFIT=revamp BOSSLAB_BOSS=regent ./scripts/bosslab-unreal capture feel` films the player side-on for 24 s. The sequence is:
+- a run in a circle;
+- two hard 180° reversals;
+- a sprint and a stop;
+- two rolls;
+- the three-cut chain;
+- a sprint into a running cut;
+- a jump.
+
+It uses the normal action acceptance and costs. Sheets are in `artifacts/art/feel-2026-11-13/`.
+
+### What was stiff
+
+- **The sword was fixed in place.** While walking, running or sprinting, both hands were IK-pinned to one fixed guard point in mesh space. The torso bobbed under a blade that never moved.
+- **No body response to movement.** There was no lean on starts or stops and no bank into turns.
+- **Sprint looked like walking.** The sprint used the same upright guard as the walk.
+- **The idle was nearly frozen.** Standing still, the idle clip ran at 0.2× speed, because the slow stopping clock also applied at zero speed. The stance barely breathed.
+
+### Fixes
+
+All of these are in `WardenSword.cpp`. They are presentation only: no capsule, speed, timing or hitbox change.
+
+- **Speed-driven sword carry.**
+  - Running lowers the greatsword to a low forward guard.
+  - Sprinting trails it low behind at the right side, two-handed.
+  - The blend runs Guard → Low → Trail, so the blade swings past the outside of the body, never through the head.
+  - The carry holds for 0.3 s before falling, so a quick reversal keeps the blade low instead of flapping it up to the guard.
+- **Body response.**
+  - Smoothed acceleration gives a forward lean on starts and a lean back on hard stops.
+  - Speed adds a lean of up to 6° in a sprint.
+  - Sideways acceleration banks the pelvis and spine into turns (up to 11°), with the hips shifting toward the inside of the turn.
+  - The feet are re-solved to the clip, so they stay planted.
+- **Hands ride the chest.** While ready, the hilt follows the chest bone's movement from the rest pose: stride bob, sway, lean and bank. Idle breathing now moves the arms.
+- **Blade inertia.** A spring (stiffness 160, damping 17) offsets the hilt and tilts the blade against acceleration.
+- **Head leads turns.** The head turns up to 22° into the turn rate.
+- **Idle at its natural rate.** The idle clip now plays at 1.0×. The slow clock only applies through the last 60 cm/s of a stop.
+- **Swings start from the pose you are in.** The player always winds up from the drawn ready pose (`bPoseFromLast`), so a cut from a sprint starts from the trailing carry without a snap to guard.
+
+### Results
+
+- **Native suite:** 35/35.
+- **Player:** forward slip 0.00 and locked-on strafe slip 0.00.
+- **Grip error:** 0.000 cm on all sword poses.
+- **Not owner-tested.** Feel is the real acceptance test.
+- **Unchanged:** new strike, roll or locomotion clips are still needed for authored-quality motion. These fixes change how the existing motion is layered.
