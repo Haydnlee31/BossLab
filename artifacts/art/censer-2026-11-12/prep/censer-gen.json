@@ -1,0 +1,22 @@
+{
+ "triangles_source": 291336,
+ "triangles": 14000,
+ "height_m": 0.24,
+ "size_m": [
+  0.0815,
+  0.0814,
+  0.24
+ ],
+ "textures": [
+  {
+   "material": "Material_0",
+   "node": "BASE COLOR",
+   "path": "/Users/haydn/Documents/BossLab/artifacts/art/censer-2026-11-12/prep/T_RegentCenserGen_0.png"
+  },
+  {
+   "material": "Material_0",
+   "node": "METALLIC ROUGHNESS",
+   "path": "/Users/haydn/Documents/BossLab/artifacts/art/censer-2026-11-12/prep/T_RegentCenserGen_1.png"
+  }
+ ]
+}

@@ -562,8 +562,12 @@ void AWardenArenaMode::BuildRegentView()
         return C;
     };
     bool Lantern=false, Link=false, Skull=false;
-    V.Censer=Set(Mesh(TEXT("SM_RegentCenser"),TEXT("/Engine/BasicShapes/Sphere"),Lantern),Lantern?nullptr:Load(TEXT("none"),TEXT("Bronze")),1);
-    V.bLantern=Lantern;
+    // The generated censer (its own material) wins over the interim lantern when imported.
+    UStaticMesh* GenCenser=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/Regent/Censer/SM_RegentCenserGen"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    if(GenCenser) Lantern=true;
+    V.Censer=GenCenser ? Set(GenCenser,nullptr,1)
+                       : Set(Mesh(TEXT("SM_RegentCenser"),TEXT("/Engine/BasicShapes/Sphere"),Lantern),Lantern?nullptr:Load(TEXT("none"),TEXT("Bronze")),1);
+    V.bLantern=Lantern; V.bGenCenser=GenCenser!=nullptr;
     V.Chain=Set(Mesh(TEXT("SM_RegentLink"),TEXT("/Engine/BasicShapes/Cube"),Link),Link?nullptr:Load(TEXT("none"),TEXT("BlackIron")),FWardenRegentView::Links);
     V.bLinks=Link;
     // The generated skull (its own material) wins over the interim one when imported.
@@ -631,7 +635,9 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
     const FVector Hand=Warden->VisualBody->GetBoneLocationByName(TEXT("hand_l"),EBoneSpaces::WorldSpace);
     const FVector Hang=(Head-Hand).GetSafeNormal();
     const FQuat Along=FQuat::FindBetweenNormals(-FVector::UpVector,Hang.IsNearlyZero()||Hang.Z>-.2f?FVector(Hang.X,Hang.Y,FMath::Min(Hang.Z,-.2f)).GetSafeNormal():Hang);
-    const FVector Body=Head+Along.RotateVector(FVector(0,0,-18));
+    // The soul fire and its light sit in the cage: the generated censer is 24 cm tall
+    // (58 cm at x2.4) with its cage in the lower half; the interim lantern is 15 cm.
+    const FVector Body=Head+Along.RotateVector(FVector(0,0,V.bGenCenser?-34.f:-18.f));
     const float LanternScale=2.4f;
     Set(V.Censer.Get(),0,Gone?Hidden:V.bLantern ? FTransform(Along*FQuat(FVector::UpVector,Seconds*.6f),Head,FVector(LanternScale))
                                                : FTransform(FRotator(0,Seconds*40,0),Head,FVector(.26f)));

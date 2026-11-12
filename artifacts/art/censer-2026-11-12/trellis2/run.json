@@ -1,0 +1,9 @@
+{
+ "space": "microsoft/TRELLIS.2",
+ "input": "artifacts/art/hf-leftover-2026-11-10/inputs/censer-5.png",
+ "seed": 3,
+ "resolution": "1024",
+ "decimation_target": 300000,
+ "texture_size": 2048,
+ "seconds": 76
+}

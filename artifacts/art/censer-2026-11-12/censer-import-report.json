@@ -1,0 +1,16 @@
+{
+ "SM_RegentCenserGen": {
+  "size_cm": [
+   8.2,
+   8.1,
+   24.0
+  ],
+  "min_cm": [
+   -4.1,
+   -4.1,
+   -24.0
+  ],
+  "triangles": 13985,
+  "material": "M_RegentCenserGen"
+ }
+}
