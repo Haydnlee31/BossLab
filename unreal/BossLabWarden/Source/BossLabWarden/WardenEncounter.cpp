@@ -36,7 +36,7 @@ void AWardenChallenger::ResetFighter(bool Boss)
     bBoss = Boss; Fight = FWardenFighterState();
     GroundZ=GetActorLocation().Z; AirLift=JumpAttackLift=0; bPoseFromLast=false; PoseEase=0;
     FootLocked[0]=FootLocked[1]=false; FootRelease[0]=FootRelease[1]=1; FootLow[0]=FootLow[1]=1e9f;
-    FeelPrevVel=FeelAccel=FeelSway=FeelSwayVel=FVector::ZeroVector; FeelCarry=FeelLean=FeelBank=FeelLook=0; FeelHold=0;
+    FeelPrevVel=FeelAccel=FeelSway=FeelSwayVel=FVector::ZeroVector; FeelCarry=FeelLean=FeelBank=FeelLook=0; FeelHold=0; FeelFree=0;
     Fight.IsBoss = Boss;
     Fight.Health = Fight.MaxHealth = Boss ? 240.f : 100.f;
     PendingAction = EWardenAction::Ready; PendingAge=0; PendingHeld=0; PendingDirection=FVector::ZeroVector; PresentedAction = -1;

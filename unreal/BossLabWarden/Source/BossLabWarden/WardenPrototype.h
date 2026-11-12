@@ -85,6 +85,7 @@ public:
     FVector FeelPrevVel=FVector::ZeroVector, FeelAccel=FVector::ZeroVector, FeelSway=FVector::ZeroVector, FeelSwayVel=FVector::ZeroVector;
     float FeelCarry=0, FeelLean=0, FeelBank=0, FeelLook=0;
     int32 FeelHold=0;
+    float FeelFree=0;   // left hand off the hilt while sprinting
     FVector FeelRestChest=FVector::ZeroVector;
     float LastStepSound[2]={-1,-1};   // world seconds of each foot's last footstep sound
     int32 FootForcedReleases=0;   // locks broken by the stretch limit (should stay rare)   // yaw deg/s this step while ready; drives turn-in-place stepping

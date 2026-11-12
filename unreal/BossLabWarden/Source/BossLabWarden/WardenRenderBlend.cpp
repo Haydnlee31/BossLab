@@ -80,7 +80,7 @@ void AWardenArenaMode::GaitStudyStep(FVector& PlayerIntent,FVector& BossDirectio
         const FVector Eye=FVector(Mid.X,Mid.Y,0)+Around*(320+Distance*.55f)+FVector(0,0,190);
         const FVector Look=FVector(Mid.X,Mid.Y,105);
         const FRotator Want=(Look-Eye).Rotation();
-        RegentStudyCamera->SetActorLocationAndRotation(FMath::VInterpTo(RegentStudyCamera->GetActorLocation(),Eye,WardenRules::Step,3.f),
+        RegentStudyCamera->SetActorLocationAndRotation(FMath::VInterpTo(RegentStudyCamera->GetActorLocation(),Eye,WardenRules::Step,Player->SprintHeld ? 6.f : 3.f),
             FMath::RInterpTo(RegentStudyCamera->GetActorRotation(),Want,WardenRules::Step,4.f));
     }
 }
@@ -113,7 +113,9 @@ void AWardenArenaMode::FeelStudyStep(FVector& PlayerIntent)
     if(T==1302) Press(EWardenAction::Jump);
     if(RegentStudyCamera.IsValid())
     {
-        const FVector Eye=FVector(P.X,P.Y-430,175), Look=FVector(P.X,P.Y,100);
+        // Sprints are filmed from the front-left quarter (the cape hides the arms from behind).
+        const FVector Front=Player->GetActorForwardVector()*380-Player->GetActorRightVector()*240;
+        const FVector Eye=Player->SprintHeld ? FVector(P.X+Front.X,P.Y+Front.Y,170) : FVector(P.X,P.Y-430,175), Look=FVector(P.X,P.Y,100);
         RegentStudyCamera->SetActorLocationAndRotation(FMath::VInterpTo(RegentStudyCamera->GetActorLocation(),Eye,WardenRules::Step,3.f),
             FMath::RInterpTo(RegentStudyCamera->GetActorRotation(),(Look-Eye).Rotation(),WardenRules::Step,5.f));
     }

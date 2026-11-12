@@ -351,7 +351,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         // Held for 0.3 s first: a reversal passes through zero speed for ~0.17 s.
         FeelHold=CarryWant<FeelCarry-.05f && FeelMoving ? FeelHold+1 : 0;
         if(CarryWant>=FeelCarry || FeelHold>18 || !FeelMoving) FeelCarry+=FMath::Clamp(CarryWant-FeelCarry,-Dt*2.f,Dt*2.2f);
-        const float LeanWant=FeelMoving ? FMath::Clamp(FwdAcc/2400*8,-7.f,8.f)+1.5f*Smooth(Ground/420)+6*FeelCarry : 0;
+        const float LeanWant=FeelMoving ? FMath::Clamp(FwdAcc/2400*6,-6.f,5.f)+1.5f*Smooth(Ground/420)+3*FeelCarry : 0;
         const float BankWant=FeelMoving ? FMath::Clamp(SideAcc/980*16,-11.f,11.f) : 0;
         FeelLean=FMath::Lerp(FeelLean,LeanWant,.14f); FeelBank=FMath::Lerp(FeelBank,BankWant,.12f);
         // The head leads a turn (looks where the body is about to go).
@@ -363,7 +363,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         if(!bBoss && Fight.Action==EWardenAction::Ready)
         {
             const FSwordKey Low{FVector(26,14,100),FVector(.86f,.28f,-.42f).GetSafeNormal(),-6,4};
-            const FSwordKey Trail{FVector(12,25,99),FVector(-.72f,.34f,-.5f).GetSafeNormal(),-16,0};
+            const FSwordKey Trail{FVector(4,31,95),FVector(-.72f,.34f,-.5f).GetSafeNormal(),-16,0};
             if(FeelCarry>.001f) Key=FeelCarry<.5f ? Blend(Key,Low,FeelCarry*2) : Blend(Low,Trail,(FeelCarry-.5f)*2);
             Key.Grip+=FeelSway;
             Key.Axis=(Key.Axis+FVector(FeelSway.X,FeelSway.Y,0)*.035f).GetSafeNormal();
@@ -428,9 +428,11 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         SetRotation(I,FQuat(FVector::UpVector,FMath::DegreesToRadians(Key.Twist*.18f))*
             FQuat(FVector::ForwardVector,FMath::DegreesToRadians(Key.Lean*.13f))*CS[I].GetRotation());
     }
-    if(FMath::Abs(FeelLook)>.05f)
+    // ...and keeps the eyes level over a leaning run (the run clip already pitches the chest).
+    if(FMath::Abs(FeelLook)>.05f || FeelCarry>.001f)
         for(const TCHAR* Name:{TEXT("neck_01"),TEXT("head")})
-            if(const int32 I=Index(Name); I>=0) SetRotation(I,FQuat(FVector::UpVector,FMath::DegreesToRadians(FeelLook*.5f))*CS[I].GetRotation());
+            if(const int32 I=Index(Name); I>=0)
+                SetRotation(I,FQuat(FVector::UpVector,FMath::DegreesToRadians(FeelLook*.5f))*FQuat(FVector::ForwardVector,FMath::DegreesToRadians(FeelCarry*7.f))*CS[I].GetRotation());
     // The head snaps with the blow, even mid-swing.
     if(Recoil>0)
         for(const TCHAR* Name:{TEXT("neck_01"),TEXT("head")})
@@ -629,6 +631,15 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             if(Middle>=0) SetRotation(H,FQuat::FindBetweenNormals((CS[Middle].GetLocation()-CS[H].GetLocation()).GetSafeNormal(),FMath::Lerp(MeshPoint(FVector(.3f,.2f,-1)),MeshPoint(FVector(.2f,.9f,.4f)),Raise).GetSafeNormal())*CS[H].GetRotation());
         }
     }
+    // Sprinting frees the left hand: the greatsword trails in the right hand and the left arm
+    // pumps with the run clip (as a souls sprint does), instead of both arms welded to the hilt.
+    // Eases back onto the hilt over ~0.1 s for any action, ~0.3 s when slowing.
+    const float FreeWant=!bBoss && Fight.Action==EWardenAction::Ready ? Smooth((FeelCarry-.55f)/.35f) : 0.f;
+    FeelFree+=FMath::Clamp(FreeWant-FeelFree,-(Fight.Action==EWardenAction::Ready ? 3.5f : 9.f)*WardenRules::Step,3.f*WardenRules::Step);
+    TArray<FTransform> FreeArm;
+    const int32 FreeBones[3]={Index(TEXT("upperarm_l")),Index(TEXT("lowerarm_l")),Index(TEXT("hand_l"))};
+    if(FeelFree>.001f && FreeBones[0]>=0 && FreeBones[1]>=0 && FreeBones[2]>=0)
+        for(const int32 I:FreeBones) FreeArm.Add(Local[I]);
     for(int32 Side=0;Side<Hands;++Side)
     {
         const bool Right=Side==0;
@@ -642,6 +653,12 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             SetRotation(Hand,FQuat::FindBetweenNormals((CS[Middle].GetLocation()-CS[Hand].GetLocation()).GetSafeNormal(),Finger)*CS[Hand].GetRotation());
             GripError=FMath::Max(GripError,FVector::Distance(CS[Hand].GetLocation()+Finger*7,Grip));
         }
+    }
+    if(FreeArm.Num()==3)
+    {
+        for(int32 K=0;K<3;++K)
+            Local[FreeBones[K]].SetRotation(FQuat::Slerp(Local[FreeBones[K]].GetRotation(),FreeArm[K].GetRotation(),FeelFree).GetNormalized());
+        Rebuild(FreeBones[0]);
     }
     if(Local.Num()<Ref.GetNum())
     {
