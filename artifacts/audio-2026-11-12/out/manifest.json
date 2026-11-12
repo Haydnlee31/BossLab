@@ -583,8 +583,8 @@
  "RegentSkull_0": {
   "seconds": 0.9,
   "layers": [
-   "procedural soul-fire",
-   "procedural sweep",
+   "organic fire bed (flutter roar, wood-grain crackle 18/s)",
+   "fire whoosh (rpg_cloth1 -7 st + opening low-pass noise)",
    "impactWood_light_000 +3 st (bone clack)"
   ],
   "loop": false
@@ -592,8 +592,8 @@
  "RegentSkull_1": {
   "seconds": 0.9,
   "layers": [
-   "procedural soul-fire",
-   "procedural sweep",
+   "organic fire bed (flutter roar, wood-grain crackle 18/s)",
+   "fire whoosh (rpg_cloth2 -8 st + opening low-pass noise)",
    "impactWood_light_001 +3 st (bone clack)"
   ],
   "loop": false
@@ -601,8 +601,8 @@
  "RegentSkull_2": {
   "seconds": 0.9,
   "layers": [
-   "procedural soul-fire",
-   "procedural sweep",
+   "organic fire bed (flutter roar, wood-grain crackle 18/s)",
+   "fire whoosh (rpg_cloth3 -9 st + opening low-pass noise)",
    "impactWood_light_002 +3 st (bone clack)"
   ],
   "loop": false
@@ -610,8 +610,8 @@
  "RegentSkull_3": {
   "seconds": 0.9,
   "layers": [
-   "procedural soul-fire",
-   "procedural sweep",
+   "organic fire bed (flutter roar, wood-grain crackle 18/s)",
+   "fire whoosh (rpg_cloth4 -7 st + opening low-pass noise)",
    "impactWood_light_003 +3 st (bone clack)"
   ],
   "loop": false
@@ -646,7 +646,7 @@
  "RegentEruption_0": {
   "seconds": 1.4,
   "layers": [
-   "procedural fire roar",
+   "organic fire bed + fire whoosh",
    "impactMining_002 -8 st",
    "sub",
    "presence band x0.5"
@@ -656,7 +656,7 @@
  "RegentEruption_1": {
   "seconds": 1.4,
   "layers": [
-   "procedural fire roar",
+   "organic fire bed + fire whoosh",
    "impactMining_003 -8 st",
    "sub",
    "presence band x0.5"
@@ -666,7 +666,7 @@
  "RegentEruption_2": {
   "seconds": 1.4,
   "layers": [
-   "procedural fire roar",
+   "organic fire bed + fire whoosh",
    "impactMining_004 -8 st",
    "sub",
    "presence band x0.5"
@@ -676,7 +676,7 @@
  "RegentPyre_0": {
   "seconds": 2.6,
   "layers": [
-   "procedural fire roar",
+   "organic fire bed + fire whoosh",
    "impactMining_000 -10 st",
    "sub 70->30 Hz",
    "impactBell_heavy_003 -12 st",
@@ -687,7 +687,7 @@
  "RegentPyre_1": {
   "seconds": 2.6,
   "layers": [
-   "procedural fire roar",
+   "organic fire bed + fire whoosh",
    "impactMining_001 -10 st",
    "sub 70->30 Hz",
    "impactBell_heavy_004 -12 st",
@@ -698,21 +698,24 @@
  "RegentWakes_0": {
   "seconds": 1.6,
   "layers": [
-   "procedural rolling fire"
+   "organic rolling fire (flutter, wood-grain crackle 20/s)",
+   "fire whoosh"
   ],
   "loop": false
  },
  "RegentWakes_1": {
   "seconds": 1.6,
   "layers": [
-   "procedural rolling fire"
+   "organic rolling fire (flutter, wood-grain crackle 20/s)",
+   "fire whoosh"
   ],
   "loop": false
  },
  "RegentWakes_2": {
   "seconds": 1.6,
   "layers": [
-   "procedural rolling fire"
+   "organic rolling fire (flutter, wood-grain crackle 20/s)",
+   "fire whoosh"
   ],
   "loop": false
  },
@@ -728,7 +731,7 @@
  "AmbFire_0": {
   "seconds": 8.0,
   "layers": [
-   "procedural brazier crackle and roar"
+   "organic brazier bed (flutter roar, wood-grain crackle 7/s)"
   ],
   "loop": true
  }

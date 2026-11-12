@@ -208,21 +208,50 @@ for k in range(4):
     save(f'RegentThrust_{k}', mix(.5, (x, 0, 1), (scrape / (np.abs(scrape).max() + 1e-9), 0, .25)),
          ['procedural fast thin sweep', f'rpg_drawKnife{k % 3 + 1} (normalised blade scrape)'], .7)
 
-def fire(seconds, rumble=220, crackle=.004, seed=0):
+def flicker(seconds, rate, depth, r):
+    # Random loudness flutter (real flames flutter several times a second; steady filtered
+    # noise reads as electronic hiss).
+    m = onepole(r.standard_normal(int(SR * seconds)), rate, stages=2)
+    return 1 + depth * m / (np.abs(m).max() + 1e-9)
+
+def crackles(seconds, per_second, r):
+    # Fire crackle is wood snapping: short grains of real CC0 wood/stone impacts, pitched up,
+    # each a different source, pitch, length and level, at a natural density. (The old
+    # version used ~175-530 identical filtered clicks a second, which fuses into a buzz.)
+    out = np.zeros(int(SR * seconds))
+    sources = [pick('impact_impactWood_light', j) for j in range(5)] + [pick('impact_impactGeneric_light', j) for j in range(5)] + [pick('impact_impactWood_medium', j) for j in range(5)]
+    for _ in range(int(seconds * per_second)):
+        grain = pitch(load(sources[r.integers(len(sources))]), r.uniform(5, 13))[:int(SR * r.uniform(.01, .045))]
+        grain = grain * np.exp(-np.linspace(0, r.uniform(4, 9), len(grain)))
+        at = int(r.uniform(0, max(1e-3, seconds - .05)) * SR)
+        out[at:at + len(grain)] += grain * r.uniform(.1, 1) ** 2
+    return out
+
+def fire(seconds, rumble=220, per_second=12, seed=0):
+    # Organic fire bed: a broadband roar (no resonant band) with fast flutter, a slower low
+    # body, and wood-grain crackle.
     r = np.random.default_rng(seed)
-    roar = onepole(r.standard_normal(int(SR * seconds)), rumble, stages=3) * 4
-    mid = bandpass(r.standard_normal(int(SR * seconds)), 700, 1.2) * 1.1
-    pops = (r.random(int(SR * seconds)) < crackle) * r.standard_normal(int(SR * seconds))
-    crack = onepole(onepole(pops, 3500, stages=2), 600, high=True)
-    return roar + mid + crack * 3
+    roar = onepole(onepole(r.standard_normal(int(SR * seconds)), 1600, stages=2), 140, high=True) * 2.2 * flicker(seconds, 9, .45, r)
+    body = onepole(r.standard_normal(int(SR * seconds)), rumble, stages=3) * 4 * flicker(seconds, 3.5, .35, r)
+    return roar + body + crackles(seconds, per_second, r) * .9
+
+def fire_whoosh(seconds, seed):
+    # Flame rushing past or igniting: a real cloth flap pitched down (the classic fire-whoosh
+    # source) under noise whose low-pass cutoff opens and closes (no resonance, so no laser
+    # sweep), with flutter.
+    r = np.random.default_rng(seed); n = int(SR * seconds); u = np.arange(n) / n
+    arc = np.sin(np.pi * u) ** 1.3
+    air = onepole(r.standard_normal(n), 250 + 2600 * arc, stages=2) * arc * 2.5 * flicker(seconds, 11, .3, r)
+    cloth = pitch(load(f'rpg_cloth{seed % 4 + 1}'), -7 - seed % 3)[:n]
+    return mix(seconds, (air, 0, 1), (cloth / (np.abs(cloth).max() + 1e-9), 0, .55))
 
 for k in range(4):
     sec = .9
-    flame = fire(sec, 300, .006, k) * env(int(SR * sec), .15, .5)
-    sweep = whoosh(sec, 300, 1600, 200, 0) * .8
+    flame = fire(sec, 300, 18, k) * env(int(SR * sec), .12, .5)
+    rush = fire_whoosh(sec, k)
     bone = pitch(load(pick('impact_impactWood_light', k)), 3)
-    save(f'RegentSkull_{k}', mix(sec, (flame, 0, 1), (sweep, 0, .9), (bone, 0, .5)),
-         ['procedural soul-fire', 'procedural sweep', pick('impactWood_light', k) + ' +3 st (bone clack)'], .65)
+    save(f'RegentSkull_{k}', mix(sec, (flame, 0, .8), (rush, 0, 1), (bone, 0, .45)),
+         ['organic fire bed (flutter roar, wood-grain crackle 18/s)', f'fire whoosh (rpg_cloth{k % 4 + 1} {-7 - k % 3} st + opening low-pass noise)', pick('impactWood_light', k) + ' +3 st (bone clack)'], .65)
 for k in range(3):
     s = t(.9); swell = onepole(noise(.9), 1200, stages=2) * (s / .9) ** 3 * 3
     swell[-int(SR * .05):] *= np.linspace(1, 0, int(SR * .05))
@@ -231,19 +260,19 @@ for k in range(3):
     save(f'RegentBlink_{k}', mix(1.3, (swell, 0, 1), (shimmer, 0, .25), (thud, .88, .9)),
          ['reversed-style noise swell', 'high shimmer', pick('impactSoft_heavy', k) + ' -7 st'], .7)
 for k in range(3):
-    roar = fire(1.4, 260, .01, 10 + k) * env(int(SR * 1.4), .01, 1.0)
+    roar = (fire(1.4, 260, 26, 10 + k) + fire_whoosh(1.4, 10 + k) * .8) * env(int(SR * 1.4), .01, 1.0)
     crunch = pitch(load(pick('impact_impactMining', k + 2)), -8)
     save(f'RegentEruption_{k}', mix(1.4, (roar, 0, 1), (crunch, 0, 1.2), (sub(90, 40, .8, 5), 0, .4)),
-         ['procedural fire roar', pick('impactMining', k + 2) + ' -8 st', 'sub'], .9, present=0.5)
+         ['organic fire bed + fire whoosh', pick('impactMining', k + 2) + ' -8 st', 'sub'], .9, present=0.5)
 for k in range(2):
-    roar = fire(2.4, 200, .012, 20 + k) * env(int(SR * 2.4), .02, 1.8)
+    roar = (fire(2.4, 200, 30, 20 + k) + fire_whoosh(2.4, 20 + k) * .9) * env(int(SR * 2.4), .02, 1.8)
     crunch = pitch(load(pick('impact_impactMining', k)), -10)
     bell = pitch(load(pick('impact_impactBell_heavy', k + 3)), -12)
     save(f'RegentPyre_{k}', mix(2.6, (roar, 0, 1), (crunch, 0, 1.2), (sub(70, 30, 1.6, 2.5), 0, .5), (bell, .05, .45)),
-         ['procedural fire roar', pick('impactMining', k) + ' -10 st', 'sub 70->30 Hz', pick('impactBell_heavy', k + 3) + ' -12 st'], .95, present=0.5)
+         ['organic fire bed + fire whoosh', pick('impactMining', k) + ' -10 st', 'sub 70->30 Hz', pick('impactBell_heavy', k + 3) + ' -12 st'], .95, present=0.5)
 for k in range(3):
-    roar = fire(1.6, 340, .008, 30 + k) * env(int(SR * 1.6), .25, .8)
-    save(f'RegentWakes_{k}', roar, ['procedural rolling fire'], .7)
+    roar = (fire(1.6, 340, 20, 30 + k) + fire_whoosh(1.6, 30 + k) * .7) * env(int(SR * 1.6), .25, .8)
+    save(f'RegentWakes_{k}', roar, ['organic rolling fire (flutter, wood-grain crackle 20/s)', 'fire whoosh'], .7)
 
 # --- Ambience beds (seamless loops: crossfade the tail into the head) -------------------------
 def loopable(x, fade):
@@ -262,8 +291,8 @@ while at < secs:
     i = int(SR * at); drips[i:i + len(drip)] += drip * (.05 + .06 * rng.random())
     at += 2.5 + 4 * rng.random()
 save('AmbDungeon_0', loopable(room + wind + drips, 2), ['brown-noise room tone', 'slow wind band', 'random water drips'], .5, loop=True)
-crackle = fire(10, 180, .0035, 99) * .6
-save('AmbFire_0', loopable(crackle, 2), ['procedural brazier crackle and roar'], .6, loop=True)
+crackle = fire(10, 180, 7, 99) * .6
+save('AmbFire_0', loopable(crackle, 2), ['organic brazier bed (flutter roar, wood-grain crackle 7/s)'], .6, loop=True)
 
 json.dump(manifest, open(os.path.join(OUT, 'manifest.json'), 'w'), indent=1)
 print('BOSSLAB game audio', len(manifest), 'files')

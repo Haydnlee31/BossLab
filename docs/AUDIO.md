@@ -91,3 +91,27 @@ The owner said the audio was "a bit plain" and asked how game audio engineers wo
   - the whoosh character;
   - the bell;
   - the overall balance against the boss's magic.
+
+## Soul-fire rebuild (2026-11-12, owner: "the summoning soul fire sometimes still has a robotic sound")
+
+- **Causes found:**
+  - **Click crackle.** The old fire crackle was a per-sample probability of 0.004–0.012, which is **about 175–530 identical filtered clicks per second**. At that density the clicks fuse into a buzzing rasp.
+  - **Steady roar.** The roar was steady filtered noise, with a resonant band at 700 Hz and no flutter. It read as electronic hiss.
+  - **Laser sweep.** The skull swish was a resonant band-pass sweep.
+  - **Stacked copies.** The phase-two fan volley and the Witness Circle dive play three near-identical skull sounds on the same tick.
+- **Fix:** standard fire sound design, using organic sources.
+  - **Crackle:** grains of the CC0 wood and stone impacts (10–45 ms, pitched up 5–13 semitones, all different) at natural densities: braziers 7/s, skull 18/s, Wakes 20/s, eruption 26/s, pyre 30/s.
+  - **Roar:** a broadband roar with no resonance, with 9 Hz random flutter, plus a low body with 3.5 Hz flutter.
+  - **Fire whoosh:** a real cloth flap pitched down 7–9 semitones under noise whose low-pass opens and closes, with no resonance.
+  - **One sound per skull group:** `RegentSound` plays each Regent sound at most once per 3 ticks, so simultaneous skulls make one sound.
+- **Measured buzz:** the ratio of 30–300 Hz loudness modulation (roughness, which reads as buzz) to 1–30 Hz (flame flutter), old → new:
+
+  | Sound | Old | New |
+  |---|---|---|
+  | RegentSkull | 0.67 | 0.34 |
+  | RegentWakes (the phase-two soul-fire ring) | 3.16 | 0.69 |
+  | RegentEruption | 1.88 | 0.96 |
+  | RegentPyre | 5.77 | 2.31 |
+  | AmbFire | 6.56 | 2.63 |
+
+- **Verification:** native suite 34/34. Not listened to.

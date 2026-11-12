@@ -477,6 +477,11 @@ void AWardenArenaMode::RegentResolve()
 
 void AWardenArenaMode::RegentSound(const TCHAR* Name,const FVector& At,float Volume)
 {
+    // Skulls launched or diving together (fan volley, Witness Circle) would play near-identical
+    // copies on the same tick, which phase into a metallic, robotic chorus: one per 3 ticks.
+    int32& Last=RegentSoundTick.FindOrAdd(Name,-100);
+    if(CombatTick-Last<3 && CombatTick>=Last) return;
+    Last=CombatTick;
     // The boss sits a little under the player's own sounds in the mix.
     PlaySfx(Name,At,Volume*.9f,.04f,2600);
 }
