@@ -174,6 +174,8 @@ public:
     // Options (WardenQoL.cpp): look inversion, camera distance multiplier, sensitivity access.
     bool bInvertLook=false;
     float CameraDistanceScale=1.f;
+    bool bCameraRecentre=false;   // set from Options (camera follow); off unless applied
+    float LookIdle=0;             // seconds since the last mouse-look input
     void SetSensitivity(float S) { Sensitivity=S; }
     float GetSensitivity() const { return Sensitivity; }
     void ToggleHints();

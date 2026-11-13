@@ -10,6 +10,7 @@ struct FWardenSettings
     float CameraDistance=1.f;   // spring-arm length multiplier (0.7 - 1.5)
     float MasterVolume=1.f, MusicVolume=1.f, SfxVolume=1.f;   // 0 - 1
     bool bInvertY=false, bDamageNumbers=true, bControlHints=true;
+    bool bCameraFollow=true;    // spring-arm lag + gentle re-centre behind the heading
 
     void Clamp();
     FString Serialize() const;
@@ -21,7 +22,7 @@ struct FWardenSettings
     {
         return Sensitivity==O.Sensitivity && CameraDistance==O.CameraDistance && MasterVolume==O.MasterVolume
             && MusicVolume==O.MusicVolume && SfxVolume==O.SfxVolume && bInvertY==O.bInvertY
-            && bDamageNumbers==O.bDamageNumbers && bControlHints==O.bControlHints;
+            && bDamageNumbers==O.bDamageNumbers && bControlHints==O.bControlHints && bCameraFollow==O.bCameraFollow;
     }
 };
 

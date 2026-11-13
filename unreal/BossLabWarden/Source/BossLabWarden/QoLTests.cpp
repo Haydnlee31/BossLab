@@ -4,6 +4,8 @@
 #include "Engine/Engine.h"
 #include "GameFramework/InputSettings.h"
 #include "HAL/FileManager.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/PlayerController.h"
 #include "Misc/Paths.h"
 #include "Misc/AutomationTest.h"
 #if WITH_DEV_AUTOMATION_TESTS
@@ -50,6 +52,10 @@ bool FWardenSettingsTest::RunTest(const FString&)
     TestEqual(TEXT("Sensitivity applied"),M->Player->GetSensitivity(),1.75f);
     TestTrue(TEXT("Invert applied"),M->Player->bInvertLook);
     TestEqual(TEXT("Camera distance applied"),M->Player->CameraDistanceScale,1.2f);
+    TestTrue(TEXT("Camera follow on by default after apply"),M->Player->Arm->bEnableCameraLag && M->Player->bCameraRecentre);
+    S.bCameraFollow=false; M->Settings=S; M->ApplySettings();
+    TestTrue(TEXT("Camera follow switches off"),!M->Player->Arm->bEnableCameraLag && !M->Player->bCameraRecentre);
+    TestTrue(TEXT("Follow flag round-trips"),[&]{ S.Save(File); FWardenSettings R; R.Load(File); IFileManager::Get().Delete(*File); return !R.bCameraFollow; }());
     TestTrue(TEXT("Effects gain scaled"),FMath::IsNearlyEqual(M->SfxMaster,2.f,.001f));
     TestTrue(TEXT("Music scaled"),FMath::IsNearlyEqual(M->MusicLevel(),MusicBefore*.3f,.001f));
     M->Settings=FWardenSettings(); M->ApplySettings();
@@ -81,6 +87,27 @@ bool FWardenRunRecordTest::RunTest(const FString&)
     // Scripted pilot runs are not the player's attempts.
     M->ConfigureEncounter(101,true,1); M->FixedStep();
     TestEqual(TEXT("Scripted pilot not counted"),M->Run.Attempts,2);
+    QoLClose(W);
+    return true;
+}
+QOL_TEST(FWardenRecentreTest,"BossLab.QoL.CameraRecentreBehindHeading");
+bool FWardenRecentreTest::RunTest(const FString&)
+{
+    auto* W=QoLWorld();
+    auto* P=W->SpawnActor<AWardenChallenger>(FVector(0,0,95),FRotator(0,90,0)); P->DispatchBeginPlay(); P->ResetFighter(false);
+    auto* PC=W->SpawnActor<APlayerController>(); PC->Possess(P); P->SetLocked(false);
+    P->SetActorRotation(FRotator(0,90,0));
+    auto Run=[&](bool Follow,FVector Velocity,float StartYaw)
+    {
+        P->bCameraRecentre=Follow; P->LookIdle=0; PC->SetControlRotation(FRotator(-12,StartYaw,0));
+        for(int32 I=0;I<240;++I) { P->MoveVelocity=Velocity; P->Tick(1.f/60); }
+        return FRotator::NormalizeAxis(PC->GetControlRotation().Yaw);
+    };
+    const FVector Running(0,400,0);
+    TestTrue(TEXT("Follow off: camera yaw untouched"),FMath::IsNearlyEqual(Run(false,Running,30),30.f,.5f));
+    TestTrue(TEXT("Follow on: idle camera eases behind the heading"),FMath::IsNearlyEqual(Run(true,Running,30),90.f,2.f));
+    TestTrue(TEXT("Standing still: no re-centre"),FMath::IsNearlyEqual(Run(true,FVector::ZeroVector,30),30.f,.5f));
+    TestTrue(TEXT("Running toward the camera: no 180 swing"),FMath::IsNearlyEqual(Run(true,Running,-90),-90.f,.5f));
     QoLClose(W);
     return true;
 }

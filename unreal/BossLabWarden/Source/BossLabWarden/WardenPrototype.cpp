@@ -125,8 +125,8 @@ void AWardenChallenger::SetupPlayerInputComponent(UInputComponent* Input)
 
     Input->BindAction(TEXT("Export"),IE_Pressed,this,&AWardenChallenger::ExportReport);
 }
-void AWardenChallenger::Turn(float Value) { if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerYawInput(Value*Sensitivity); else LockYawOffset=FMath::Clamp(LockYawOffset+Value*Sensitivity,-25.f,25.f); }
-void AWardenChallenger::Look(float Value) { if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerPitchInput(-Value*Sensitivity*(bInvertLook?-1.f:1.f)); else LockPitchOffset=FMath::Clamp(LockPitchOffset-Value*Sensitivity*(bInvertLook?-1.f:1.f),-12.f,12.f); }
+void AWardenChallenger::Turn(float Value) { if(FMath::Abs(Value)>.01f) LookIdle=0; if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerYawInput(Value*Sensitivity); else LockYawOffset=FMath::Clamp(LockYawOffset+Value*Sensitivity,-25.f,25.f); }
+void AWardenChallenger::Look(float Value) { if(FMath::Abs(Value)>.01f) LookIdle=0; if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerPitchInput(-Value*Sensitivity*(bInvertLook?-1.f:1.f)); else LockPitchOffset=FMath::Clamp(LockPitchOffset-Value*Sensitivity*(bInvertLook?-1.f:1.f),-12.f,12.f); }
 void AWardenChallenger::ToggleLock() { if(!AllowsGameplayInput()) return; bLocked = !bLocked && Target.IsValid(); LockYawOffset=LockPitchOffset=0; }
 FVector AWardenChallenger::GetTargetPosition() const { return Target.IsValid() ? Target->GetActorLocation()+FVector(0,0,45) : FVector::ZeroVector; }
 
@@ -178,6 +178,15 @@ void AWardenChallenger::Tick(float DeltaSeconds)
         Desired.Pitch = FMath::Clamp(FMath::Lerp(Desired.Pitch-10.f,-16.f,Separation)+LockPitchOffset,-35.f,15.f);
         Desired.Yaw+=35*Separation+LockYawOffset;
         View = FMath::RInterpTo(View,Desired,DeltaSeconds,8.f);
+    }
+    // Option (default on): after ~1 s without look input, an unlocked moving camera eases back
+    // behind the player's heading. Never swings round when running toward the camera.
+    LookIdle+=DeltaSeconds;
+    if(bCameraRecentre && !IsLocked() && LookIdle>1.f && MoveVelocity.SizeSquared2D()>FMath::Square(60.f))
+    {
+        const float Heading=GetActorRotation().Yaw;
+        if(FMath::Abs(FRotator::NormalizeAxis(Heading-View.Yaw))<100.f)
+            View.Yaw=FMath::FixedTurn(View.Yaw,Heading,DeltaSeconds*FMath::Clamp((LookIdle-1.f)*60.f,0.f,60.f));
     }
     View.Pitch = FMath::Clamp(FRotator::NormalizeAxis(View.Pitch),-55.f,25.f);
     if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>(); Mode && Mode->bTitle) View=FRotator(-12,0,0);

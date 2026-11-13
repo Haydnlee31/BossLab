@@ -3,6 +3,7 @@
 #include "WardenQoL.h"
 #include "WardenPrototype.h"
 #include "AudioDevice.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Engine/World.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
@@ -24,8 +25,8 @@ void FWardenSettings::Clamp()
 }
 FString FWardenSettings::Serialize() const
 {
-    return FString::Printf(TEXT("[BossLab.Settings]\nSensitivity=%.2f\nCameraDistance=%.2f\nMasterVolume=%.2f\nMusicVolume=%.2f\nSfxVolume=%.2f\nInvertY=%s\nDamageNumbers=%s\nControlHints=%s\n"),
-        Sensitivity,CameraDistance,MasterVolume,MusicVolume,SfxVolume,bInvertY?TEXT("True"):TEXT("False"),bDamageNumbers?TEXT("True"):TEXT("False"),bControlHints?TEXT("True"):TEXT("False"));
+    return FString::Printf(TEXT("[BossLab.Settings]\nSensitivity=%.2f\nCameraDistance=%.2f\nMasterVolume=%.2f\nMusicVolume=%.2f\nSfxVolume=%.2f\nInvertY=%s\nDamageNumbers=%s\nControlHints=%s\nCameraFollow=%s\n"),
+        Sensitivity,CameraDistance,MasterVolume,MusicVolume,SfxVolume,bInvertY?TEXT("True"):TEXT("False"),bDamageNumbers?TEXT("True"):TEXT("False"),bControlHints?TEXT("True"):TEXT("False"),bCameraFollow?TEXT("True"):TEXT("False"));
 }
 void FWardenSettings::Parse(const FString& Text)
 {
@@ -44,6 +45,7 @@ void FWardenSettings::Parse(const FString& Text)
         else if(Key==TEXT("InvertY")) bInvertY=B;
         else if(Key==TEXT("DamageNumbers")) bDamageNumbers=B;
         else if(Key==TEXT("ControlHints")) bControlHints=B;
+        else if(Key==TEXT("CameraFollow")) bCameraFollow=B;
     }
     Clamp();
 }
@@ -71,7 +73,10 @@ void AWardenArenaMode::SaveSettings()
 void AWardenArenaMode::ApplySettings()
 {
     Settings.Clamp();
-    if(Player) { Player->SetSensitivity(Settings.Sensitivity); Player->bInvertLook=Settings.bInvertY; Player->CameraDistanceScale=Settings.CameraDistance; }
+    if(Player) { Player->SetSensitivity(Settings.Sensitivity); Player->bInvertLook=Settings.bInvertY; Player->CameraDistanceScale=Settings.CameraDistance;
+        // Camera follow (presentation only): soft spring-arm lag and idle re-centre.
+        Player->bCameraRecentre=Settings.bCameraFollow;
+        Player->Arm->bEnableCameraLag=Settings.bCameraFollow; Player->Arm->CameraLagSpeed=11.f; Player->Arm->CameraLagMaxDistance=60.f; }
     SfxMaster=2.5f*Settings.SfxVolume;
     MusicVolumeScale=Settings.MusicVolume;
     if(UWorld* World=GetWorld()) if(FAudioDeviceHandle Device=World->GetAudioDevice()) Device->SetTransientPrimaryVolume(Settings.MasterVolume);
@@ -116,6 +121,8 @@ TSharedRef<SWidget> AWardenArenaMode::BuildOptionsPanel()
     auto OnOff=[](bool B) { return B?FString(TEXT("On")):FString(TEXT("Off")); };
     Row([](const FWardenSettings& S) { return FString::Printf(TEXT("Mouse sensitivity   %.2fx"),S.Sensitivity); },
         [](FWardenSettings& S,int32 D) { S.Sensitivity+=.25f*D; });
+    Row([OnOff](const FWardenSettings& S) { return TEXT("Camera follow (lag + re-centre)   ")+OnOff(S.bCameraFollow); },
+        [](FWardenSettings& S,int32) { S.bCameraFollow=!S.bCameraFollow; });
     Row([OnOff](const FWardenSettings& S) { return TEXT("Invert look Y   ")+OnOff(S.bInvertY); },
         [](FWardenSettings& S,int32) { S.bInvertY=!S.bInvertY; });
     Row([Percent](const FWardenSettings& S) { return TEXT("Camera distance   ")+Percent(S.CameraDistance); },
