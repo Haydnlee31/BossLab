@@ -373,13 +373,18 @@ void AWardenPrototypeHUD::DrawHUD()
     }
     if ((!P.Alive() || !B.Alive()) && !Mode->bPaused)
     {
-        DrawRect(FLinearColor(.015,.02,.025,.85),W*.25f,H*.35f,W*.5f,190);
+        DrawRect(FLinearColor(.015,.02,.025,.85),W*.25f,H*.35f,W*.5f,FMath::Max(190.f,H*.12f+150));
         DrawText(!P.Alive() ? TEXT("YOU FELL") : !B.Alive() ? (Mode->bRegent?TEXT("REGENT FALLEN"):TEXT("WARDEN FALLEN")) : TEXT("PAUSED"),FColor(230,192,125),W*.3f,H*.4f,nullptr,2.f);
         DrawText(P.Alive() && B.Alive() ? TEXT("P resume / R restart | M mute | F2 motion | F4 sensitivity") : TEXT("R to begin a fresh encounter"),FColor::White,W*.3f,H*.47f);
         if(!P.Alive() || !B.Alive())
         {
             DrawText(FString::Printf(TEXT("%.1fs | Damage dealt %.0f / taken %.0f"),Mode->CombatTick/60.f,Mode->PlayerDamage,Mode->BossDamage),FColor(185,205,211),W*.3f,H*.47f+28);
             DrawText(FString::Printf(TEXT("Warden moves %d / %d / %d | Observed exchanges %d"),Mode->MoveCounts[0],Mode->MoveCounts[1],Mode->MoveCounts[2],Mode->Statistics.Pooled.Samples),FColor(185,205,211),W*.3f,H*.47f+50);
+            // Death recap and session record (WardenQoL.cpp); human attempts only.
+            const auto& Run=Mode->Run;
+            if(!P.Alive() && !Run.KilledBy.IsEmpty()) DrawText(FString::Printf(TEXT("Killed by: %s   |   Boss left at %.0f%%"),*Run.KilledBy,100*FMath::Max(B.Health,0.f)/B.MaxHealth),FColor(240,170,140),W*.3f,H*.47f+76,nullptr,1.1f);
+            if(Run.Attempts>0) DrawText(FString::Printf(TEXT("Attempt %d | Deaths %d | Victories %d | Best: boss at %.0f%%%s%s"),Run.Attempts,Run.Deaths,Run.Victories,100*Run.BestBossFraction,
+                Run.BestVictorySeconds>0?*FString::Printf(TEXT(" | Fastest win %.1fs"),Run.BestVictorySeconds):TEXT(""),Run.bPractice?TEXT(" | PRACTICE (not recorded)"):TEXT("")),FColor(185,205,211),W*.3f,H*.47f+100);
         }
     }
     if(Mode->Player->bV13Outfit) DrawText(TEXT("V13 TEST | Approximate rigid fitting / simplified materials"),FColor(230,192,125),32,258);
@@ -413,6 +418,12 @@ void AWardenPrototypeHUD::DrawHUD()
     DrawInspector(Mode);
     if (Mode->Player->HitFlash > 0 && !Mode->bReducedMotion) DrawRect(FLinearColor(.7,.03,.01,Mode->Player->HitFlash),0,0,W,H);
     DrawText(Mode->bRehearsal?(Mode->bRegent?TEXT("REGENT GREYBOX / FIXED SEQUENCE"):TEXT("FIXED ATTACK REHEARSAL")):TEXT("PRACTICE DUMMY"),FColor(180,195,200),W-285,28);
+    // Fight clock and attempt number (WardenQoL.cpp), human attempts only.
+    if(!Mode->bTitle && !Mode->bRecording && Mode->Run.bCounted)
+    {
+        const int32 Secs=Mode->CombatTick/60;
+        DrawText(FString::Printf(TEXT("TIME %d:%02d   |   ATTEMPT %d"),Secs/60,Secs%60,Mode->Run.Attempts),FColor(180,195,200),W-285,48);
+    }
     if (Mode->bTitle)
     {
         DrawRect(FLinearColor(.01,.015,.02,.93),W*.18f,H*.2f,W*.64f,H*.55f);

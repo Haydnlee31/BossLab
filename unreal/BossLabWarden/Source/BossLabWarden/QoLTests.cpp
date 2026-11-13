@@ -57,4 +57,31 @@ bool FWardenSettingsTest::RunTest(const FString&)
     QoLClose(W);
     return true;
 }
+QOL_TEST(FWardenRunRecordTest,"BossLab.QoL.AttemptsAndDeathRecap");
+bool FWardenRunRecordTest::RunTest(const FString&)
+{
+    auto* W=QoLWorld(); auto* M=QoLArena(W,false);
+    M->FixedStep();
+    TestEqual(TEXT("First combat tick counts an attempt"),M->Run.Attempts,1);
+    TestTrue(TEXT("Human attempt is counted"),M->Run.bCounted);
+    M->LastEvent=TEXT("You were hit. Recover before committing again."); M->Warden->Fight.Move=1;
+    M->RunKilled();
+    TestEqual(TEXT("Blade kill names the boss strike"),M->Run.KilledBy,FString(WardenRules::Strike(1).Name));
+    M->LastEvent=TEXT("Caught in the Funeral Pyre. Roll out through the blast.");
+    M->RunKilled();
+    TestEqual(TEXT("Magic kill names the hazard"),M->Run.KilledBy,FString(TEXT("Caught in the Funeral Pyre")));
+    M->Warden->Fight.Health=M->Warden->Fight.MaxHealth*.25f;
+    M->Player->Fight.Health=0;
+    M->FixedStep(); M->FixedStep();
+    TestEqual(TEXT("Death recorded once"),M->Run.Deaths,1);
+    TestTrue(TEXT("Best boss fraction recorded"),FMath::IsNearlyEqual(M->Run.BestBossFraction,.25f,.001f));
+    M->ResetEncounter(); M->FixedStep();
+    TestEqual(TEXT("Retry counts a second attempt"),M->Run.Attempts,2);
+    TestTrue(TEXT("Recap cleared on retry"),M->Run.KilledBy.IsEmpty());
+    // Scripted pilot runs are not the player's attempts.
+    M->ConfigureEncounter(101,true,1); M->FixedStep();
+    TestEqual(TEXT("Scripted pilot not counted"),M->Run.Attempts,2);
+    QoLClose(W);
+    return true;
+}
 #endif

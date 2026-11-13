@@ -132,3 +132,36 @@ TSharedRef<SWidget> AWardenArenaMode::BuildOptionsPanel()
         [](FWardenSettings& S,int32) { S.bControlHints=!S.bControlHints; });
     return Box;
 }
+
+// ---- Attempt counter, fight timer and death recap ----
+void AWardenArenaMode::RunStarted()
+{
+    Run.bResult=false; Run.KilledBy.Reset(); Run.bPractice=false;
+    Run.bCounted=CountsRun();
+    if(Run.bCounted) ++Run.Attempts;
+}
+void AWardenArenaMode::RunKilled()
+{
+    if(!Warden) return;
+    // A blade/strike hit sets the generic "You were hit" event; Regent magic names itself.
+    if(LastEvent.StartsWith(TEXT("You were hit")) || LastEvent.IsEmpty())
+        Run.KilledBy=WardenRules::Strike(Warden->Fight.Move).Name;
+    else
+    {
+        FString First; Run.KilledBy=LastEvent.Split(TEXT("."),&First,nullptr) ? First : LastEvent;
+    }
+}
+void AWardenArenaMode::RunEnded()
+{
+    if(Run.bResult || !Run.bCounted || !Player || !Warden) return;
+    Run.bResult=true;
+    if(Run.bPractice) return;   // practice attempts never set records
+    Run.BestBossFraction=FMath::Min(Run.BestBossFraction,FMath::Max(Warden->Fight.Health,0.f)/Warden->Fight.MaxHealth);
+    if(!Player->Fight.Alive()) ++Run.Deaths;
+    else if(!Warden->Fight.Alive())
+    {
+        ++Run.Victories;
+        const float Seconds=CombatTick/60.f;
+        Run.BestVictorySeconds=Run.BestVictorySeconds>0?FMath::Min(Run.BestVictorySeconds,Seconds):Seconds;
+    }
+}

@@ -367,10 +367,12 @@ void AWardenArenaMode::FixedStep()
         Statistics.Censor();
         if(bRegent) { Regent.Flying.Reset(); Regent.Hazards.Reset(); }
         if(!bReportSaved) { SaveReport(); bReportSaved=true; }
+        RunEnded();
         if(bDemo && ++DemoResetWait>=120) { ++DemoRounds; ResetEncounter(true); DemoResetWait=0; LastEvent=TEXT("DEMO ROUND RESET | Health restored; evidence retained"); }
         return;
     }
     ++CombatTick;
+    if(CombatTick==1) RunStarted();
     FVector BossDirection=FVector::ZeroVector;
     // Temporary rehearsal choreography: fixed 0,1,2 order, no learned policy,
     // response statistics, input reading or hidden resource-dependent selection.
@@ -478,6 +480,7 @@ void AWardenArenaMode::FixedStep()
     if (Warden->ResolveStrike(Player,bDebugGeometry)) { BossDamage+=PriorPlayerHealth-Player->Fight.Health; LastEvent = TEXT("You were hit. Recover before committing again."); }
     if (Player->ResolveStrike(Warden,bDebugGeometry)) { PlayerDamage+=PriorBossHealth-Warden->Fight.Health; LastEvent = TEXT("Greatsword connected."); }
     if(bRegent && bRehearsal) RegentResolve();
+    if(PriorPlayerHealth>0 && !Player->Fight.Alive()) RunKilled();
     Player->Fight.Advance(); Warden->Fight.Advance();
     if(bCaptureFrames) ReviewTrace+=FString::Printf(TEXT("%d,%d,%d,%.1f,%.1f,%d,%d,%.1f,%d,%.2f\n"),CombatTick,int32(Player->Fight.Action),Player->Fight.Age,Player->Fight.Health,Player->Fight.Stamina,int32(Warden->Fight.Action),Warden->Fight.Age,Warden->Fight.Health,Warden->Fight.Poise,FVector::Dist2D(Player->GetActorLocation(),Warden->GetActorLocation()));
 }

@@ -24,3 +24,16 @@ struct FWardenSettings
             && bDamageNumbers==O.bDamageNumbers && bControlHints==O.bControlHints;
     }
 };
+
+// Session record for the results screen and the corner timer (WardenQoL.cpp). Counts only
+// human-played encounters (no demo/scripted pilot/capture). Session only, not persisted.
+struct FWardenRunRecord
+{
+    int32 Attempts=0, Deaths=0, Victories=0;
+    float BestBossFraction=1.f;     // lowest boss health fraction any attempt reached
+    float BestVictorySeconds=0;     // fastest victory (0 = none yet)
+    FString KilledBy;               // what landed the last killing blow
+    bool bCounted=false;            // current attempt already counted / result recorded
+    bool bResult=false;
+    bool bPractice=false;           // current attempt used a practice option
+};
