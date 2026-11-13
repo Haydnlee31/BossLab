@@ -225,7 +225,12 @@ void AWardenChallenger::DressRegentWeapon()
         if(auto* C=FindObject<UStaticMeshComponent>(this,Name)) C->SetVisibility(false);
     if(FindObject<UStaticMeshComponent>(this,TEXT("RegentEstoc"))) return;
     auto* Estoc=NewObject<UStaticMeshComponent>(this,TEXT("RegentEstoc"));
-    if(auto* Mesh=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/Dungeon/Props/SM_Estoc"),nullptr,LOAD_Quiet|LOAD_NoWarn))
+    // Preferred: the generated estoc (TRELLIS.2, prep_estoc_trellis.py: pommel at origin, 149 cm,
+    // guard 28.6 cm up). Seated so its guard sits where the interim guard does (17.2 cm along
+    // SwordRoot) at the same scale, so the point keeps the same reach. Presentation only.
+    if(auto* Gen=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/Regent/Estoc/SM_RegentEstocGen"),nullptr,LOAD_Quiet|LOAD_NoWarn))
+    { Estoc->SetStaticMesh(Gen); Estoc->SetRelativeLocation(FVector(0,0,17.2f-28.6f*1.12f)); Estoc->SetRelativeScale3D(FVector(1.12f)); }
+    else if(auto* Mesh=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/Dungeon/Props/SM_Estoc"),nullptr,LOAD_Quiet|LOAD_NoWarn))
     { Estoc->SetStaticMesh(Mesh); Estoc->SetRelativeLocation(FVector(0,0,-22)); Estoc->SetRelativeScale3D(FVector(1.12f)); }
     else
     {

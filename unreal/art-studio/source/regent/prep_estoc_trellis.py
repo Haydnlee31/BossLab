@@ -2,7 +2,7 @@
 
 Run: unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender -b --python \
      unreal/art-studio/source/regent/prep_estoc_trellis.py -- <model.glb> <out_dir> [length_m] [guard_axis]
-Joins the generated parts, decimates to ~9k triangles, finds the blade's long axis and
+Joins the generated parts, decimates to ~16k triangles (smooth shaded), finds the blade's long axis and
 stands it on +Z with the pommel at the origin (the same convention as the interim CC0
 SM_Estoc: pommel at origin, point up), scales the overall length to length_m (default
 1.49 m, the interim estoc's length), turns the crossguard onto guard_axis (X or Y, default
@@ -17,7 +17,7 @@ args = sys.argv[sys.argv.index('--') + 1:]
 GLB, OUT = os.path.abspath(args[0]), os.path.abspath(args[1])
 LENGTH = float(args[2]) if len(args) > 2 else 1.49
 GUARD_AXIS = (args[3] if len(args) > 3 else 'X').upper()
-TARGET = 9000
+TARGET = 16000
 os.makedirs(OUT, exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=GLB)
@@ -34,6 +34,7 @@ bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 before = sum(len(p.vertices) - 2 for p in sword.data.polygons)
 m = sword.modifiers.new('decimate', 'DECIMATE'); m.ratio = min(1.0, TARGET / max(1, before))
 bpy.ops.object.modifier_apply(modifier=m.name)
+for p in sword.data.polygons: p.use_smooth = True
 
 # Principal axes: the long axis is the blade; of the two others, the wider spread is the guard.
 vs = [v.co.copy() for v in sword.data.vertices]
@@ -84,7 +85,7 @@ for slot in sword.data.materials:
                 textures.append({'material': slot.name, 'node': n.label or n.name, 'path': path})
 bpy.ops.object.select_all(action='DESELECT'); sword.select_set(True)
 bpy.ops.export_scene.fbx(filepath=os.path.join(OUT, 'SM_RegentEstocGen.fbx'), use_selection=True, apply_unit_scale=True,
-                         apply_scale_options='FBX_SCALE_UNITS', mesh_smooth_type='FACE', add_leaf_bones=False, path_mode='STRIP')
+                         apply_scale_options='FBX_SCALE_UNITS', mesh_smooth_type='OFF', add_leaf_bones=False, path_mode='STRIP')
 after = sum(len(p.vertices) - 2 for p in sword.data.polygons)
 vs = [v.co for v in sword.data.vertices]
 size = [round(max(v[i] for v in vs) - min(v[i] for v in vs), 4) for i in range(3)]

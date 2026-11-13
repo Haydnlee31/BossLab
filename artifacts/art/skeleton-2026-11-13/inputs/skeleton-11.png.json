@@ -1,0 +1,11 @@
+{
+ "space": "black-forest-labs/FLUX.1-schnell",
+ "prompt": "A single standing human skeleton, complete full body from skull to feet, front view, symmetrical A-pose with both arms held clearly away from the ribcage and legs slightly apart, dark aged brown bone with cracks and soot, whole ribcage, pelvis and spine visible, isolated on a plain flat light grey background, centered, entire body in frame, studio product photograph, soft even diffuse lighting, no shadows, sharp detail, no clothing, no weapon, no text",
+ "seed": 11,
+ "steps": 4,
+ "size": [
+  1024,
+  1024
+ ],
+ "seconds": 8
+}
