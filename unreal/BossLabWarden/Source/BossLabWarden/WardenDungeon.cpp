@@ -3,6 +3,7 @@
 // transforms and collision and only change material; everything added here is
 // NoCollision scenery outside the wall line or overhead. See docs/ARENA_DUNGEON.md.
 #include "WardenPrototype.h"
+#include "WardenGraphics.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/SpotLightComponent.h"
@@ -291,6 +292,22 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
     Post->Settings.bOverride_ColorContrast=true; Post->Settings.ColorContrast=FVector4(1.12,1.12,1.12,1);
     Post->Settings.bOverride_ColorGainShadows=true; Post->Settings.ColorGainShadows=FVector4(.92,.97,1.08,1);
     Post->Settings.bOverride_FilmGrainIntensity=true; Post->Settings.FilmGrainIntensity=.18f;
+
+    // Overnight 2026-11-14 (BOSSLAB_GRAPHICS, see WardenGraphics.h).
+    if(WardenGraphics::Enabled(TEXT("volumetric")))
+    {
+        // Volumetric fog: the oculus moonlight becomes a real light shaft through the haze
+        // and the braziers glow in the air. Only the key light scatters strongly; the
+        // shadowless fire lights add a faint warm bloom in the fog.
+        auto* FogC=Fog->GetComponent();
+        FogC->SetVolumetricFog(true);
+        FogC->SetVolumetricFogScatteringDistribution(.55f);
+        FogC->SetVolumetricFogAlbedo(FColor(200,205,215));
+        FogC->SetVolumetricFogExtinctionScale(2.2f);
+        FogC->SetVolumetricFogDistance(4200);
+        KeyC->SetVolumetricScatteringIntensity(4.f);
+        for(auto& L:Out.Lights) if(L.IsValid() && L.Get()!=KeyC) L->SetVolumetricScatteringIntensity(.35f);
+    }
 }
 
 // Presentation-time flicker and embers; the fixed combat step never reads these.
