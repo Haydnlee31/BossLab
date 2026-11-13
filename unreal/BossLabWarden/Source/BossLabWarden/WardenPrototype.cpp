@@ -433,6 +433,7 @@ void AWardenPrototypeHUD::DrawHUD()
         const int32 Secs=Mode->CombatTick/60;
         DrawText(FString::Printf(TEXT("TIME %d:%02d   |   ATTEMPT %d"),Secs/60,Secs%60,Mode->Run.Attempts),FColor(180,195,200),W-285,48);
     }
+    if(!Mode->bTitle && Mode->bPracticeInfiniteHealth) DrawText(TEXT("PRACTICE / INFINITE HEALTH"),FColor(255,140,110),W-285,68);
     if (Mode->bTitle)
     {
         DrawRect(FLinearColor(.01,.015,.02,.93),W*.18f,H*.2f,W*.64f,H*.55f);

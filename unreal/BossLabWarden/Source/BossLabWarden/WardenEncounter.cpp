@@ -475,6 +475,8 @@ void AWardenArenaMode::FixedStep()
         const FVector P=Player->GetActorLocation();
         MotionStudyTrace+=FString::Printf(TEXT("%d,%d,%d,%.3f,%.4f,%.3f,%.3f,%.3f,%d\n"),CombatTick,int32(Player->Fight.Action),Player->Fight.Age,Player->Fight.Stamina,Player->GripError,P.X,P.Y,P.Z,int32(Player->Fight.Invulnerable()));
     }
+    // Practice (opt-in, labelled): the player is refilled before each step resolves.
+    if(bPracticeInfiniteHealth) { Player->Fight.Health=Player->Fight.MaxHealth; Run.bPractice=true; }
     const float PriorPlayerHealth=Player->Fight.Health, PriorBossHealth=Warden->Fight.Health;
     // Explicit boss-first ordering; lethal damage prevents retaliation and healing.
     if (Warden->ResolveStrike(Player,bDebugGeometry)) { BossDamage+=PriorPlayerHealth-Player->Fight.Health; LastEvent = TEXT("You were hit. Recover before committing again."); }

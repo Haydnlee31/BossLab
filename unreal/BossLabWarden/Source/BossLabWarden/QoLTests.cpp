@@ -111,4 +111,26 @@ bool FWardenRecentreTest::RunTest(const FString&)
     QoLClose(W);
     return true;
 }
+QOL_TEST(FWardenPracticeTest,"BossLab.QoL.PracticeOptionsOptInAndUnrecorded");
+bool FWardenPracticeTest::RunTest(const FString&)
+{
+    auto* W=QoLWorld(); auto* M=QoLArena(W,true);
+    TestFalse(TEXT("Infinite health defaults off"),M->bPracticeInfiniteHealth);
+    TestFalse(TEXT("Phase-two start defaults off"),M->bRegentPhaseTwoStart);
+    M->Player->Fight.Health=10; M->FixedStep();
+    TestEqual(TEXT("Default game does not refill health"),M->Player->Fight.Health,10.f);
+    TestFalse(TEXT("Default attempt is not practice"),M->Run.bPractice);
+    M->bPracticeInfiniteHealth=true; M->FixedStep();
+    TestEqual(TEXT("Practice refills health"),M->Player->Fight.Health,M->Player->Fight.MaxHealth);
+    TestTrue(TEXT("Attempt marked practice"),M->Run.bPractice);
+    M->Warden->Fight.Health=1; M->Player->Fight.Health=0; M->bPracticeInfiniteHealth=false; M->FixedStep();
+    TestEqual(TEXT("Practice attempt sets no record"),M->Run.BestBossFraction,1.f);
+    TestEqual(TEXT("Practice death not counted"),M->Run.Deaths,0);
+    M->bRegentPhaseTwoStart=true; M->ResetEncounter();
+    TestEqual(TEXT("Phase-two practice opens at the threshold"),M->Warden->Fight.Health,WardenRegent::PhaseTwoHealth);
+    M->FixedStep();
+    TestTrue(TEXT("Phase-two start is practice"),M->Run.bPractice);
+    QoLClose(W);
+    return true;
+}
 #endif

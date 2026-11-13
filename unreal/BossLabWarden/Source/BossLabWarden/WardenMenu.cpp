@@ -47,7 +47,7 @@ void AWardenArenaMode::SetMenuOpen(bool Open)
                 .BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush"))
                 .BorderBackgroundColor(FLinearColor(0,0,0,.7f))
                 .HAlign(HAlign_Center).VAlign(VAlign_Center)
-                [ SNew(SBox).WidthOverride(460)
+                [ SNew(SBox).WidthOverride(860)
                     [ SNew(SBorder).Padding(28)
                         .BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush"))
                         .BorderBackgroundColor(FLinearColor(.025,.035,.045,1))
@@ -66,8 +66,11 @@ void AWardenArenaMode::SetMenuOpen(bool Open)
                             [ SNew(SButton).ContentPadding(FMargin(18,14)).IsFocusable(false)
                                 .OnClicked_Lambda([WeakThis]() { if(WeakThis.IsValid()) WeakThis->QuitFromMenu(); return FReply::Handled(); })
                                 [ SNew(STextBlock).Text(FText::FromString("Quit game   [Q]")).Font(Font) ] ]
+                            // Options (left) beside practice (right) so the menu fits at 720p.
                             +SVerticalBox::Slot().AutoHeight().Padding(0,0,0,18)
-                            [ BuildOptionsPanel() ]
+                            [ SNew(SHorizontalBox)
+                                +SHorizontalBox::Slot().FillWidth(1.15f).Padding(0,0,24,0) [ BuildOptionsPanel() ]
+                                +SHorizontalBox::Slot().FillWidth(1) [ BuildPracticePanel() ] ]
                             +SVerticalBox::Slot().AutoHeight()
                             [ SNew(STextBlock).Text(FText::FromString("R restart | M mute | H hints")).Font(FCoreStyle::GetDefaultFontStyle("Regular",12)) ]
                         ]

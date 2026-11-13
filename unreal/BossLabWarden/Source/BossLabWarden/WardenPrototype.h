@@ -339,6 +339,10 @@ public:
     void RunStarted();
     void RunKilled();
     void RunEnded();
+    // Practice options (pause menu, session only, default off, never saved). Practice
+    // attempts are labelled on the HUD and never set records.
+    bool bPracticeInfiniteHealth=false;
+    TSharedRef<class SWidget> BuildPracticePanel();
     void StopAudioRecording();
     // Hit-stop ticks left and camera shake strength (presentation) after a landed blow.
     int32 HitStop=0;

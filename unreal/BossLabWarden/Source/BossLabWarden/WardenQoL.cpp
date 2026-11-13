@@ -145,6 +145,7 @@ void AWardenArenaMode::RunStarted()
 {
     Run.bResult=false; Run.KilledBy.Reset(); Run.bPractice=false;
     Run.bCounted=CountsRun();
+    Run.bPractice=bPracticeInfiniteHealth || bRegentPhaseTwoStart;
     if(Run.bCounted) ++Run.Attempts;
 }
 void AWardenArenaMode::RunKilled()
@@ -171,4 +172,31 @@ void AWardenArenaMode::RunEnded()
         const float Seconds=CombatTick/60.f;
         Run.BestVictorySeconds=Run.BestVictorySeconds>0?FMath::Min(Run.BestVictorySeconds,Seconds):Seconds;
     }
+}
+
+// ---- Practice options (session only, default off) ----
+TSharedRef<SWidget> AWardenArenaMode::BuildPracticePanel()
+{
+    const TWeakObjectPtr<AWardenArenaMode> WeakThis(this);
+    const auto Font=FCoreStyle::GetDefaultFontStyle("Regular",13);
+    auto Box=SNew(SVerticalBox);
+    Box->AddSlot().AutoHeight().Padding(0,0,0,8)
+    [ SNew(STextBlock).Text(FText::FromString("PRACTICE  (this session only, not recorded)")).Font(FCoreStyle::GetDefaultFontStyle("Bold",14)).ColorAndOpacity(FLinearColor(1,.55,.43)) ];
+    auto Toggle=[&](TFunction<FString(const AWardenArenaMode&)> Label,TFunction<void(AWardenArenaMode&)> Press)
+    {
+        Box->AddSlot().AutoHeight().Padding(0,2)
+        [ SNew(SButton).IsFocusable(false).ContentPadding(FMargin(10,4))
+            .OnClicked_Lambda([WeakThis,Press]() { if(WeakThis.IsValid()) Press(*WeakThis); return FReply::Handled(); })
+            [ SNew(STextBlock).Font(Font).Text_Lambda([WeakThis,Label]() { return FText::FromString(WeakThis.IsValid()?Label(*WeakThis):FString()); }) ] ];
+    };
+    Toggle([](const AWardenArenaMode& M) { return FString::Printf(TEXT("Infinite health   %s"),M.bPracticeInfiniteHealth?TEXT("ON"):TEXT("Off")); },
+        [](AWardenArenaMode& M) { M.bPracticeInfiniteHealth=!M.bPracticeInfiniteHealth; });
+    if(bRegent)
+    {
+        Toggle([](const AWardenArenaMode& M) { return FString::Printf(TEXT("Start at second phase   %s"),M.bRegentPhaseTwoStart?TEXT("ON"):TEXT("Off")); },
+            [](AWardenArenaMode& M) { M.bRegentPhaseTwoStart=!M.bRegentPhaseTwoStart; });
+    }
+    Toggle([](const AWardenArenaMode&) { return FString(TEXT("Restart fight now")); },
+        [](AWardenArenaMode& M) { M.bDemo=false; M.ResetEncounter(); M.bTitle=false; });
+    return Box;
 }
