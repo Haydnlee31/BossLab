@@ -349,8 +349,19 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     {
         const float Dt=WardenRules::Step;
         const FVector Vel=Travel/Dt;
+        const FVector PrevVel=FeelPrevVel;
         FVector Acc=(Vel-FeelPrevVel)/Dt; FeelPrevVel=Vel;
         if(Acc.Size2D()>20000 || !FeelMoving) Acc=FVector::ZeroVector;   // teleports, resets, actions
+        // Pivot on a hard turn under drive (reversals start from near zero speed here, since
+        // the run brakes in a straight line): turning at the 540 deg/s cap for 6 ticks means a
+        // turn of over ~90 deg. A ~0.2 s plant drops the hips and leans against the facing the
+        // turn started from, then the acceleration lean pushes off into the new direction.
+        if(FeelTurnHold==0) FeelPivotStart=GetActorForwardVector();
+        FeelTurnHold=FeelMoving && FMath::Abs(TurnRate)>=520 ? FeelTurnHold+1 : 0;
+        if(FeelPivot<=0 && FeelTurnHold==6 && Acc.Size2D()>1000)
+        { FeelPivot=1; FeelPivotDir=FeelPivotStart.GetSafeNormal2D(); }
+        else if(FeelPivot>0) FeelPivot=FeelMoving ? FMath::Max(0.f,FeelPivot-Dt/.22f) : 0.f;
+        const float Pivot=FeelPivot>0 ? FMath::Sin(PI*FMath::Pow(1-FeelPivot,.7f)) : 0.f;
         FeelAccel=FMath::Lerp(FeelAccel,Acc,.2f);
         const float FwdAcc=FVector::DotProduct(FeelAccel,GetActorForwardVector()), SideAcc=FVector::DotProduct(FeelAccel,GetActorRightVector());
         const float Ground=Vel.Size2D();
@@ -362,8 +373,9 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         // Rolls and jumps keep the carry, so rolling out of a run flows straight back into it.
         const bool CarryKept=Fight.Action==EWardenAction::Dodge || Fight.Action==EWardenAction::Jump;
         if(!CarryKept && (CarryWant>=FeelCarry || FeelHold>18 || !FeelMoving)) FeelCarry+=FMath::Clamp(CarryWant-FeelCarry,-Dt*2.f,Dt*2.2f);
-        const float LeanWant=FeelMoving ? FMath::Clamp(FwdAcc/2400*6,-6.f,5.f)+1.5f*Smooth(Ground/420)+3*FeelCarry : 0;
-        const float BankWant=FeelMoving ? FMath::Clamp(SideAcc/980*16,-11.f,11.f) : 0;
+        const float PivotFwd=FVector::DotProduct(FeelPivotDir,GetActorForwardVector()), PivotSide=FVector::DotProduct(FeelPivotDir,GetActorRightVector());
+        const float LeanWant=FeelMoving ? FMath::Clamp(FwdAcc/2400*6,-6.f,5.f)+1.5f*Smooth(Ground/420)+3*FeelCarry-9*Pivot*PivotFwd : 0;
+        const float BankWant=FeelMoving ? FMath::Clamp(SideAcc/980*16-12*Pivot*PivotSide,-14.f,14.f) : 0;
         FeelLean=FMath::Lerp(FeelLean,LeanWant,.14f); FeelBank=FMath::Lerp(FeelBank,BankWant,.12f);
         // The head leads a turn (looks where the body is about to go).
         FeelLook=FMath::Lerp(FeelLook,FeelMoving ? FMath::Clamp(TurnRate*.05f,-22.f,22.f) : 0.f,.15f);
@@ -375,6 +387,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         if(FeelLand>0) FeelLand=FMath::Max(0.f,FeelLand-Dt/.4f);
         const float Absorb=FeelLand>0 ? FMath::Sin(PI*FMath::Pow(1-FeelLand,.6f)) : 0.f;
         FeelAbsorb=Absorb;
+        FeelPivotDrop=Pivot;
         FeelIdle+=FMath::Clamp((!bBoss && Fight.Alive() && Fight.Action==EWardenAction::Ready ? 1-Smooth(Ground/120) : 0.f)-FeelIdle,-Dt*5.f,Dt*2.5f);
         if(!bBoss && Fight.Action==EWardenAction::Ready)
         {
@@ -434,7 +447,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const FVector Shift=Fight.Action==EWardenAction::Strike
             ? FVector(FMath::Lerp(-7.f,9.f,Drive)*Load*Weight,FMath::Lerp(4.f,-3.f,Drive)*Load*Weight,-9*Load*Weight)
             : FVector(6*HitFront*Recoil,6*HitSide*Recoil,-32*Tuck-6*Landing-4*Recoil-20*Stagger);
-        Local[Pelvis].AddToTranslation(MeshPoint(Shift+FVector(0,FeelBank*.55f,-1.5f*FMath::Abs(FeelBank)/11-3*FeelCarry-11*FeelAbsorb-3*FeelIdle))); Rebuild(Pelvis);
+        Local[Pelvis].AddToTranslation(MeshPoint(Shift+FVector(0,FeelBank*.55f,-1.5f*FMath::Abs(FeelBank)/11-3*FeelCarry-11*FeelAbsorb-3*FeelIdle-5*FeelPivotDrop))); Rebuild(Pelvis);
         if(FMath::Abs(FeelBank)>.01f) SetRotation(Pelvis,FQuat(MeshPoint(FVector::ForwardVector),FMath::DegreesToRadians(-FeelBank*.45f))*CS[Pelvis].GetRotation());
         const float HipTurn=Fight.Action==EWardenAction::Strike ? FMath::Lerp(-22.f,26.f,Drive)*Load*Weight : Key.Twist*.2f;
         SetRotation(Pelvis,FQuat(FVector::UpVector,FMath::DegreesToRadians(-HipTurn))*CS[Pelvis].GetRotation());
@@ -595,7 +608,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
                 FootRelease[Side]=FMath::Min(1.f,FootRelease[Side]+1/6.f);
                 Pin=FMath::Lerp(FVector(FootReleaseFrom[Side].X,FootReleaseFrom[Side].Y,AnimWorld.Z),AnimWorld,Smooth(FootRelease[Side]));
             }
-            if(Pin.Equals(AnimWorld,.01) && FMath::Abs(FeelBank)<.01f && FeelCarry<.001f && FeelAbsorb<.001f && FeelIdle<.001f) continue;
+            if(Pin.Equals(AnimWorld,.01) && FMath::Abs(FeelBank)<.01f && FeelCarry<.001f && FeelAbsorb<.001f && FeelIdle<.001f && FeelPivotDrop<.001f) continue;
             IK(Side?TEXT("thigh_r"):TEXT("thigh_l"),Side?TEXT("calf_r"):TEXT("calf_l"),Side?TEXT("foot_r"):TEXT("foot_l"),MeshWorld.InverseTransformPosition(Pin),MeshPoint(FVector(65,Side?20.f:-20.f,55)));
             SetRotation(Side?FootRI:FootLI,Anim.GetRotation());
         }
