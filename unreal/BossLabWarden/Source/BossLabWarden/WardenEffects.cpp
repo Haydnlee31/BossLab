@@ -21,6 +21,7 @@
 namespace
 {
 float Hash(int32 I) { return FMath::Frac(FMath::Sin(I*12.9898f)*43758.5453f); }
+constexpr int32 SparksPerBurst=16;
 UMaterialInterface* Effect(const TCHAR* Name,const TCHAR* Fallback)
 {
     if(auto* M=LoadObject<UMaterialInterface>(nullptr,*(FString(TEXT("/Game/BossLab/Effects/"))+Name),nullptr,LOAD_Quiet|LOAD_NoWarn)) return M;
@@ -67,6 +68,14 @@ void AWardenArenaMode::BuildEffects()
     Blade->SetIntensity(0); Blade->SetAttenuationRadius(260); Blade->SetLightColor(FLinearColor(1,.5,.15));
     Blade->SetCastShadows(false); Blade->RegisterComponent(); Owner->AddInstanceComponent(Blade);
     V.SwordLight=Blade;
+    // Hit sparks (BOSSLAB_GRAPHICS sparks): hot streaks thrown off steel at each landed
+    // blow, driven from the same burst ring as the blood (no extra state).
+    if(WardenGraphics::Enabled(TEXT("sparks")))
+    {
+        auto* SparkMat=LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/BossLab/Regent/M_RegentSpark"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+        auto* Sparks=Set(TEXT("/Engine/BasicShapes/Plane"),SparkMat ? SparkMat : Effect(TEXT("M_HealMote"),TEXT("Amber")),FWardenEffects::Bursts*SparksPerBurst);
+        Sparks->ComponentTags.Add(TEXT("HitSparks"));
+    }
     // Rim lights (BOSSLAB_GRAPHICS rim): one cool spot behind each fighter, opposite the
     // camera, on lighting channel 1 only, which only the fighters' meshes receive, so the
     // silhouettes separate from the dark hall without lighting the floor or walls.
@@ -308,6 +317,38 @@ void AWardenArenaMode::AnimateEffects(float Seconds)
     if(Warden) Trail(V.BossTrail,V.BossShown,V.LastBossHit,Warden->Fight.Health,true);
     Trail(V.PlayerTrail,V.PlayerShown,V.LastPlayerHit,Player->Fight.Health,false);
     for(auto* C:{V.Flask.Get(),V.FlaskNeck.Get()}) C->MarkRenderStateDirty();
+
+    // Hit sparks: fast, short-lived streaks stretched along their velocity, falling under
+    // gravity, a few bouncing off the floor; a bright cluster flashes at the contact point.
+    if(AActor* O=V.Owner.Get())
+    {
+        TInlineComponentArray<UInstancedStaticMeshComponent*> Sets(O);
+        for(auto* Sparks:Sets)
+        {
+            if(!Sparks->ComponentHasTag(TEXT("HitSparks"))) continue;
+            TArray<FTransform> Streaks; Streaks.Reserve(FWardenEffects::Bursts*SparksPerBurst);
+            for(const auto& B:V.Burst)
+                for(int32 I=0;I<SparksPerBurst;++I)
+                {
+                    const int32 Seed=B.Seed*7+I*13+900;
+                    const float T=Seconds-B.Start, Life=.18f+.3f*Hash(Seed);
+                    if(T<0 || T>Life) { Streaks.Add(Hidden); continue; }
+                    const FVector Random=FVector(Hash(Seed+1)-.5f,Hash(Seed+2)-.5f,Hash(Seed+3)-.2f).GetSafeNormal();
+                    // Thrown back along the blow and out sideways, faster than blood.
+                    const FVector V0=((Random-B.Dir*.35f).GetSafeNormal()*(520+680*Hash(Seed+4))+FVector(0,0,160))*B.Scale;
+                    FVector Vel=V0+FVector(0,0,-980*T), At=B.At+V0*T+FVector(0,0,-490*T*T);
+                    if(At.Z<1) { At.Z=1+(1-At.Z)*.25f; Vel.Z=-Vel.Z*.3f; }
+                    const float Fade=1-T/Life, Len=FMath::Clamp(Vel.Size()*.035f,6.f,34.f)*Fade*B.Scale;
+                    const FVector X=Vel.GetSafeNormal(), Toward=(Eye-At).GetSafeNormal();
+                    FVector Y=FVector::CrossProduct(Toward,X).GetSafeNormal();
+                    if(Y.IsNearlyZero()) { Streaks.Add(Hidden); continue; }
+                    const FVector Z=FVector::CrossProduct(X,Y);
+                    const float Width=(I<3 ? 5.f : 1.6f)*B.Scale*(.4f+.6f*Fade);
+                    Streaks.Add(FTransform(FMatrix(X,Y,Z,FVector::ZeroVector).ToQuat(),At,FVector((I<3 ? 5.f : Len)/100,Width/100,1)));
+                }
+            Sparks->BatchUpdateInstancesTransforms(0,Streaks,true,true);
+        }
+    }
 
     // Rim lights: behind each fighter as seen from the camera, raised, aimed at the chest.
     if(AActor* O=V.Owner.Get())
