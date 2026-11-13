@@ -3,6 +3,8 @@
 // flash when the heal lands (Elden Ring's flask feel), and dust with a camera kick when
 // a jump or jump attack lands. Materials: ue_import_effects.py (/Game/BossLab/Effects).
 #include "WardenPrototype.h"
+#include "WardenGraphics.h"
+#include "Components/SpotLightComponent.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/PoseableMeshComponent.h"
@@ -65,6 +67,22 @@ void AWardenArenaMode::BuildEffects()
     Blade->SetIntensity(0); Blade->SetAttenuationRadius(260); Blade->SetLightColor(FLinearColor(1,.5,.15));
     Blade->SetCastShadows(false); Blade->RegisterComponent(); Owner->AddInstanceComponent(Blade);
     V.SwordLight=Blade;
+    // Rim lights (BOSSLAB_GRAPHICS rim): one cool spot behind each fighter, opposite the
+    // camera, on lighting channel 1 only, which only the fighters' meshes receive, so the
+    // silhouettes separate from the dark hall without lighting the floor or walls.
+    if(WardenGraphics::Enabled(TEXT("rim")))
+        for(int32 K=0;K<2;++K)
+        {
+            auto* Rim=NewObject<USpotLightComponent>(Owner);
+            Rim->SetupAttachment(Root); Rim->SetMobility(EComponentMobility::Movable);
+            Rim->SetIntensity(K==0 ? 110000 : 150000); Rim->SetAttenuationRadius(900);
+            Rim->SetOuterConeAngle(34); Rim->SetInnerConeAngle(14);
+            Rim->SetLightColor(K==0 ? FLinearColor(.62,.75,1) : FLinearColor(.75,.8,1));
+            Rim->SetCastShadows(false); Rim->SetLightingChannels(false,true,false);
+            Rim->SetVolumetricScatteringIntensity(0); Rim->SetSpecularScale(1.6f);
+            Rim->ComponentTags.Add(K==0 ? TEXT("RimPlayer") : TEXT("RimBoss"));
+            Rim->RegisterComponent(); Owner->AddInstanceComponent(Rim);
+        }
 }
 
 void AWardenArenaMode::EffectSound(const TCHAR* Name,const FVector& At,float Volume)
@@ -290,4 +308,27 @@ void AWardenArenaMode::AnimateEffects(float Seconds)
     if(Warden) Trail(V.BossTrail,V.BossShown,V.LastBossHit,Warden->Fight.Health,true);
     Trail(V.PlayerTrail,V.PlayerShown,V.LastPlayerHit,Player->Fight.Health,false);
     for(auto* C:{V.Flask.Get(),V.FlaskNeck.Get()}) C->MarkRenderStateDirty();
+
+    // Rim lights: behind each fighter as seen from the camera, raised, aimed at the chest.
+    if(AActor* O=V.Owner.Get())
+    {
+        TInlineComponentArray<USpotLightComponent*> Rims(O);
+        for(auto* Rim:Rims)
+        {
+            const bool Boss=Rim->ComponentHasTag(TEXT("RimBoss"));
+            if(!Boss && !Rim->ComponentHasTag(TEXT("RimPlayer"))) continue;
+            AWardenChallenger* Who=Boss ? Warden.Get() : Player.Get();
+            if(!Who) { Rim->SetVisibility(false); continue; }
+            TInlineComponentArray<UPrimitiveComponent*> Parts(Who);
+            for(auto* C:Parts) if(!C->LightingChannels.bChannel1) C->SetLightingChannels(true,true,false);
+            const float Scale=Who->GetActorScale3D().X;
+            const FVector Chest=Who->GetActorLocation()+FVector(0,0,(Boss ? 40 : 30)*Scale);
+            FVector Away=Chest-Eye; Away.Z=0; Away=Away.GetSafeNormal();
+            if(Away.IsNearlyZero()) Away=Who->GetActorForwardVector();
+            const FVector Side=FVector::CrossProduct(FVector::UpVector,Away);
+            const FVector At=Chest+(Away*260+Side*90+FVector(0,0,170))*Scale;
+            Rim->SetWorldLocationAndRotation(At,(Chest-At).Rotation());
+            Rim->SetVisibility(true);
+        }
+    }
 }
