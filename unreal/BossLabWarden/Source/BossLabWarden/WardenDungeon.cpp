@@ -308,6 +308,25 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
         KeyC->SetVolumetricScatteringIntensity(4.f);
         for(auto& L:Out.Lights) if(L.IsValid() && L.Get()!=KeyC) L->SetVolumetricScatteringIntensity(.35f);
     }
+    if(WardenGraphics::Enabled(TEXT("grade")))
+    {
+        // Filmic grade tuned for soul fire: a firmer toe for deep blacks, a softer shoulder
+        // so HDR flame keeps colour, bloom that favours bright fire over lit stone, a fixed
+        // exposure (eye adaptation stays off project-wide), warm highlights over the
+        // existing cool shadows, a slightly stronger vignette and screen-space contact
+        // shadows on the key light so feet and blades sit on the floor.
+        auto& S=Post->Settings;
+        S.bOverride_FilmToe=true; S.FilmToe=.57f;
+        S.bOverride_FilmShoulder=true; S.FilmShoulder=.24f;
+        S.bOverride_FilmSlope=true; S.FilmSlope=.9f;
+        S.bOverride_BloomIntensity=true; S.BloomIntensity=.95f;
+        S.bOverride_BloomThreshold=true; S.BloomThreshold=1.2f;
+        S.bOverride_BloomSizeScale=true; S.BloomSizeScale=3.2f;
+        S.bOverride_ColorGainHighlights=true; S.ColorGainHighlights=FVector4(1.05,1.0,.94,1);
+        S.bOverride_VignetteIntensity=true; S.VignetteIntensity=.68f;
+        S.bOverride_SceneFringeIntensity=true; S.SceneFringeIntensity=.35f;
+        KeyC->ContactShadowLength=.035f; KeyC->MarkRenderStateDirty();
+    }
 }
 
 // Presentation-time flicker and embers; the fixed combat step never reads these.
