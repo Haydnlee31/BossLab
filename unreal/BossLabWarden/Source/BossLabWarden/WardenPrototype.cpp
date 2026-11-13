@@ -110,6 +110,7 @@ void AWardenChallenger::SetupPlayerInputComponent(UInputComponent* Input)
     Input->BindAction(TEXT("Heal"),IE_Pressed,this,&AWardenChallenger::Heal);
     Input->BindAction(TEXT("Restart"),IE_Pressed,this,&AWardenChallenger::Restart);
     Input->BindAction(TEXT("Pause"),IE_Pressed,this,&AWardenChallenger::PauseGame);
+    Input->BindAction(TEXT("Hints"),IE_Pressed,this,&AWardenChallenger::ToggleHints);
     Input->BindAction(TEXT("Debug"),IE_Pressed,this,&AWardenChallenger::DebugGeometry);
     Input->BindAction(TEXT("Capture"),IE_Pressed,this,&AWardenChallenger::CaptureEvidence);
     Input->BindAction(TEXT("Start"),IE_Pressed,this,&AWardenChallenger::StartFight);
@@ -125,7 +126,7 @@ void AWardenChallenger::SetupPlayerInputComponent(UInputComponent* Input)
     Input->BindAction(TEXT("Export"),IE_Pressed,this,&AWardenChallenger::ExportReport);
 }
 void AWardenChallenger::Turn(float Value) { if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerYawInput(Value*Sensitivity); else LockYawOffset=FMath::Clamp(LockYawOffset+Value*Sensitivity,-25.f,25.f); }
-void AWardenChallenger::Look(float Value) { if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerPitchInput(-Value*Sensitivity); else LockPitchOffset=FMath::Clamp(LockPitchOffset-Value*Sensitivity,-12.f,12.f); }
+void AWardenChallenger::Look(float Value) { if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerPitchInput(-Value*Sensitivity*(bInvertLook?-1.f:1.f)); else LockPitchOffset=FMath::Clamp(LockPitchOffset-Value*Sensitivity*(bInvertLook?-1.f:1.f),-12.f,12.f); }
 void AWardenChallenger::ToggleLock() { if(!AllowsGameplayInput()) return; bLocked = !bLocked && Target.IsValid(); LockYawOffset=LockPitchOffset=0; }
 FVector AWardenChallenger::GetTargetPosition() const { return Target.IsValid() ? Target->GetActorLocation()+FVector(0,0,45) : FVector::ZeroVector; }
 
@@ -169,7 +170,7 @@ void AWardenChallenger::Tick(float DeltaSeconds)
     if(IsLocked()) { PairOffset=(Target->GetActorLocation()-GetActorLocation())*.5f; PairOffset.Z=30; }
     Arm->TargetOffset=FMath::VInterpTo(Arm->TargetOffset,PairOffset*Separation,DeltaSeconds,5.f);
     Arm->SocketOffset=FMath::VInterpTo(Arm->SocketOffset,FVector(0,45,100)*(1-Separation),DeltaSeconds,5.f);
-    Arm->TargetArmLength=FMath::FInterpTo(Arm->TargetArmLength,500+120*Separation,DeltaSeconds,5.f);
+    Arm->TargetArmLength=FMath::FInterpTo(Arm->TargetArmLength,(500+120*Separation)*CameraDistanceScale,DeltaSeconds,5.f);
     if (IsLocked())
     {
         FVector Aim = GetTargetPosition() - (GetActorLocation()+FVector(0,0,80));
@@ -265,6 +266,7 @@ void AWardenArenaMode::BeginPlay()
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabRegent"))) EnableRegent();
     bRegentPhaseTwoStart=bRegent && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegentPhaseTwo"));
     SetupAudio();
+    LoadSettings();
     ResetEncounter();
     bTitle=true;
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabCapture")))
@@ -341,8 +343,8 @@ void AWardenPrototypeHUD::DrawHUD()
     Bar(32,78,260,P.Stamina/100,FLinearColor(.3,.6,.45));
     if(Mode->Player->RejectFlash>0) DrawRect(FLinearColor(1,.3,.12,Mode->Player->RejectFlash),30,76,264,15);
     DrawText(FString::Printf(TEXT("HP %.0f   STAMINA %.0f   HEALS %d"),P.Health,P.Stamina,P.Heals),FColor::White,32,100);
-    if(!Mode->bRecording) DrawText(TEXT("WASD move | Shift sprint | Tab target | LMB cut (chain x3) | Space roll | F jump | E heal | Esc menu"),FColor(200,205,210),32,H-62);
-    if(!Mode->bRecording) DrawText(TEXT("I controls | F5 boss rehearsal | F6 test pilot | F9 export | F1 clean"),FColor(170,180,190),32,H-42);
+    if(!Mode->bRecording && Mode->Settings.bControlHints) DrawText(TEXT("WASD move | Shift sprint | Tab target | LMB cut (chain x3) | Space roll | F jump | E heal | Esc menu"),FColor(200,205,210),32,H-62);
+    if(!Mode->bRecording && Mode->Settings.bControlHints) DrawText(TEXT("I controls | F5 boss rehearsal | F6 test pilot | F9 export | F1 clean | H hide hints"),FColor(170,180,190),32,H-42);
     if(!Mode->bRecording && (Mode->Player->RejectFlash>0 || (!Mode->LastEvent.StartsWith(TEXT("Not enough stamina")) && !Mode->LastEvent.StartsWith(TEXT("Heal unavailable"))))) DrawText(Mode->LastEvent,FColor(230,192,125),32,132);
     if(!Mode->bRecording)
     {
@@ -357,7 +359,7 @@ void AWardenPrototypeHUD::DrawHUD()
         Bar(W*.25f,H-110,W*.5f,(Fx.BossTrail>=0?Fx.BossTrail:B.Health)/B.MaxHealth,FLinearColor(.85,.72,.42));
         DrawRect(FLinearColor(.62,.1,.07),W*.25f,H-110,W*.5f*FMath::Clamp(B.Health/B.MaxHealth,0.f,1.f),11);
         // Damage dealt by the latest flurry, beside the bar.
-        if(GetWorld()->GetTimeSeconds()-Fx.LastBossHit<2.5f && Fx.RecentDamage>0)
+        if(Mode->Settings.bDamageNumbers && GetWorld()->GetTimeSeconds()-Fx.LastBossHit<2.5f && Fx.RecentDamage>0)
             DrawText(FString::Printf(TEXT("%.0f"),Fx.RecentDamage),FColor(240,225,200),W*.75f+12,H-114,nullptr,1.15f);
         DrawText(Mode->bRegent?TEXT("THE FUNERAL REGENT"):TEXT("THE WARDEN"),FColor(230,192,125),W*.25f,H-137,nullptr,1.2f);
         DrawText(FString::Printf(TEXT("STANCE %d / %d%s"),B.Poise,B.MaxPoise,B.Action==EWardenAction::Hurt?TEXT(" / BROKEN"):TEXT("")),FColor(190,205,210),W*.65f,H-137);

@@ -8,6 +8,7 @@
 #include "WardenScript.h"
 #include "WardenStatistics.h"
 #include "WardenRegent.h"
+#include "WardenQoL.h"
 #include "WardenPrototype.generated.h"
 
 class UCapsuleComponent;
@@ -169,6 +170,12 @@ public:
     // Last landed blow (presentation): recoil direction and the blood burst it spawns.
     FVector ImpactDir=FVector::ZeroVector, BleedAt=FVector::ZeroVector, BleedDir=FVector::ForwardVector;
     int32 BleedCount=0;
+    // Options (WardenQoL.cpp): look inversion, camera distance multiplier, sensitivity access.
+    bool bInvertLook=false;
+    float CameraDistanceScale=1.f;
+    void SetSensitivity(float S) { Sensitivity=S; }
+    float GetSensitivity() const { return Sensitivity; }
+    void ToggleHints();
 private:
     void Heal() { QueueAction(EWardenAction::Heal); }
     void Restart();
@@ -316,6 +323,13 @@ public:
     float MusicLevel() const;
     bool bRecordingAudio=false;
     float SfxMaster=2.5f;   // effects master gain (+8 dB), see WardenAudio.cpp
+    // Quality-of-life options (WardenQoL.cpp), persisted under Saved/Config/BossLabSettings.ini.
+    FWardenSettings Settings;
+    float MusicVolumeScale=1.f;
+    void LoadSettings();
+    void SaveSettings();
+    void ApplySettings();
+    TSharedRef<class SWidget> BuildOptionsPanel();
     void StopAudioRecording();
     // Hit-stop ticks left and camera shake strength (presentation) after a landed blow.
     int32 HitStop=0;

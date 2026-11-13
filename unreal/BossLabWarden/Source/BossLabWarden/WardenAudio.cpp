@@ -151,7 +151,7 @@ float AWardenArenaMode::MusicLevel() const
 {
     const bool Living=Warden && Warden->Fight.Alive();
     if(bMuted || !Living) return 0;
-    return bRegent ? (Regent.PhaseTwo ? 1.f : .8f) : .6f;
+    return (bRegent ? (Regent.PhaseTwo ? 1.f : .8f) : .6f)*MusicVolumeScale;
 }
 
 void AWardenArenaMode::UpdateAudio()

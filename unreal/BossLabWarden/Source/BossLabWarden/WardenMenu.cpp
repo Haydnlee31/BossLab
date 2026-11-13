@@ -47,7 +47,7 @@ void AWardenArenaMode::SetMenuOpen(bool Open)
                 .BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush"))
                 .BorderBackgroundColor(FLinearColor(0,0,0,.7f))
                 .HAlign(HAlign_Center).VAlign(VAlign_Center)
-                [ SNew(SBox).WidthOverride(400)
+                [ SNew(SBox).WidthOverride(460)
                     [ SNew(SBorder).Padding(28)
                         .BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush"))
                         .BorderBackgroundColor(FLinearColor(.025,.035,.045,1))
@@ -66,8 +66,10 @@ void AWardenArenaMode::SetMenuOpen(bool Open)
                             [ SNew(SButton).ContentPadding(FMargin(18,14)).IsFocusable(false)
                                 .OnClicked_Lambda([WeakThis]() { if(WeakThis.IsValid()) WeakThis->QuitFromMenu(); return FReply::Handled(); })
                                 [ SNew(STextBlock).Text(FText::FromString("Quit game   [Q]")).Font(Font) ] ]
+                            +SVerticalBox::Slot().AutoHeight().Padding(0,0,0,18)
+                            [ BuildOptionsPanel() ]
                             +SVerticalBox::Slot().AutoHeight()
-                            [ SNew(STextBlock).Text(FText::FromString("R restart | M mute | F4 sensitivity")).Font(FCoreStyle::GetDefaultFontStyle("Regular",12)) ]
+                            [ SNew(STextBlock).Text(FText::FromString("R restart | M mute | H hints")).Font(FCoreStyle::GetDefaultFontStyle("Regular",12)) ]
                         ]
                     ]
                 ];
