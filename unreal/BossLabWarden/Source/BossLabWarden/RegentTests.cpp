@@ -25,7 +25,7 @@ float Duel(int32 Move,float Distance,int32 RollAt,FVector RollDirection)
 {
     auto* W=NewWorld(); auto* M=RegentArena(W);
     M->bScriptedPlayer=false; M->Regent.Waiting=1000000;
-    M->Warden->SetActorLocation(FVector(0,0,128)); M->Warden->SetActorRotation(FRotator::ZeroRotator);
+    M->Warden->SetActorLocation(FVector(0,0,WardenRegent::StandZ)); M->Warden->SetActorRotation(FRotator::ZeroRotator);
     M->Player->SetActorLocation(FVector(Distance,0,95));
     M->Warden->BeginAction(EWardenAction::Strike,Move,FVector::ForwardVector);
     const int32 Ticks=M->Warden->Fight.Definition().Total()+120;
@@ -81,7 +81,7 @@ bool FRegentRollTest::RunTest(const FString&)
     const FVector Side=FVector::RightVector, Back=FVector::ForwardVector;  // player stands on +X
     const FCase Cases[]={
         {Thrust,250,32,Side},{Rite,230,26,Side},{Arc,300,52,Back},{Bell,300,62,Side},{Volley,600,SkullRoll,Side},
-        {Dash,700,40,Side},{Furrow,500,60,Side},{AshStep,300,64,Side},{Pyre,300,68,Back},{HeldThrust,250,54,Side},{Circle,300,SkullRoll,Side}};
+        {Dash,700,40,Side},{Furrow,500,60,Side},{AshStep,300,64,Side},{Pyre,300,68,Back},{HeldThrust,250,54,Side},{Circle,300,SkullRoll,Side},{Sentence,300,106,Side}};
     for(const auto& C:Cases)
     {
         const TCHAR* Name=WardenRules::Strike(C.Move).Name;

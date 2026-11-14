@@ -169,13 +169,16 @@ void AWardenChallenger::Tick(float DeltaSeconds)
     FVector PairOffset=FVector::ZeroVector;
     if(IsLocked()) { PairOffset=(Target->GetActorLocation()-GetActorLocation())*.5f; PairOffset.Z=30; }
     Arm->TargetOffset=FMath::VInterpTo(Arm->TargetOffset,PairOffset*Separation,DeltaSeconds,5.f);
-    Arm->SocketOffset=FMath::VInterpTo(Arm->SocketOffset,FVector(0,45,100)*(1-Separation),DeltaSeconds,5.f);
+    const float SocketZ=IsLocked() && CameraMode && CameraMode->bRegent ? 78.f : 100.f;   // lower when facing the Regent
+    Arm->SocketOffset=FMath::VInterpTo(Arm->SocketOffset,FVector(0,45,SocketZ)*(1-Separation),DeltaSeconds,5.f);
     Arm->TargetArmLength=FMath::FInterpTo(Arm->TargetArmLength,(500+120*Separation)*CameraDistanceScale,DeltaSeconds,5.f);
     if (IsLocked())
     {
         FVector Aim = GetTargetPosition() - (GetActorLocation()+FVector(0,0,80));
         FRotator Desired = Aim.Rotation();
-        Desired.Pitch = FMath::Clamp(FMath::Lerp(Desired.Pitch-10.f,-16.f,Separation)+LockPitchOffset,-35.f,15.f);
+        // Against the towering Regent the view sits lower and more level, looking up at it.
+        const bool Towering=CameraMode && CameraMode->bRegent;
+        Desired.Pitch = FMath::Clamp(FMath::Lerp(Desired.Pitch-(Towering ? 4.f : 10.f),Towering ? -11.f : -16.f,Separation)+LockPitchOffset,-35.f,15.f);
         Desired.Yaw+=35*Separation+LockYawOffset;
         View = FMath::RInterpTo(View,Desired,DeltaSeconds,8.f);
     }
@@ -272,6 +275,7 @@ void AWardenArenaMode::BeginPlay()
     }
     DressArena();
     BuildEffects();
+    BuildSpectacle();
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabRegent"))) EnableRegent();
     bRegentPhaseTwoStart=bRegent && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegentPhaseTwo"));
     SetupAudio();
@@ -303,7 +307,7 @@ void AWardenArenaMode::BeginPlay()
     if(bCaptureFrames && FParse::Param(FCommandLine::Get(),TEXT("BossLabGaitStudy")))
     {
         bGaitStudy=true; bScriptedPlayer=false; bRehearsal=false; Player->SetLocked(false);
-        Player->SetActorLocation(FVector(-350,0,95)); Warden->SetActorLocation(FVector(350,0,128));
+        Player->SetActorLocation(FVector(-350,0,95)); Warden->SetActorLocation(FVector(350,0,95*Warden->GetActorScale3D().Z));
         auto* Camera=World->SpawnActor<ACameraActor>(FVector(0,-1050,260),(FVector(0,0,110)-FVector(0,-1050,260)).Rotation());
         RegentStudyCamera=Camera;
         if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
@@ -311,7 +315,7 @@ void AWardenArenaMode::BeginPlay()
     if(bCaptureFrames && FParse::Param(FCommandLine::Get(),TEXT("BossLabFeelStudy")))
     {
         bFeelStudy=true; bScriptedPlayer=false; bRehearsal=false; Player->SetLocked(false);
-        Player->SetActorLocation(FVector(-350,0,95)); Warden->SetActorLocation(FVector(0,900,128));
+        Player->SetActorLocation(FVector(-350,0,95)); Warden->SetActorLocation(FVector(0,900,95*Warden->GetActorScale3D().Z));
         auto* Camera=World->SpawnActor<ACameraActor>(FVector(-350,-700,230),FRotator(-10,90,0));
         RegentStudyCamera=Camera;
         if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
@@ -380,7 +384,10 @@ void AWardenPrototypeHUD::DrawHUD()
         const TCHAR* Phase = B.Age < Def.Windup ? TEXT("ANTICIPATION") : B.Active() ? TEXT("CONTACT") : TEXT("RECOVERY");
         DrawText(FString::Printf(TEXT("%s / %s"),Def.Name,Phase),FColor(240,190,110),W*.25f,H-88);
     }
-    if ((!P.Alive() || !B.Alive()) && !Mode->bPaused)
+    // A felled boss gets its moment (slow motion, the soul streaming away, the golden banner)
+    // before the results panel opens over it (WardenSpectacle.cpp).
+    const bool Moment=!B.Alive() && P.Alive() && Mode->Spectacle.FelledAt>0 && GetWorld()->GetTimeSeconds()-Mode->Spectacle.FelledAt<3.4f;
+    if ((!P.Alive() || !B.Alive()) && !Mode->bPaused && !Moment)
     {
         DrawRect(FLinearColor(.015,.02,.025,.85),W*.25f,H*.35f,W*.5f,FMath::Max(190.f,H*.12f+150));
         DrawText(!P.Alive() ? TEXT("YOU FELL") : !B.Alive() ? (Mode->bRegent?TEXT("REGENT FALLEN"):TEXT("WARDEN FALLEN")) : TEXT("PAUSED"),FColor(230,192,125),W*.3f,H*.4f,nullptr,2.f);

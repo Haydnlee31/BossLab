@@ -54,6 +54,9 @@ const FWardenStrike& WardenRegent::Strike(int32 Index)
         {TEXT("WITNESS CIRCLE"),TEXT("RegentCast"),TEXT("hand_l"),36,20,50,0,0,1,18,0,0},
         // A whispered chant raises two skeletons from rune circles (no direct damage).
         {TEXT("RAISE THE DEAD"),TEXT("RegentCast"),TEXT("hand_l"),70,10,56,0,0,1,0,0,0},
+        // The estoc raised high and held for almost two seconds while soul fire gathers on it
+        // and the Regent stalks in; then a 4 m lunge in a blink and a long, punishable recovery.
+        {TEXT("THE SENTENCE"),TEXT("RegentBlade"),TEXT("hand_r"),110,10,60,0,0,1,30,8,420},
     };
     check(IsRegent(Index));
     return Moves[Index-First];
@@ -62,7 +65,7 @@ WardenRegent::EKind WardenRegent::Kind(int32 Move)
 {
     switch(Move)
     {
-        case Thrust: case Rite: case Dash: case HeldThrust: return EKind::Blade;
+        case Thrust: case Rite: case Dash: case HeldThrust: case Sentence: return EKind::Blade;
         case Arc: case Bell: return EKind::Censer;
         case Volley: case Furrow: case Circle: case Raise: return EKind::Cast;
         case Drift: return EKind::Move;
@@ -165,6 +168,7 @@ FVector2D WardenRegent::Band(int32 Move)
     {
         case Thrust: case HeldThrust: return {0,330};
         case Rite: return {0,300};
+        case Sentence: return {0,460};
         case Arc: return {0,440};
         case Bell: return {160,430};
         case Volley: return {250,5000};
@@ -186,6 +190,7 @@ int32 WardenRegent::Pause(int32 Move)
         case Thrust: case HeldThrust: return 18;
         case Arc: case Furrow: case Wakes: return 24;
         case Bell: case Dash: return 32;
+        case Sentence: return 36;
         default: return 40;   // Rite, Pyre: the long recoveries are the main punish windows
     }
 }
@@ -248,6 +253,8 @@ void AWardenArenaMode::EnableRegent()
     bRegent=true;
     if(!Warden) return;
     Warden->bRegent=true;
+    Warden->SetActorScale3D(FVector(WardenRegent::Scale));
+    Warden->SetActorLocation(FVector(Warden->GetActorLocation().X,Warden->GetActorLocation().Y,WardenRegent::StandZ));
     Warden->DressRegentWeapon();
     BuildRegentView();
     Regent=FWardenRegentState();
@@ -299,6 +306,9 @@ void AWardenArenaMode::RegentDecide(FVector& BossDirection)
             if(F.Age>AshAppear && F.Age<D.Windup-Lock) Warden->CommittedDirection=ToPlayer.GetSafeNormal2D();
         }
         else if(F.Age<D.Windup-Lock) Warden->CommittedDirection=ToPlayer.GetSafeNormal2D();
+        // The Sentence: stalks in at a slow walk through the hold, so backing away is not enough.
+        if(F.Move==Sentence && F.Age>=24 && F.Age<D.Windup-16 && Distance>200)
+            Warden->MoveSwept(ToPlayer.GetSafeNormal2D()*SentenceStalk*WardenRules::Step);
         return;
     }
     if(!F.Ready()) return;
@@ -317,8 +327,8 @@ void AWardenArenaMode::RegentDecide(FVector& BossDirection)
     if(!R.PhaseTwo && F.Health<=PhaseTwoHealth) { Commit(Wakes); return; }
     // Fixed rehearsal sequence, labelled as such: no learning, no input reading. Each
     // step walks into its distance band, commits, or is skipped after four seconds.
-    static const int32 One[]={Thrust,Arc,Volley,Rite,Raise,HeldThrust,Drift,Dash,Bell,Furrow};
-    static const int32 Two[]={AshStep,Rite,Pyre,HeldThrust,Volley,Raise,Dash,Arc,Circle,Furrow,Bell,Thrust,Drift};
+    static const int32 One[]={Thrust,Arc,Volley,Rite,Raise,HeldThrust,Drift,Dash,Bell,Sentence,Furrow};
+    static const int32 Two[]={AshStep,Rite,Pyre,HeldThrust,Volley,Raise,Dash,Arc,Sentence,Circle,Furrow,Bell,Thrust,Drift};
     const int32 Next=R.PhaseTwo ? Two[R.Step%UE_ARRAY_COUNT(Two)] : One[R.Step%UE_ARRAY_COUNT(One)];
     if((Next==Volley || Next==Circle) && R.ReadySkulls()==0) { ++R.Step; R.Seeking=0; return; }
     if(Next==Raise && R.StandingSkeletons()>0) { ++R.Step; R.Seeking=0; return; }
@@ -380,6 +390,8 @@ void AWardenArenaMode::RegentResolve()
         // Procession Dash: a charge that swells through the wind-up, then a heavy launch.
         if(F.Move==Dash && A==1) RegentSound(TEXT("RegentDashCharge"),BossAt,.8f);
         if(F.Move==Dash && Since==0) { RegentSound(TEXT("RegentDash"),BossAt,1.f); Impact(0,.25f); }
+        if(F.Move==Sentence && A==24) RegentSound(TEXT("RegentDashCharge"),BossAt,.9f);
+        if(F.Move==Sentence && Since==0) { RegentSound(TEXT("RegentDash"),BossAt,1.f); Impact(0,.35f); }
         if(F.Move==Arc && (A==12 || Since==-4)) RegentSound(TEXT("RegentWhoosh"),Head,A==12 ? .35f : .7f);
         if(F.Move==Bell && A==20) RegentSound(TEXT("RegentWhoosh"),Head,.4f);
         if(F.Move==Drift && A==2) RegentSound(TEXT("RegentWhoosh"),BossAt,.3f);
@@ -645,7 +657,7 @@ void AWardenArenaMode::RegentStudyStep()
     if(--RegentStudyWait>0 || RegentStudyMove>=End) return;
     if(!F.Alive() || F.Action!=EWardenAction::Ready) { RegentStudyWait=1; return; }
     const FVector At=WardenRegentStudyDistance(RegentStudyMove);
-    Warden->SetActorLocation(FVector(0,0,128)); Warden->SetActorRotation(FRotator::ZeroRotator);
+    Warden->SetActorLocation(FVector(0,0,StandZ)); Warden->SetActorRotation(FRotator::ZeroRotator);
     Player->SetActorLocation(At); Player->SetActorRotation(FRotator(0,180,0));
     Player->Fight=FWardenFighterState(); Player->Fight.Health=Player->Fight.MaxHealth=100000;
     F.Stamina=100; F.Gap=0; for(int32& C:F.Cooldowns) C=0;

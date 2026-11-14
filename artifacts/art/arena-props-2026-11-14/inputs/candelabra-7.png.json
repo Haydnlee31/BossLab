@@ -1,0 +1,11 @@
+{
+ "space": "black-forest-labs/FLUX.1-schnell",
+ "prompt": "A single tall wrought iron floor candelabrum with many melted white candles and dripping wax, gothic design, black iron, three-quarter view, isolated on a plain flat light grey background, centered, whole object in frame, studio product photograph, soft even diffuse lighting, no shadows, sharp detail, no text, no people",
+ "seed": 7,
+ "steps": 4,
+ "size": [
+  1024,
+  1024
+ ],
+ "seconds": 8
+}

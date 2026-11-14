@@ -1,0 +1,11 @@
+{
+ "space": "black-forest-labs/FLUX.1-schnell",
+ "prompt": "A single ancient gothic stone funeral throne, tall pointed back carved with skulls and tracery, worn dark grey stone, cracked, three-quarter front view, isolated on a plain flat light grey background, centered, whole object in frame, studio product photograph, soft even diffuse lighting, no shadows, sharp detail, no text, no people",
+ "seed": 3,
+ "steps": 4,
+ "size": [
+  1024,
+  1024
+ ],
+ "seconds": 9
+}

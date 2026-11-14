@@ -47,7 +47,7 @@ namespace WardenRules
     inline constexpr float StrikeCost = 22, DodgeCost = 14, HealCost = 0;
     inline constexpr float StaminaRegen = 45, BossStaminaRegen = 26;
     // Rehearsal moves 0-2 plus the opt-in Funeral Regent moves 3-16 (WardenRegent.h).
-    inline constexpr int32 BossMoveCount = 17;
+    inline constexpr int32 BossMoveCount = 18;
     enum EPlayerMove : int32 { CutOne, CutTwo, CutThree, JumpAttack, RollAttack, RunAttack, PlayerMoveCount };
     inline constexpr float WalkSpeed=420, SprintSpeed=630, SprintCostPerSecond=12, SprintStartStamina=10;
     const FWardenStrike& Strike(int32 Index, bool Boss = true);

@@ -248,6 +248,31 @@ struct FWardenEffects
     bool bAirborne=false;
 };
 
+// Spectacle pass (WardenSpectacle.cpp, presentation only): boss weapon trails, the
+// Sentence's gathering soul fire, the phase-two eruption, the felled moment, floor debris and
+// the critical-hit punch-in. Reads fight state every rendered frame; never feeds back into it,
+// except the slow-motion scale on how fast real time feeds the fixed step (off in tests).
+struct FWardenSpectacle
+{
+    static constexpr int32 TrailSamples=24, Embers=200, Grit=120, Puffs=28;
+    TWeakObjectPtr<AActor> Owner;
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> BladeTrail, CenserTrail, Ember, Grit_, Puff;
+    TWeakObjectPtr<class UPointLightComponent> Charge, Flash;
+    FVector BladeBase[TrailSamples], BladeTip[TrailSamples], CenserA[TrailSamples], CenserB[TrailSamples];
+    float BladeTime[TrailSamples]={}, CenserTime[TrailSamples]={};
+    int32 BladeNext=0, CenserNext=0;
+    struct FMote { FVector At=FVector::ZeroVector, Vel=FVector::ZeroVector; float Start=-100, Life=1, Size=1, Drag=0, Gravity=0; };
+    FMote EmberMote[Embers], GritMote[Grit], PuffMote[Puffs];
+    int32 NextEmber=0, NextGrit=0, NextPuff=0;
+    float LastSeconds=-1, EmberCarry=0;
+    float SlowUntil=-100, SlowScale=1, PunchAt=-100, PunchDepth=0, FlashAt=-100, FlashPeak=0;
+    float PhaseAt=-100, FelledAt=-100;
+    bool bWasPhaseTwo=false, bBossWasAlive=true;
+    int32 SeenCritical=0, SeenDodge=-1, SeenRelease=-1, LastPlayerAction=0;
+    bool bStudy=false;   // capture-only: -BossLabSpectacleStudy drives phase two, a critical and the fall
+    float TimeScale(float Seconds) const { return Seconds<SlowUntil ? SlowScale : 1.f; }
+};
+
 // Greybox visuals for the Regent's censer, chain, skulls and floor fire. Read-only view
 // of FWardenRegentState; rebuilt from it every rendered frame.
 struct FWardenRegentView
@@ -302,6 +327,10 @@ public:
     FVector RegentAshTarget() const;
     void RegentSound(const TCHAR* Name,const FVector& At,float Volume);
     FWardenEffects Effects;
+    FWardenSpectacle Spectacle;
+    int32 CriticalCount=0;   // presentation counter: stance-break critical blows landed
+    void BuildSpectacle();
+    void AnimateSpectacle(float Seconds);
     void BuildEffects();
     void AnimateEffects(float Seconds);
     void RecentDamageAdd(float Amount,float Seconds);

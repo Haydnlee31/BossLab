@@ -206,7 +206,7 @@ bool AWardenChallenger::ResolveStrike(AWardenChallenger* Other, bool Debug)
                 const bool Critical=!bBoss && Other->bBoss && Other->Fight.Action==EWardenAction::Hurt;
                 Fight.HitConsumed=true; Dealt=Other->Fight.Damage(Def.Damage*(Critical ? WardenRules::StaggerCritical : 1.f),true,Def.Stance);
                 if(Dealt && Critical)
-                    if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>()) { Mode->Impact(9,.8f); Mode->LastEvent=TEXT("CRITICAL BLOW | The staggered boss takes heavy damage."); }
+                    if(auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>()) { Mode->Impact(9,.8f); ++Mode->CriticalCount; Mode->LastEvent=TEXT("CRITICAL BLOW | The staggered boss takes heavy damage."); }
                 if(Dealt)
                 {
                     Other->HitFlash=.18f; Other->PlayCue(1);
@@ -275,7 +275,7 @@ void AWardenArenaMode::ResetEncounter(bool RetainEvidence)
 {
     if (!Player || !Warden) return;
     Player->SetActorLocation(FVector(-450,0,95)); Player->SetActorRotation(FRotator::ZeroRotator);
-    Warden->SetActorLocation(FVector(300,0,128)); Warden->SetActorRotation(FRotator(0,180,0));
+    Warden->SetActorLocation(FVector(300,0,95*Warden->GetActorScale3D().Z)); Warden->SetActorRotation(FRotator(0,180,0));
     Player->SetTarget(Warden); Warden->SetTarget(Player);
     Player->ResetFighter(false); Warden->ResetFighter(true);
     CombatTick = 0; CombatAccumulator = 0; VisibleHistory.Reset(); SetMenuOpen(false);
@@ -305,7 +305,7 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
     if(bDungeon) AnimateDungeon(Dungeon,GetWorld()->GetTimeSeconds());
     UpdateAudio();
     // Regent visuals follow the fixed-step state below; updated after the steps run.
-    ON_SCOPE_EXIT { if(bRegent) AnimateRegentView(GetWorld()->GetTimeSeconds()); AnimateEffects(GetWorld()->GetTimeSeconds()); };
+    ON_SCOPE_EXIT { if(bRegent) AnimateRegentView(GetWorld()->GetTimeSeconds()); AnimateEffects(GetWorld()->GetTimeSeconds()); AnimateSpectacle(GetWorld()->GetTimeSeconds()); };
     const double Now=FPlatformTime::Seconds();
     if(LastFrameTime>0 && !bPaused && !bTitle && Player && Warden && Player->Fight.Alive() && Warden->Fight.Alive())
     {
@@ -335,7 +335,10 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
             GetWorld()->GetFirstPlayerController()->ConsoleCommand(TEXT("quit"));
         }
     }
-    CombatAccumulator += DeltaSeconds;
+    // Slow motion for the big moments (phase change, felled boss, critical blow): real time feeds
+    // the fixed step more slowly; the step itself is unchanged. Off in automation and with
+    // reduced motion, so tests and determinism checks never see it.
+    CombatAccumulator += DeltaSeconds*(GIsAutomationTesting || bReducedMotion ? 1.f : Spectacle.TimeScale(GetWorld()->GetTimeSeconds()));
     while (CombatAccumulator >= WardenRules::Step)
     {
         CombatAccumulator -= WardenRules::Step;

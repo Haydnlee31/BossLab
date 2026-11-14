@@ -27,6 +27,7 @@ FSwordKey RegentKey(const FWardenFighterState& F)
     const FSwordKey Guard=RegentGuard();
     const FSwordKey Wind{FVector(2,26,130),FVector(.97f,-.05f,.2f).GetSafeNormal(),-28,-6};
     const FSwordKey Lunge{FVector(60,8,124),FVector(1,-.05f,.02f).GetSafeNormal(),18,14};
+    const FSwordKey Condemn{FVector(-6,24,168),FVector(-.3f,.15f,.94f).GetSafeNormal(),-20,-10};   // the Sentence's hold
     const FSwordKey Low{FVector(16,30,92),FVector(.45f,.2f,-.87f).GetSafeNormal(),0,0};
     const auto& D=F.Definition();
     const int32 A=F.Age, R=A-D.Windup;
@@ -49,6 +50,15 @@ FSwordKey RegentKey(const FWardenFighterState& F)
             const int32 Wound=F.Move==HeldThrust ? 30 : D.Windup-6;
             FSwordKey K=Blend(Guard,Wind,float(A-From)/FMath::Max(1,Wound-From));
             if(F.Move==Dash) K.Lean+=18*In;   // crouched before the procession dash
+            if(F.Move==Sentence)
+            {
+                // Raised high over the right shoulder, point up and back, trembling as it charges.
+                const float Charge=Smooth((A-24)/float(D.Windup-24));
+                FSwordKey H=Blend(Guard,Condemn,Smooth(A/22.f));
+                H.Grip+=FVector(-4,0,6)*Charge+FVector(FMath::Sin(A*1.9f),FMath::Sin(A*2.3f+1),FMath::Sin(A*1.7f+2))*.9f*Charge;
+                H.Lean-=6*Charge; H.Twist-=12*Charge;
+                return H;
+            }
             if(F.Move==HeldThrust && A>30)
             {
                 const float Coil=Smooth((A-30)/16.f);
@@ -63,6 +73,7 @@ FSwordKey RegentKey(const FWardenFighterState& F)
             for(const int32 S:{0,20,56}) E=FMath::Max(E,Smooth(float(R-S+4)/4)*(1-Smooth(float(R-S-(S==56?10:8))/8)));
             return Blend(Wind,Lunge,E);
         }
+        if(F.Move==Sentence && R<D.Active) { FSwordKey K=Blend(Condemn,Lunge,float(R+1)/3); K.Lean+=14; return K; }
         if(R<D.Active) { FSwordKey K=Blend(Wind,Lunge,float(R+3)/4); if(F.Move==Dash) K.Lean+=20; return K; }
         const float U=float(R-D.Active)/D.Recovery;
         return U<.25f ? Lunge : Blend(Lunge,Guard,(U-.25f)/.75f);

@@ -92,6 +92,19 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
         if(!C) C=Set(*(FString(TEXT("/Game/BossLab/Dungeon/Props/"))+Name),nullptr);
         C->AddInstance(FTransform(Rotation,Base,Scale),true);
     };
+    // Generated props (TRELLIS.2, prep_arena_gen.py / ue_import_arena_gen.py, 2026-11-14),
+    // same convention; skipped when the local assets are absent.
+    auto Gen=[&](const TCHAR* Name,FVector Base,FRotator Rotation,FVector Scale)
+    {
+        const FString Path=FString(TEXT("/Game/BossLab/Dungeon/Gen/SM_"))+Name+TEXT("Gen");
+        UInstancedStaticMeshComponent*& C=Props.FindOrAdd(Path);
+        if(!C)
+        {
+            if(!LoadObject<UStaticMesh>(nullptr,*Path,nullptr,LOAD_Quiet|LOAD_NoWarn)) return;
+            C=Set(*Path,nullptr);
+        }
+        C->AddInstance(FTransform(Rotation,Base,Scale),true);
+    };
     auto* Banner=Set(TEXT("/Engine/BasicShapes/Plane"),TEXT("M_DungeonBanner"));
     auto* FogGate=Set(TEXT("/Engine/BasicShapes/Plane"),TEXT("M_DungeonFogGate"));
     // Crossed vertical cards, base at Base; yaw jitter keeps neighbours from lining up.
@@ -108,7 +121,11 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
         C->SetLightColor(Color); C->SetCastShadows(Shadows); C->SetSourceRadius(Shadows?25:10);
         Out.Lights.Add(C); Out.Base.Add(Intensity);
     };
-    const FLinearColor FireColor(1,.42,.13);
+    // Warm fire against the cool moonlight and soul fire (BOSSLAB_GRAPHICS warmth): amber,
+    // and a little brighter, so blue magic pops off a warm hall as in the reference clip.
+    const bool Warm=WardenGraphics::Enabled(TEXT("warmth"));
+    const FLinearColor FireColor=Warm ? FLinearColor(1,.5,.17) : FLinearColor(1,.42,.13);
+    const float FireBoost=Warm ? 1.35f : 1.f;
 
     // Fight floor ritual rings (flush inlays, as in the default arena) and the sunken
     // trench floor between the parapet and the outer wall.
@@ -165,6 +182,13 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
             for(float Side:{-1.f,1.f}) Box(Pier,Centre+Tangent*Side*235+FVector(0,0,290+Raise)-Radial(Mid,30,0),FVector(90,70,660),FRotator(0,MidYaw,0));
             Box(Pier,Centre+FVector(0,0,650+Raise)-Radial(Mid,30,0),FVector(90,560,80),FRotator(0,MidYaw,0));
             Prop(TEXT("SM_CastleDoor"),Centre-Radial(Mid,15,0)+FVector(0,0,-40+Raise),FRotator(0,Face,0),FVector(2.05f,2,2.05f));
+            if(I==0)
+            {
+                // The Regent's funeral throne on the dais before the sealed door, flanked by
+                // tall candelabra: the court he holds.
+                Gen(TEXT("Throne"),Centre-Radial(Mid,105,0)+FVector(0,0,Raise-20),FRotator(0,Face,0),FVector(1));
+                for(float Side:{-1.f,1.f}) Gen(TEXT("Candelabrum"),Centre-Radial(Mid,100,0)+Tangent*Side*190+FVector(0,0,Raise-20),FRotator(0,Face+Side*20,0),FVector(.8f));
+            }
             if(I==8) Box(FogGate,Centre-Radial(Mid,75,0)+FVector(0,0,-40+320),FVector(450,640,100),FRotator(0,Face,90));
         }
         else if(I%2==0 && (I==4 || I==12))
@@ -207,6 +231,16 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
                 Box(Pier,Radial(Mid,1470,745)+Tangent*K*Chord*.33f,FVector(70,36,90),FRotator(-25,MidYaw,0));
             }
         }
+        // Generated mourners and the dead on the gallery, looking down on the fight: angels in
+        // even bays, sarcophagi, biers and bone heaps in odd bays.
+        if(!Door)
+        {
+            const FVector Walk=Radial(Mid,1462,822);
+            if(I%2==0) Gen(TEXT("Angel"),Walk,FRotator(0,Face,0),FVector(.92f));
+            else if(I%4==1) Gen(TEXT("Sarcophagus"),Walk,FRotator(0,Face,0),FVector(.9f));
+            else if(I==3 || I==11) Gen(TEXT("Bier"),Walk,FRotator(0,Face+Hash(I)*30-15,0),FVector(.85f));
+            else Gen(TEXT("Ossuary"),Walk,FRotator(0,Hash(I)*360,0),FVector(.5f));
+        }
         // Tattered banner on an iron rod in every bay.
         Box(Banner,Radial(Mid,OuterWall-12,790),FVector(170,440,100),FRotator(0,Face,90));
         Box(IronRound,Radial(Mid,OuterWall-14,1015),FVector(5,5,210),FRotator(90,Face,0));
@@ -215,7 +249,7 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
         Box(IronRound,Torch,FVector(22,22,18),FRotator::ZeroRotator);
         Flame(Torch+FVector(0,0,6),48,95,2,I*7+3);
         // Deferred light cost scales with covered pixels: alternate torches lit, short reach.
-        if(I%2) Light(Torch+FVector(0,0,70)-Radial(A,60,0),8000,520,FireColor,false);
+        if(I%2) Light(Torch+FVector(0,0,70)-Radial(A,60,0),8000*FireBoost,520,FireColor,false);
     }
     Box(Wall,FVector(0,0,Height+300),FVector(2*OuterWall+200,2*OuterWall+200,40),FRotator::ZeroRotator);
     Box(IronRound,FVector(0,0,Height+230),FVector(520,520,60),FRotator::ZeroRotator);
@@ -242,7 +276,7 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
         Flame(Top+FVector(0,0,52),150,250,3,I*13+1);
         // Shadowless: eight cube-shadowed point lights cost 48 shadow views per frame;
         // the overhead key light carries the fighters' shadows instead.
-        Light(Top+FVector(0,0,190),60000,2000,FireColor,false);
+        Light(Top+FVector(0,0,190),60000*FireBoost,2000,FireColor,false);
         Out.EmberSources.Add(Top+FVector(0,0,90));
     }
 
@@ -326,6 +360,14 @@ void AWardenArenaMode::BuildDungeon(UWorld* World,FWardenDungeon& Out)
         S.bOverride_VignetteIntensity=true; S.VignetteIntensity=.68f;
         S.bOverride_SceneFringeIntensity=true; S.SceneFringeIntensity=.35f;
         KeyC->ContactShadowLength=.035f; KeyC->MarkRenderStateDirty();
+    }
+    if(Warm)
+    {
+        // Warm midtones and highlights over the existing cool shadows, a touch more saturation.
+        auto& S=Post->Settings;
+        S.bOverride_ColorSaturation=true; S.ColorSaturation=FVector4(.98,.96,.92,1);
+        S.bOverride_ColorGainMidtones=true; S.ColorGainMidtones=FVector4(1.06,1.0,.9,1);
+        S.bOverride_ColorGainHighlights=true; S.ColorGainHighlights=FVector4(1.1,1.0,.86,1);
     }
 }
 

@@ -7,7 +7,7 @@
 // encounter, policies and tests never select them.
 namespace WardenRegent
 {
-    enum EMove : int32 { Thrust=3, Rite, Arc, Bell, Volley, Drift, Dash, Furrow, AshStep, Pyre, Wakes, HeldThrust, Circle, Raise, End };
+    enum EMove : int32 { Thrust=3, Rite, Arc, Bell, Volley, Drift, Dash, Furrow, AshStep, Pyre, Wakes, HeldThrust, Circle, Raise, Sentence, End };
     enum class EKind : uint8 { Blade, Censer, Cast, Move, Vanish, Ring, Transition };
     inline constexpr int32 First=Thrust, Count=End-Thrust;
     inline constexpr int32 Skulls=3, MaxPools=4, AshVanish=20, AshAppear=44;
@@ -15,6 +15,9 @@ namespace WardenRegent
     // Regent in 26 s under the souls-style player rules; this aims at minutes, not seconds.
     inline constexpr float Health=600, PhaseTwoHealth=300, ArenaRadius=1180, FloorRadius=1400;
     inline constexpr int32 Poise=6;
+    // Presence: the Regent stands 1.5x (the Warden 1.35x); capsule half-height 95 cm scales with it.
+    inline constexpr float Scale=1.5f, StandZ=95*Scale;
+    inline constexpr float SentenceStalk=75;   // cm/s walk-in during the Sentence's held wind-up
     inline constexpr float SkullSpeed=720, SkullRadius=30, SkullDamage=16, SkullTurnDegrees=2, SkullLockDistance=350;
     inline constexpr float PoolDamage=5, BellPoolRadius=250, PyrePoolRadius=200, PyreSpread=340;
     inline constexpr int32 PoolInterval=30, PoolIgnite=18, BellPoolTicks=180, PyrePoolTicks=240;
