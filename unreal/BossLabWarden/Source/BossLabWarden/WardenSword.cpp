@@ -228,14 +228,38 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     // Authored body for the player's three cuts: the clip is time-warped so its peak hand speed
     // lands mid-contact (wind-up -> start..peak-0.12 s, contact -> +-0.12 s, recovery -> rest).
     bClipBody=false;
-    if(!bBoss && Fight.Action==EWardenAction::Strike && Fight.Move>=WardenRules::CutOne && Fight.Move<=WardenRules::CutThree)
+    UAnimSequence* StrikeClip=nullptr; float StrikePeak=0;
+    if(!bBoss && Fight.Action==EWardenAction::Strike)
     {
-        const int32 C=Fight.Move-WardenRules::CutOne;
-        UAnimSequence* Clip=C==0 ? ClipCut0.Get() : C==1 ? ClipCut1.Get() : ClipCut2.Get();
+        if(Fight.Move>=WardenRules::CutOne && Fight.Move<=WardenRules::CutThree)
+        {
+            const int32 C=Fight.Move-WardenRules::CutOne;
+            StrikeClip=C==0 ? ClipCut0.Get() : C==1 ? ClipCut1.Get() : ClipCut2.Get(); StrikePeak=ClipCutPeak[C];
+        }
+        else if(Fight.Move==WardenRules::JumpAttack) { StrikeClip=ClipJumpAttack.Get(); StrikePeak=.5f; }
+        else if(Fight.Move==WardenRules::RunAttack) { StrikeClip=ClipRunCut.Get(); StrikePeak=.3f; }
+    }
+    // Hit reaction (player): the stagger clip's first half on the torso through the hurt ticks.
+    if(!bBoss && Fight.Action==EWardenAction::Hurt && ClipHurt)
+    {
+        const float Clock=FMath::Lerp(.03f,.6f,FMath::Clamp(float(Fight.Age)/WardenRules::HurtTicks,0.f,1.f));
+        if(Body->GetSingleNodeInstance()->GetCurrentAsset()!=ClipHurt) Body->PlayAnimation(ClipHurt,false);
+        auto* N=Body->GetSingleNodeInstance(); N->SetPlayRate(0); N->SetPosition(Clock,false);
+        Body->TickAnimation(0,false); Body->RefreshBoneTransforms();
+        const TArray<FTransform> Authored=Body->GetBoneSpaceTransforms();
+        const float W=Smooth(Fight.Age/4.f)*(1-Smooth((Fight.Age-12)/6.f));
+        for(int32 I=0;I<Authored.Num() && I<Local.Num();++I)
+        {
+            const FString Bone=Ref.GetBoneName(I).ToString();
+            if(Bone.StartsWith(TEXT("spine")) || Bone.StartsWith(TEXT("neck")) || Bone==TEXT("head")) { FTransform B; B.Blend(Local[I],Authored[I],W); Local[I]=B; }
+        }
+    }
+    {
+        UAnimSequence* Clip=StrikeClip;
         if(Clip)
         {
             const auto& D=Fight.Definition();
-            const float Len=Clip->GetPlayLength(), Peak=FMath::Clamp(ClipCutPeak[C],.15f,Len-.15f);
+            const float Len=Clip->GetPlayLength(), Peak=FMath::Clamp(StrikePeak,.15f,Len-.15f);
             const float A0=FMath::Max(0.f,Peak-.12f), A1=FMath::Min(Len*.99f,Peak+.12f);
             const float Age=float(Fight.Age);
             const float Clock=Age<D.Windup ? FMath::Lerp(0.f,A0,Age/D.Windup)
@@ -287,6 +311,52 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         Anim->SetPlayRate(Rate);
         Body->TickAnimation(WardenRules::Step,false); Body->RefreshBoneTransforms(); Local=Body->GetBoneSpaceTransforms();
     }
+    // Locomotion overlays (player, HY clips sampled on OverlayBody): a burst forward from a
+    // standstill, a planted stop from a run, a plant-and-turn on hard reversals. Upper body,
+    // clip yaw removed (the actor's facing already turns), eased in and out. Presentation only.
+    if(!bBoss && Fight.Action==EWardenAction::Ready && OverlayBody && !ClipSprinting)
+    {
+        auto Begin=[&](UAnimSequence* Clip,float From,float To,int32 Ticks,float Weight)
+        {
+            if(!Clip) return;
+            Overlay=Clip; OverlayFrom=From; OverlayTo=FMath::Min(To,Clip->GetPlayLength()*.99f); OverlayTicks=Ticks; OverlayAge=0; OverlayWeight=Weight;
+            OverlayBody->PlayAnimation(Clip,false);
+        };
+        const bool Busy=Overlay.IsValid() && OverlayAge<OverlayTicks;
+        if(bPivotQueued) { Begin(ClipPivot,.25f,.95f,26,.8f); bPivotQueued=false; }
+        else if(!Busy && OverlayPrevSpeed>380 && StepSpeed<OverlayPrevSpeed-35 && FMath::Abs(TurnRate)<200) Begin(ClipRunStop,.1f,1.f,34,.85f);
+        else if(!Busy && OverlayPrevSpeed<25 && StepSpeed>40 && !IsLocked()) Begin(ClipRunStart,0.f,.55f,22,.6f);
+        if(Overlay.IsValid() && OverlayAge<OverlayTicks)
+        {
+            auto* N=OverlayBody->GetSingleNodeInstance();
+            N->SetPlayRate(0); N->SetPosition(FMath::Lerp(OverlayFrom,OverlayTo,float(OverlayAge)/OverlayTicks),false);
+            OverlayBody->TickAnimation(0,false); OverlayBody->RefreshBoneTransforms();
+            const TArray<FTransform> Authored=OverlayBody->GetBoneSpaceTransforms();
+            const float W=OverlayWeight*Smooth(OverlayAge/4.f)*(1-Smooth((OverlayAge-(OverlayTicks-6))/6.f));
+            const int32 Hip=Ref.FindBoneIndex(TEXT("pelvis"));
+            for(int32 I=0;I<Authored.Num() && I<Local.Num();++I)
+            {
+                FTransform A=Authored[I];
+                if(I==Hip)
+                {
+                    // Keep the clip's hip tilt, not its turn: the change from the locomotion hip
+                    // (mesh space, Z up; the hip's parent is the root) minus its twist about Z.
+                    const FQuat Delta=(A.GetRotation()*Local[I].GetRotation().Inverse()).GetNormalized();
+                    FQuat Swing,Twist; Delta.ToSwingTwist(FVector::UpVector,Swing,Twist);
+                    A.SetRotation((Swing*Local[I].GetRotation()).GetNormalized());
+                    A.SetTranslation(Local[I].GetTranslation());
+                }
+                // Upper body only: legs stay on the blendspace stride (and its foot locks); the
+                // clips' legs sat the body down mid-stride.
+                const FString Bone=Ref.GetBoneName(I).ToString();
+                if(I!=Hip && !(Bone.StartsWith(TEXT("spine")) || Bone.StartsWith(TEXT("neck")) || Bone==TEXT("head") || Bone.StartsWith(TEXT("clavicle")))) continue;
+                FTransform B; B.Blend(Local[I],A,W); Local[I]=B;
+            }
+            ++OverlayAge;
+        }
+    }
+    else if(Fight.Action!=EWardenAction::Ready) { OverlayAge=OverlayTicks; bPivotQueued=false; }
+    OverlayPrevSpeed=StepSpeed;
     // Blend only the unmodified animation base: never feed procedural IK back
     // into itself. This removes the walk/stop/commit snap while keeping contact
     // poses authoritative on the fixed simulation step.
@@ -475,7 +545,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         if(FeelTurnHold==0) FeelPivotStart=GetActorForwardVector();
         FeelTurnHold=FeelMoving && FMath::Abs(TurnRate)>=520 ? FeelTurnHold+1 : 0;
         if(FeelPivot<=0 && FeelTurnHold==6 && Acc.Size2D()>1000)
-        { FeelPivot=1; FeelPivotDir=FeelPivotStart.GetSafeNormal2D(); }
+        { FeelPivot=1; FeelPivotDir=FeelPivotStart.GetSafeNormal2D(); bPivotQueued=ClipPivot!=nullptr; }
         else if(FeelPivot>0) FeelPivot=FeelMoving ? FMath::Max(0.f,FeelPivot-Dt/.22f) : 0.f;
         const float Pivot=FeelPivot>0 ? FMath::Sin(PI*FMath::Pow(1-FeelPivot,.7f)) : 0.f;
         FeelAccel=FMath::Lerp(FeelAccel,Acc,.2f);

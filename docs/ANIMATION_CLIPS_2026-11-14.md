@@ -85,3 +85,17 @@ The owner downloaded the free Standard zips to `artifacts/anim-sources/`. They a
 - **Native suite:** 39/39. Captures: `in-game-roll.png`, `in-game-cuts.png`.
 - **Not wired yet:** jump attack, run start and stop, pivot and heavy hit are imported but unused. Their entry points, such as stop and pivot detection, need care. The feel is not owner-tested.
 
+## All HY clips wired (owner: not in the EU/UK/KR, integrate for testing)
+
+- **Jump attack:** `jump_attack_s1` torso, time-warped to contact (peak 0.5 s).
+- **Running cut:** `cut_a_s1` torso (peak 0.3 s).
+- **Hit reaction:** `hit_heavy_s0`, first 0.6 s on the spine, neck and head through the 18 hurt ticks, eased in over 4 ticks and out by tick 18.
+- **Locomotion overlays (new `OverlayBody` hidden sampler, so the blendspace stride clock is untouched):**
+  - **Run start:** `run_start_s0` 0–0.55 s over 22 ticks at 60% weight, when the player bursts from a standstill while unlocked.
+  - **Run stop:** `run_stop_s0` 0.1–1.0 s over 34 ticks at 85%, when braking from above 380 cm/s without turning.
+  - **Pivot:** `pivot_s0` 0.25–0.95 s over 26 ticks at 80%, fired with the existing hard-turn pivot plant.
+- **Overlay limits:** upper body plus hip tilt only; the hip twist and translation are removed. With full-body overlays the clips' legs sat the body down mid-stride, so the legs stay on the blendspace and its foot locks.
+- **Switch:** `BOSSLAB_ANIM_OVERLAYS=off` disables the hit reaction and the overlays.
+- **Tests:** native suite 39/39; locomotion slip is unchanged (player forward 0.00 at gait 1.1).
+- **Not verified:** the jump attack and the hit reaction are not seen in the feel capture. Not owner-tested.
+

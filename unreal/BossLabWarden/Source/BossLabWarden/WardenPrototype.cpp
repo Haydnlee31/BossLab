@@ -48,6 +48,15 @@ AWardenChallenger::AWardenChallenger()
     Body->SetHiddenInGame(true);
     Body->SetCastShadow(false);
     Body->SetDisablePostProcessBlueprint(true);
+    OverlayBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("OverlaySampler"));
+    OverlayBody->SetupAttachment(Capsule);
+    OverlayBody->SetRelativeLocation(FVector(0,0,-95));
+    OverlayBody->SetRelativeRotation(FRotator(0,-90,0));
+    OverlayBody->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    if (Mesh.Succeeded()) OverlayBody->SetSkeletalMesh(Mesh.Object);
+    OverlayBody->SetHiddenInGame(true);
+    OverlayBody->SetCastShadow(false);
+    OverlayBody->SetDisablePostProcessBlueprint(true);
     VisualBody=CreateDefaultSubobject<UPoseableMeshComponent>(TEXT("SwordFighter"));
     VisualBody->SetupAttachment(Capsule);
     VisualBody->SetRelativeLocation(FVector(0,0,-95));
@@ -95,7 +104,15 @@ void AWardenChallenger::BeginPlay()
     {
         ClipCut0=Hy(TEXT("cut_a_s0")); ClipCut1=Hy(TEXT("cut_b_s1")); ClipCut2=Hy(TEXT("cut_heavy_s1"));
         ClipCutPeak[0]=.433f; ClipCutPeak[1]=.2f; ClipCutPeak[2]=.933f;   // retarget report: peak hand speed
+        ClipJumpAttack=Hy(TEXT("jump_attack_s1")); ClipRunCut=Hy(TEXT("cut_a_s1"));
     }
+    // Hit reaction and locomotion overlays (BOSSLAB_ANIM_OVERLAYS=off keeps them out).
+    if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_OVERLAYS")).ToLower()!=TEXT("off"))
+    {
+        ClipHurt=Hy(TEXT("hit_heavy_s0")); ClipRunStart=Hy(TEXT("run_start_s0")); ClipRunStop=Hy(TEXT("run_stop_s0")); ClipPivot=Hy(TEXT("pivot_s0"));
+    }
+    OverlayBody->SetComponentTickEnabled(false);
+    OverlayBody->VisibilityBasedAnimTickOption=EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
     Body->SetComponentTickEnabled(false);
     Body->VisibilityBasedAnimTickOption=EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
     Body->PlayAnimation(IdleAnimation,false);

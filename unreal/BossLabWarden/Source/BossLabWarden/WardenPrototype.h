@@ -150,6 +150,9 @@ public:
     float HitFlash = 0;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UCapsuleComponent> Capsule;
     UPROPERTY(VisibleAnywhere) TObjectPtr<USkeletalMeshComponent> Body;
+    // Second hidden mannequin that samples overlay clips (run start/stop, pivot) without
+    // disturbing the locomotion blendspace's stride clock on Body.
+    UPROPERTY(VisibleAnywhere) TObjectPtr<USkeletalMeshComponent> OverlayBody;
     UPROPERTY(VisibleAnywhere) TObjectPtr<USpringArmComponent> Arm;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UCameraComponent> Camera;
 private:
@@ -217,6 +220,16 @@ private:
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipCut1;
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipCut2;
     float ClipCutPeak[3]={0,0,0};   // seconds of peak hand speed (the clip's contact) per cut
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipJumpAttack;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipRunCut;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipHurt;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipRunStart;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipRunStop;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipPivot;
+    // Overlay clip over locomotion: which, how far in (ticks), its span and peak weight.
+    TWeakObjectPtr<class UAnimSequence> Overlay;
+    int32 OverlayAge=0, OverlayTicks=0; float OverlayFrom=0, OverlayTo=0, OverlayWeight=0, OverlayPrevSpeed=0;
+    bool bPivotQueued=false;
     float ClipRollFrom=.1f, ClipRollTo=1.f;   // the roll clip's tumble span (seconds)
     bool bClipBody=false;      // this step's body comes from an authored strike clip
     bool bClipRoll=false;      // this roll plays the authored clip (not a backward roll)
