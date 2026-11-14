@@ -210,12 +210,51 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             // The tumble (clip 0.1-1.0 s) fills the first 72% at ~1.25x; the stand-up is compressed
             // into the rest (the whole 1.5 s clip at 2.3x moved joints ~80 cm a tick).
             const float Len=ClipRoll->GetPlayLength();
-            const float Clock=U<.72f ? FMath::Lerp(.1f,1.f,U/.72f) : FMath::Lerp(1.f,Len*.99f,(U-.72f)/.28f);
+            const float Clock=U<.72f ? FMath::Lerp(ClipRollFrom,ClipRollTo,U/.72f) : FMath::Lerp(ClipRollTo,Len*.99f,(U-.72f)/.28f);
             N->SetPlayRate(0); N->SetPosition(FMath::Min(Clock,Len*.99f),false);
-            Body->TickAnimation(0,false); Body->RefreshBoneTransforms(); Local=Body->GetBoneSpaceTransforms();
+            Body->TickAnimation(0,false); Body->RefreshBoneTransforms();
+            // Ease into the clip over 10 ticks and back to the guard stance over the last 20%:
+            // the clips start crouched and end in their own stance (feet jumped 70 cm otherwise).
+            const TArray<FTransform> Authored=Body->GetBoneSpaceTransforms();
+            const float In=Smooth(Fight.Age/10.f), Out=Smooth((U-.8f)/.2f);
+            for(int32 I=0;I<Authored.Num() && I<Local.Num();++I)
+            {
+                FTransform A; A.Blend(Local[I],Authored[I],In);
+                FTransform B; B.Blend(A,GuardBase.IsValidIndex(I)?GuardBase[I]:A,Out); Local[I]=B;
+            }
         }
     }
     else bClipRoll=false;
+    // Authored body for the player's three cuts: the clip is time-warped so its peak hand speed
+    // lands mid-contact (wind-up -> start..peak-0.12 s, contact -> +-0.12 s, recovery -> rest).
+    bClipBody=false;
+    if(!bBoss && Fight.Action==EWardenAction::Strike && Fight.Move>=WardenRules::CutOne && Fight.Move<=WardenRules::CutThree)
+    {
+        const int32 C=Fight.Move-WardenRules::CutOne;
+        UAnimSequence* Clip=C==0 ? ClipCut0.Get() : C==1 ? ClipCut1.Get() : ClipCut2.Get();
+        if(Clip)
+        {
+            const auto& D=Fight.Definition();
+            const float Len=Clip->GetPlayLength(), Peak=FMath::Clamp(ClipCutPeak[C],.15f,Len-.15f);
+            const float A0=FMath::Max(0.f,Peak-.12f), A1=FMath::Min(Len*.99f,Peak+.12f);
+            const float Age=float(Fight.Age);
+            const float Clock=Age<D.Windup ? FMath::Lerp(0.f,A0,Age/D.Windup)
+                : Age<D.Windup+D.Active ? FMath::Lerp(A0,A1,(Age-D.Windup)/D.Active)
+                : FMath::Lerp(A1,Len*.99f,FMath::Clamp((Age-D.Windup-D.Active)/D.Recovery,0.f,1.f));
+            if(Body->GetSingleNodeInstance()->GetCurrentAsset()!=Clip) Body->PlayAnimation(Clip,false);
+            auto* N=Body->GetSingleNodeInstance(); N->SetPlayRate(0); N->SetPosition(Clock,false);
+            Body->TickAnimation(0,false); Body->RefreshBoneTransforms();
+            // Spine, neck and head from the clip; hips and legs stay keyed so the existing
+            // support-foot plant keeps the feet on the floor (clip hips slid them ~10 cm).
+            const TArray<FTransform> Authored=Body->GetBoneSpaceTransforms();
+            for(int32 I=0;I<Authored.Num() && I<Local.Num();++I)
+            {
+                const FString Bone=Ref.GetBoneName(I).ToString();
+                if(Bone.StartsWith(TEXT("spine")) || Bone.StartsWith(TEXT("neck")) || Bone==TEXT("head")) Local[I]=Authored[I];
+            }
+            bClipBody=true;
+        }
+    }
     if((Fight.Action==EWardenAction::Ready || DrinkWalk) && Locomotion && !ClipSprinting)
     {
         if(Body->GetSingleNodeInstance()->GetCurrentAsset()!=Locomotion) { Body->PlayAnimation(Locomotion,true); if(ClipSprint && !bBoss) PoseSettle=FMath::Max(PoseSettle,8); }
@@ -520,7 +559,8 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     const int32 Pelvis=Index(TEXT("pelvis"));
     if(Pelvis>=0)
     {
-        const float Weight=1-Settle;
+        // An authored cut body already shifts and turns the hips: keep 40% of the keyed layer.
+        const float Weight=(1-Settle)*(bClipBody ? .4f : 1.f);
         const FVector Shift=Fight.Action==EWardenAction::Strike
             ? FVector(FMath::Lerp(-7.f,9.f,Drive)*Load*Weight,FMath::Lerp(4.f,-3.f,Drive)*Load*Weight,-9*Load*Weight)
             : FVector(6*HitFront*Recoil,6*HitSide*Recoil,-32*Tuck-6*Landing-4*Recoil-20*Stagger);
@@ -533,7 +573,8 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     for(const TCHAR* Name:{TEXT("spine_01"),TEXT("spine_02"),TEXT("spine_03"),TEXT("spine_04"),TEXT("spine_05")})
     {
         const int32 I=Index(Name); if(I<0) continue;
-        const FQuat Delta=FQuat(FVector::UpVector,FMath::DegreesToRadians(-Key.Twist*.8f/5))*FQuat(FVector::ForwardVector,FMath::DegreesToRadians(-Key.Lean/5))
+        const float Layer=bClipBody ? .4f : 1.f;   // the authored cut body twists the spine itself
+        const FQuat Delta=FQuat(FVector::UpVector,FMath::DegreesToRadians(-Key.Twist*.8f/5*Layer))*FQuat(FVector::ForwardVector,FMath::DegreesToRadians(-Key.Lean/5*Layer))
             *FQuat(MeshPoint(FVector::ForwardVector),FMath::DegreesToRadians(-FeelBank*.55f/5))
             *FQuat(FVector::ForwardVector,FMath::DegreesToRadians(-5*Curl));   // the roll curls the back
         SetRotation(I,Delta*CS[I].GetRotation());
@@ -809,8 +850,8 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         if(bClipRoll && !Dead)
         {
             // Authored roll: the clip tumbles the body; the mesh only turns to face the roll's
-            // travel (in over 4 ticks, back by tick 38) so side rolls read as rolls.
-            const float Face=Smooth(Fight.Age/4.f)*(1-Smooth((Fight.Age-28)/10.f));
+            // travel (in over 10 ticks, back by tick 38) so side rolls read as rolls.
+            const float Face=Smooth(Fight.Age/10.f)*(1-Smooth((Fight.Age-28)/10.f));
             Rotation=FQuat(FVector::UpVector,FMath::DegreesToRadians(ClipRollYaw*Face))*Rotation;
             // The clip is a dive roll (the body leaves the floor mid-dive); keep it low like a souls
             // roll: drop the mesh by 75% of any hip rise above the standing hip height.

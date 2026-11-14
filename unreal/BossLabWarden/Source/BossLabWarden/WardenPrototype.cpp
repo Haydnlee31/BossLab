@@ -80,10 +80,22 @@ void AWardenChallenger::BeginPlay()
             if(auto* A=LoadObject<UAnimSequence>(nullptr,*(TEXT("/Game/BossLab/Anim/UAL/")+Name),nullptr,LOAD_Quiet|LOAD_NoWarn)) return A;
         return nullptr;
     };
-    // The UAL roll is a straight-legged dive roll (parkour, not a tucked souls roll), so it is
-    // opt-in for comparison: BOSSLAB_ANIM_ROLL=clip. The sprint loop is on by default.
+    auto Hy=[](const TCHAR* Clip)->UAnimSequence*
+    {
+        return LoadObject<UAnimSequence>(nullptr,*FString::Printf(TEXT("/Game/BossLab/Anim/HY/HY_Anims_root_HY_%s"),Clip),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    };
+    // Roll: the HY-Motion tucked ground roll by default; BOSSLAB_ANIM_ROLL=ual for the UAL dive
+    // roll, =procedural for the keyed shoulder roll. The sprint loop (UAL) is on by default.
     ClipSprint=Ual(TEXT("Sprint_Loop"));
-    if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_ROLL")).ToLower()==TEXT("clip")) ClipRoll=Ual(TEXT("Roll"));
+    const FString RollMode=FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_ROLL")).ToLower();
+    if(RollMode==TEXT("ual") || RollMode==TEXT("clip")) { ClipRoll=Ual(TEXT("Roll")); ClipRollFrom=.1f; ClipRollTo=1.f; }
+    else if(RollMode!=TEXT("procedural") && (ClipRoll=Hy(TEXT("roll_s0")))!=nullptr) { ClipRollFrom=.15f; ClipRollTo=.75f; }   // the tumble, at ~1.25x (the whole clip moved joints ~50 cm a tick)
+    // Cuts I-III: authored body (BOSSLAB_ANIM_CUTS=off keeps the keyed body).
+    if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_CUTS")).ToLower()!=TEXT("off"))
+    {
+        ClipCut0=Hy(TEXT("cut_a_s0")); ClipCut1=Hy(TEXT("cut_b_s1")); ClipCut2=Hy(TEXT("cut_heavy_s1"));
+        ClipCutPeak[0]=.433f; ClipCutPeak[1]=.2f; ClipCutPeak[2]=.933f;   // retarget report: peak hand speed
+    }
     Body->SetComponentTickEnabled(false);
     Body->VisibilityBasedAnimTickOption=EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
     Body->PlayAnimation(IdleAnimation,false);

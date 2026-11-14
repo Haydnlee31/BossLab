@@ -56,3 +56,32 @@ The owner downloaded the free Standard zips to `artifacts/anim-sources/`. They a
 - Map the HY-Motion skeleton onto Manny.
 - Generate the moves we have no clip for: greatsword cuts, a low souls roll, run start and stop, pivots, hit reactions.
 - Rebuild the player's swings on authored clips while keeping the engine-owned timing windows.
+
+## HY-Motion in the game (same day, owner said go)
+
+- **Generated:** 9 prompts with 2 seeds each, through `unreal/art-studio/source/anim/hy_motion_generate.py`. Each call took 18–40 s on HF Pro. The prompts are recorded in `artifacts/art/hy-motion-2026-11-14/raw/*.json` (local).
+  - roll, cut A (horizontal), cut B (diagonal), heavy cut;
+  - jump attack, run start, run stop, 180° pivot, heavy hit.
+- **Retarget:** `retarget_motion.py` maps the SMPL-style rig (Pelvis, L_Hip, Spine1-3 and so on) to Manny.
+  - **Rest alignment:** HY rests in a T-pose and Manny in an A-pose. Each Manny bone's rest is turned onto the source bone's direction (taken from child joints) before copying rotation changes.
+  - **Facing:** each clip is turned to start facing forward, using its first-frame hip line. Yaws were fixed by up to 26°.
+  - **Standing height:** the rest leg length plus the planted toe-joint height.
+  - **In place:** the smoothed (±7 frame) hip path is removed. A straight-line removal left curved travel, such as pivots and jumps, out of frame.
+  - **Contact point:** the frame of peak hand speed is recorded for timing.
+- **Import:** `ue_import_hy.py` puts the clips in `/Game/BossLab/Anim/HY/HY_Anims_root_HY_<name>` (local; outputs are never committed).
+- **Evidence:** `artifacts/art/hy-motion-2026-11-14/evidence/`.
+- **Roll (default now):**
+  - **Clip:** `roll_s0`, a crouch, a low dive, a ground tumble, then up.
+  - **Timing:** its tumble span (0.15–0.75 s) is mapped onto 72% of the 40-tick roll.
+  - **Blending:** it eases in over 10 ticks and back to the guard stance over the last 20%. The mesh turns toward the roll's travel over 10 ticks and returns by tick 38.
+  - **Switch:** `BOSSLAB_ANIM_ROLL=ual` gives the UAL dive roll, and `=procedural` the keyed shoulder roll.
+  - **Tests:** `DirectionalRollPoseContinuity` gives a maximum joint step of 44.1 cm (the limit is 45) and an exit of 0.9 cm. Using the whole clip moved joints about 50–70 cm a tick.
+- **Cuts I–III (default now, `BOSSLAB_ANIM_CUTS=off` to disable):**
+  - **Clips:** `cut_a_s0`, `cut_b_s1` and `cut_heavy_s1` drive the spine, neck and head.
+  - **Timing:** each is time-warped so its peak hand speed falls mid-contact. Wind-up maps to the clip start up to peak − 0.12 s, contact to ±0.12 s, and recovery to the rest of the clip.
+  - **Unchanged:** the arms stay on the procedural sword path, so the blade sweep, hit timing and reach are the same. The hips and legs stay keyed, because the clip's hips slid the support foot by about 10 cm.
+  - **Layering:** the keyed hip and spine layer drops to 40% under a clip.
+  - **Tests:** `MovingStrikeSupportFoot` gives a drift of 1.28 cm (the limit is 3) and a height error of 1.02 cm (the limit is 1.5).
+- **Native suite:** 39/39. Captures: `in-game-roll.png`, `in-game-cuts.png`.
+- **Not wired yet:** jump attack, run start and stop, pivot and heavy hit are imported but unused. Their entry points, such as stop and pivot detection, need care. The feel is not owner-tested.
+

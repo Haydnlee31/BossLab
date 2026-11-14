@@ -210,6 +210,15 @@ private:
     // the player's forward/side roll and sprint. Procedural fallbacks when absent.
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipRoll;
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipSprint;
+    // HY-Motion text-to-motion clips (retarget_motion.py; Tencent Hunyuan licence, local):
+    // body (hips, legs, spine) for the three greatsword cuts, time-warped onto the engine's
+    // phases; the arms stay on the procedural sword path, so the blade sweep is unchanged.
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipCut0;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipCut1;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipCut2;
+    float ClipCutPeak[3]={0,0,0};   // seconds of peak hand speed (the clip's contact) per cut
+    float ClipRollFrom=.1f, ClipRollTo=1.f;   // the roll clip's tumble span (seconds)
+    bool bClipBody=false;      // this step's body comes from an authored strike clip
     bool bClipRoll=false;      // this roll plays the authored clip (not a backward roll)
     float ClipRollYaw=0;       // mesh yaw toward the roll's travel, actor-relative degrees
     int32 PresentedAction = -1;
