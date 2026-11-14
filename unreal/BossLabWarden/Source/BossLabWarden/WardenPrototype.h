@@ -258,6 +258,7 @@ struct FWardenRegentView
     bool bLantern=false, bLinks=false, bSkull=false;   // local props found (else primitives)
     bool bGenSkull=false;                              // generated skull (ue_import_skull_gen.py) in use
     bool bGenCenser=false;                             // generated censer (ue_import_censer_gen.py) in use
+    bool bGenDead=false;                               // generated rigged skeleton (ue_import_dead_gen.py) in use
     TArray<TWeakObjectPtr<class UStaticMeshComponent>> Disc;
     TArray<TWeakObjectPtr<class UMaterialInstanceDynamic>> DiscMaterial;
     TWeakObjectPtr<class UPointLightComponent> Glow;

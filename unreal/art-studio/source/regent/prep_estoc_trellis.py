@@ -1,7 +1,10 @@
 """Prepare the TRELLIS-generated Regent estoc for the game.
 
 Run: unreal/art-studio/tools/Blender.app/Contents/MacOS/Blender -b --python \
-     unreal/art-studio/source/regent/prep_estoc_trellis.py -- <model.glb> <out_dir> [length_m] [guard_axis]
+     unreal/art-studio/source/regent/prep_estoc_trellis.py -- <model.glb> <out_dir> [length_m] [guard_axis] [name] [guard_z tip_z]
+Also used for the player's generated greatsword: name (default SM_RegentEstocGen) sets the
+mesh/FBX/texture names, and guard_z tip_z (metres) re-seat the sword in the game's sword-root
+frame (uniform scale + shift so the guard and the point land there; grip at the origin).
 Joins the generated parts, decimates to ~16k triangles (smooth shaded), finds the blade's long axis and
 stands it on +Z with the pommel at the origin (the same convention as the interim CC0
 SM_Estoc: pommel at origin, point up), scales the overall length to length_m (default
@@ -17,6 +20,9 @@ args = sys.argv[sys.argv.index('--') + 1:]
 GLB, OUT = os.path.abspath(args[0]), os.path.abspath(args[1])
 LENGTH = float(args[2]) if len(args) > 2 else 1.49
 GUARD_AXIS = (args[3] if len(args) > 3 else 'X').upper()
+NAME = args[4] if len(args) > 4 else 'SM_RegentEstocGen'
+FRAME = (float(args[5]), float(args[6])) if len(args) > 6 else None
+STEM = NAME[3:] if NAME.startswith('SM_') else NAME
 TARGET = 16000
 os.makedirs(OUT, exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -70,13 +76,19 @@ scale = LENGTH / (hi - lo)
 base = c + long_axis * lo
 for v in sword.data.vertices: v.co = (R @ (v.co - base)) * scale
 guard_m = (guard_bin + .5) / BINS * LENGTH
-sword.name = 'SM_RegentEstocGen'
+lo_z, hi_z = 0.0, LENGTH
+if FRAME:
+    k = (FRAME[1] - FRAME[0]) / (LENGTH - guard_m)
+    for v in sword.data.vertices: v.co = Vector((v.co.x * k, v.co.y * k, FRAME[0] + (v.co.z - guard_m) * k))
+    lo_z, hi_z = FRAME[0] - guard_m * k, FRAME[1]
+    guard_m = FRAME[0]
+sword.name = NAME
 textures = []
 for slot in sword.data.materials:
     if slot and slot.use_nodes:
         for n in slot.node_tree.nodes:
             if n.type == 'TEX_IMAGE' and n.image:
-                path = os.path.join(OUT, f'T_RegentEstocGen_{len(textures)}.png')
+                path = os.path.join(OUT, f'T_{STEM}_{len(textures)}.png')
                 src = n.image; w, h = src.size
                 png = bpy.data.images.new(f'png_{len(textures)}', w, h, alpha=True)
                 png.colorspace_settings.name = src.colorspace_settings.name
@@ -84,7 +96,7 @@ for slot in sword.data.materials:
                 png.filepath_raw = path; png.file_format = 'PNG'; png.save()
                 textures.append({'material': slot.name, 'node': n.label or n.name, 'path': path})
 bpy.ops.object.select_all(action='DESELECT'); sword.select_set(True)
-bpy.ops.export_scene.fbx(filepath=os.path.join(OUT, 'SM_RegentEstocGen.fbx'), use_selection=True, apply_unit_scale=True,
+bpy.ops.export_scene.fbx(filepath=os.path.join(OUT, NAME + '.fbx'), use_selection=True, apply_unit_scale=True,
                          apply_scale_options='FBX_SCALE_UNITS', mesh_smooth_type='OFF', add_leaf_bones=False, path_mode='STRIP')
 after = sum(len(p.vertices) - 2 for p in sword.data.polygons)
 vs = [v.co for v in sword.data.vertices]
@@ -95,13 +107,13 @@ bpy.context.scene.world = world
 bpy.ops.object.camera_add(); cam = bpy.context.active_object; bpy.context.scene.camera = cam
 sc = bpy.context.scene; sc.render.engine = 'BLENDER_WORKBENCH'; sc.display.shading.color_type = 'TEXTURE'
 sc.render.resolution_x = 320; sc.render.resolution_y = 960
-mid = Vector((0, 0, LENGTH / 2))
+mid = Vector((0, 0, (lo_z + hi_z) / 2))
 for name, d in (('front', Vector((2.4, 0, 0))), ('edge', Vector((0, 2.4, 0))), ('hilt', Vector((.35, -.35, .1)))):
     at = Vector((0, 0, guard_m)) if name == 'hilt' else mid
     cam.location = at + d; cam.rotation_euler = (at - cam.location).to_track_quat('-Z', 'Y').to_euler()
     cam.data.lens = 50
-    sc.render.filepath = os.path.join(OUT, f'estoc-gen-{name}.png'); bpy.ops.render.render(write_still=True)
+    sc.render.filepath = os.path.join(OUT, f'{STEM}-{name}.png'); bpy.ops.render.render(write_still=True)
 json.dump({'triangles_source': before, 'triangles': after, 'length_m': LENGTH, 'guard_m': round(guard_m, 4),
-           'guard_axis': GUARD_AXIS, 'size_m': size, 'textures': textures},
-          open(os.path.join(OUT, 'estoc-gen.json'), 'w'), indent=1)
-print('BOSSLAB estoc gen', before, after, size, 'guard', round(guard_m, 3))
+           'guard_axis': GUARD_AXIS, 'frame': FRAME, 'pommel_z': round(lo_z, 4), 'size_m': size, 'textures': textures},
+          open(os.path.join(OUT, STEM + '.json'), 'w'), indent=1)
+print('BOSSLAB', NAME, before, after, size, 'guard', round(guard_m, 3))

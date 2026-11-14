@@ -1,0 +1,11 @@
+{
+ "space": "black-forest-labs/FLUX.1-schnell",
+ "prompt": "A single two-handed greatsword standing vertically, point down, pommel up, long straight double-edged blackened steel blade with a central fuller and faint engraved runes, long leather-wrapped grip, wide straight crossguard with downturned ends, heavy faceted pommel, whole sword in frame, isolated on a plain flat light grey background, centered, studio product photograph, soft even diffuse lighting, no shadows, sharp detail, no text, no hands",
+ "seed": 19,
+ "steps": 4,
+ "size": [
+  1024,
+  1024
+ ],
+ "seconds": 8
+}

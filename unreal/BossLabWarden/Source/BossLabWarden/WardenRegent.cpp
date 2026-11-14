@@ -736,16 +736,20 @@ void AWardenArenaMode::BuildRegentView()
     V.DeadWalk=LoadObject<UAnimSequence>(nullptr,TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Walk/MF_Unarmed_Walk_Fwd"),nullptr,LOAD_Quiet|LOAD_NoWarn);
     V.DeadAttack=LoadObject<UAnimSequence>(nullptr,TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_Attack_02"),nullptr,LOAD_Quiet|LOAD_NoWarn);
     USkeletalMesh* Manny=LoadObject<USkeletalMesh>(nullptr,TEXT("/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    // Preferred: the generated skeleton (TRELLIS.2 + rig_fit.py) on SK_Mannequin itself, so the
+    // same clips play on it; it carries its own skull and material.
+    USkeletalMesh* GenDead=LoadObject<USkeletalMesh>(nullptr,TEXT("/Game/BossLab/Regent/Dead/SKM_RegentDeadGen"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    V.bGenDead=GenDead!=nullptr;
     UStaticMesh* DeadHead=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/Regent/Skull/SM_RegentSkullGen"),nullptr,LOAD_Quiet|LOAD_NoWarn);
     UMaterialInterface* BoneMat=Load(TEXT("/Game/BossLab/Regent/M_RegentBone"),TEXT("Stone"));
     UMaterialInterface* DeadMat=LoadObject<UMaterialInterface>(nullptr,TEXT("/Game/BossLab/Regent/M_RegentDead"),nullptr,LOAD_Quiet|LOAD_NoWarn);
     for(int32 I=0;I<FWardenRegentView::DeadSlots;++I)
     {
         auto* C=NewObject<USkeletalMeshComponent>(Owner);
-        C->SetupAttachment(Root); C->SetSkeletalMesh(Manny); C->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        C->SetupAttachment(Root); C->SetSkeletalMesh(GenDead ? GenDead : Manny); C->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         C->VisibilityBasedAnimTickOption=EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
         C->SetCastShadow(true); C->RegisterComponent(); Owner->AddInstanceComponent(C);
-        for(int32 M=0;M<C->GetNumMaterials();++M) C->SetMaterial(M,DeadMat ? DeadMat : BoneMat);
+        if(!GenDead) for(int32 M=0;M<C->GetNumMaterials();++M) C->SetMaterial(M,DeadMat ? DeadMat : BoneMat);
         C->SetVisibility(false);
         auto* H=NewObject<UStaticMeshComponent>(Owner);
         H->SetStaticMesh(DeadHead ? DeadHead : LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Sphere")));
@@ -987,7 +991,7 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
             if(S->State==ES::Stagger) Lean=-14*FMath::Sin(PI*FMath::Clamp(Age/SkeletonStagger,0.f,1.f));
             const FRotator Facing(0,S->Yaw,0);
             C->SetWorldLocationAndRotation(S->Position+FVector(0,0,Sink),(Facing.Quaternion()*FRotator(Lean,0,Roll).Quaternion()*FRotator(0,-90,0).Quaternion()));
-            C->SetWorldScale3D(FVector(.72f,.72f,1.f));   // gaunt
+            C->SetWorldScale3D(V.bGenDead ? FVector(1.f) : FVector(.72f,.72f,1.f));   // the greybox mannequin is made gaunt
             C->SetVisibility(true);
             // Clip: shambling walk at ~65% speed; the attack clip scrubbed to the swing beats.
             const bool Swing=S->State==ES::Windup || S->State==ES::Strike || S->State==ES::Recover;
@@ -1010,13 +1014,26 @@ void AWardenArenaMode::AnimateRegentView(float Seconds)
             }
             // Skull head over the mannequin head, soul-fire eyes, a small flame on the crown.
             const FQuat Look=Facing.Quaternion()*FRotator(-Lean*.5f,0,0).Quaternion();
+            const float Alive=S->State==ES::Fall ? 1-Smooth(Age/20) : 1;
+            if(V.bGenDead)
+            {
+                // The generated skeleton has its own skull: eyes in its sockets (about 6 cm above
+                // and 9 cm ahead of the head bone, 4 cm apart each side), flame on the crown.
+                const FVector Bone=C->GetBoneLocation(TEXT("head"));
+                H->SetVisibility(false);
+                for(int32 E=0;E<2;++E)
+                    Set(V.DeadEyes.Get(),Slot*2+E,FTransform(Look,Bone+Look.RotateVector(FVector(9.f,E ? 4.f : -4.f,6.f)),FVector(.035f*Alive)));
+                if(Alive>.1f) Flame(Bone+FVector(0,0,19),16*Alive,(S->State==ES::Windup ? 50 : 28)*Alive,S->Id*17);
+            }
+            else
+            {
             // Large enough to swallow the mannequin head and sit slightly forward of it.
             const FVector HeadAt=C->GetBoneLocation(TEXT("head"))+FVector(0,0,8)+Look.RotateVector(FVector(4,0,0));
             H->SetWorldLocationAndRotation(HeadAt,Look); H->SetWorldScale3D(FVector(1.45f)); H->SetVisibility(true);
-            const float Alive=S->State==ES::Fall ? 1-Smooth(Age/20) : 1;
             for(int32 E=0;E<2;++E)
                 Set(V.DeadEyes.Get(),Slot*2+E,FTransform(Look,HeadAt+Look.RotateVector(FVector(8.5f,E ? 3.2f : -3.2f,1.5f)*1.45f/1.27f),FVector(.045f*Alive)));
             if(Alive>.1f) Flame(HeadAt+FVector(0,0,10),18*Alive,(S->State==ES::Windup ? 55 : 32)*Alive,S->Id*17);
+            }
         }
     }
     // Procession Dash: soul fire gathers on the estoc and rune marks light the path through

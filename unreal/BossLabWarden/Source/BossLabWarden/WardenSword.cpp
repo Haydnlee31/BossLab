@@ -124,7 +124,10 @@ void AWardenChallenger::DressGreatsword()
     // The modelled enchanted greatsword (prep_greatsword.py / ue_import_greatsword.py) in
     // the sword root's frame: grip at the origin, point at the existing 148 cm reach, so
     // contact sweeps are unchanged. Falls back to the primitive blade when absent.
-    auto* Mesh=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/Sword/SM_Greatsword"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    // Preferred: the generated greatsword (TRELLIS.2, prep_estoc_trellis.py seated in the same
+    // frame, ue_import_greatsword_gen.py); its one material carries the rune Glow parameter.
+    auto* Gen=LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/SwordGen/SM_GreatswordGen"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    auto* Mesh=Gen ? Gen : LoadObject<UStaticMesh>(nullptr,TEXT("/Game/BossLab/Sword/SM_Greatsword"),nullptr,LOAD_Quiet|LOAD_NoWarn);
     if(!Mesh) return;
     // Dressing can run before BeginPlay creates the primitive blade; create it first so the
     // hide below always finds it (the primitive parts otherwise showed through the new sword).
@@ -138,7 +141,7 @@ void AWardenChallenger::DressGreatsword()
         Blade->SetStaticMesh(Mesh); Blade->SetupAttachment(SwordRoot);
         Blade->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         Blade->RegisterComponent(); AddInstanceComponent(Blade);
-        const int32 Slot=Blade->GetMaterialIndex(TEXT("sword_rune"));
+        const int32 Slot=Gen ? 0 : Blade->GetMaterialIndex(TEXT("sword_rune"));
         if(Slot!=INDEX_NONE) SwordRunes=Blade->CreateDynamicMaterialInstance(Slot);
     }
     Greatsword=Blade;

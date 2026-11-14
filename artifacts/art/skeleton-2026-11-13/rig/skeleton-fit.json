@@ -1,0 +1,35 @@
+{
+ "glb": "artifacts/art/skeleton-2026-11-13/trellis2/model.glb",
+ "manny_fbx": "artifacts/art/claude-revamp-2026-11-09/rig/manny.fbx",
+ "out_fbx": "artifacts/art/skeleton-2026-11-13/rig/out/SKM_RegentDeadGen.fbx",
+ "out_blend": "artifacts/art/skeleton-2026-11-13/rig/out/skeleton-rig.blend",
+ "yaw_deg": 0,
+ "height_scale": 1.0,
+ "offset": [
+  0,
+  0,
+  0
+ ],
+ "pose": [
+  [
+   "lowerarm_l",
+   [
+    0,
+    1,
+    0
+   ],
+   -36
+  ],
+  [
+   "lowerarm_r",
+   [
+    0,
+    1,
+    0
+   ],
+   36
+  ]
+ ],
+ "target_tris": 40000,
+ "voxel": 0.008
+}
