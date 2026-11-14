@@ -242,7 +242,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     float Plant=0,Recover=0,Load=0,Drive=0,Settle=0;
     FSwordKey Guard=bRegent ? RegentGuard() : FSwordKey{FVector(28,5,114),FVector(.38,-.12,.92).GetSafeNormal(),-7,5};
     FSwordKey Key=Guard;
-    float Roll=0, Tuck=0,Landing=0;
+    float Roll=0, Tuck=0,Landing=0, Curl=0;   // Curl: the roll's spine curl and chin tuck
     if(Fight.Action==EWardenAction::Strike)
     {
         const auto& D=Fight.Definition();
@@ -328,7 +328,11 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     {
         const float U=float(Fight.Age)/WardenRules::DodgeTicks;
         Tuck=Smooth(U/.18f)*(1-Smooth((U-.48f)/.46f));
-        Roll=360*Smooth((U-.12f)/.62f);
+        // Shoulder roll, not a turntable: a short dive into it, then the tumble over the shoulder
+        // (oblique axis below) while the spine curls and the chin tucks. Timing is unchanged.
+        const float T=FMath::Clamp((U-.06f)/.66f,0.f,1.f);
+        Roll=22*Smooth(U/.06f)*(1-T)+360*Smooth(T);
+        Curl=Smooth((U-.04f)/.14f)*(1-Smooth((U-.58f)/.3f));
         Landing=Smooth((U-.68f)/.09f)*(1-Smooth((U-.77f)/.20f));
         // Keep the facing continuous. Roll around the axis perpendicular to the
         // committed travel, so backwards rolls do not need a 180-degree yaw whip.
@@ -471,7 +475,8 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
     {
         const int32 I=Index(Name); if(I<0) continue;
         const FQuat Delta=FQuat(FVector::UpVector,FMath::DegreesToRadians(-Key.Twist*.8f/5))*FQuat(FVector::ForwardVector,FMath::DegreesToRadians(-Key.Lean/5))
-            *FQuat(MeshPoint(FVector::ForwardVector),FMath::DegreesToRadians(-FeelBank*.55f/5));
+            *FQuat(MeshPoint(FVector::ForwardVector),FMath::DegreesToRadians(-FeelBank*.55f/5))
+            *FQuat(FVector::ForwardVector,FMath::DegreesToRadians(-5*Curl));   // the roll curls the back
         SetRotation(I,Delta*CS[I].GetRotation());
     }
     // Counterbalance the gaze instead of welding the head to the chest.
@@ -486,6 +491,11 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         for(const TCHAR* Name:{TEXT("neck_01"),TEXT("head")})
             if(const int32 I=Index(Name); I>=0)
                 SetRotation(I,FQuat(FVector::UpVector,FMath::DegreesToRadians(FeelLook*.5f))*FQuat(FVector::ForwardVector,FMath::DegreesToRadians(FeelCarry*7.f))*CS[I].GetRotation());
+    // Rolling: chin to the chest and tucked toward the far shoulder (the roll goes over the near one).
+    if(Curl>.001f)
+        for(const TCHAR* Name:{TEXT("neck_01"),TEXT("head")})
+            if(const int32 I=Index(Name); I>=0)
+                SetRotation(I,FQuat(MeshPoint(FVector::ForwardVector),FMath::DegreesToRadians(10*Curl))*FQuat(FVector::ForwardVector,FMath::DegreesToRadians(-12*Curl))*CS[I].GetRotation());
     // The head snaps with the blow, even mid-swing.
     if(Recoil>0)
         for(const TCHAR* Name:{TEXT("neck_01"),TEXT("head")})
@@ -728,8 +738,13 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const FVector LocalDirection=GetActorQuat().UnrotateVector(CommittedDirection);
         const float U=float(Fight.Age)/WardenRules::DodgeTicks;
         const bool Dead=Fight.Action==EWardenAction::Dead;
+        // Over the shoulder: the tumble stays square to the travel (an oblique axis swept the
+        // blade into the floor), but the body leans onto the off-hand shoulder through the middle
+        // of the roll, so it goes over diagonally (souls roll) instead of a flat turntable flip.
         const FVector RollAxis=Dead?FVector::RightVector:FVector(-LocalDirection.Y,LocalDirection.X,0).GetSafeNormal();
-        const FQuat DirectionalRoll=FQuat(RollAxis,FMath::DegreesToRadians(Dead?85*Smooth(DeathAge/60.f):Roll));
+        const float Shoulder=Dead ? 0.f : -16*FMath::Sin(PI*FMath::Clamp((U-.06f)/.66f,0.f,1.f));
+        const FQuat DirectionalRoll=FQuat(LocalDirection.GetSafeNormal2D().IsNearlyZero()?FVector::ForwardVector:LocalDirection.GetSafeNormal2D(),FMath::DegreesToRadians(Shoulder))
+            *FQuat(RollAxis,FMath::DegreesToRadians(Dead?85*Smooth(DeathAge/60.f):Roll));
         Rotation=DirectionalRoll*Rotation;
         Origin=FVector(0,0,-25)-DirectionalRoll.RotateVector(FVector(0,0,70));
         // Ground the supporting body envelope, not just a helmet clearance clamp.
@@ -742,6 +757,11 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             const float Radius=FCString::Strcmp(Name,TEXT("head"))==0?20.f:FCString::Strncmp(Name,TEXT("foot"),4)==0?3.f:10.f;
             Floor=FMath::Min(Floor,float((Origin+Rotation.RotateVector(CS[I].GetLocation())).Z+95-Radius));
         }
+        // The blade (on SwordRoot, in mesh space) counts too: the shoulder lean must never drive
+        // the point into the floor; 3.5 cm clearance.
+        if(!Dead)
+            for(const float Along:{.25f,.5f,.75f,1.f})
+                Floor=FMath::Min(Floor,float((Origin+Rotation.RotateVector(SwordFrame.TransformPosition(FVector(0,0,FMath::Lerp(14.f,148.f,Along))))).Z+95-3.5f));
         const float Contact=Dead?Smooth(DeathAge/12.f):Smooth(U/.12f)*(1-Smooth((U-.80f)/.17f));
         Origin.Z-=Floor*Contact;
     }
