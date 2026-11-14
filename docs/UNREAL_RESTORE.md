@@ -1,5 +1,7 @@
 # Restoring the Unreal project from a source checkout
 
+**Current Windows readiness:** see [WINDOWS_SETUP.md](WINDOWS_SETUP.md). Pulling this repository does not provide a Windows executable or the local generated characters, animations, dungeon and combat sound assets. The template restore below is only one dependency step, not a complete restore of the current game.
+
 This repository is a source handoff, not a self-contained packaged game or a clean-clone build certification. The working local prototype was tested on Apple Silicon macOS with installed Unreal Engine **5.8.4** and Xcode **26.1.1**. No fresh-clone build was performed for publication. Historical local test results in `docs/STATUS.md` do not establish that another engine version or operating system works.
 
 ## Public source boundary
@@ -21,7 +23,7 @@ Their recorded absolute source path is historical provenance, not the restore de
 
 1. Obtain and install Unreal Engine5.8.4 and its template resources through your own supported installation/access. This repository does not install or redistribute the engine. The installed version used here includes the `ModelContextProtocol`, `EditorToolset` and `AutomationTestToolset` editor plugins as well as PythonScriptPlugin, ACLPlugin, AnimationData and ControlRig listed in the `.uproject`. An installation missing those plugins is not equivalent; do not silently disable plugins and call that the verified setup.
 2. On the verified Mac route, install a matching supported Xcode toolchain, Python3 and normal command-line build tools. Engine binaries are arm64. The launcher is currently Mac-specific: `Mac` targets, mac-arm64 DotNet, `.app` paths and macOS package handling are hard-coded. `BOSSLAB_UE_ROOT` relocates the engine but does **not** make the launcher portable to Windows/Linux. Those platforms require a separately implemented/tested launch/build path.
-3. Keep the existing limits: under10,000,000,000 allocated bytes in `unreal/`, at least24GiB free throughout heavy work. Allow extra build headroom above that reserve; roughly0.9GB of local compiler intermediates were reclaimed and must regenerate, with additional shader/swap/temp demand possible. `doctor` reports storage but does not guarantee the next build will fit.
+3. Keep the current limits: under10,000,000,000 allocated bytes in `unreal/`, at least15GiB free throughout heavy work (owner revised the reserve on2026-11-11). Allow extra build headroom above that reserve, including compiler intermediates and shader/swap/temp demand. `doctor` reports storage but does not guarantee the next build will fit.
 4. Clone this repository and run all following commands from its root. An API key or model server is not required. Adaptive boss AI/model adapters remain deferred.
 
 Set the path to the engine root containing `Engine/` and `Templates/`:

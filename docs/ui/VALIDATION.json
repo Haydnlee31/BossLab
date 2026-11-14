@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-14",
+  "platform": "MacEditor",
+  "source_report_sha256": "f31b7a19862fefcf31c012de79fca207ae47bf632cffbc86c1635e420ef785da",
+  "succeeded": 41,
+  "succeededWithWarnings": 0,
+  "failed": 0,
+  "notRun": 0,
+  "scope": "Existing final native frontend/audio regression run; not a new Windows or packaged-build test."
+}

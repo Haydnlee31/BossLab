@@ -15,6 +15,7 @@ void AWardenChallenger::ToggleController()
 {
     if(auto* M=GetWorld()->GetAuthGameMode<AWardenArenaMode>())
     {
+        if(M->bFrontendSession) return;
         if(!M->bTitle && !M->bPaused && Fight.Alive() && M->Warden->Fight.Alive())
         { M->SetMenuOpen(true); M->LastEvent=TEXT("F5 again: toggle boss rehearsal and reset. P resumes."); return; }
         M->bRehearsal=!M->bRehearsal; M->bAdaptive=false; M->bDemo=false; M->ResetEncounter(); M->bTitle=false;
@@ -24,6 +25,7 @@ void AWardenChallenger::StartDemo()
 {
     if(auto* M=GetWorld()->GetAuthGameMode<AWardenArenaMode>())
     {
+        if(M->bFrontendSession) return;
         if(!M->bTitle && !M->bPaused && Fight.Alive() && M->Warden->Fight.Alive())
         { M->SetMenuOpen(true); M->LastEvent=TEXT("F7 again: begin disclosed switch demo. P resumes."); return; }
         M->ConfigureEncounter(202,true,3); M->bAdaptive=true; M->bDemo=true; M->bInspector=true;

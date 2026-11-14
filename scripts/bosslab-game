@@ -1,0 +1,8 @@
+#!/bin/sh
+# Player-facing entry point; original development launcher remains available.
+cd "$(dirname "$0")/.." || exit 1
+export BOSSLAB_OUTFIT="${BOSSLAB_OUTFIT:-revamp}"
+export BOSSLAB_BOSS="${BOSSLAB_BOSS:-regent}"
+export BOSSLAB_ARENA="${BOSSLAB_ARENA:-dungeon}"
+export BOSSLAB_QUALITY="${BOSSLAB_QUALITY:-performance}"
+exec ./scripts/bosslab-unreal play "$@"

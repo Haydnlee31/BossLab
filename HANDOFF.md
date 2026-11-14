@@ -1,4 +1,20 @@
-# BossLab handoff —2026-11-09
+# BossLab handoff — 2026-11-14
+
+Current local Mac launch: `./scripts/bosslab-game`. The frontend selects the Funeral Regent encounter with revamp characters and dungeon assets. Home, boss selection, Settings, Challenge statistics and unranked Creative assists are implemented. Interface audio now uses its own sparse musical theme and dry cues, with combat drones/ambience muted behind menus.
+
+Latest native Mac suite: **41/41**, no failures/warnings/notRun; build succeeded. Live frontend flows and actual mixed output were captured. UI/mouse/audio owner review remains open; no Windows, packaged-build or new FPS validation. See `docs/STATUS.md`, `docs/ui/CRUCIBLE_FRONTEND.md` and `docs/AUDIO.md`.
+
+**A Windows pull is not a runnable game.** Read [WINDOWS_SETUP.md](docs/WINDOWS_SETUP.md): install a compatible Unreal/C++ toolchain, restore Epic dependencies, transfer omitted local generated game assets, and build/test a Windows route. Existing launchers and packages are Mac-only. No API key or model server is needed to play once assets are present. No Windows executable has been delivered.
+
+This publication includes frontend code, PNG artwork, Cinzel with its OFL licence, and original interface audio assets/generators. It preserves existing exclusions for engine/template dependencies, other local generated content, tools, caches, packages and credentials. No force push or deployment is intended. Current heavy-work limits:10GB under unreal/ and15GiB free. Boss AI remains deferred.
+
+Exact next action: owner review of menu/cue sound and frontend; if moving development to Windows, first complete the dependency transfer and platform build described in the Windows guide.
+
+---
+
+## Archived handoff — 2026-11-09
+
+Everything below describes the older V13/procedural-boss stage. Its next actions, permissions, asset status and test counts are historical; current STATUS and the summary above supersede them.
 
 ## Start here
 

@@ -226,6 +226,7 @@ void AWardenChallenger::Restart()
 {
     if (auto* Mode = GetWorld()->GetAuthGameMode<AWardenArenaMode>())
     {
+        if(Mode->bFrontendSession) { if(Mode->bTitle) return; if(Mode->FrontScreen==EWardenFrontScreen::Pause || Mode->FrontScreen==EWardenFrontScreen::Result) Mode->RetrySession(); else if(!Mode->bPaused) Mode->ShowFrontPage(EWardenFrontScreen::Pause); return; }
         if (Mode->bTitle || Mode->bPaused || !Fight.Alive() || !Mode->Warden->Fight.Alive())
         { Mode->bDemo=false; Mode->ResetEncounter(); Mode->bTitle=false; }
         else { Mode->SetMenuOpen(true); Mode->LastEvent=TEXT("Restart? Press R again to reset, or P / Esc to resume."); }
@@ -234,12 +235,13 @@ void AWardenChallenger::Restart()
 void AWardenChallenger::StartFight()
 {
     if (auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>(); Mode && Mode->bTitle)
-    { Mode->bDemo=false; Mode->ResetEncounter(); Mode->bTitle=false; }
+    { if(Mode->bFrontendSession) { if(Mode->FrontScreen==EWardenFrontScreen::Home) Mode->OpenBossSelect(); return; } Mode->bDemo=false; Mode->ResetEncounter(); Mode->bTitle=false; }
 }
 void AWardenChallenger::TogglePilot()
 {
     if (auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>())
     {
+        if(Mode->bFrontendSession) return;
         if (!Mode->bTitle && !Mode->bPaused && Fight.Alive() && Mode->Warden->Fight.Alive())
         { Mode->SetMenuOpen(true); Mode->LastEvent=TEXT("Switch player mode? F6 again confirms a fresh encounter; P resumes."); return; }
         Mode->ConfigureEncounter(101,!Mode->bScriptedPlayer,1);
@@ -247,7 +249,17 @@ void AWardenChallenger::TogglePilot()
 }
 void AWardenChallenger::PauseGame()
 {
-    if (auto* Mode = GetWorld()->GetAuthGameMode<AWardenArenaMode>()) { Mode->SetMenuOpen(!Mode->bPaused); }
+    if (auto* Mode = GetWorld()->GetAuthGameMode<AWardenArenaMode>())
+    {
+        if(Mode->bFrontendSession)
+        {
+            if(Mode->FrontScreen==EWardenFrontScreen::Result) return;
+            if(Mode->bTitle) { if(Mode->FrontScreen!=EWardenFrontScreen::Home) Mode->OpenHome(); return; }
+            if(Mode->FrontScreen==EWardenFrontScreen::Settings || Mode->FrontScreen==EWardenFrontScreen::CreativeSetup)
+            { Mode->ShowFrontPage(EWardenFrontScreen::Pause); return; }
+        }
+        Mode->SetMenuOpen(!Mode->bPaused);
+    }
 }
 void AWardenChallenger::DebugGeometry()
 {
@@ -361,6 +373,7 @@ void AWardenArenaMode::FixedStep()
     Player->RestoreStepState(); Warden->RestoreStepState();
     ON_SCOPE_EXIT { Player->CaptureStepState(); Warden->CaptureStepState(); };
     // Hit-stop freezes the whole fight (both fighters, hazards, skulls) for a few ticks.
+    if(bFrontendSession && (bTitle || bPaused)) return;
     if(HitStop>0) { --HitStop; return; }
     if(bDemo) ++DemoTick;
     if(!Player->Fight.Alive() || !Warden->Fight.Alive())
@@ -479,13 +492,21 @@ void AWardenArenaMode::FixedStep()
         MotionStudyTrace+=FString::Printf(TEXT("%d,%d,%d,%.3f,%.4f,%.3f,%.3f,%.3f,%d\n"),CombatTick,int32(Player->Fight.Action),Player->Fight.Age,Player->Fight.Stamina,Player->GripError,P.X,P.Y,P.Z,int32(Player->Fight.Invulnerable()));
     }
     // Practice (opt-in, labelled): the player is refilled before each step resolves.
+    if(bFrontendSession && !bCreativeMode) { if(bPracticeInfiniteHealth || bPracticeInfiniteStamina) Run.bChallengeEligible=false; bPracticeInfiniteHealth=false; bPracticeInfiniteStamina=false; }
     if(bPracticeInfiniteHealth) { Player->Fight.Health=Player->Fight.MaxHealth; Run.bPractice=true; }
+    if(bPracticeInfiniteStamina && bCreativeMode) { Player->Fight.Stamina=100; Run.bPractice=true; }
     const float PriorPlayerHealth=Player->Fight.Health, PriorBossHealth=Warden->Fight.Health;
     // Explicit boss-first ordering; lethal damage prevents retaliation and healing.
     if (Warden->ResolveStrike(Player,bDebugGeometry)) { BossDamage+=PriorPlayerHealth-Player->Fight.Health; LastEvent = TEXT("You were hit. Recover before committing again."); }
     if (Player->ResolveStrike(Warden,bDebugGeometry)) { PlayerDamage+=PriorBossHealth-Warden->Fight.Health; LastEvent = TEXT("Greatsword connected."); }
     if(bRegent && bRehearsal) RegentResolve();
+    if(bFrontendSession && bCreativeMode && bPracticeInfiniteHealth)
+    {
+        Player->Fight.Health=Player->Fight.MaxHealth;
+        if(Player->Fight.Action==EWardenAction::Dead) { Player->Fight.Action=EWardenAction::Ready; Player->Fight.Age=0; }
+    }
     if(PriorPlayerHealth>0 && !Player->Fight.Alive()) RunKilled();
+    UpdateRunStats();
     Player->Fight.Advance(); Warden->Fight.Advance();
     if(bCaptureFrames) ReviewTrace+=FString::Printf(TEXT("%d,%d,%d,%.1f,%.1f,%d,%d,%.1f,%d,%.2f\n"),CombatTick,int32(Player->Fight.Action),Player->Fight.Age,Player->Fight.Health,Player->Fight.Stamina,int32(Warden->Fight.Action),Warden->Fight.Age,Warden->Fight.Health,Warden->Fight.Poise,FVector::Dist2D(Player->GetActorLocation(),Warden->GetActorLocation()));
 }

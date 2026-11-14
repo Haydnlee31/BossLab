@@ -1,17 +1,17 @@
 # BossLab: The Warden
 
-**Arena branch:** [Court of the Last Witness](docs/ARENA_DESIGN_01.md) is a new editable Blender draft for the Funeral Regent. [Actual preview](artifacts/art/arena-design-01/candidate-03/hero-entry.png) · [Floor plan](artifacts/art/arena-design-01/candidate-03/annotated-plan.png). It is not integrated into Unreal yet; this branch also retains the newer [Claude revamp](docs/CLAUDE_REVAMP.md) work.
+An original boss-duel prototype. **The active project is the Unreal third-person arena**; the browser version is an earlier reference.
 
-An original boss-duel prototype. **The active project is the Unreal third-person arena**; the dependency-free browser version is an earlier, runnable reference.
+## Current handoff — 2026-11-14
 
-## Current handoff —2026-11-09
+Read [HANDOFF.md](HANDOFF.md), then [STATUS](docs/STATUS.md), [execution plan](docs/EXECPLAN.md), [decisions](docs/DECISIONS.md) and [claims](docs/CLAIMS.md).
 
-Read [HANDOFF.md](HANDOFF.md) first, then [STATUS](docs/STATUS.md), [execution plan](docs/EXECPLAN.md), [decisions](docs/DECISIONS.md) and [claims](docs/CLAIMS.md).
+- Current local game: generated player/Regent characters, dungeon arena, estoc/censer/skull spells, greatsword combat and authored/generated animation clips.
+- Cinematic Home, boss selection (one available boss), Settings, Challenge results and unranked Creative assists; separate menu music and interface cues.
+- Latest Mac native suite: **41/41 passed**. Owner UI/audio acceptance remains pending. No new Windows build, package or FPS claim.
+- Boss AI/adaptation remains deferred. Generated assets and motion do not imply runtime AI; historical browser adaptation and headless PPO are separate.
 
-- Existing local Unreal build: greatsword combat, directional dodge, target lock, sprint and pause/quit; optional V13 Blender player costume trial.
-- New boss direction: **B — Funeral Regent**, with blue-flame skulls and a proposed chain pull followed by an avoidable stab. These new boss abilities are **not implemented**.
-- Current boss clay/focal studies failed visual acceptance. Included scenes and renders are honest work-in-progress evidence, not production-ready assets.
-- Boss AI/adaptation remains deferred in Unreal. Browser statistical adaptation, historical headless PPO and unavailable model adapters are separate systems.
+**Windows: a Git pull is not immediately playable.** No Windows executable is included; launchers are Mac-specific and several current game asset folders remain local-only. See [Windows setup and missing dependencies](docs/WINDOWS_SETUP.md).
 
 ## Run the browser reference from a clone
 
@@ -31,12 +31,12 @@ Follow [UNREAL_RESTORE.md](docs/UNREAL_RESTORE.md). The source checkout excludes
 After dependencies and the editor target are built:
 
 ```sh
-BOSSLAB_OUTFIT=v13 BOSSLAB_QUALITY=performance ./scripts/bosslab-unreal play
+./scripts/bosslab-game
 ```
 
-Controls: Enter starts; WASD moves; mouse looks; Tab locks target; Space rolls; left-click/J attacks; Shift sprints; Esc/P opens the pause menu. Quit through the menu or Q while paused. Omit `BOSSLAB_OUTFIT` for the original costume. `package-play` requires a separately built local package, which is not in Git.
+Controls: Tab/Enter navigate menus; WASD moves; mouse looks; Tab locks target; Space rolls; left-click/J attacks; Shift sprints; F jumps; E heals; Esc/P pauses. Quit through the pause menu. This wrapper selects local revamp/Regent/dungeon assets. `package-play` uses a separate older local package, which is not in Git.
 
-The project retains a10GB Unreal allocation limit and24GiB free-space guard. No public game deployment or model connection is included. See [publication scope](docs/PUBLICATION_SCOPE.md) for retained checkpoints, excluded dependencies and known historical links. No open-source license has been assigned by this handoff; third-party rights remain separate.
+The project retains a10GB Unreal allocation limit and15GiB free-space guard. No public game deployment or model connection is included. See [publication scope](docs/PUBLICATION_SCOPE.md) for retained checkpoints, excluded dependencies and known historical links. No open-source license has been assigned by this handoff; third-party rights remain separate.
 
 ---
 

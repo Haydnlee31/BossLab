@@ -238,3 +238,13 @@ Owner says proceed with refinements. Continue the approved target using the exis
 121. Owner sets aside arena draft for boss weapon/ability/movement planning. Recommend execution staff and separate chain manacle, commanded skull fireballs and short committed dash. Recommendation is not owner acceptance or implemented combat. Preserve existing arena/source/local assets. First kit avoids overlapping hazards and releases hook restraint before an avoidable thrust; no AI changes. See docs/design/REGENT_WEAPON_AND_MOVESET.md.
 
 122. 2026-11-09: Owner chose Regent weapon A (estoc + soul-fire censer chain), "magic as diversified as possible", and a second phase, and authorised a greybox implementation for later testing. This supersedes the staff/manacle recommendation (121) for the greybox only. It is opt-in `BOSSLAB_BOSS=regent`; the default Warden rehearsal and the packaged app are unchanged. No AI. See docs/REGENT_MOVESET.md.
+
+123. 2026-11-14: Owner requests professional multi-boss-ready frontend. Use native Slate with one available Regent and disabled future entries; separate Challenge from permanently unranked Creative. Session records only; reset assists for Challenge and latch eligibility. Reuse existing local assets; built-in imagegen logo, no HF token used. Preserve original package and fixed rehearsal.
+
+##2026-11-14 — Cinematic frontend replaces rejected dashboard
+
+Use fullbleed HF-generated environment/keyart and licensed Cinzel; keep navigation transparent and immediate with gold focus. No card grid. ComingSoon remains noninteractive until another boss exists. FLUX is an art-generation tool, not a UI specialist or runtimeAI. Preserve original model responses/prompts and convert WebP to PNG for Slate. Keep actual outcome separate from eligibility and ignore R on settings/assists subpages. Gold custom focus replaces engine blue rectangles at project scope. No new package/publication.
+
+##2026-11-14 — Interface sound owns a separate mix
+
+Owner rejects menu buzzing. Suppress battle music/room/fire beds and cancel tracked spell tails on menus. Dedicated original sparse struck-string score on title pages; short dry confirm/adjust sounds,90ms retrigger guard, no hover sound. Pause/results remain quiet. Respect saved master/music/effects/mute from startup. Missing interface assets remain silent rather than falling back to fight sounds. Preserve initial too-quiet recording and calibrate source gain from measured output. No combat-rule/AI changes.

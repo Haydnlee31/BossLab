@@ -167,6 +167,8 @@ def main():
             for name, group in [('rolls-cardinal', 0), ('rolls-diagonal', 1)]:
                 if name in sys.argv[2:]:
                     cmd += ['-BossLabRollStudy=' + str(group)]
+        if mode == 'play' and 'record-audio' in sys.argv[2:]:
+            cmd += ['-BossLabRecordAudio']
         if mode == 'benchmark':
             cmd += ['-BossLabBenchmark', '-ForceRes']
             if 'record-audio' in sys.argv[2:]:

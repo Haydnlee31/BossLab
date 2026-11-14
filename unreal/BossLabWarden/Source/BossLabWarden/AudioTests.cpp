@@ -2,6 +2,7 @@
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 #include "Sound/SoundBase.h"
+#include "Components/AudioComponent.h"
 #include "Misc/AutomationTest.h"
 #if WITH_DEV_AUTOMATION_TESTS
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FWardenAudioVariationTest,"BossLab.Audio.VariationsNeverRepeat",(EAutomationTestFlags::EditorContext|EAutomationTestFlags::ClientContext)|EAutomationTestFlags::EngineFilter)
@@ -34,5 +35,34 @@ bool FWardenAudioVariationTest::RunTest(const FString&)
     else AddInfo(TEXT("Layered sound set not imported here; legacy sounds stand in."));
     GEngine->DestroyWorldContext(W); W->DestroyWorld(false);
     return true;
+}
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FWardenInterfaceAudioTest,"BossLab.Audio.InterfaceRouting",(EAutomationTestFlags::EditorContext|EAutomationTestFlags::ClientContext)|EAutomationTestFlags::EngineFilter)
+bool FWardenInterfaceAudioTest::RunTest(const FString&)
+{
+    auto* W=UWorld::CreateWorld(EWorldType::Game,false); GEngine->CreateNewWorldContext(EWorldType::Game).SetCurrentWorld(W);
+    auto* M=W->SpawnActor<AWardenArenaMode>();
+    M->Warden=W->SpawnActor<AWardenChallenger>(); M->Player=W->SpawnActor<AWardenChallenger>();
+    M->Warden->Fight.Health=M->Player->Fight.Health=100;
+    M->bTitle=true; M->bPaused=true; M->MusicVolumeScale=1;
+    TestFalse(TEXT("Home blocks world ambience and one-shots"),M->WorldAudioEnabled());
+    TestEqual(TEXT("Living boss cannot play music behind Home"),M->MusicLevel(),0.f);
+    TestTrue(TEXT("Home has separate quiet score"),M->MenuMusicLevel()>0 && M->MenuMusicLevel()<.5f);
+    M->MusicVolumeScale=0; TestEqual(TEXT("Music slider mutes title score"),M->MenuMusicLevel(),0.f);
+    M->MusicVolumeScale=1; M->bMuted=true; TestEqual(TEXT("Mute silences title score"),M->MenuMusicLevel(),0.f);
+    M->bMuted=false; M->bTitle=false; M->bPaused=false;
+    TestTrue(TEXT("Fight restores world audio"),M->WorldAudioEnabled() && M->MusicLevel()>0);
+    TestEqual(TEXT("Fight has no menu score"),M->MenuMusicLevel(),0.f);
+    M->bPaused=true; TestTrue(TEXT("Pause/settings are quiet"),!M->WorldAudioEnabled() && M->MusicLevel()==0 && M->MenuMusicLevel()==0);
+    M->bPaused=false; M->Player->Fight.Health=0;
+    TestEqual(TEXT("Death stops boss music even while boss lives"),M->MusicLevel(),0.f);
+    M->Player->Fight.Health=100;
+    auto* Music=NewObject<UAudioComponent>(M); M->MusicComponent=Music;
+    M->bTitle=true; M->bPaused=true; M->UpdateAudio();
+    TestEqual(TEXT("Home suppresses actual boss component gain"),Music->VolumeMultiplier,0.f);
+    M->bTitle=false; M->bPaused=false; M->UpdateAudio();
+    TestEqual(TEXT("Challenge restores component gain independently of fade envelope"),Music->VolumeMultiplier,1.f);
+    M->bPaused=true; M->UpdateAudio(); M->bPaused=false; M->UpdateAudio();
+    TestEqual(TEXT("Resume restores gain a second time"),Music->VolumeMultiplier,1.f);
+    GEngine->DestroyWorldContext(W); W->DestroyWorld(false); return true;
 }
 #endif

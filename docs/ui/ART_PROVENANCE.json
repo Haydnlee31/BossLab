@@ -1,0 +1,22 @@
+[
+  {
+    "space": "black-forest-labs/FLUX.1-schnell",
+    "prompt": "Cinematic dark fantasy video game title screen environment, widescreen 16:9 composition. A vast ruined funerary cathedral, ancient charcoal stone arches fading into cold blue mist, a distant throne on the RIGHT third beneath a broken circular window, thin shafts of moonlight, tiny amber votive candles along the floor, scattered ash. The LEFT HALF is extremely dark empty atmospheric negative space reserved for live game menu typography, no objects in foreground left. A narrow weathered straight sword planted upright in cracked stone in the lower RIGHT foreground, faded crimson cloth at its hilt, one faint cyan soul flame near the throne. Painterly realism with exquisite stone and metal detail, understated rich blacks and desaturated antique gold, dramatic chiaroscuro, cinematic matte painting, solemn, ominous, beautiful, premium PC game key art. Wide establishing shot. No text, no letters, no logo, no UI, no panels, no frames, no people, no colourful neon, no cartoon.",
+    "seed": 47,
+    "width": 1536,
+    "height": 864,
+    "steps": 4,
+    "seconds": 6.735530138015747,
+    "runtime_asset": "unreal/BossLabWarden/Content/UI/CrucibleBackdrop.png"
+  },
+  {
+    "space": "black-forest-labs/FLUX.1-schnell",
+    "prompt": "Premium dark fantasy game boss selection key art, wide 16:9 horizontal composition. On the RIGHT HALF stands the Funeral Regent, tall lean undead king in long tattered indigo mourning robes with fine ancient gold embroidery, fitted dark silver ribbed armour, a narrow damaged bronze crown above an elongated ivory funeral mask, no exposed face. Full body or knees-up three-quarter portrait, graceful terrifying regal silhouette, not bulky. He holds a thin straight estoc down in his right hand and a hanging ancient brass incense censer on a long chain in his left hand, emitting subdued spectral blue fire. Exactly three small floating human skulls with blue soul flames behind his shoulders. Background ruined cathedral disappearing into black mist. LEFT HALF is empty near-black atmospheric negative space for game typography. Strong cold rim light traces hood and silver armour, very restrained warm highlights on the mask, painterly realistic exquisite materials, haunting solemn beauty. No text, no letters, no UI, no panels, no beige background, no cartoon, no wings, no giant glowing weapon.",
+    "seed": 53,
+    "width": 1536,
+    "height": 864,
+    "steps": 4,
+    "seconds": 6.756042957305908,
+    "runtime_asset": "unreal/BossLabWarden/Content/UI/RegentBackdrop.png"
+  }
+]

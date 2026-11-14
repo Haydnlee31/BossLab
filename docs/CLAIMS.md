@@ -1,3 +1,27 @@
+## Main publication and Windows audit — 2026-11-14
+
+Owner requests main push. Publication selection includes the latest frontend/audio implementation, runtime UI art/font licence and InterfaceAudio assets, plus Windows setup guidance. Remote main matched the previous gameplay branch before this change; no history rewrite is needed. Current generated game content remains local-only under the documented publication boundary. A Windows clone is not immediately playable: no executable, Mac-specific launchers, omitted asset dependencies and no Windows build/test. See docs/WINDOWS_SETUP.md and refreshed HANDOFF/README. Existing Mac regression evidence41/41 is retained in docs/ui/VALIDATION.json; this publication adds no platform verification. Next: owner frontend/audio review, then Windows asset transfer/build if requested. Git history and remote receipt establish publication completion.
+
+## Interface audio revision — 2026-11-14
+
+Owner reports buzzing beneath menus. Found title/pause routing left boss drone, room tone and six fire loops playing. Now title screens use a separate original sparse32-second struck-string theme with short dry confirm/adjust cues; combat ambience/music and lingering spell voices stop behind menus, pause/results are quiet. Saved volume settings apply before sound setup; mute/music/effects work independently. Boss music gain restoration after resume is covered by a component-level regression. No combat/AI changes.
+
+Final build succeeds; native **41/41**, zero warnings/failures/notRun. Actual recorded Home→boss selection→fight→death/restart→pause→resume→pause routes inspected; initial mix was too quiet and preserved. Final menu-only44.16s recording: peak-21.073dBFS, zero clipped samples, first30s RMS-35.855dBFS; melody-envelope correlation0.983 with generated source. Paused portions in the earlier recording reach digital silence after reverb decay. These are numerical/output checks, not a claim of listening or owner acceptance.
+
+Launch `./scripts/bosslab-game`. Listening preview: `artifacts/audio-interface-2026-11-14/menu-preview.wav`; sources/importer under `unreal/art-studio/source/audio/`; reports, initial/final recordings in the same artifact directory. Local interface assets /Game/BossLab/InterfaceAudio; no model/server/token required. No package/FPS/publication claim. All owned jobs stopped. Exact next action: owner listen to menu and cues at normal speaker/headphone level and judge timbre/balance.
+
+## Cinematic frontend revision — 2026-11-14
+
+Owner rejected the prior dashboard-like UI. Rebuilt Home/roster/pause/settings/Creative/results as cinematic native game menus with Cinzel, gold text focus and two actual Hugging Face FLUX.1-schnell illustrations. Home and Regent selection now use full-bleed key art; no card dashboard. Challenge/Creative rules retained. Fixed R restarting from Settings and ineligible wins being mislabeled as death.
+
+Build succeeded; native **40/40**, zero warnings/failures/notRun. Live Home, Regent selection, Settings, Creative, pause, Challenge start, actual defeat and returnHome inspected. Real defeat545ticks/100damage/6hits/0flasks. Success and Creative exclusion are fixture-tested, not a human victory. Synthetic mouse activation remains unreliable; physical mouse acceptance pending. Project-only focus styling uses custom gold indicators.
+
+Launch: `./scripts/bosslab-game`. Evidence/provenance: `artifacts/ui/cinematic-2026-11-14/`; design: `docs/ui/CRUCIBLE_FRONTEND.md`. Images are illustrative UI art, not new 3D assets. Two HF requests succeeded; quota consumption not measured. Token not stored; no runtime model connection. No new AI, package, FPS or public-push claim. Original package unchanged. Next: owner review of the actual game frontend and physical mouse navigation; no bossAI work.
+
+## Crucible UI — 2026-11-14
+
+Branded local editor-game frontend implemented,40/40 native tests on two runs. Actual Home/roster/settings/Creative/Challenge launch and defeat summary inspected. Success eligibility/statistics tested through state fixtures, not a human victory. Synthetic mouse activation unreliable; physical review pending. Final text-layout-only build follows tests. No new FPS, package or AI claim.
+
 ## Regent combat proposal — 2026-11-09
 
 Weapon, fireball, chain and dash design saved in docs/design/REGENT_WEAPON_AND_MOVESET.md. Proposed dimensions/timings are untested. No new gameplay implementation, renders, tests or performance results. Arena draft deferred, existing assets preserved.

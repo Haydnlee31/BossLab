@@ -133,4 +133,31 @@ bool FWardenPracticeTest::RunTest(const FString&)
     QoLClose(W);
     return true;
 }
+QOL_TEST(FWardenFrontendIsolationTest,"BossLab.QoL.FrontendChallengeCreativeIsolation");
+bool FWardenFrontendIsolationTest::RunTest(const FString&)
+{
+    auto* W=QoLWorld(); auto* M=QoLArena(W,true);
+    M->OpenHome();
+    TestTrue(TEXT("Home pauses and clears assists"),M->bTitle && M->bPaused && !M->bPracticeInfiniteHealth);
+    const int32 T=M->CombatTick; M->FixedStep(); TestEqual(TEXT("Home cannot advance combat"),M->CombatTick,T);
+    M->ShowFrontPage(EWardenFrontScreen::CreativeSetup);
+    M->SetCreativeInfiniteHealth(true); M->SetCreativeInfiniteStamina(true); M->bRegentPhaseTwoStart=true;
+    M->StartRegentSession(true); M->FixedStep();
+    TestTrue(TEXT("Creative retains selected assists, never eligible"),M->bCreativeMode && M->bPracticeInfiniteHealth && M->bPracticeInfiniteStamina && !M->Run.bChallengeEligible);
+    M->Warden->Fight.Health=0; M->RunEnded(); M->RunEnded();
+    TestTrue(TEXT("Creative result exists without Challenge success"),M->Run.bResult && !M->Run.bChallengeVictory && M->Run.Victories==0);
+    M->StartRegentSession(false); M->FixedStep();
+    TestTrue(TEXT("Fresh Challenge clears all practice options"),!M->bCreativeMode && !M->bPracticeInfiniteHealth && !M->bPracticeInfiniteStamina && !M->bRegentPhaseTwoStart);
+    TestTrue(TEXT("Clean human challenge eligible"),M->Run.bChallengeEligible);
+    M->SetCreativeInfiniteHealth(true); TestFalse(TEXT("Challenge rejects assist setter"),M->bPracticeInfiniteHealth);
+    M->CombatTick=600; M->PlayerDamage=600; M->BossDamage=24; M->Player->BleedCount+=2; --M->Player->Fight.Heals;
+    M->Warden->Fight.Health=0; M->RunEnded(); M->RunEnded();
+    TestTrue(TEXT("Challenge victory recorded once"),M->Run.bChallengeVictory && M->Run.Victories==1);
+    TestEqual(TEXT("Snapshot duration"),M->Run.Seconds,10.f); TestEqual(TEXT("Snapshot damage taken"),M->Run.DamageTaken,24.f);
+    TestEqual(TEXT("Snapshot hits"),M->Run.HitsTaken,2); TestEqual(TEXT("Snapshot consumed flask"),M->Run.HealsUsed,1);
+    M->RetrySession(); M->FixedStep(); M->bRehearsal=false; M->UpdateRunStats(); M->bRehearsal=true;
+    M->Warden->Fight.Health=0; M->RunEnded(); TestFalse(TEXT("Dummy assistance invalidates attempt permanently"),M->Run.bChallengeVictory);
+    M->OpenHome(); TestTrue(TEXT("Returning Home retains records but stops attempt"),M->Run.Victories==1 && !M->Run.bChallengeEligible && M->bTitle);
+    QoLClose(W); return true;
+}
 #endif

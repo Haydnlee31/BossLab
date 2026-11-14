@@ -1,3 +1,6 @@
+##2026-11-14 Interface audio — complete for listening review
+Root: audio routing/import/build/runtime capture. Unreal builder: original menu score/cues/importer. QA: routing review; gain-restoration defect corrected. Native41/41; final44.16s mix recorded, no clipping. Next owner listening; no bossAI.
+
 # BossLab development board — 2026-11-07
 
 Priority: user rejected character realism. Improve original 3D character first; preserve current playable fight. Boss AI capabilities remain deferred until all other readiness gates are met.

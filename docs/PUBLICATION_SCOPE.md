@@ -13,3 +13,7 @@ Historical logs/JSON/reports may identify the original workstation via absolute 
 Many historical Markdown links point to local evidence intentionally not uploaded or previously pruned. Start from HANDOFF.md for the maintained entrypoints. Earlier saved hash audits remain dated evidence; pruning manifests explain later removals.
 
 Only source-safe assets are selected for the initial commit. No Git LFS service, release upload, CI job, Pages deployment or repository visibility change is part of this handoff.
+
+## Frontend publication — 2026-11-14
+
+The current push adds native frontend/audio source, UI PNGs (generated artwork), Cinzel plus OFL, and four original InterfaceAudio assets (music, two cues and sound class). It does not bulk-publish the local Anim, Dungeon, Effects, Regent, Revamp, Sound, Sword or SwordGen folders. Those omissions prevent a clone from reproducing the latest local game presentation; see WINDOWS_SETUP.md. The unused RegentPortrait study remains local. No Windows package or portability certification is included.

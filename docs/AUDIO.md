@@ -184,3 +184,15 @@ The owner said the audio was "a bit plain" and asked how game audio engineers wo
 
   Skull sounds now carry 22–35% of their energy above 2.5 kHz (was 9–12%), mostly in the 2–5 kHz range the ear is most sensitive to. They are about 8 dB louder, with call volumes of 0.8 (launch) and 1.0 (dive).
 - **Verification:** native suite 34/34. Not listened to by the agent.
+
+## Interface audio separation — 2026-11-14
+
+Owner reports interface buzzing. Code review found that title/pause screens inherited the fight's MusicBoss drone, room loop and six fire loops; MusicLevel only checked boss health/mute and ambience only checked mute. SetupAudio also preceded loading saved volumes.
+
+Dedicated original32-second sparse D-minor struck-string menu theme and two short confirmation/adjustment cues live in /Game/BossLab/InterfaceAudio. Generator/importer: unreal/art-studio/source/audio/make_interface_audio.py and ue_import_interface_audio.py. No external samples/model/download. Source48kHz stereoPCM16; calibrated music peak-6.73dBFS, RMS-21.76dBFS including quiet gaps; no clipped samples and exact silent loop boundary. Cues use a dry UISound class, no spatial attenuation or hall reverb,90ms repeat guard. No sound on hover.
+
+Home/roster/title settings/Creative setup use only the menu theme. Fight pauses the menu theme and restores world beds; pause/results suppress both music beds and ambience. Tracked long combat one-shot tails stop on opening a menu. Saved settings load before spawning audio; loops start paused at negligible gain. Music and effects sliders/mute apply independently; absent menu assets produce silence instead of a battle fallback. Actual outcome/gameplay rules unchanged.
+
+Build succeeded; final native41/41, zero warnings/failures/notRun, including actual component gain restoration after Home/pause. Initial106.176s real output capture confirms title melody (envelope correlation0.969), battle-on and silence after result/pause; it revealed a too-quiet title mix(-45.83dBFS RMS). Added10dB to the menu source and6dB to short cues, then reimported only InterfaceAudio. Final recording measurement is in artifacts/audio-interface-2026-11-14/runtime-analysis.json. The initial recording/log is preserved. Sound quality still requires owner listening: numerical checks do not prove artistic quality.
+
+Final calibrated output:44.16s, peak-21.073dBFS, zero clipped samples, first30s RMS-35.855dBFS; envelope correlation0.983 with the intended melody. See menu-preview.wav for an actual30-second unboosted excerpt from Unreal. All checks are numerical; owner listening remains open.

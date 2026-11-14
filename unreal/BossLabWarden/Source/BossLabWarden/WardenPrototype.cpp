@@ -328,8 +328,8 @@ void AWardenArenaMode::BeginPlay()
     BuildSpectacle();
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabRegent"))) EnableRegent();
     bRegentPhaseTwoStart=bRegent && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegentPhaseTwo"));
-    SetupAudio();
     LoadSettings();
+    SetupAudio();
     ResetEncounter();
     bTitle=true;
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabCapture")))
@@ -381,6 +381,11 @@ void AWardenArenaMode::BeginPlay()
         ConfigureEncounter(202,true,3); bDemo=true; bAdaptive=false; bInspector=false; bBenchmark=true;
         Player->SetLocked(true);
     }
+    if(!GIsAutomationTesting && !bCaptureFrames && !bBenchmark)
+    {
+        bFrontendSession=true;
+        OpenHome();
+    }
 }
 
 void AWardenPrototypeHUD::DrawHUD()
@@ -389,6 +394,7 @@ void AWardenPrototypeHUD::DrawHUD()
     if (!Canvas) return;
     auto* Mode = GetWorld()->GetAuthGameMode<AWardenArenaMode>();
     if (!Mode || !Mode->Player || !Mode->Warden) return;
+    if(Mode->bFrontendSession && (Mode->bTitle || Mode->bPaused)) return;
     const auto& P = Mode->Player->Fight;
     const auto& B = Mode->Warden->Fight;
     const float W = Canvas->SizeX, H = Canvas->SizeY;
@@ -407,7 +413,7 @@ void AWardenPrototypeHUD::DrawHUD()
     if(Mode->Player->RejectFlash>0) DrawRect(FLinearColor(1,.3,.12,Mode->Player->RejectFlash),30,76,264,15);
     DrawText(FString::Printf(TEXT("HP %.0f   STAMINA %.0f   HEALS %d"),P.Health,P.Stamina,P.Heals),FColor::White,32,100);
     if(!Mode->bRecording && Mode->Settings.bControlHints) DrawText(TEXT("WASD move | Shift sprint | Tab target | LMB cut (chain x3) | Space roll | F jump | E heal | Esc menu"),FColor(200,205,210),32,H-62);
-    if(!Mode->bRecording && Mode->Settings.bControlHints) DrawText(TEXT("I controls | F5 boss rehearsal | F6 test pilot | F9 export | F1 clean | H hide hints"),FColor(170,180,190),32,H-42);
+    if(!Mode->bFrontendSession && !Mode->bRecording && Mode->Settings.bControlHints) DrawText(TEXT("I controls | F5 boss rehearsal | F6 test pilot | F9 export | F1 clean | H hide hints"),FColor(170,180,190),32,H-42);
     if(!Mode->bRecording && (Mode->Player->RejectFlash>0 || (!Mode->LastEvent.StartsWith(TEXT("Not enough stamina")) && !Mode->LastEvent.StartsWith(TEXT("Heal unavailable"))))) DrawText(Mode->LastEvent,FColor(230,192,125),32,132);
     if(!Mode->bRecording)
     {
@@ -453,8 +459,8 @@ void AWardenPrototypeHUD::DrawHUD()
                 Run.BestVictorySeconds>0?*FString::Printf(TEXT(" | Fastest win %.1fs"),Run.BestVictorySeconds):TEXT(""),Run.bPractice?TEXT(" | PRACTICE (not recorded)"):TEXT("")),FColor(185,205,211),W*.3f,H*.47f+100);
         }
     }
-    if(Mode->Player->bV13Outfit) DrawText(TEXT("V13 TEST | Approximate rigid fitting / simplified materials"),FColor(230,192,125),32,258);
-    if(Mode->Player->bRevampOutfit) DrawText(TEXT("REVAMP TEST | Generated characters / distance-weighted skin, no cloth sim"),FColor(230,192,125),32,258);
+    if(!Mode->bFrontendSession && Mode->Player->bV13Outfit) DrawText(TEXT("V13 TEST | Approximate rigid fitting / simplified materials"),FColor(230,192,125),32,258);
+    if(!Mode->bFrontendSession && Mode->Player->bRevampOutfit) DrawText(TEXT("REVAMP TEST | Generated characters / distance-weighted skin, no cloth sim"),FColor(230,192,125),32,258);
     if(Mode->bCaptureFrames) DrawText(TEXT("ENGINE FRAME CAPTURE / fixed 30 fps / not a real-time benchmark"),FColor(230,192,125),32,184);
     // The boss's name as the fight opens (fades in and out over four seconds) and an Elden
     // Ring-style golden banner when it falls.
@@ -481,9 +487,9 @@ void AWardenPrototypeHUD::DrawHUD()
         const bool Protected=Mode->Player->Fight.Invulnerable();
         DrawText(FString::Printf(TEXT("ROLL WINDOW: %s | age %d / 36 | protection ages 4-17"),Protected?TEXT("PROTECTED"):TEXT("VULNERABLE"),Mode->Player->Fight.Age),Protected?FColor(100,240,170):FColor(230,190,140),32,232);
     }
-    DrawInspector(Mode);
+    if(!Mode->bFrontendSession) DrawInspector(Mode);
     if (Mode->Player->HitFlash > 0 && !Mode->bReducedMotion) DrawRect(FLinearColor(.7,.03,.01,Mode->Player->HitFlash),0,0,W,H);
-    DrawText(Mode->bRehearsal?(Mode->bRegent?TEXT("REGENT GREYBOX / FIXED SEQUENCE"):TEXT("FIXED ATTACK REHEARSAL")):TEXT("PRACTICE DUMMY"),FColor(180,195,200),W-285,28);
+    DrawText(Mode->bFrontendSession?(Mode->bCreativeMode?TEXT("CREATIVE"):TEXT("CHALLENGE")):Mode->bRehearsal?(Mode->bRegent?TEXT("REGENT GREYBOX / FIXED SEQUENCE"):TEXT("FIXED ATTACK REHEARSAL")):TEXT("PRACTICE DUMMY"),FColor(180,195,200),W-285,28);
     // Fight clock and attempt number (WardenQoL.cpp), human attempts only.
     if(!Mode->bTitle && !Mode->bRecording && Mode->Run.bCounted)
     {

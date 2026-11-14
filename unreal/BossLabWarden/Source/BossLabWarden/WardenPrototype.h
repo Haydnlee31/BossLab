@@ -371,6 +371,12 @@ public:
     const TArray<TWeakObjectPtr<class USoundBase>>& SfxVariations(const FString& Name,const TCHAR* Legacy);
     int32 SfxPick(const FString& Name,int32 Count);
     void SetupAudio();
+    bool WorldAudioEnabled() const;
+    float MenuMusicLevel() const;
+    void PlayInterfaceCue(bool Adjust=false);
+    TWeakObjectPtr<class UAudioComponent> MenuMusicComponent;
+    TArray<TWeakObjectPtr<class UAudioComponent>> WorldAudioVoices;
+    double LastInterfaceCue=-1;
     void UpdateAudio();
     TMap<FString,TArray<TWeakObjectPtr<class USoundBase>>> SfxBank;
     TMap<FString,int32> SfxLast;
@@ -394,6 +400,17 @@ public:
     void ApplySettings();
     TSharedRef<class SWidget> BuildOptionsPanel();
     // Attempt counter, fight timer and death recap (WardenQoL.cpp).
+    EWardenFrontScreen FrontScreen=EWardenFrontScreen::None;
+    bool bFrontendSession=false, bCreativeMode=false;
+    void ShowFrontPage(EWardenFrontScreen Screen);
+    void OpenHome();
+    void OpenBossSelect();
+    void StartRegentSession(bool Creative);
+    void RetrySession();
+    FString ChallengeStatsText() const;
+    void SetCreativeInfiniteHealth(bool Enabled);
+    void SetCreativeInfiniteStamina(bool Enabled);
+    void UpdateRunStats();
     FWardenRunRecord Run;
     bool CountsRun() const { return !bDemo && !bScriptedPlayer && !bCaptureFrames; }
     void RunStarted();
@@ -401,7 +418,7 @@ public:
     void RunEnded();
     // Practice options (pause menu, session only, default off, never saved). Practice
     // attempts are labelled on the HUD and never set records.
-    bool bPracticeInfiniteHealth=false;
+    bool bPracticeInfiniteHealth=false, bPracticeInfiniteStamina=false;
     TSharedRef<class SWidget> BuildPracticePanel();
     void StopAudioRecording();
     // Hit-stop ticks left and camera shake strength (presentation) after a landed blow.
