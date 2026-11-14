@@ -74,6 +74,16 @@ void AWardenChallenger::BeginPlay()
     Super::BeginPlay();
     Locomotion = LoadObject<UBlendSpace>(nullptr,TEXT("/Game/Characters/Mannequins/Anims/Unarmed/BS_Idle_Walk_Run"));
     IdleAnimation = LoadObject<UAnimSequence>(nullptr,TEXT("/Game/Characters/Mannequins/Anims/Unarmed/MM_Idle"));
+    auto Ual=[](const TCHAR* Clip)->UAnimSequence*
+    {
+        for(const FString& Name:{FString::Printf(TEXT("UAL_Anims_root_UAL_%s"),Clip),FString::Printf(TEXT("UAL_Anims_UAL_%s"),Clip),FString::Printf(TEXT("UAL_%s"),Clip),FString(Clip)})
+            if(auto* A=LoadObject<UAnimSequence>(nullptr,*(TEXT("/Game/BossLab/Anim/UAL/")+Name),nullptr,LOAD_Quiet|LOAD_NoWarn)) return A;
+        return nullptr;
+    };
+    // The UAL roll is a straight-legged dive roll (parkour, not a tucked souls roll), so it is
+    // opt-in for comparison: BOSSLAB_ANIM_ROLL=clip. The sprint loop is on by default.
+    ClipSprint=Ual(TEXT("Sprint_Loop"));
+    if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_ROLL")).ToLower()==TEXT("clip")) ClipRoll=Ual(TEXT("Roll"));
     Body->SetComponentTickEnabled(false);
     Body->VisibilityBasedAnimTickOption=EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
     Body->PlayAnimation(IdleAnimation,false);

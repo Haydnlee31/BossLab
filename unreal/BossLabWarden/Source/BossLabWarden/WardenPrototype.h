@@ -206,6 +206,12 @@ private:
     UPROPERTY() TArray<TObjectPtr<UAnimationAsset>> AttackAnimations;
     UPROPERTY() TObjectPtr<UAnimationAsset> DashAnimation;
     UPROPERTY() TObjectPtr<UAnimationAsset> IdleAnimation;
+    // Authored clips (Quaternius UAL, CC0, retargeted by retarget_ual.py; local assets):
+    // the player's forward/side roll and sprint. Procedural fallbacks when absent.
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipRoll;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipSprint;
+    bool bClipRoll=false;      // this roll plays the authored clip (not a backward roll)
+    float ClipRollYaw=0;       // mesh yaw toward the roll's travel, actor-relative degrees
     int32 PresentedAction = -1;
 };
 

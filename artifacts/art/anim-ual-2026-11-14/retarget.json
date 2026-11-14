@@ -1,0 +1,92 @@
+{
+ "clips": {
+  "Idle_Loop": {
+   "frames": 63,
+   "ratio": 1.0461
+  },
+  "Walk_Loop": {
+   "frames": 34,
+   "ratio": 1.0461
+  },
+  "Jog_Fwd_Loop": {
+   "frames": 24,
+   "ratio": 1.0461
+  },
+  "Sprint_Loop": {
+   "frames": 17,
+   "ratio": 1.0461
+  },
+  "Roll": {
+   "frames": 37,
+   "ratio": 1.0461
+  },
+  "Sword_Idle": {
+   "frames": 42,
+   "ratio": 1.0461
+  },
+  "Sword_Attack": {
+   "frames": 39,
+   "ratio": 1.0461
+  },
+  "Hit_Chest": {
+   "frames": 9,
+   "ratio": 1.0461
+  },
+  "Hit_Head": {
+   "frames": 11,
+   "ratio": 1.0461
+  },
+  "Death01": {
+   "frames": 61,
+   "ratio": 1.0461
+  },
+  "Jump_Start": {
+   "frames": 34,
+   "ratio": 1.0461
+  },
+  "Jump_Loop": {
+   "frames": 63,
+   "ratio": 1.0461
+  },
+  "Jump_Land": {
+   "frames": 32,
+   "ratio": 1.0461
+  },
+  "Sword_Regular_A": {
+   "frames": 11,
+   "ratio": 1.0461
+  },
+  "Sword_Regular_A_Rec": {
+   "frames": 25,
+   "ratio": 1.0461
+  },
+  "Sword_Regular_B": {
+   "frames": 14,
+   "ratio": 1.0461
+  },
+  "Sword_Regular_B_Rec": {
+   "frames": 26,
+   "ratio": 1.0461
+  },
+  "Sword_Regular_C": {
+   "frames": 51,
+   "ratio": 1.0461
+  },
+  "Sword_Heavy_Combo": {
+   "frames": 109,
+   "ratio": 1.0461
+  },
+  "Sword_Dash": {
+   "frames": 40,
+   "ratio": 1.0461
+  },
+  "Sword_Block": {
+   "frames": 31,
+   "ratio": 1.0461
+  },
+  "Hit_Knockback": {
+   "frames": 21,
+   "ratio": 1.0461
+  }
+ }
+}

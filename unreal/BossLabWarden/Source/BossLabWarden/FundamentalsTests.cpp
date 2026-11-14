@@ -161,7 +161,7 @@ bool FWardenRollContinuityTest::RunTest(const FString&)
 {
     auto* W=NewWorld(); auto* P=Fighter(W,FVector(0,0,95));
     const FName Bones[]={TEXT("pelvis"),TEXT("head"),TEXT("foot_l"),TEXT("foot_r")};
-    float MaxStep=0,MaxExit=0,LowestHead=10000,LowestBlade=10000;
+    float MaxStep=0,MaxExit=0,LowestHead=10000,LowestBlade=10000; FString MaxAt;
     for(int32 DirectionIndex=0;DirectionIndex<8;++DirectionIndex)
     {
         const FVector Direction=FRotator(0,DirectionIndex*45.f,0).Vector();
@@ -176,7 +176,7 @@ bool FWardenRollContinuityTest::RunTest(const FString&)
             {
                 const FVector Point=P->VisualBody->GetBoneLocationByName(Bones[I],EBoneSpaces::WorldSpace);
                 TestFalse(TEXT("Finite rolling joints"),Point.ContainsNaN());
-                MaxStep=FMath::Max(MaxStep,FVector::Distance(Point,Prior[I])); Prior[I]=Point;
+                { const float Step=FVector::Distance(Point,Prior[I]); if(Step>MaxStep) { MaxStep=Step; MaxAt=FString::Printf(TEXT("%s dir %d tick %d"),*Bones[I].ToString(),DirectionIndex,T); } } Prior[I]=Point;
                 if(I==1) LowestHead=FMath::Min(LowestHead,float(Point.Z));
             }
             for(int32 I=0;I<5;++I) LowestBlade=FMath::Min(LowestBlade,float(P->BladePoint(I/4.f).Z));
@@ -187,7 +187,7 @@ bool FWardenRollContinuityTest::RunTest(const FString&)
         P->CombatPose(FVector::ZeroVector);
         for(int32 I=0;I<4;++I) MaxExit=FMath::Max(MaxExit,FVector::Distance(Prior[I],P->VisualBody->GetBoneLocationByName(Bones[I],EBoneSpaces::WorldSpace)));
     }
-    AddInfo(FString::Printf(TEXT("Eight directions, varied facing: max joint step %.3f cm; exit %.3f cm; lowest head %.3f cm; lowest blade %.3f cm"),MaxStep,MaxExit,LowestHead,LowestBlade));
+    AddInfo(FString::Printf(TEXT("Eight directions, varied facing: max joint step %.3f cm (%s); exit %.3f cm; lowest head %.3f cm; lowest blade %.3f cm"),MaxStep,*MaxAt,MaxExit,LowestHead,LowestBlade));
     TestTrue(TEXT("No tuck/untuck joint teleport"),MaxStep<45);
     TestTrue(TEXT("Landed pose joins guard without a pop"),MaxExit<8);
     TestTrue(TEXT("Rolling head has helmet clearance above the floor"),LowestHead>=19);
