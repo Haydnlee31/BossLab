@@ -74,7 +74,7 @@ Read [SOULS_CONTROLS.md](SOULS_CONTROLS.md).
 
 See [ANIMATION_FEEL.md](ANIMATION_FEEL.md).
 
-## Animation feel pass (2026-11-09, branch regent-moveset-01)
+## Animation feel pass (2026-11-09, uncommitted)
 
 The owner said the boss and player movement felt weird. Measured first, then fixed how motion feeds the clips; combat rules unchanged.
 
@@ -87,9 +87,10 @@ The owner said the boss and player movement felt weird. Measured first, then fix
 
 Read [ANIMATION_FEEL.md](ANIMATION_FEEL.md).
 
-## Funeral Regent refinement pass (2026-11-09, branch regent-moveset-01)
+## Funeral Regent refinement pass (2026-11-09, uncommitted)
 
-Owner: "rectify all the problems, gradually refine the moves". 
+Owner: "rectify all the problems, gradually refine the moves". The other session's staff/manacle draft was ignored.
+
 - **Props:**
   - the CC0 Poly Haven brass lantern as the censer;
   - a modelled chain link (up to 72 follow the chain);
@@ -105,9 +106,9 @@ Owner: "rectify all the problems, gradually refine the moves".
 - **Performance:** in back-to-back benchmarks on a heavily loaded machine, the Regent was within noise of the Warden. No 60 FPS claim.
 - **Remaining:** no owner feel test, sounds not listened to, interim skull, procedural poses. See [REGENT_MOVESET.md](REGENT_MOVESET.md).
 
-## Funeral Regent moveset greybox — playable opt-in (2026-11-09, branch regent-moveset-01)
+## Funeral Regent moveset greybox — playable opt-in (2026-11-09, branch arena-design-01, uncommitted)
 
-The owner chose weapon A: an estoc, plus a soul-fire censer on a left-arm chain. The owner also asked for diversified magic and a second phase. Launch: `BOSSLAB_BOSS=regent` (editor game only), with `BOSSLAB_REGENT_PHASE=2` to start at the threshold.
+The owner chose weapon A: an estoc, plus a soul-fire censer on a left-arm chain. This supersedes the staff/manacle recommendation in the draft below for this greybox. The owner also asked for diversified magic and a second phase. Launch: `BOSSLAB_BOSS=regent` (editor game only), with `BOSSLAB_REGENT_PHASE=2` to start at the threshold.
 
 - **Moves:** 11 engine-owned Regent moves, boss indices 3–13: thrust, triple rite, censer arc, grave bell plus fire pool, witness-skull volley, drift step, procession dash, ashen furrow. Phase two adds: transition (hall fire turns blue), ash-step blink and funeral pyre ring.
 - **Controller:** fixed, labelled rehearsal sequence; no AI.
@@ -117,6 +118,10 @@ The owner chose weapon A: an estoc, plus a soul-fire censer on a left-arm chain.
 - **Not done:** no owner feel test, no performance measurement, no authored animation or final art.
 
 Read [REGENT_MOVESET.md](REGENT_MOVESET.md). Next action: owner playtest, then timing tuning.
+
+## Regent weapon and moveset draft — 2026-11-09
+
+Owner set aside the arena draft and requested weapons, abilities and movement planning. Proposed execution staff + separate chain manacle, blue-flame skull projectiles and a committed short dash; see [design draft](design/REGENT_WEAPON_AND_MOVESET.md). Existing arena files and local Dungeon/Revamp assets preserved. Design only: no game, art asset, combat test, FPS or AI changes. Exact next action: review weapon direction, then author staff/chain silhouette and grip studies before animation implementation.
 
 ## Dungeon arena — props and souls-style pass (2026-11-09, branch arena-design-01)
 

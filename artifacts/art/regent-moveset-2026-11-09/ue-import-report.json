@@ -8,8 +8,18 @@
   "params": [
    "Radius",
    "Intensity",
-   "Tint"
-  ]
+   "Tint",
+   "Reveal"
+  ],
+  "style": "rune mandala"
+ },
+ "M_RegentSpark": {
+  "blend": "additive unlit",
+  "colour": "white-orange head, red tail"
+ },
+ "M_RegentDead": {
+  "base": "grey bone, rib gaps",
+  "emissive": "soul fire between ribs, blue rim"
  },
  "M_RegentBone": {
   "base": [

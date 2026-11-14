@@ -1,3 +1,7 @@
+## Regent combat proposal — 2026-11-09
+
+Weapon, fireball, chain and dash design saved in docs/design/REGENT_WEAPON_AND_MOVESET.md. Proposed dimensions/timings are untested. No new gameplay implementation, renders, tests or performance results. Arena draft deferred, existing assets preserved.
+
 ## Arena design01 — studio evidence only
 
 Actualeditablearena and5finalrenders exist. Scoped floor/clearance audit passes;43currentgame/config/Revampfiles unchanged. No new Unreal arena, playabletest/FPSresult, hook/skullability orAIintegration claimed. ExistingClaude-revamp improvements remain intact; older characterfailures below are historical.

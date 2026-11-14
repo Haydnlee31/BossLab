@@ -1,3 +1,7 @@
+## Regent combat design — current focus, 2026-11-09
+
+Arena draft set aside at owner request; historical work below retained. Weapon/moveset proposal: docs/design/REGENT_WEAPON_AND_MOVESET.md. Next: weapon silhouette/grip study, two staff strikes, committed dash, single fireball, isolated hook test, then optional fan. No AI work.
+
 ## Arena design01 —2026-11-09
 
 - [x] Branch from currentrevamp, source/character preservation, art/combat-space/engine proposals.
