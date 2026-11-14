@@ -125,8 +125,8 @@ void AWardenChallenger::SetupPlayerInputComponent(UInputComponent* Input)
 
     Input->BindAction(TEXT("Export"),IE_Pressed,this,&AWardenChallenger::ExportReport);
 }
-void AWardenChallenger::Turn(float Value) { if(FMath::Abs(Value)>.01f) LookIdle=0; if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerYawInput(Value*Sensitivity); else LockYawOffset=FMath::Clamp(LockYawOffset+Value*Sensitivity,-25.f,25.f); }
-void AWardenChallenger::Look(float Value) { if(FMath::Abs(Value)>.01f) LookIdle=0; if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerPitchInput(-Value*Sensitivity*(bInvertLook?-1.f:1.f)); else LockPitchOffset=FMath::Clamp(LockPitchOffset-Value*Sensitivity*(bInvertLook?-1.f:1.f),-12.f,12.f); }
+void AWardenChallenger::Turn(float Value) { if(FMath::Abs(Value)>.01f) LookIdle=0; if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerYawInput(Value*Sensitivity); else LockYawOffset=FMath::Clamp(LockYawOffset+Value*Sensitivity*.8f,-40.f,40.f); }
+void AWardenChallenger::Look(float Value) { if(FMath::Abs(Value)>.01f) LookIdle=0; if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerPitchInput(-Value*Sensitivity*(bInvertLook?-1.f:1.f)); else LockPitchOffset=FMath::Clamp(LockPitchOffset-Value*Sensitivity*.8f*(bInvertLook?-1.f:1.f),-18.f,14.f); }
 void AWardenChallenger::ToggleLock() { if(!AllowsGameplayInput()) return; bLocked = !bLocked && Target.IsValid(); LockYawOffset=LockPitchOffset=0; }
 FVector AWardenChallenger::GetTargetPosition() const { return Target.IsValid() ? Target->GetActorLocation()+FVector(0,0,45) : FVector::ZeroVector; }
 
@@ -169,18 +169,29 @@ void AWardenChallenger::Tick(float DeltaSeconds)
     FVector PairOffset=FVector::ZeroVector;
     if(IsLocked()) { PairOffset=(Target->GetActorLocation()-GetActorLocation())*.5f; PairOffset.Z=30; }
     Arm->TargetOffset=FMath::VInterpTo(Arm->TargetOffset,PairOffset*Separation,DeltaSeconds,5.f);
-    const float SocketZ=IsLocked() && CameraMode && CameraMode->bRegent ? 78.f : 100.f;   // lower when facing the Regent
-    Arm->SocketOffset=FMath::VInterpTo(Arm->SocketOffset,FVector(0,45,SocketZ)*(1-Separation),DeltaSeconds,5.f);
-    Arm->TargetArmLength=FMath::FInterpTo(Arm->TargetArmLength,(500+120*Separation)*CameraDistanceScale,DeltaSeconds,5.f);
+    // Locked on (Elden Ring style): a raised camera looking down over the shoulder at the boss,
+    // a little further back from the towering Regent so the pair stays in frame.
+    const bool Towering=IsLocked() && CameraMode && CameraMode->bRegent;
+    const float SocketZ=IsLocked() ? (Towering ? 150.f : 125.f) : 100.f;
+    Arm->SocketOffset=FMath::VInterpTo(Arm->SocketOffset,FVector(0,45,SocketZ)*(1-Separation),DeltaSeconds,4.f);
+    Arm->TargetArmLength=FMath::FInterpTo(Arm->TargetArmLength,((Towering ? 560.f : 500.f)+120*Separation)*CameraDistanceScale,DeltaSeconds,4.f);
     if (IsLocked())
     {
+        // Aim at the boss's body (not its head, which towers over the camera) and always look down
+        // a little, so the floor between the two reads and attacks are seen coming.
         FVector Aim = GetTargetPosition() - (GetActorLocation()+FVector(0,0,80));
+        if(Towering) Aim.Z-=60;
         FRotator Desired = Aim.Rotation();
-        // Against the towering Regent the view sits lower and more level, looking up at it.
-        const bool Towering=CameraMode && CameraMode->bRegent;
-        Desired.Pitch = FMath::Clamp(FMath::Lerp(Desired.Pitch-(Towering ? 4.f : 10.f),Towering ? -11.f : -16.f,Separation)+LockPitchOffset,-35.f,15.f);
+        Desired.Pitch = FMath::Clamp(FMath::Lerp(FMath::Min(Desired.Pitch-14.f,-12.f),-20.f,Separation)+LockPitchOffset,-38.f,4.f);
         Desired.Yaw+=35*Separation+LockYawOffset;
-        View = FMath::RInterpTo(View,Desired,DeltaSeconds,8.f);
+        // Mouse nudges hold while the mouse moves, then relax back over ~1.5 s.
+        if(LookIdle>.8f)
+        {
+            LockYawOffset=FMath::FInterpTo(LockYawOffset,0.f,DeltaSeconds,1.6f);
+            LockPitchOffset=FMath::FInterpTo(LockPitchOffset,0.f,DeltaSeconds,1.6f);
+        }
+        // Softer follow than a snap: the camera trails the boss's sidesteps slightly.
+        View = FMath::RInterpTo(View,Desired,DeltaSeconds,4.5f);
     }
     // Option (default on): after ~1 s without look input, an unlocked moving camera eases back
     // behind the player's heading. Never swings round when running toward the camera.

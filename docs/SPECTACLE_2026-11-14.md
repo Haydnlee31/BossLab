@@ -21,7 +21,12 @@ This pass is modelled on the owner's reference clip, a Morgott no-hit Short. The
   - **Height:** stand height is 95 × scale, used for reset, the study and the tests.
   - **Reach:** hit-sample radii and blade reach scale with the body.
   - **Tests:** every Regent move still hurts a player who stands still and is beaten by one timed roll at the new size (`RollBeatsEveryAttack`, run through `EnableRegent`).
-- **Lock-on camera against the Regent:** the socket is lower (78 against 100) and the view more level (pitch −4 against −10; −11 against −16 at contact). It looks up at the bigger boss. Locking onto the Warden is unchanged.
+- **Lock-on camera (revised the same day after owner feedback: "too rigid, too low").** It now behaves like the reference clip, with a raised camera looking down over the shoulder.
+  - **Height:** the socket is at 125 cm, or 150 cm against the Regent. It was 100 cm, and 78 cm in the first version of this pass.
+  - **Distance:** 560 cm from the Regent, 500 cm otherwise.
+  - **Aim:** at the Regent's body, 60 cm below the target point. The view always looks down at least 12° (20° at contact).
+  - **Follow:** softer, with an interpolation speed of 4.5 (it was 8).
+  - **Mouse nudges:** wider, ±40° yaw and −18°/+14° pitch at 0.8× sensitivity. They relax back to centre after 0.8 s without look input.
 
 ## Presentation (`WardenSpectacle.cpp`, plus the materials from `ue_import_spectacle.py`)
 
