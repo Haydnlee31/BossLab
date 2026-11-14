@@ -50,6 +50,17 @@ FSwordKey RegentKey(const FWardenFighterState& F)
             const int32 Wound=F.Move==HeldThrust ? 30 : D.Windup-6;
             FSwordKey K=Blend(Guard,Wind,float(A-From)/FMath::Max(1,Wound-From));
             if(F.Move==Dash) K.Lean+=18*In;   // crouched before the procession dash
+            if(F.Move==Feint)
+            {
+                // Winds like the plain thrust, jabs a third of the way out on its beat and snaps
+                // back (no contact: pose only), then coils deeper and holds for the real one.
+                FSwordKey J=Blend(Guard,Wind,Smooth(A/30.f));
+                const float Jab=FMath::Sin(PI*FMath::Clamp((A-31)/9.f,0.f,1.f));
+                J=Blend(J,Lunge,.38f*Jab); J.Lean+=8*Jab;
+                const float Coil=Smooth((A-42)/14.f);
+                J.Grip+=FVector(-10,5,5)*Coil; J.Twist-=12*Coil; J.Lean-=6*Coil;
+                return J;
+            }
             if(F.Move==Sentence)
             {
                 // Raised high over the right shoulder, point up and back, trembling as it charges.
@@ -78,7 +89,7 @@ FSwordKey RegentKey(const FWardenFighterState& F)
         const float U=float(R-D.Active)/D.Recovery;
         return U<.25f ? Lunge : Blend(Lunge,Guard,(U-.25f)/.75f);
     }
-    case EKind::Censer: return F.Move==Arc ? Phased(Low,-4,35,6,-40) : Phased(Low,-14,8,24,0);
+    case EKind::Censer: return F.Move==Arc || F.Move==Toll ? Phased(Low,-4,35,6,-40) : Phased(Low,-14,8,24,0);
     case EKind::Cast: return F.Move==Volley || F.Move==Circle ? Phased(Low,-9,10,4,0) : Phased(Low,-6,0,18,0);
     case EKind::Move: return Phased(Guard,-8,0,-8,0);
     case EKind::Ring:

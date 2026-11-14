@@ -7,7 +7,7 @@
 // encounter, policies and tests never select them.
 namespace WardenRegent
 {
-    enum EMove : int32 { Thrust=3, Rite, Arc, Bell, Volley, Drift, Dash, Furrow, AshStep, Pyre, Wakes, HeldThrust, Circle, Raise, Sentence, End };
+    enum EMove : int32 { Thrust=3, Rite, Arc, Bell, Volley, Drift, Dash, Furrow, AshStep, Pyre, Wakes, HeldThrust, Circle, Raise, Sentence, Feint, Toll, End };
     enum class EKind : uint8 { Blade, Censer, Cast, Move, Vanish, Ring, Transition };
     inline constexpr int32 First=Thrust, Count=End-Thrust;
     inline constexpr int32 Skulls=3, MaxPools=4, AshVanish=20, AshAppear=44;

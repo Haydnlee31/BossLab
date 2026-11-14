@@ -57,6 +57,12 @@ const FWardenStrike& WardenRegent::Strike(int32 Index)
         // The estoc raised high and held for almost two seconds while soul fire gathers on it
         // and the Regent stalks in; then a 4 m lunge in a blink and a long, punishable recovery.
         {TEXT("THE SENTENCE"),TEXT("RegentBlade"),TEXT("hand_r"),110,10,60,0,0,1,30,8,420},
+        // A fake jab on the plain thrust's beat (pose only: no contact, no movement), then a
+        // deeper coil and the real thrust about 0.6 s later.
+        {TEXT("FALSE MERCY"),TEXT("RegentBlade"),TEXT("hand_r"),74,10,44,0,0,1,24,7,140},
+        // The censer rises and hangs overhead, swaying, then drops into the Censer Arc's
+        // floor-dragging sweep (same contact window, 46 ticks later).
+        {TEXT("THE LONG TOLL"),TEXT("RegentCenser"),TEXT("hand_l"),100,22,48,0,0,1,24,30,30},
     };
     check(IsRegent(Index));
     return Moves[Index-First];
@@ -65,8 +71,8 @@ WardenRegent::EKind WardenRegent::Kind(int32 Move)
 {
     switch(Move)
     {
-        case Thrust: case Rite: case Dash: case HeldThrust: case Sentence: return EKind::Blade;
-        case Arc: case Bell: return EKind::Censer;
+        case Thrust: case Rite: case Dash: case HeldThrust: case Sentence: case Feint: return EKind::Blade;
+        case Arc: case Bell: case Toll: return EKind::Censer;
         case Volley: case Furrow: case Circle: case Raise: return EKind::Cast;
         case Drift: return EKind::Move;
         case AshStep: return EKind::Vanish;
@@ -126,6 +132,17 @@ FVector WardenRegent::CenserOffset(int32 Move,int32 Age,bool Striking)
         }
         return FMath::Lerp(Finish,Rest,Smooth(float(Age-D.Windup-D.Active)/D.Recovery));
     }
+    if(Move==Toll)
+    {
+        // Rise to hang high over the left shoulder, sway there on the chain, then drop to the
+        // Arc's sweep start; from the contact window on it is the Censer Arc, shifted.
+        const int32 Shift=D.Windup-Strike(Arc).Windup;
+        if(Age>=D.Windup-12) return CenserOffset(Arc,Age-Shift,Striking);
+        const FVector Hang(-10,-40,215);
+        const float U=Smooth(Age/30.f);
+        const FVector Sway=FVector(FMath::Sin(Age*.11f)*22,FMath::Sin(Age*.07f+1)*14,FMath::Sin(Age*.22f)*6)*U;
+        return FMath::Lerp(Rest,Hang,U)+Sway;
+    }
     if(Move==Bell)
     {
         // Raised high behind the head, slammed ahead, then dragged back along the floor.
@@ -146,6 +163,7 @@ FVector WardenRegent::CenserOffset(int32 Move,int32 Age,bool Striking)
 }
 float WardenRegent::CenserGround(int32 Move,int32 Age,bool Striking)
 {
+    if(Striking && Move==Toll) return CenserGround(Arc,Age-(Strike(Toll).Windup-Strike(Arc).Windup),true);
     if(!Striking || (Move!=Arc && Move!=Bell)) return 0;
     const auto& D=Strike(Move);
     if(Move==Arc)
@@ -166,7 +184,8 @@ FVector2D WardenRegent::Band(int32 Move)
 {
     switch(Move)
     {
-        case Thrust: case HeldThrust: return {0,330};
+        case Thrust: case HeldThrust: case Feint: return {0,330};
+        case Toll: return {0,440};
         case Rite: return {0,300};
         case Sentence: return {0,460};
         case Arc: return {0,440};
@@ -187,7 +206,8 @@ int32 WardenRegent::Pause(int32 Move)
         case Drift: return 0;
         case Volley: case AshStep: return 8;
         case Circle: case Raise: return 30;
-        case Thrust: case HeldThrust: return 18;
+        case Thrust: case HeldThrust: case Feint: return 18;
+        case Toll: return 30;
         case Arc: case Furrow: case Wakes: return 24;
         case Bell: case Dash: return 32;
         case Sentence: return 36;
@@ -327,8 +347,8 @@ void AWardenArenaMode::RegentDecide(FVector& BossDirection)
     if(!R.PhaseTwo && F.Health<=PhaseTwoHealth) { Commit(Wakes); return; }
     // Fixed rehearsal sequence, labelled as such: no learning, no input reading. Each
     // step walks into its distance band, commits, or is skipped after four seconds.
-    static const int32 One[]={Thrust,Arc,Volley,Rite,Raise,HeldThrust,Drift,Dash,Bell,Sentence,Furrow};
-    static const int32 Two[]={AshStep,Rite,Pyre,HeldThrust,Volley,Raise,Dash,Arc,Sentence,Circle,Furrow,Bell,Thrust,Drift};
+    static const int32 One[]={Thrust,Arc,Volley,Rite,Raise,HeldThrust,Drift,Feint,Dash,Bell,Sentence,Furrow};
+    static const int32 Two[]={AshStep,Rite,Pyre,HeldThrust,Volley,Toll,Raise,Dash,Arc,Sentence,Feint,Circle,Furrow,Bell,Thrust,Drift};
     const int32 Next=R.PhaseTwo ? Two[R.Step%UE_ARRAY_COUNT(Two)] : One[R.Step%UE_ARRAY_COUNT(One)];
     if((Next==Volley || Next==Circle) && R.ReadySkulls()==0) { ++R.Step; R.Seeking=0; return; }
     if(Next==Raise && R.StandingSkeletons()>0) { ++R.Step; R.Seeking=0; return; }
@@ -393,6 +413,8 @@ void AWardenArenaMode::RegentResolve()
         if(F.Move==Sentence && A==24) RegentSound(TEXT("RegentDashCharge"),BossAt,.9f);
         if(F.Move==Sentence && Since==0) { RegentSound(TEXT("RegentDash"),BossAt,1.f); Impact(0,.35f); }
         if(F.Move==Arc && (A==12 || Since==-4)) RegentSound(TEXT("RegentWhoosh"),Head,A==12 ? .35f : .7f);
+        if(F.Move==Toll && (A==10 || A==56 || Since==-4)) RegentSound(TEXT("RegentWhoosh"),Head,Since==-4 ? .75f : .3f);
+        if(F.Move==Feint && A==33) RegentSound(TEXT("RegentWhoosh"),BossAt,.45f);   // the fake jab cuts air
         if(F.Move==Bell && A==20) RegentSound(TEXT("RegentWhoosh"),Head,.4f);
         if(F.Move==Drift && A==2) RegentSound(TEXT("RegentWhoosh"),BossAt,.3f);
         if(F.Move==AshStep && (A==AshVanish || A==AshAppear)) RegentSound(TEXT("RegentBlink"),A==AshVanish ? BossAt : R.AshTarget,.6f);

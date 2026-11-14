@@ -230,6 +230,32 @@ void AWardenArenaMode::AnimateSpectacle(float Seconds)
     }
     if(bRegent && Regent.CenserGrounded && Hash(int32(Seconds*60))<.5f) Kick(Warden->CenserWorld(),FVector::ZeroVector,2,Hash(int32(Seconds*60)+7)<.25f ? 1 : 0,.6f);
 
+    // --- Hit-stop that keeps the world alive ---------------------------------------------
+    // The freeze still holds both fighters' poses (engine-owned), but the struck body shudders
+    // and gives a little away from the blow, so the stop reads as impact, not a hitch. Fire,
+    // particles, blood and the camera already run on real time. Off with reduced motion.
+    {
+        AWardenChallenger* Fighters[2]={Player,Warden};
+        for(int32 K=0;K<2;++K)
+            if(Fighters[K]->BleedCount!=V.SeenBleed[K]) { V.SeenBleed[K]=Fighters[K]->BleedCount; V.Struck=Fighters[K]; V.StruckAt=Seconds; }
+        auto* Who=V.Struck.Get();
+        const bool Shudder=Who && HitStop>0 && !bReducedMotion && Who->VisualBody && Seconds-V.StruckAt<.3f;
+        if(Shudder)
+        {
+            if(!V.bShaking) { V.ShakeRest=Who->VisualBody->GetRelativeLocation(); V.bShaking=true; }
+            const float Age=Seconds-V.StruckAt, Fade=1-FMath::Clamp(Age/.25f,0.f,1.f);
+            const FVector Away=Who->GetActorQuat().UnrotateVector(Who->ImpactDir)*5.f*FMath::Sin(PI*FMath::Clamp(Age/.12f,0.f,1.f));
+            const FVector Jitter(FMath::Sin(Seconds*197)*1.6f,FMath::Sin(Seconds*173+1)*1.6f,FMath::Sin(Seconds*211+2)*.8f);
+            Who->VisualBody->SetRelativeLocation(V.ShakeRest+Away+Jitter*Fade);
+        }
+        else if(V.bShaking)
+        {
+            // The freeze ended: put the mesh back exactly (the next fixed step re-poses it anyway).
+            if(Who && Who->VisualBody && HitStop>0) Who->VisualBody->SetRelativeLocation(V.ShakeRest);
+            V.bShaking=false;
+        }
+    }
+
     // --- Critical blow: punch in and a brief slow-down ----------------------------------
     if(CriticalCount!=V.SeenCritical)
     {

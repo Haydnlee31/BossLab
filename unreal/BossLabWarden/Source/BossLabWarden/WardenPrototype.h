@@ -269,6 +269,8 @@ struct FWardenSpectacle
     float PhaseAt=-100, FelledAt=-100;
     bool bWasPhaseTwo=false, bBossWasAlive=true;
     int32 SeenCritical=0, SeenDodge=-1, SeenRelease=-1, LastPlayerAction=0;
+    // Hit-stop body shudder: who was struck last, and the mesh rest it shakes around.
+    TWeakObjectPtr<class AWardenChallenger> Struck; int32 SeenBleed[2]={0,0}; FVector ShakeRest=FVector::ZeroVector; bool bShaking=false; float StruckAt=-100;
     bool bStudy=false;   // capture-only: -BossLabSpectacleStudy drives phase two, a critical and the fall
     float TimeScale(float Seconds) const { return Seconds<SlowUntil ? SlowScale : 1.f; }
 };

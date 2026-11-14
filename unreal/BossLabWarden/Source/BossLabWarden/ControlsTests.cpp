@@ -71,7 +71,7 @@ namespace {
 // A reasonable player, written against engine state (test-only): rolls sideways just
 // before contact or a skull's arrival, sidesteps hazards, punishes recovery with two
 // cuts, heals when low and safe. Returns the fight outcome.
-struct FBotResult { bool Won=false; float PlayerHealth=0, BossHealth=0, Seconds=0; int32 Rolls=0, Cuts=0, Heals=0; };
+struct FBotResult { bool Won=false; float PlayerHealth=0, BossHealth=0, Seconds=0; int32 Rolls=0, Cuts=0, Heals=0; FString Last; };
 FBotResult Fight(bool Regent,int32 Seed)
 {
     using namespace WardenRules;
@@ -113,6 +113,7 @@ FBotResult Fight(bool Regent,int32 Seed)
         }
     };
     for(int32 I=0;I<60*240 && M->Player->Fight.Alive() && M->Warden->Fight.Alive();++I) M->FixedStep();
+    R.Last=M->Warden->Fight.Action==EWardenAction::Strike ? M->Warden->Fight.Definition().Name : TEXT("-");
     R.Won=!M->Warden->Fight.Alive(); R.PlayerHealth=M->Player->Fight.Health; R.BossHealth=M->Warden->Fight.Health; R.Seconds=M->CombatTick/60.f;
     M->TestPilot=nullptr; CloseWorld(W);
     return R;
@@ -130,7 +131,7 @@ bool FWardenBeatableTest::RunTest(const FString&)
         {
             const FBotResult R=Fight(Regent,Seed);
             Wins+=R.Won; Time+=R.Seconds;
-            AddInfo(FString::Printf(TEXT("%s seed %d: %s in %.0fs, player %.0f hp, boss %.0f hp, rolls %d, cuts %d, heals %d"),Regent?TEXT("Regent"):TEXT("Warden"),Seed,R.Won?TEXT("WIN"):TEXT("loss"),R.Seconds,R.PlayerHealth,R.BossHealth,R.Rolls,R.Cuts,R.Heals));
+            AddInfo(FString::Printf(TEXT("%s seed %d: %s in %.0fs, player %.0f hp, boss %.0f hp, rolls %d, cuts %d, heals %d, boss move at end %s"),Regent?TEXT("Regent"):TEXT("Warden"),Seed,R.Won?TEXT("WIN"):TEXT("loss"),R.Seconds,R.PlayerHealth,R.BossHealth,R.Rolls,R.Cuts,R.Heals,*R.Last));
         }
         AddInfo(FString::Printf(TEXT("%s: bot won %d of 6, mean %.0fs"),Regent?TEXT("Regent"):TEXT("Warden"),Wins,Time/6));
         TestTrue(FString::Printf(TEXT("%s is beatable by disciplined play"),Regent?TEXT("Regent"):TEXT("Warden")),Wins>=3);

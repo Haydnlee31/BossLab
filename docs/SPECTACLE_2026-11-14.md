@@ -28,6 +28,22 @@ This pass is modelled on the owner's reference clip, a Morgott no-hit Short. The
   - **Follow:** softer, with an interpolation speed of 4.5 (it was 8).
   - **Mouse nudges:** wider, ±40° yaw and −18°/+14° pitch at 0.8× sensitivity. They relax back to centre after 0.8 s without look input.
 
+## Follow-up the same day (owner picked items 2, 4 and 7)
+
+- **Shoulder roll (presentation):**
+  - a short dive into it, then the square tumble (spread over about 26 ticks) with a 16° lean onto the off-hand shoulder mid-roll;
+  - the spine curls and the chin tucks;
+  - the blade now counts in the roll's floor solve (3.5 cm clearance).
+  - **Rejected:** an oblique tumble axis. In some directions it swept the blade into the floor at both ±12° and ±25°.
+  - **Tests:** `DirectionalRollPoseContinuity` gives a 40.7 cm maximum joint step (the limit is 45), the head at least 22 cm and the blade at least 3.5 cm above the floor. Timing, distance and invulnerability are unchanged.
+- **Hit-stop that keeps the world alive (presentation):** during the existing freeze, the struck body shudders (±1.6 cm, about 30 Hz) and gives 5 cm away from the blow. Flames, particles, blood and the camera already run on real time. It is off with reduced motion. It has not been checked at real frame rate.
+- **Two delayed and feint moves (rules):**
+  - **FALSE MERCY (Regent 18):** wind-up 74 ticks, 24 damage. It jabs a third of the way out on the plain thrust's beat (pose and whoosh only, with no contact or movement), then coils and thrusts about 0.6 s later. The glint flashes only before the real thrust. The fake jab is not clearly visible in the 30 fps study capture.
+  - **THE LONG TOLL (Regent 19):** wind-up 100 ticks. The censer rises and hangs swaying overhead, then drops into the Censer Arc's floor-dragging sweep, with the same contact window shifted by 46 ticks.
+  - **Sequence:** False Mercy comes after Drift Step in phase one and after the Sentence in phase two. The Long Toll comes after Witness Volley in phase two.
+  - **Tests:** both pass `RollBeatsEveryAttack` (24 standing, 0 rolled).
+  - **Bot results:** `ReactiveBotCanWin` gives Regent 4 of 6 wins (5 of 6 without False Mercy, and 2 of 6 with it placed before Raise the Dead). The bot test now reports the boss move at the end of each fight.
+
 ## Presentation (`WardenSpectacle.cpp`, plus the materials from `ue_import_spectacle.py`)
 
 - **Boss weapon trails:** `M_BossTrail` is a soul-fire ribbon behind the estoc or sword in contact and behind the censer through its sweep. Fast blades are filled in with extra samples so the ribbon follows the arc.
