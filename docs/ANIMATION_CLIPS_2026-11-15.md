@@ -25,9 +25,15 @@ All of these are presentation only: rules, timing, hit boxes and iframes are unc
 | Landing a jump | `land_s0` (deep absorb) | Upper-body overlay, 0.17–0.95 s over 26 ticks at 70%. |
 | Cut II | `cut_b2_s2` (high wind-up, full torso turn), replacing `cut_b_s1` | Peak 0.3 s (was 0.2 s, which left almost no wind-up). |
 
+## Regent stalk walk (opt-in: `BOSSLAB_ANIM_STALK=on`)
+
+- **What it does:** `stalk_s1` is looped over its clean cycle, frames 8–51. The seam mismatch is 7.5 cm across the joints (feet 1–2 cm). It replaces the Regent's forward walk only (heading within 35°), and strafes and turns stay on the blendspace.
+- **Clock:** ground speed ÷ 83 cm/s. That is the clip's measured planted-foot speed; the 125 cm/s from the raw drift was wrong and gave a slip of 0.48.
+- **Test:** `BossLab.Regent.ForwardWalkFeet`. With the stalk on, the Regent walks on the clip for 180 of 180 ticks with a peak foot speed of 3.93× travel, so no pops (limit 4×). But the planted-foot slip is **0.58**: the foot locks never engage on this clip and there are 0 forced releases. A wider height band didn't help, so the clip's foot moves faster per tick than the plant test allows. Not solved, so it stays off by default.
+- **Default walk:** the blendspace walk holds slip at 0.00, and the test requires slip under 0.15 there.
+
 ## Imported but not wired
 
-- `stalk` (a regal walk for the Regent; it needs a clean loop span);
 - `cast` (arms raised to summon; the Regent's arms are keyed with the censer chain);
 - `backstep` (no backstep action yet);
 - `strafe` (the lock-on strafe already uses the blendspace);
@@ -35,7 +41,7 @@ All of these are presentation only: rules, timing, hit boxes and iframes are unc
 
 ## Checks
 
-- **Native suite:** 41/41. `DirectionalRollPoseContinuity` has a maximum step of 44.1 cm (the forward roll, unchanged; limit 45). The reactive bot beats the Regent 4 of 6 times, unchanged.
+- **Native suite:** 42/42, including the new `BossLab.Regent.ForwardWalkFeet`. `DirectionalRollPoseContinuity` has a maximum step of 44.1 cm (the forward roll, unchanged; limit 45). The reactive bot beats the Regent 4 of 6 times, unchanged.
 - **Fixed during the pass:** a null sampler instance crashed the input-buffer test before anything had played on `OverlayBody`.
 - **Captures:** `rolls-cardinal` shows the backward roll with the blade across the body. `spectacle` (Regent, dungeon) shows the felled Regent dropping to his knees and folding over. The stance-break kneel is covered only by the native tests, not by a capture. Frames were deleted after inspection.
 - **Not owner-tested.**

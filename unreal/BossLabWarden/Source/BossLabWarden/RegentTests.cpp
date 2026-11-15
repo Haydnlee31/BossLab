@@ -3,6 +3,7 @@
 #include "Engine/World.h"
 #include "Components/PoseableMeshComponent.h"
 #include "Engine/Engine.h"
+#include "Animation/AnimSingleNodeInstance.h"
 #include "Misc/AutomationTest.h"
 #if WITH_DEV_AUTOMATION_TESTS
 #define REGENT_TEST(Type,Name) IMPLEMENT_SIMPLE_AUTOMATION_TEST(Type,Name,(EAutomationTestFlags::EditorContext|EAutomationTestFlags::ClientContext)|EAutomationTestFlags::EngineFilter)
@@ -252,5 +253,45 @@ bool FRegentSkeletonTest::RunTest(const FString&)
     TestTrue(TEXT("Arc touches the floor briefly"),ArcGround>=4 && ArcGround<=16);
     TestTrue(TEXT("Bell grinds along the floor"),BellGround>=15);
     return true;
+}
+REGENT_TEST(FRegentStalkTest,"BossLab.Regent.ForwardWalkFeet");
+bool FRegentStalkTest::RunTest(const FString&)
+{
+    // The Regent's forward walk: the blendspace by default (planted feet must hold), or the HY
+    // stalk loop with BOSSLAB_ANIM_STALK=on (it must play and not pop across its loop seam; its
+    // slip is reported: the foot locks do not engage on it yet, 0.58 measured 2026-11-15).
+    auto* W=NewWorld(); auto* M=RegentArena(W); AWardenChallenger* B=M->Warden.Get();
+    M->Player->SetActorLocation(FVector(3000,0,95));
+    // Starts well back so the 4 s walk (~1000 cm) never reaches the arena wall.
+    B->SetActorLocation(FVector(-800,0,WardenRegent::StandZ)); B->SetActorRotation(FRotator::ZeroRotator); B->ResetFighter(true);
+    B->SetTarget(M->Player);
+    const FVector Start=B->GetActorLocation(); B->FootForcedReleases=0;
+    TArray<FVector> Feet[2]; int32 OnStalk=0; const int32 Steps=240; FString Off;
+    for(int32 I=0;I<Steps;++I)
+    {
+        B->StepFighter(FVector::ForwardVector); B->Fight.Advance();
+        if(I>=60 && B->Body->GetSingleNodeInstance() && B->StalkClip() && B->Body->GetSingleNodeInstance()->GetCurrentAsset()==B->StalkClip()) ++OnStalk;
+        else if(I>=60) Off+=FString::Printf(TEXT(" %d(%s)"),I,*B->Body->GetSingleNodeInstance()->GetCurrentAsset()->GetName());
+        Feet[0].Add(B->VisualBody->GetBoneLocationByName(TEXT("foot_l"),EBoneSpaces::WorldSpace));
+        Feet[1].Add(B->VisualBody->GetBoneLocationByName(TEXT("foot_r"),EBoneSpaces::WorldSpace));
+    }
+    const float Travel=FVector::Dist2D(B->GetActorLocation(),Start)/(Steps/60.f);
+    float Peak=0,Sum=0; int32 Samples=0;
+    for(int32 K=0;K<2;++K)
+    {
+        float Floor=1e9f; for(int32 I=60;I<Steps;++I) Floor=FMath::Min(Floor,float(Feet[K][I].Z));
+        for(int32 I=61;I<Steps;++I)
+        {
+            const float Speed=FVector::Dist2D(Feet[K][I],Feet[K][I-1])*60;
+            Peak=FMath::Max(Peak,Speed);
+            if(Feet[K][I].Z<Floor+1.5f && Feet[K][I-1].Z<Floor+1.5f) { Sum+=Speed; ++Samples; }
+        }
+    }
+    const float Ratio=Samples ? Sum/Samples/FMath::Max(1.f,Travel) : 1;
+    AddInfo(FString::Printf(TEXT("Regent stalk: %d/%d ticks on the clip, travel %.0f cm/s, peak foot %.2fx travel, planted slip %.2f; forced releases %d; off:%s"),OnStalk,Steps-60,Travel,Peak/FMath::Max(1.f,Travel),Ratio,B->FootForcedReleases,*Off));
+    if(B->StalkClip()) TestTrue(TEXT("Forward walk plays the stalk"),OnStalk>=Steps-60-2);
+    TestTrue(TEXT("No foot pops across the loop"),Peak/FMath::Max(1.f,Travel)<4.f);
+    if(!B->StalkClip()) TestTrue(TEXT("Planted foot slips under 15% of travel"),Ratio<.15f);
+    CloseWorld(W); return true;
 }
 #endif

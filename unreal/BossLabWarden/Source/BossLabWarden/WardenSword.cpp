@@ -327,9 +327,27 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             bClipBody=true;
         }
     }
-    if((Fight.Action==EWardenAction::Ready || DrinkWalk) && Locomotion && !ClipSprinting)
+    // The Regent's forward walk: the HY stalk (long deliberate strides, chest proud) looped over
+    // its clean cycle, clocked to ground speed; strafes, backsteps and turns stay on the blendspace.
+    bool Stalking=false;
+    if(bRegent && ClipStalk && Fight.Action==EWardenAction::Ready && StepSpeed>50)
     {
-        if(Body->GetSingleNodeInstance()->GetCurrentAsset()!=Locomotion) { Body->PlayAnimation(Locomotion,true); if(ClipSprint && !bBoss) PoseSettle=FMath::Max(PoseSettle,8); }
+        const float Heading=FMath::RadiansToDegrees(FMath::Atan2(FVector::DotProduct(Travel,GetActorRightVector()),FVector::DotProduct(Travel,GetActorForwardVector())));
+        Stalking=FMath::Abs(Heading)<35.f;
+    }
+    if(Stalking)
+    {
+        // Each gait has its own planted-foot height: the foot locks re-learn it on the switch
+        // (the blendspace's lower foot otherwise kept every stalk step from counting as planted).
+        if(Body->GetSingleNodeInstance()->GetCurrentAsset()!=ClipStalk) { Body->PlayAnimation(ClipStalk,false); PoseSettle=FMath::Max(PoseSettle,10); FootLow[0]=FootLow[1]=1e9f; }
+        StalkClock+=WardenRules::Step*FMath::Clamp(StepSpeed/StalkSpeed,.5f,2.4f);
+        if(StalkClock<StalkFrom || StalkClock>=StalkTo) StalkClock=StalkFrom+FMath::Fmod(FMath::Max(0.f,StalkClock-StalkFrom),StalkTo-StalkFrom);
+        auto* N=Body->GetSingleNodeInstance(); N->SetPlayRate(0); N->SetPosition(StalkClock,false);
+        Body->TickAnimation(0,false); Body->RefreshBoneTransforms(); Local=Body->GetBoneSpaceTransforms();
+    }
+    if((Fight.Action==EWardenAction::Ready || DrinkWalk) && Locomotion && !ClipSprinting && !Stalking)
+    {
+        if(Body->GetSingleNodeInstance()->GetCurrentAsset()!=Locomotion) { if(bRegent && ClipStalk && Body->GetSingleNodeInstance()->GetCurrentAsset()==ClipStalk) FootLow[0]=FootLow[1]=1e9f; Body->PlayAnimation(Locomotion,true); if(ClipSprint && !bBoss) PoseSettle=FMath::Max(PoseSettle,8); }
         auto* Anim=Body->GetSingleNodeInstance();
         float Angle=FMath::RadiansToDegrees(FMath::Atan2(FVector::DotProduct(Travel,GetActorRightVector()),FVector::DotProduct(Travel,GetActorForwardVector())));
         // Turning on the spot steps the feet round (side-step clips) instead of spinning
@@ -857,7 +875,8 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
             // test alone kept slowed full strides "planted" into the swing (forced releases).
             const float AnimMove=FVector::Dist2D(AnimWorld,FootAnimPrev[Side]);
             FootAnimPrev[Side]=AnimWorld;
-            const bool Planted=Anim.GetLocation().Z<FootLow[Side]+4.f && AnimMove<FMath::Max(1.2f,.6f*float(Travel.Size2D()));
+            // (The Regent's stalk rolls heel to toe over a long stance: a wider height band.)
+            const bool Planted=Anim.GetLocation().Z<FootLow[Side]+(Stalking ? 10.f : 4.f) && AnimMove<FMath::Max(1.2f,.6f*float(Travel.Size2D()));
             if(Planted && !FootLocked[Side] && FootRelease[Side]>=1)
             {
                 FootLocked[Side]=true; FootLock[Side]=AnimWorld;

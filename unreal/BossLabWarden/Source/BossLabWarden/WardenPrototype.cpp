@@ -116,6 +116,8 @@ void AWardenChallenger::BeginPlay()
     // HY forward roll; BOSSLAB_ANIM_ROLL=ual|procedural leaves backward rolls procedural).
     if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_DEATH")).ToLower()!=TEXT("off"))
     { ClipDeath=Hy(TEXT("death_s0")); ClipDeathFrom=0.f; ClipDeathTo=2.9f; }
+    // Regent stalk walk: opt-in (BOSSLAB_ANIM_STALK=on); its foot locks do not engage yet (slip 0.58).
+    if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_STALK")).ToLower()==TEXT("on")) ClipStalk=Hy(TEXT("stalk_s1"));   // used only when bRegent
     if(RollMode.IsEmpty() || RollMode==TEXT("hy")) { ClipBackRoll=Hy(TEXT("back_roll_s1")); ClipBackFrom=.1f; ClipBackTo=1.f; }
     OverlayBody->SetComponentTickEnabled(false);
     OverlayBody->VisibilityBasedAnimTickOption=EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;

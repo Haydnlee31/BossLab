@@ -182,6 +182,7 @@ public:
     void SetSensitivity(float S) { Sensitivity=S; }
     float GetSensitivity() const { return Sensitivity; }
     void ToggleHints();
+    class UAnimSequence* StalkClip() const { return ClipStalk; }   // tests: the Regent's walk loop
 private:
     void Heal() { QueueAction(EWardenAction::Heal); }
     void Restart();
@@ -233,6 +234,8 @@ private:
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipStagger;
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipDrink;
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipLand;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipStalk;   // the Regent's forward walk loop
+    float StalkClock=0, StalkFrom=8/30.f, StalkTo=51/30.f, StalkSpeed=83.f;   // loop span (s); clip ground speed (cm/s, measured planted-foot speed)
     float DeathClipTicks=0;           // ticks since this death began (DeathAge stops at 72)
     float ClipDeathFrom=0, ClipDeathTo=1, ClipBackFrom=0, ClipBackTo=1;
     bool bClipBack=false;             // this roll plays the backward-roll clip
