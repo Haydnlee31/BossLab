@@ -102,15 +102,21 @@ void AWardenChallenger::BeginPlay()
     // Cuts I-III: authored body (BOSSLAB_ANIM_CUTS=off keeps the keyed body).
     if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_CUTS")).ToLower()!=TEXT("off"))
     {
-        ClipCut0=Hy(TEXT("cut_a_s0")); ClipCut1=Hy(TEXT("cut_b_s1")); ClipCut2=Hy(TEXT("cut_heavy_s1"));
-        ClipCutPeak[0]=.433f; ClipCutPeak[1]=.2f; ClipCutPeak[2]=.933f;   // retarget report: peak hand speed
+        ClipCut0=Hy(TEXT("cut_a_s0")); ClipCut1=Hy(TEXT("cut_b2_s2")); ClipCut2=Hy(TEXT("cut_heavy_s1"));
+        ClipCutPeak[0]=.433f; ClipCutPeak[1]=.3f; ClipCutPeak[2]=.933f;   // retarget report: peak hand speed
         ClipJumpAttack=Hy(TEXT("jump_attack_s1")); ClipRunCut=Hy(TEXT("cut_a_s1"));
     }
     // Hit reaction and locomotion overlays (BOSSLAB_ANIM_OVERLAYS=off keeps them out).
     if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_OVERLAYS")).ToLower()!=TEXT("off"))
     {
         ClipHurt=Hy(TEXT("hit_heavy_s0")); ClipRunStart=Hy(TEXT("run_start_s0")); ClipRunStop=Hy(TEXT("run_stop_s0")); ClipPivot=Hy(TEXT("pivot_s0"));
+        ClipStagger=Hy(TEXT("stagger_s0")); ClipDrink=Hy(TEXT("heal_s0")); ClipLand=Hy(TEXT("land_s0"));
     }
+    // Death collapse (BOSSLAB_ANIM_DEATH=off keeps the keyed fall) and the backward roll (with the
+    // HY forward roll; BOSSLAB_ANIM_ROLL=ual|procedural leaves backward rolls procedural).
+    if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_DEATH")).ToLower()!=TEXT("off"))
+    { ClipDeath=Hy(TEXT("death_s0")); ClipDeathFrom=0.f; ClipDeathTo=2.9f; }
+    if(RollMode.IsEmpty() || RollMode==TEXT("hy")) { ClipBackRoll=Hy(TEXT("back_roll_s1")); ClipBackFrom=.1f; ClipBackTo=1.f; }
     OverlayBody->SetComponentTickEnabled(false);
     OverlayBody->VisibilityBasedAnimTickOption=EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
     Body->SetComponentTickEnabled(false);

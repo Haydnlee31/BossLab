@@ -226,6 +226,17 @@ private:
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipRunStart;
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipRunStop;
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipPivot;
+    // 2026-11-15 HY clips: full-body collapse on death (player and boss), backward roll, the
+    // boss's stance-break stagger torso and the drink torso. Presentation only.
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipDeath;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipBackRoll;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipStagger;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipDrink;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipLand;
+    float DeathClipTicks=0;           // ticks since this death began (DeathAge stops at 72)
+    float ClipDeathFrom=0, ClipDeathTo=1, ClipBackFrom=0, ClipBackTo=1;
+    bool bClipBack=false;             // this roll plays the backward-roll clip
+    bool bClipStagger=false;          // this stance break plays the stagger clip (whole body)
     // Overlay clip over locomotion: which, how far in (ticks), its span and peak weight.
     TWeakObjectPtr<class UAnimSequence> Overlay;
     int32 OverlayAge=0, OverlayTicks=0; float OverlayFrom=0, OverlayTo=0, OverlayWeight=0, OverlayPrevSpeed=0;
