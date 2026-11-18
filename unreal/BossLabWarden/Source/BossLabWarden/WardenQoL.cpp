@@ -176,7 +176,7 @@ void AWardenArenaMode::StartRegentSession(bool Creative)
     bDemo=false; bScriptedPlayer=false; bAdaptive=false; bRehearsal=true;
     bInspector=false; bEvents=false; bRecording=false; bDebugGeometry=false;
     TestPilot=nullptr;
-    if(!bRegent) EnableRegent();
+    if(!bRegent && !bBellbreaker) EnableRegent();   // the Bellbreaker greybox keeps its own boss
     ResetEncounter();
     Run.bCounted=false; Run.bResult=false; Run.bChallengeVictory=false;
     bTitle=false; FrontScreen=EWardenFrontScreen::None;

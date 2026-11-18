@@ -14,3 +14,13 @@ The audio files are not in this repository; they are downloaded locally and buil
 
 All CC BY sounds were modified (sliced, pitch-shifted, reversed, filtered and layered).
 The in-game title screen carries the same attribution.
+
+### Generated sounds: the Bellbreaker (2026-11-18)
+
+The 26 bell, impact, shockwave and ear-ringing sounds in `/Game/BossLab/Bellbreaker/Sound` were generated with
+**Stable Audio Open 1.0** (Stability AI), through the `1inkusFace/Stable-Audio-Open-Zero` Hugging Face Space
+(`unreal/art-studio/source/audio/sfx_generate.py`). The exact prompts are in `artifacts/audio-bellbreaker-2026-11-18/raw/*.json`.
+
+**Powered by Stability AI.** The model is used under the [Stability AI Community License](https://huggingface.co/stabilityai/stable-audio-open-1.0/blob/main/LICENSE.md). It is free for individuals and organisations with under USD 1M in annual revenue; above that, a Stability AI enterprise licence is required.
+
+The sounds were trimmed, faded and peak-normalised. TangoFlux was considered and not used: its checkpoints are for non-commercial research only.

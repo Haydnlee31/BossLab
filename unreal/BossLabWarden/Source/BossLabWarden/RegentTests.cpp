@@ -1,5 +1,6 @@
 #include "WardenPrototype.h"
 #include "WardenRegent.h"
+#include "WardenBellbreaker.h"
 #include "Engine/World.h"
 #include "Components/PoseableMeshComponent.h"
 #include "Engine/Engine.h"
@@ -48,7 +49,8 @@ bool FRegentTableTest::RunTest(const FString&)
 {
     using namespace WardenRegent;
     TestEqual(TEXT("Default rehearsal moves unchanged"),FString(WardenRules::Strike(0).Name)+WardenRules::Strike(1).Name+WardenRules::Strike(2).Name,FString(TEXT("BROAD SWEEPHELD OVERHEADRISING CLEAVE")));
-    TestEqual(TEXT("Regent moves fill the boss table"),First+Count,WardenRules::BossMoveCount);
+    TestEqual(TEXT("Regent moves end where the Bellbreaker's begin"),First+Count,int32(WardenBellbreaker::First));
+    TestEqual(TEXT("Bellbreaker moves fill the boss table"),int32(WardenBellbreaker::End),WardenRules::BossMoveCount);
     for(int32 M=First;M<First+Count;++M)
     {
         const auto& D=WardenRules::Strike(M);

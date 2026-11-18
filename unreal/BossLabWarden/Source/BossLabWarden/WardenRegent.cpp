@@ -232,6 +232,7 @@ bool AWardenChallenger::CenserStrike() const
 }
 FVector AWardenChallenger::HitPoint(int32 Sample) const
 {
+    if(bBellbreaker) return BellbreakerHitPoint(Sample);
     if(!CenserStrike()) return BladePoint(Sample/4.f);
     // The chain from the shoulder to the censer head is the weapon.
     const FVector Anchor=WardenRegent::ChainAnchor();
@@ -239,6 +240,7 @@ FVector AWardenChallenger::HitPoint(int32 Sample) const
 }
 FVector AWardenChallenger::HitOrigin() const
 {
+    if(bBellbreaker) return BellbreakerHitPoint(0);   // the grip
     if(!CenserStrike()) return SwordRoot->GetComponentLocation();
     return GetActorLocation()+FRotator(0,GetActorRotation().Yaw,0).RotateVector(WardenRegent::ChainAnchor());
 }

@@ -50,6 +50,7 @@ void AWardenPrototypeHUD::DrawInspector(AWardenArenaMode* M)
 }
 void AWardenArenaMode::SaveReport()
 {
+    if(bSmelteryWalkthrough || !Player || !Warden) return; // F9 has no encounter to export in a walkthrough.
     FString Directory=FPaths::Combine(FPaths::ProjectSavedDir(),TEXT("BossLabEvidence"));
 #if WITH_EDITOR
     Directory=FPaths::ConvertRelativePathToFull(FPaths::Combine(FPaths::ProjectDir(),TEXT("../../artifacts/unreal")));

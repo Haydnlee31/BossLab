@@ -262,7 +262,7 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         else if(Fight.Move==WardenRules::RunAttack) { StrikeClip=ClipRunCut.Get(); StrikePeak=.3f; }
     }
     // Hit reaction (player): the stagger clip's first half on the torso through the hurt ticks.
-    if(!bBoss && Fight.Action==EWardenAction::Hurt && ClipHurt)
+    if(!bBoss && Fight.Action==EWardenAction::Hurt && !Fight.Stunned() && ClipHurt)
     {
         const float Clock=FMath::Lerp(.03f,.6f,FMath::Clamp(float(Fight.Age)/WardenRules::HurtTicks,0.f,1.f));
         if(Body->GetSingleNodeInstance()->GetCurrentAsset()!=ClipHurt) Body->PlayAnimation(ClipHurt,false);
@@ -302,6 +302,14 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         const float U=float(Fight.Age)/WardenRules::BossHurtTicks;
         Torso(Body,ClipStagger,FMath::Lerp(.05f,ClipStagger->GetPlayLength()*.85f,U),.9f*Smooth(U/.1f)*(1-Smooth((U-.8f)/.2f)),true);
     }
+    // Player stun (Bellbreaker shockwave): the dazed stagger, or the knee drop after the blast, over the
+    // whole body for the stun's length; it eases out as the stun ends so control returns from a stand.
+    if(!bBoss && Fight.Stunned())
+        if(UAnimSequence* Stun=Fight.StunKneel && ClipStunKneel ? ClipStunKneel.Get() : ClipStun.Get())
+        {
+            const float U=float(Fight.Age)/FMath::Max(1,Fight.StunTicks);
+            Torso(Body,Stun,FMath::Lerp(.02f,Stun->GetPlayLength()*.9f,U),.95f*Smooth(U/.08f)*(1-Smooth((U-.85f)/.15f)),true);
+        }
     {
         UAnimSequence* Clip=StrikeClip;
         if(Clip)

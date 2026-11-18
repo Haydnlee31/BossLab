@@ -8,6 +8,7 @@
 #include "WardenScript.h"
 #include "WardenStatistics.h"
 #include "WardenRegent.h"
+#include "WardenBellbreaker.h"
 #include "WardenQoL.h"
 #include "WardenPrototype.generated.h"
 
@@ -122,6 +123,9 @@ public:
     // Funeral Regent (-BossLabRegent): one-handed estoc, censer chain from the left arm.
     bool bRegent=false;
     void DressRegentWeapon();
+    // Bellbreaker greybox (-BossLabBellbreaker): hidden scaled capsule, engine-owned hammer path.
+    bool bBellbreaker=false;
+    FVector BellbreakerHitPoint(int32 Sample) const;
     // Player's modelled enchanted greatsword and its rune material (glow driven per frame).
     void DressGreatsword();
     TWeakObjectPtr<UStaticMeshComponent> Greatsword;
@@ -201,7 +205,9 @@ private:
     void StartDemo();
     void ExportReport();
     float Sensitivity = 1.f;
-    float ForwardInput = 0, RightInput = 0;
+public:
+    float ForwardInput = 0, RightInput = 0;   // public for the real-input tests (BellbreakerTests)
+private:
     double Accumulator = 0;
     bool bLocked = false;
     bool bCloseCameraHidden = false;
@@ -232,6 +238,9 @@ private:
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipDeath;
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipBackRoll;
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipStagger;
+    // Player stun (Bellbreaker shockwave): dazed stagger and the blast's knee drop (HY, 2026-11-18).
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipStun;
+    UPROPERTY() TObjectPtr<class UAnimSequence> ClipStunKneel;
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipDrink;
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipLand;
     UPROPERTY() TObjectPtr<class UAnimSequence> ClipStalk;   // the Regent's forward walk loop
@@ -360,6 +369,20 @@ public:
     AWardenArenaMode();
     static void BuildDungeon(UWorld* World,FWardenDungeon& Out);
     static void AnimateDungeon(FWardenDungeon& Dungeon,float Seconds);
+    bool bSmelteryWalkthrough=false;
+    bool bHearthA=false, bHearthA2=false, bSmelteryTiming=false;
+    FVector2D SmelteryHalfSize=FVector2D(1400,1800);
+    FVector SmelterySpawn=FVector(0,-1200,95);
+    TArray<FVector> SmelteryStudyStops;
+    double SmelteryStudyDistance=0;
+    int32 SmelteryWaypointArrivals=0, SmelteryLastMovementTick=0;
+    FRotator SmelteryEntry=FRotator(-12,90,0);
+    bool bStartupCameraDiagnostic=false, bStartupEntryCapture=false, bStartupEntryCaptured=false;
+    double StartupCameraTime=0, StartupCameraNextSample=0;
+    int32 StartupCameraLogCount=0, StartupCameraAxisLogCount=0;
+    void RecordStartupCamera(const TCHAR* Event,float AxisValue=0);
+    void BeginSmelteryWalkthrough();
+    void TickSmelteryWalkthrough(float DeltaSeconds);
     bool bDungeon=false;
     FWardenDungeon Dungeon;
     bool bRegent=false, bRegentPhaseTwoStart=false;
@@ -370,6 +393,28 @@ public:
     void RegentResolve();
     FVector RegentAshTarget() const;
     void RegentSound(const TCHAR* Name,const FVector& At,float Volume);
+    // Bellbreaker greybox (WardenBellbreaker.cpp, docs/BELLBREAKER_GREYBOX.md).
+    bool bBellbreaker=false;
+    bool bForgeArena=false;
+    int32 StuckTicks=0, StuckFixes=0;   // stuck guard (WardenEncounter.cpp)   // the fight runs in the Hearth A2 forge (-BossLabForgeFight)
+    FWardenBellbreakerState Bellbreaker;
+    void EnableBellbreaker();
+    void BellbreakerDecide(FVector& BossDirection);
+    void BellbreakerResolve();
+    void BellbreakerSound(const TCHAR* Name,const FVector& At,float Volume);
+    void BuildBellbreakerView();
+    void AnimateBellbreakerView(float Seconds);
+    TWeakObjectPtr<class ASkeletalMeshActor> BellbreakerView;
+    TWeakObjectPtr<UStaticMeshComponent> BellbreakerHammer;
+    TArray<TWeakObjectPtr<UStaticMeshComponent>> BellbreakerRings;
+    TArray<TWeakObjectPtr<class UMaterialInstanceDynamic>> BellbreakerRingMids;
+    TMap<FString,class UAnimSequence*> BellbreakerClips;     // kept alive by SfxKeepAlive
+    TMap<FString,class USoundBase*> BellbreakerSounds;       // kept alive by SfxKeepAlive
+    FWardenBellbreakerView BBView;
+    // Capture-only side-on review of every Bellbreaker move (-BossLabBellbreakerStudy).
+    bool bBellbreakerStudy=false;
+    int32 BellbreakerStudyIndex=0, BellbreakerStudyWait=90;
+    void BellbreakerStudyStep();
     FWardenEffects Effects;
     FWardenSpectacle Spectacle;
     int32 CriticalCount=0;   // presentation counter: stance-break critical blows landed

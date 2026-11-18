@@ -9,6 +9,7 @@
     {"Name": "ACLPlugin", "Enabled": true},
     {"Name": "AnimationData", "Enabled": true, "TargetAllowList": ["Editor"]},
     {"Name": "ControlRig", "Enabled": true},
+    {"Name": "IKRig", "Enabled": true, "TargetAllowList": ["Editor"]},
     {"Name": "ModelContextProtocol", "Enabled": true, "TargetAllowList": ["Editor"]},
     {"Name": "EditorToolset", "Enabled": true, "TargetAllowList": ["Editor"]},
     {"Name": "AutomationTestToolset", "Enabled": true, "TargetAllowList": ["Editor"]},

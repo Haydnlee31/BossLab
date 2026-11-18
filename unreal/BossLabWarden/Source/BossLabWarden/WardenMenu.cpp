@@ -23,6 +23,7 @@ void AWardenChallenger::ClearGameplayInput()
 void AWardenChallenger::QueueAction(EWardenAction Action)
 {
     if(!AllowsGameplayInput()) return;
+    if(const auto* M=GetWorld()->GetAuthGameMode<AWardenArenaMode>(); M && M->bSmelteryWalkthrough && Action!=EWardenAction::Dodge && Action!=EWardenAction::Jump) return;
     // Jump/roll then attack in quick succession: keep the jump or roll and queue the
     // attack behind it, instead of the second press overwriting the first.
     if(Action==EWardenAction::Strike && (PendingAction==EWardenAction::Jump || PendingAction==EWardenAction::Dodge))
@@ -121,13 +122,13 @@ void AWardenArenaMode::SetMenuOpen(bool Open)
                 Add(Button(TEXT("Settings"),[Go](){Go(EWardenFrontScreen::Settings);}));
                 Add(Button(TEXT("Quit game"),[Weak](){if(Weak.IsValid())Weak->QuitFromMenu();}));break;
             case EWardenFrontScreen::BossSelect:
-                Eyebrow=TEXT("I   /   CHALLENGE");Heading=TEXT("The Funeral\nRegent");
-                Description=TEXT("Keeper of the unquiet dead.\nAn executioner's estoc. A censer full of souls.\nTwo acts of judgment.");
+                Eyebrow=TEXT("I   /   CHALLENGE");Heading=bBellbreaker?TEXT("The\nBellbreaker"):TEXT("The Funeral\nRegent");
+                Description=bBellbreaker?TEXT("Founder of the cracked peal.\nA bell for a hammer. A floor that shakes.\nGreybox: jump or roll the quake."):TEXT("Keeper of the unquiet dead.\nAn executioner's estoc. A censer full of souls.\nTwo acts of judgment.");
                 Add(Button(TEXT("Begin challenge"),[Weak](){if(Weak.IsValid()){Weak->PlayInterfaceCue();Weak->StartRegentSession(false);}}));
                 Add(Button(TEXT("Back"),[Weak](){if(Weak.IsValid())Weak->OpenHome();}));
                 Add(Text(TEXT("II   /   COMING SOON          III   /   COMING SOON"),11,Muted),0);break;
             case EWardenFrontScreen::CreativeSetup:
-                Eyebrow=TEXT("CREATIVE   /   THE FUNERAL REGENT");Heading=TEXT("Practice");
+                Eyebrow=bBellbreaker?TEXT("CREATIVE   /   THE BELLBREAKER"):TEXT("CREATIVE   /   THE FUNERAL REGENT");Heading=TEXT("Practice");
                 Description=TEXT("Explore the encounter. Assists are optional.\nCreative sessions never earn challenge records.");
                 Add(BuildPracticePanel());
                 if(bTitle)Add(Button(TEXT("Enter encounter"),[Weak](){if(Weak.IsValid()){Weak->PlayInterfaceCue();Weak->StartRegentSession(true);}}));
@@ -162,17 +163,18 @@ void AWardenArenaMode::SetMenuOpen(bool Open)
                     +SHorizontalBox::Slot().FillWidth(1).HAlign(HAlign_Center)[Button(TEXT("Return home"),[Weak](){if(Weak.IsValid())Weak->OpenHome();})]);break;
             }
             default:
-                Eyebrow=bCreativeMode?TEXT("CREATIVE"):TEXT("CHALLENGE");Heading=TEXT("Paused");
+                Eyebrow=bSmelteryWalkthrough?TEXT("SMELTERY WALKTHROUGH"):(bCreativeMode?TEXT("CREATIVE"):TEXT("CHALLENGE"));Heading=TEXT("Paused");
                 Description=TEXT("A moment of stillness.");
                 Add(Button(TEXT("Resume"),[Weak](){if(Weak.IsValid())Weak->SetMenuOpen(false);}));
                 Add(Button(TEXT("Settings"),[Go](){Go(EWardenFrontScreen::Settings);}));
+                if(bSmelteryWalkthrough) { Add(Button(TEXT("Quit game"),[Weak](){if(Weak.IsValid())Weak->QuitFromMenu();})); break; }
                 if(bCreativeMode)Add(Button(TEXT("Creative assists"),[Go](){Go(EWardenFrontScreen::CreativeSetup);}));
                 Add(Button(TEXT("Restart encounter"),[Weak](){if(Weak.IsValid())Weak->RetrySession();}));
                 Add(Button(TEXT("Return home"),[Weak](){if(Weak.IsValid())Weak->OpenHome();}));break;
             }
             auto Backdrop=SNew(SOverlay);
             Backdrop->AddSlot()[SNew(SBorder).BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush")).BorderBackgroundColor(FLinearColor(.008f,.01f,.012f))];
-            if(const FSlateBrush* Art=Image(Boss?TEXT("RegentBackdrop.png"):TEXT("CrucibleBackdrop.png"),FVector2D(1536,864)))
+            if(const FSlateBrush* Art=bSmelteryWalkthrough?nullptr:Image(Boss?TEXT("RegentBackdrop.png"):TEXT("CrucibleBackdrop.png"),FVector2D(1536,864)))
                 Backdrop->AddSlot()[SNew(SScaleBox).Stretch(EStretch::ScaleToFill).Clipping(EWidgetClipping::ClipToBounds)[SNew(SImage).Image(Art)]];
             Backdrop->AddSlot()[SNew(SSimpleGradient).Orientation(Orient_Horizontal).StartColor(FLinearColor(.004f,.006f,.008f,.94f)).EndColor(FLinearColor(0,0,0,.10f)).Visibility(EVisibility::HitTestInvisible)];
             if(Result || Options || !bTitle)
