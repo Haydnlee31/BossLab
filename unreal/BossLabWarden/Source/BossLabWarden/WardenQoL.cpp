@@ -198,7 +198,7 @@ void AWardenArenaMode::UpdateRunStats()
 {
     if(!Player || !Warden || Run.bResult) return;
     Run.Seconds=CombatTick/60.f; Run.DamageDealt=PlayerDamage; Run.DamageTaken=BossDamage;
-    Run.HitsTaken=FMath::Max(0,Player->BleedCount-Run.StartBleedCount);
+    Run.HitsTaken=FMath::Max(0,Player->Fight.DamageEvents-Run.StartDamageEvents);
     Run.HealsUsed=FMath::Max(0,Run.StartHeals-Player->Fight.Heals);
     if(bCreativeMode || bPracticeInfiniteHealth || bPracticeInfiniteStamina || bRegentPhaseTwoStart || !bRehearsal || bScriptedPlayer || bDemo || bCaptureFrames || bBenchmark || TestPilot)
         Run.bChallengeEligible=false;
@@ -216,7 +216,7 @@ void AWardenArenaMode::RunStarted()
     Run.bCounted=CountsRun();
     Run.bPractice=bCreativeMode || bPracticeInfiniteHealth || bPracticeInfiniteStamina || bRegentPhaseTwoStart;
     Run.bChallengeVictory=false; Run.Seconds=Run.DamageDealt=Run.DamageTaken=0; Run.HitsTaken=Run.HealsUsed=0;
-    Run.StartBleedCount=Player?Player->BleedCount:0; Run.StartHeals=Player?Player->Fight.Heals:0;
+    Run.StartDamageEvents=Player?Player->Fight.DamageEvents:0; Run.StartHeals=Player?Player->Fight.Heals:0;
     Run.bChallengeEligible=Run.bCounted && !Run.bPractice && bRehearsal && !bBenchmark && !TestPilot;
     if(bFrontendSession && !Run.bChallengeEligible) Run.bCounted=false;
     if(Run.bCounted) ++Run.Attempts;
@@ -238,7 +238,7 @@ void AWardenArenaMode::RunEnded()
     UpdateRunStats();
     Run.bResult=true;
     Run.bChallengeVictory=Run.bChallengeEligible && Player->Fight.Alive() && !Warden->Fight.Alive();
-    if(bFrontendSession) ShowFrontPage(EWardenFrontScreen::Result);
+    // FixedStep opens the result screen once the dying fighter has finished falling.
     if(Run.bPractice || (bFrontendSession && !Run.bChallengeEligible)) return;   // practice attempts never set records
     Run.BestBossFraction=FMath::Min(Run.BestBossFraction,FMath::Max(Warden->Fight.Health,0.f)/Warden->Fight.MaxHealth);
     if(!Player->Fight.Alive()) ++Run.Deaths;

@@ -194,7 +194,7 @@ void AWardenArenaMode::AnimateEffects(float Seconds)
         AWardenChallenger* Who=Bleeders[K];
         if(!Who || Who->BleedCount==V.SeenBleed[K]) continue;
         V.SeenBleed[K]=Who->BleedCount;
-        if(K==0) EffectSound(TEXT("SwordHit"),Who->BleedAt,.55f);
+        if(K==0 && !bBellbreaker) EffectSound(TEXT("SwordHit"),Who->BleedAt,.55f);
         auto& B=V.Burst[V.NextBurst]; V.NextBurst=(V.NextBurst+1)%FWardenEffects::Bursts;
         B.Start=Seconds; B.At=Who->BleedAt; B.Seed=Who->BleedCount*31+K*7;
         B.Dir=(Who->BleedDir*.6f+Who->ImpactDir*.8f).GetSafeNormal(); B.Scale=Who->GetActorScale3D().X;

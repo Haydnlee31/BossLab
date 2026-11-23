@@ -26,6 +26,11 @@
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
 #include "Camera/CameraActor.h"
+#if WITH_EDITOR
+#include "TimerManager.h"
+#include "UnrealClient.h"
+#include "Misc/Paths.h"
+#endif
 
 AWardenChallenger::AWardenChallenger()
 {
@@ -245,6 +250,7 @@ void AWardenChallenger::Tick(float DeltaSeconds)
         Arm->SocketOffset=FMath::VInterpTo(Arm->SocketOffset,FVector(0,45,SocketZ)*(1-Separation),DeltaSeconds,4.f);
         Arm->TargetArmLength=FMath::FInterpTo(Arm->TargetArmLength,((Towering ? 560.f : 500.f)+120*Separation)*CameraDistanceScale,DeltaSeconds,4.f);
     }
+    float LensLift=0.f;
     if (IsLocked() && Giant)
     {
         // Look at his lower chest (~2.4 m up a 4.6 m giant) blended toward the player's own chest when close, so the
@@ -253,7 +259,21 @@ void AWardenChallenger::Tick(float DeltaSeconds)
         const FVector Him=Target->GetActorLocation()+FVector(0,0,0), Me=GetActorLocation()+FVector(0,0,60);
         const FVector Look=FMath::Lerp(Him,Me,.3f*Close);
         FRotator Desired=(Look-(GetActorLocation()+FVector(0,0,165))).Rotation();
-        Desired.Pitch=FMath::Clamp(Desired.Pitch*.6f-6.f+LockPitchOffset,-32.f,12.f);
+        const float NaturalPitch=Desired.Pitch*.6f-6.f;
+        if(Arm->IsCollisionFixApplied())
+        {
+            // Near a work bay the shortened boom lowers the optical centre.
+            // Keep the smith's raised arms in view from that actual position.
+            const FVector Eye=Camera->GetComponentLocation();
+            const float Retracted=FVector::Dist(Eye,Arm->GetUnfixedCameraPosition());
+            const float WallBlend=FMath::Clamp(Retracted/200.f,0.f,1.f);
+            const FVector Sternum=Him+FVector(0,0,55);
+            const float ChestPitch=FMath::Clamp((Sternum-Eye).Rotation().Pitch,-8.f,18.f);
+            // Tilt only the lens. Pitching the boom here lowers the eye again,
+            // turning a momentary wall retraction into a ground-level feedback loop.
+            LensLift=WallBlend*FMath::Clamp(ChestPitch-NaturalPitch,0.f,14.f);
+        }
+        Desired.Pitch=FMath::Clamp(NaturalPitch+LockPitchOffset,-32.f,12.f);
         Desired.Yaw+=12*Close+LockYawOffset;
         LockPitchOffset=FMath::Clamp(LockPitchOffset,-20.f,15.f);
         if(LookIdle>.8f) LockYawOffset=FMath::FInterpTo(LockYawOffset,0.f,DeltaSeconds,1.2f);
@@ -277,6 +297,9 @@ void AWardenChallenger::Tick(float DeltaSeconds)
         // Softer follow than a snap: the camera trails the boss's sidesteps slightly.
         View = FMath::RInterpTo(View,Desired,DeltaSeconds,4.5f);
     }
+    const float CurrentLift=Camera->GetRelativeRotation().Pitch;
+    if(LensLift>0.f || !FMath::IsNearlyZero(CurrentLift))
+        Camera->SetRelativeRotation(FRotator(FMath::FInterpTo(CurrentLift,LensLift,DeltaSeconds,6.f),0,0));
     // Option (default on): after ~1 s without look input, an unlocked moving camera eases back
     // behind the player's heading. Never swings round when running toward the camera.
     LookIdle+=DeltaSeconds;
@@ -319,7 +342,9 @@ void AWardenArenaMode::BeginPlay()
     // Bellbreaker forge fight (-BossLabForgeFight, 2026-11-18): the Hearth A2 forge is built by the walkthrough
     // builder (art, collision, lights, fog, grade); the walkthrough state is then switched off and the normal
     // encounter setup below runs in it, without the default ring arena.
-    bForgeArena=bForgeArena || FParse::Param(FCommandLine::Get(),TEXT("BossLabForgeFight"));
+    const FString RosterBoss=FParse::Param(FCommandLine::Get(),TEXT("BossLabLocalRoster")) ? UGameplayStatics::ParseOption(OptionsString,TEXT("RosterBoss")) : FString();
+    const bool RosterRegent=RosterBoss==TEXT("regent"), RosterBell=RosterBoss==TEXT("bellbreaker");
+    bForgeArena=RosterBell || (!RosterRegent && (bForgeArena || FParse::Param(FCommandLine::Get(),TEXT("BossLabForgeFight"))));
     if(bForgeArena)
     {
         bHearthA2=true; BeginSmelteryWalkthrough();
@@ -384,10 +409,11 @@ void AWardenArenaMode::BeginPlay()
         PC->SetInputMode(FInputModeGameOnly());
         PC->bShowMouseCursor = false;
     }
+    if(RosterRegent) bDungeon=true;
     if(!bForgeArena) DressArena();
     BuildEffects();
     BuildSpectacle();
-    if(FParse::Param(FCommandLine::Get(),TEXT("BossLabRegent"))) EnableRegent();
+    if(RosterRegent || (!RosterBell && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegent")))) EnableRegent();
     bRegentPhaseTwoStart=bRegent && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegentPhaseTwo"));
     // Bellbreaker greybox (opt-in; the Regent flag wins if both are given). Phase-two start reuses the flag.
     if(!bRegent && (bForgeArena || FParse::Param(FCommandLine::Get(),TEXT("BossLabBellbreaker")))) EnableBellbreaker();
@@ -418,6 +444,18 @@ void AWardenArenaMode::BeginPlay()
         RegentStudyCamera=Camera;
         if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
     }
+    if(bCaptureFrames && bBellbreaker && FParse::Param(FCommandLine::Get(),TEXT("BossLabBellApproachStudy")))
+    {
+        bBellApproachStudy=true;
+        if(FParse::Param(FCommandLine::Get(),TEXT("BossLabBellWalkSide")))
+        {
+            auto* Camera=World->SpawnActor<ACameraActor>(FVector(510,665,275),FRotator::ZeroRotator);
+            RegentStudyCamera=Camera;
+            if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
+        }
+        bScriptedPlayer=false;
+        Player->SetLocked(true);
+    }
     if(bCaptureFrames && bBellbreaker && FParse::Param(FCommandLine::Get(),TEXT("BossLabBellbreakerStudy")))
     {
         // Side-on review of each Bellbreaker move (BellbreakerStudyStep): fixed camera square to his swing plane.
@@ -426,7 +464,11 @@ void AWardenArenaMode::BeginPlay()
         const FVector Look=FVector(B.X,B.Y,0)+Fwd*230+FVector(0,0,240);
         const FString Near=FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_BB_STUDY_DIST"));
         const float Dist=Near.IsEmpty() ? 820.f : FMath::Clamp(FCString::Atof(*Near),300.f,1500.f);
-        auto* Camera=World->SpawnActor<ACameraActor>(Look+Side*Dist+FVector(0,0,40),(-Side).Rotation()+FRotator(-3,0,0));
+        const bool ThreeQuarter=FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_BB_STUDY_ANGLE"))==TEXT("three-quarter");
+        const FVector ViewSide=ThreeQuarter ? (Side*.82f+Fwd*.57f).GetSafeNormal() : Side;
+        const FVector Aim=Look+FVector::UpVector*(ThreeQuarter ? 55.f : 0.f);
+        const FVector Eye=Aim+ViewSide*Dist+FVector(0,0,ThreeQuarter ? 155.f : 40.f);
+        auto* Camera=World->SpawnActor<ACameraActor>(Eye,(Aim-Eye).Rotation());
         RegentStudyCamera=Camera;
         if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
     }
@@ -461,6 +503,25 @@ void AWardenArenaMode::BeginPlay()
     {
         bFrontendSession=true;
         OpenHome();
+#if WITH_EDITOR
+        // Render the real encounter selection screen for repeatable poster review.
+        if (FParse::Param(FCommandLine::Get(), TEXT("BossLabPosterStudy")))
+        {
+            OpenBossSelect();
+            FTimerHandle CaptureTimer, ExitTimer;
+            World->GetTimerManager().SetTimer(CaptureTimer, FTimerDelegate::CreateWeakLambda(this, [this]()
+            {
+                const TCHAR* File = bBellbreaker ? TEXT("BellbreakerPreview.png") : TEXT("RegentPreview.png");
+                FScreenshotRequest::RequestScreenshot(FPaths::Combine(FPaths::ProjectSavedDir(), File), true, false);
+            }), 2.f, false);
+            World->GetTimerManager().SetTimer(ExitTimer, FTimerDelegate::CreateWeakLambda(this, [this]()
+            {
+                if (auto* PC = GetWorld()->GetFirstPlayerController()) PC->ConsoleCommand(TEXT("quit"));
+            }), 4.f, false);
+        }
+#endif
+        if(RosterBell || RosterRegent)
+            ShowFrontPage(UGameplayStatics::ParseOption(OptionsString,TEXT("RosterPage"))==TEXT("creative") ? EWardenFrontScreen::CreativeSetup : EWardenFrontScreen::BossSelect);
     }
 }
 
@@ -474,6 +535,14 @@ void AWardenPrototypeHUD::DrawHUD()
     const auto& P = Mode->Player->Fight;
     const auto& B = Mode->Warden->Fight;
     const float W = Canvas->SizeX, H = Canvas->SizeY;
+    if(Mode->bBellbreakerStudy || Mode->bBellApproachStudy)
+    {
+        // Keep both wrists, weapon and floor visible throughout the inspection shot.
+        const TCHAR* Pose=!B.Alive() ? TEXT("FALLEN") : B.Action==EWardenAction::Strike ? B.Definition().Name :
+            B.Action==EWardenAction::Hurt ? TEXT("STAGGER") : Mode->Warden->MoveVelocity.Size2D()>40 ? TEXT("APPROACH") : TEXT("CARRY");
+        DrawText(FString::Printf(TEXT("%s    |    30 fps motion study"),Pose),FColor(225,202,165),24,H-38);
+        return;
+    }
     auto Bar = [&](float X,float Y,float Width,float Value,FLinearColor Color)
     {
         DrawRect(FLinearColor(.025,.03,.035,.9),X-2,Y-2,Width+4,15);

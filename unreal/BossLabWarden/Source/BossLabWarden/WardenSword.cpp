@@ -608,7 +608,10 @@ void AWardenChallenger::SwordPose(const FVector& Travel)
         // Knees pull up hard at the apex and the chest curls over them; the legs reach down
         // again for the floor in the last third.
         const float Apex=FMath::Sin(PI*FMath::Clamp(U*1.15f,0.f,1.f));
-        Key=Blend(Guard,{Guard.Grip+FVector(4,0,14),Guard.Axis,0,8},Apex);
+        // Lift from the shoulder, letting the blade tip lag behind the hands.
+        Key=Blend(Guard,{Guard.Grip+FVector(1,8,13),FVector(.20,.74,.64).GetSafeNormal(),-13,8},Apex);
+        const float Reach=Smooth((U-.49f)/.28f)*(1-Smooth((U-.80f)/.20f));
+        Key=Blend(Key,{Guard.Grip+FVector(9,-3,-5),FVector(.80,-.10,.59).GetSafeNormal(),9,12},Reach);
         Tuck=.8f*Apex;
     }
     else if(Fight.Action==EWardenAction::Heal)

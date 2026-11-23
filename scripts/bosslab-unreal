@@ -36,6 +36,7 @@ def guard():
 
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else 'doctor'
+    native_1080 = mode in ('play', 'benchmark') and '1080p' in sys.argv[2:]
     EVIDENCE.mkdir(parents=True, exist_ok=True)
     editor = ENGINE / 'Engine/Binaries/Mac/UnrealEditor.app/Contents/MacOS/UnrealEditor'
     if mode == 'doctor':
@@ -161,8 +162,11 @@ def main():
                     '-TestExit=Automation Test Queue Empty',
                     '-ReportExportPath=' + str(EVIDENCE / ('evaluation-automation' if mode == 'evaluate' else 'automation'))]
         else:
-            cmd += ['-game', '-windowed', '-ResX=' + ('1920' if mode == 'benchmark' and '720p' not in sys.argv[2:] else '1280'), '-ResY=' + ('1080' if mode == 'benchmark' and '720p' not in sys.argv[2:] else '720'),
+            large_viewport = native_1080 or (mode == 'benchmark' and '720p' not in sys.argv[2:])
+            cmd += ['-game', '-windowed', '-ResX=' + ('1920' if large_viewport else '1280'), '-ResY=' + ('1080' if large_viewport else '720'),
                     '-DisablePlugins=ModelContextProtocol,EditorToolset,AutomationTestToolset,PythonScriptPlugin']
+            if native_1080 and mode == 'play':
+                cmd += ['-ForceRes']
         if mode == 'capture':
             cmd += ['-BossLabCapture', '-UseFixedTimeStep', '-FPS=30', '-NoSound']
             if 'exchange' in sys.argv[2:]:
@@ -182,9 +186,19 @@ def main():
             if 'feel' in sys.argv[2:]:
                 # Side-on player feel review: run, turn, sprint, stop, roll, cut chain, jump.
                 cmd += ['-BossLabFeelStudy', '-BossLabCaptureSeconds=24']
+            if 'bellbreaker-approach' in sys.argv[2:]:
+                cmd += ['-BossLabBellApproachStudy', '-BossLabCaptureSeconds=9']
+            if 'bellbreaker-walk' in sys.argv[2:]:
+                cmd += ['-BossLabBellApproachStudy', '-BossLabBellWalk', '-BossLabCaptureSeconds=16']
+                if 'side' in sys.argv[2:]:
+                    cmd += ['-BossLabBellWalkSide']
+            if 'bellbreaker-footwork' in sys.argv[2:]:
+                cmd += ['-BossLabBellApproachStudy', '-BossLabBellFootwork', '-BossLabCaptureSeconds=16']
             if 'bellbreaker-study' in sys.argv[2:]:
                 # Side-on review of every Bellbreaker move; needs BOSSLAB_BOSS=bellbreaker.
-                cmd += ['-BossLabBellbreakerStudy', '-BossLabCaptureSeconds=14']
+                cmd += ['-BossLabBellbreakerStudy', '-BossLabCaptureSeconds=6' if 'release' in sys.argv[2:] else '-BossLabCaptureSeconds=20']
+                if 'release' in sys.argv[2:]:
+                    cmd += ['-BossLabBellReleaseStudy']
             if 'regent-study' in sys.argv[2:]:
                 # Side-on review of every Regent move; needs BOSSLAB_BOSS=regent.
                 cmd += ['-BossLabRegentStudy', '-BossLabCaptureSeconds=30']
@@ -193,6 +207,8 @@ def main():
             for name, group in [('rolls-cardinal', 0), ('rolls-diagonal', 1)]:
                 if name in sys.argv[2:]:
                     cmd += ['-BossLabRollStudy=' + str(group)]
+        if mode == 'play' and 'poster-study' in sys.argv[2:]:
+            cmd += ['-BossLabPosterStudy']
         if mode == 'play' and 'record-audio' in sys.argv[2:]:
             cmd += ['-BossLabRecordAudio']
         if mode == 'benchmark':
@@ -216,6 +232,21 @@ def main():
     arena = os.environ.get('BOSSLAB_ARENA', 'original')
     if arena not in ('original', 'dungeon', 'smeltery', 'forge'):
         raise RuntimeError('BOSSLAB_ARENA must be original, dungeon, smeltery or forge')
+    # Enable encounter travel only in editor-game when both local installations exist.
+    if mode == 'play' and arena != 'smeltery':
+        content = PROJECT.parent / 'Content'
+        bb = content / 'BossLab/Bellbreaker'
+        try:
+            instances = json.loads((content / 'BossLab/HearthA2/layout.json').read_text())['instances']
+            forge_ready = bool(instances) and all(i['asset'].startswith('/Game/BossLab/HearthA2/') and
+                (content / (i['asset'][6:].split('.')[0] + '.uasset')).is_file() for i in instances)
+        except (OSError, ValueError, TypeError, KeyError):
+            forge_ready = False
+        clips = 'idle_hammer_s0 walk_hammer_s0 stun_s1 stun_kneel_s0 hammer_overhead_s0 sweep_rl_s1 bell_quake_s0 hammer_overhead_s1'.split()
+        if (forge_ready and all((bb / ('Anim/BB_HY_Anims_root_HY_' + c + '.uasset')).is_file() for c in clips)
+            and all((bb / f).is_file() for f in ('Rig/SKM_BellbreakerRig.uasset','SM_BellHammerGen.uasset','FX/M_BB_Shockwave.uasset'))
+            and all((content / 'BossLab' / f).is_file() for f in ('Regent/M_RegentFlame.uasset','Dungeon/M_DungeonFloor.uasset'))):
+            cmd += ['-BossLabLocalRoster']
     # Bellbreaker fight in the Hearth A2 forge (2026-11-18): editor-game only, needs BOSSLAB_BOSS=bellbreaker
     # and the imported A2 scene (the same manifest check as the walkthrough).
     if arena == 'forge':
@@ -293,7 +324,11 @@ def main():
             if schedule not in ('0', '1'):
                 raise RuntimeError('BOSSLAB_HEARTH_VISIBILITY must be 0 or 1')
             preset += ',r.Visibility.TaskSchedule ' + schedule
+        if native_1080:
+            preset += ',r.ScreenPercentage 100'
         cmd += ['-ExecCmds=' + preset]
+    elif native_1080:
+        cmd += ['-ExecCmds=r.ScreenPercentage 100']
     if mode in ('capture', 'package-capture'):
         # Fixed-time capture can outrun asynchronous PSO warm-up. Always create
         # proxies so rendering waits for their PSOs instead of recording empty world frames.

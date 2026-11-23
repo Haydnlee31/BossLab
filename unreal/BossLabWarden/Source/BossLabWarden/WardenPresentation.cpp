@@ -24,7 +24,7 @@ static UMaterialInterface* Surface(const TCHAR* Name)
 void AWardenArenaMode::DressArena()
 {
     FString Arena;
-    if(FParse::Value(FCommandLine::Get(),TEXT("BossLabArena="),Arena) && Arena==TEXT("dungeon"))
+    if(bDungeon || (FParse::Value(FCommandLine::Get(),TEXT("BossLabArena="),Arena) && Arena==TEXT("dungeon")))
     {
         bDungeon=true;
         BuildDungeon(GetWorld(),Dungeon);
@@ -121,7 +121,7 @@ void AWardenChallenger::DressFighter()
 void AWardenChallenger::PlayCue(int32 Cue)
 {
     auto* Mode=GetWorld()->GetAuthGameMode<AWardenArenaMode>();
-    if(!Mode) return;
+    if(!Mode || (bBellbreaker && bBoss)) return; // the smith has his own hammer and voice
     // Action cues: 0 swing (armour/cloth), 1 body hit, 2 flask, 3 roll, 4 jump; the older
     // single sounds stand in when the layered set is not imported.
     const int32 I=FMath::Clamp(Cue,0,4);

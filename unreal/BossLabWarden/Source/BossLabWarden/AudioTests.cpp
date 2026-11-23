@@ -52,6 +52,18 @@ bool FWardenInterfaceAudioTest::RunTest(const FString&)
     M->bMuted=false; M->bTitle=false; M->bPaused=false;
     TestTrue(TEXT("Fight restores world audio"),M->WorldAudioEnabled() && M->MusicLevel()>0);
     TestEqual(TEXT("Fight has no menu score"),M->MenuMusicLevel(),0.f);
+    M->bBellbreaker=true;
+    TestTrue(TEXT("Living Bellbreaker permits its own score at the configured gain"),FMath::IsNearlyEqual(M->MusicLevel(),.68f));
+    TestTrue(TEXT("Forge blocks even a cached Regent choir"),M->SfxVariations(TEXT("RegentChoir"),nullptr).IsEmpty());
+    TestTrue(TEXT("Forge blocks dungeon ambience"),M->SfxVariations(TEXT("AmbDungeon"),nullptr).IsEmpty());
+    TestTrue(TEXT("Forge blocks fallback music"),M->SfxVariations(TEXT("MusicBoss"),nullptr).IsEmpty());
+    M->SetForgeSpeechPriority(true);
+    TestTrue(TEXT("Spoken forge line clears the score by at least 16 dB"),M->MusicLevel()<.68f*.16f && M->MusicLevel()>0.f);
+    M->Bellbreaker.PhaseTwo=true;
+    TestTrue(TEXT("Phase change cannot restore the score over its line"),M->MusicLevel()<.82f*.16f);
+    M->SetForgeSpeechPriority(false);
+    TestTrue(TEXT("The phase score returns when speech ends"),FMath::IsNearlyEqual(M->MusicLevel(),.82f));
+    M->bBellbreaker=false;
     M->bPaused=true; TestTrue(TEXT("Pause/settings are quiet"),!M->WorldAudioEnabled() && M->MusicLevel()==0 && M->MenuMusicLevel()==0);
     M->bPaused=false; M->Player->Fight.Health=0;
     TestEqual(TEXT("Death stops boss music even while boss lives"),M->MusicLevel(),0.f);

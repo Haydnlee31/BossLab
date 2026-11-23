@@ -183,7 +183,9 @@ void AWardenArenaMode::BeginSmelteryWalkthrough()
         A->GetStaticMeshComponent()->SetStaticMesh(LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Cube")));
         A->SetActorScale3D(Scale); A->GetStaticMeshComponent()->SetCollisionProfileName(TEXT("BlockAll"));
         A->SetActorHiddenInGame(true); A->Tags.Add(Tag);
-        if(OuterCamera && FCString::Strcmp(Tag,TEXT("SmelteryBoundary"))==0)
+        // The walkthrough can survey the outer bays. During combat the longer
+        // lock-on boom must retract before the opaque racks behind the field.
+        if(OuterCamera && !bForgeArena && FCString::Strcmp(Tag,TEXT("SmelteryBoundary"))==0)
             A->GetStaticMeshComponent()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
         return A;
     };

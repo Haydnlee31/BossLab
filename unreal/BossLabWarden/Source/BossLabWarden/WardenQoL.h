@@ -34,7 +34,7 @@ struct FWardenRunRecord
 {
     int32 Attempts=0, Deaths=0, Victories=0;
     float Seconds=0, DamageDealt=0, DamageTaken=0;
-    int32 HitsTaken=0, HealsUsed=0, StartBleedCount=0, StartHeals=0;
+    int32 HitsTaken=0, HealsUsed=0, StartDamageEvents=0, StartHeals=0;
     bool bChallengeEligible=false, bChallengeVictory=false;
     float BestBossFraction=1.f;     // lowest boss health fraction any attempt reached
     float BestVictorySeconds=0;     // fastest victory (0 = none yet)

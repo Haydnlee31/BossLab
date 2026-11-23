@@ -1,6 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "WardenCombat.h"
+#include "BellbreakerSoles.h"
 
 class AActor; class USkeletalMeshComponent; class UStaticMeshComponent;
 // The bell hammer in a rig's right fist, grip solved from the reference pose (WardenSmeltery.cpp).
@@ -15,7 +16,10 @@ void WardenNeverCollide(AActor* A);
 // hammer's hit path below is analytic and engine-owned, never read from the clip.
 namespace WardenBellbreaker
 {
-    enum EMove : int32 { HammerFall=20, Sweep, Quake, BellBreaks, End };
+    enum EMove : int32 { HammerFall=20, Sweep, Quake, BellBreaks,
+        // Readiness pass 2026-11-23 (docs/BELLBREAKER_READY_2026-11-23.md): ten more engine-owned rows, each
+        // with its own repeat lock (cooldown). Cyclone and Knell open only in phase two.
+        Backhand, Stamp, Charge, Uppercut, Toll, Fling, HeldNote, Cyclone, Knell, StridingFall, End };
     inline constexpr int32 First=HammerFall, Count=End-HammerFall;
     inline bool IsBellbreaker(int32 Move) { return Move>=First && Move<End; }
     inline constexpr float Health=900, PhaseTwoHealth=450, Scale=2.55f, StandZ=95*Scale;   // same convention as the Regent (capsule 34 x 90, player at 95)
@@ -31,7 +35,17 @@ namespace WardenBellbreaker
     // Twin Quake gap: long enough that every pair of answers recovers in time (roll-roll via the roll
     // chain, jump-jump, jump-roll, roll-jump); at 30 ticks no second answer could come out in time.
     inline constexpr int32 TwinDelay=45;
-    inline constexpr float BellReach=230;   // grip to bell along the haft, cm (the visible hammer matches)
+    // Anvil Stamp: a boot blast around his front foot (anti-hugging); roll, jump or step out.
+    inline constexpr float StampRadius=300, StampDamage=22, StampAhead=110;
+    // The Toll: a sound ring at body height. Only a roll's i-frames pass it (jumping does not help).
+    inline constexpr float TollStart=140, TollEnd=1100, TollSpeed=760, TollDamage=18;
+    // Slag Fling: three molten blobs land on the floor marks LandDelay ticks after release.
+    inline constexpr float SlagRadius=125, SlagDamage=20; inline constexpr int32 SlagFlight=42, SlagCount=3;
+    // Death Knell: three slams on the same mark, the last sends a crest. Gap between slams in ticks.
+    inline constexpr int32 KnellGap=30; inline constexpr float KnellRadius=210, KnellDamage=20;
+    // Forge Cyclone: one full turn during the active window (presentation spins the body by the same angle).
+    float CycloneSpin(int32 Move,float Age);
+    inline constexpr float BellReach=282;   // grip to bell along the haft, cm (the visible hammer matches)
 
     const FWardenStrike& Strike(int32 Index);
     // Bell (hammer head) relative to the floor point under the actor, yaw frame (X forward, Y right), cm.
@@ -44,7 +58,14 @@ namespace WardenBellbreaker
     // Rehearsal distance band and pause after each move (punish windows after the slams).
     FVector2D Band(int32 Move);
     int32 Pause(int32 Move);
+    int32 RepeatLock(int32 Move);
     inline float WaveRadius(int32 TicksSinceStart) { return RingStart+TicksSinceStart*RingSpeed*WardenRules::Step; }
+    // Swept annulus for one fixed tick. Keep both combat and the bright floor band in world cm.
+    inline FVector2D WaveBand(int32 Age)
+    {
+        return FVector2D(WaveRadius(FMath::Max(0,Age-1))-CrestHalfWidth,WaveRadius(Age)+CrestHalfWidth);
+    }
+
 }
 
 struct FBellbreakerWave
@@ -52,14 +73,25 @@ struct FBellbreakerWave
     FVector Center=FVector::ZeroVector;
     int32 Start=0;
     bool PlayerResolved=false;   // stunned, blasted or cleanly avoided: one outcome per crest
-    bool Live(int32 Tick) const { return Tick>=Start && WardenBellbreaker::WaveRadius(Tick-Start)<=WardenBellbreaker::RingEnd; }
+    bool bToll=false;            // The Toll: a sound ring, only rolled (not jumped), no stun
+    float Radius(int32 Tick) const { return bToll ? WardenBellbreaker::TollStart+(Tick-Start)*WardenBellbreaker::TollSpeed*WardenRules::Step : WardenBellbreaker::WaveRadius(Tick-Start); }
+    FVector2D Band(int32 Tick) const
+    {
+        if(!bToll) return WardenBellbreaker::WaveBand(Tick-Start);
+        const float Step=WardenBellbreaker::TollSpeed*WardenRules::Step;
+        return FVector2D(Radius(Tick)-Step-WardenBellbreaker::CrestHalfWidth,Radius(Tick)+WardenBellbreaker::CrestHalfWidth);
+    }
+    bool Live(int32 Tick) const { return Tick>=Start && Radius(Tick)<=(bToll ? WardenBellbreaker::TollEnd : WardenBellbreaker::RingEnd); }
 };
+struct FBellbreakerSlag { FVector From=FVector::ZeroVector, At=FVector::ZeroVector; int32 Launch=0, Land=0; };
 enum class EBellbreakerOutcome : uint8 { None, Jumped, Rolled, Stunned, Blasted, OutOfReach };
 struct FWardenBellbreakerState
 {
     bool PhaseTwo=false;
+    float GroundAge=1.f, GroundAmplitude=0.f; // render-only camera envelope, seconds
     int32 Step=0, Waiting=90, Seeking=0;
     TArray<FBellbreakerWave> Waves;
+    TArray<FBellbreakerSlag> Slag;
     // Test/HUD evidence: how the latest crest met the player.
     EBellbreakerOutcome LastOutcome=EBellbreakerOutcome::None;
     int32 Stuns=0, Avoided=0;
@@ -70,10 +102,18 @@ struct FWardenBellbreakerView
 {
     TWeakObjectPtr<class UPoseableMeshComponent> Body;           // the corrected pose that is rendered
     TWeakObjectPtr<class UInstancedStaticMeshComponent> Sparks;  // bell-on-stone sparks
-    TArray<FTransform> Frozen;                                   // last shown pose, for clip crossfades
+    TArray<FTransform> LastSourcePose, Frozen;                   // blended source and transition origin before procedural corrections
+    FBellbreakerSoles Soles;
     TArray<FTransform> Stance;                                   // idle frame 0: the planted stance strikes are layered over
     TWeakObjectPtr<class UAnimSequence> LastClip;
-    float BlendFrom=-100, Lift=0, LastTime=-1, ScrapeReady=0, LastSpeed=0;
+    float BlendFrom=-100, SourceBlendSeconds=.20f, Lift=0, LastTime=-1, ScrapeReady=0, LastSpeed=0;
+    struct FWalkFoot { FVector Anchor=FVector::ZeroVector, SwingFrom=FVector::ZeroVector, Correction=FVector::ZeroVector; FQuat GroundRotation=FQuat::Identity; bool Planted=false; };
+    FWalkFoot WalkFeet[2];
+    TWeakObjectPtr<class UStaticMeshComponent> SoleShades[2];
+    FVector PreviousFloor=FVector::ZeroVector, WalkCarryDelta=FVector::ZeroVector;
+    float WalkCarryPitch=0;
+    float WalkPhase=0, WalkEntryTime=-100, WalkYaw=0, WalkTurnRate=0, WalkSpeed=0;
+    bool HasPreviousFloor=false, WasGroundGait=false;
     FVector LastBell=FVector::ZeroVector;
     bool bContact=false;
     int32 ScrapeVariant=0;
@@ -83,8 +123,19 @@ struct FWardenBellbreakerView
     int32 Next=0;
     // Evidence for the study capture: worst intrusions seen after the corrections (world cm).
     float WorstFloor=0, WorstBody=0, WorstLeftGap=0;   // + left palm to its haft point (world cm)
-    float SignR=-1, SignL=-1;   // grip orientation along the haft (hysteresis)
-    float LeftGrip=1;           // 1 = left hand on the haft, 0 = relaxed hang (eased)
+    struct FArmGrip
+    {
+        bool bValid=false;
+        double ElbowSwivel=0, Pronation=0;
+        FVector PreviousPalmNormal=FVector::ZeroVector;
+    };
+    FArmGrip ArmGrip[2];
+    // Anatomy governor evidence (study logs): worst input before the limits, worst chest twist after.
+    struct FGovernor { float WorstPelvisIn=0, WorstTwistIn=0, WorstTwistOut=0, WorstHeadYawIn=0, WorstHeadPitchIn=0, WorstHeadPitchOut=0, WorstSquatIn=0; };
+    FGovernor GovernorStats;
     float PalmSign=1;           // right-hand palm side (left = mirror, negated)
-    float Shift=0;              // right hand moved toward the left to share the haft (component cm, eased)
+    bool bHammerWasStriking=false;
+    float WeaponReleaseTime=-100;
+    FVector PreviousShaft=FVector::ForwardVector, PreviousGrip=FVector::ZeroVector;
+    FVector ReturnFromShaft=FVector::ForwardVector, ReturnFromGrip=FVector::ZeroVector;
 };

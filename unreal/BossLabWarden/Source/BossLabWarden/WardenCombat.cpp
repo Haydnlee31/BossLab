@@ -156,7 +156,7 @@ bool FWardenFighterState::Request(EWardenAction Requested, int32 MoveIndex)
     if (Stamina < Cost) return false;
     Sprinting=false;
     Stamina -= Cost; RegenDelay = IsBoss ? WardenRules::BossRegenDelayTicks : WardenRules::RegenDelayTicks; Action = Requested; Age = 0; Gap = 0;
-    if (Requested == EWardenAction::Strike) { Move = MoveIndex; ++AttackInstance; HitConsumed = false; Cooldowns[Move] = Definition().Total()+(IsBoss ? 60 : 8); }
+    if (Requested == EWardenAction::Strike) { Move = MoveIndex; ++AttackInstance; HitConsumed = false; Cooldowns[Move] = IsBoss && WardenBellbreaker::IsBellbreaker(Move) ? WardenBellbreaker::RepeatLock(Move) : Definition().Total()+(IsBoss ? 60 : 8); }
     if (Requested == EWardenAction::Heal) --Heals;
     return true;
 }
@@ -185,7 +185,7 @@ bool FWardenFighterState::Damage(float Amount, bool Flinch, int32 Stance)
 {
     if (!Alive() || Invulnerable() || Amount <= 0 || !FMath::IsFinite(Amount)) return false;
     if (Flinch) Sprinting=false;
-    Health = FMath::Max(0.f,Health-Amount);
+    Health = FMath::Max(0.f,Health-Amount); ++DamageEvents;
     if (Health == 0) { Action = EWardenAction::Dead; Age = 0; }
     else if (Flinch)
     {

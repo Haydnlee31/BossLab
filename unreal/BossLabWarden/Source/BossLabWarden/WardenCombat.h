@@ -47,8 +47,8 @@ namespace WardenRules
     inline constexpr float StrikeCost = 22, DodgeCost = 14, HealCost = 0;
     inline constexpr float StaminaRegen = 45, BossStaminaRegen = 26;
     // Rehearsal moves 0-2, the opt-in Funeral Regent moves 3-19 (WardenRegent.h) and the opt-in
-    // Bellbreaker moves 20-23 (WardenBellbreaker.h).
-    inline constexpr int32 BossMoveCount = 24;
+    // Bellbreaker moves 20-33 (WardenBellbreaker.h).
+    inline constexpr int32 BossMoveCount = 34;
     // Stun (Bellbreaker shockwave, 2026-11-18): a long committed hurt. Any flinching blow breaks it into
     // the ordinary short hurt (no guaranteed combos), and afterwards the fighter cannot be stunned again
     // for StunImmunityTicks (no stunlock). Identical for every controller.
@@ -69,6 +69,7 @@ namespace WardenRules
 struct FWardenFighterState
 {
     EWardenAction Action = EWardenAction::Ready;
+    int32 DamageEvents = 0; // Accepted damaging blows; independent of blood VFX.
     int32 Age = 0, Move = 0, Gap = 0, RegenDelay = 0, Heals = 3, AttackInstance = 0;
     float Health = 100, MaxHealth = 100, Stamina = 100;
     bool HitConsumed = false;

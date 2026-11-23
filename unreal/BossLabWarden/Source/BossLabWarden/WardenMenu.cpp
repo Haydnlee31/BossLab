@@ -1,5 +1,8 @@
 #include "WardenPrototype.h"
 #include "Engine/GameViewportClient.h"
+#include "Kismet/GameplayStatics.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
 #include "Widgets/Layout/SBorder.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/SBoxPanel.h"
@@ -111,6 +114,15 @@ void AWardenArenaMode::SetMenuOpen(bool Open)
             const bool Boss=FrontScreen==EWardenFrontScreen::BossSelect;
             const bool Result=FrontScreen==EWardenFrontScreen::Result;
             const bool Options=FrontScreen==EWardenFrontScreen::Settings || FrontScreen==EWardenFrontScreen::CreativeSetup;
+            const bool CanSwitch=FParse::Param(FCommandLine::Get(),TEXT("BossLabLocalRoster"));
+            auto OtherBoss=[&,Weak](bool Creative){
+                if(CanSwitch) Add(Button(bBellbreaker?TEXT("Choose the Funeral Regent"):TEXT("Choose the Bellbreaker"),[Weak,Creative](){
+                    if(!Weak.IsValid()) return;
+                    const FString Route=FString(TEXT("RosterBoss="))+(Weak->bBellbreaker?TEXT("regent"):TEXT("bellbreaker"))+TEXT("?RosterPage=")+(Creative?TEXT("creative"):TEXT("challenge"));
+                    UGameplayStatics::OpenLevel(Weak.Get(),FName(TEXT("/Game/BossLab/Maps/Arena")),true,Route);
+                }));
+                else Add(Text(TEXT("Other encounter unavailable in this installation"),11,Muted),2);
+            };
             FString Eyebrow,Heading,Description;
             switch(FrontScreen)
             {
@@ -122,14 +134,16 @@ void AWardenArenaMode::SetMenuOpen(bool Open)
                 Add(Button(TEXT("Settings"),[Go](){Go(EWardenFrontScreen::Settings);}));
                 Add(Button(TEXT("Quit game"),[Weak](){if(Weak.IsValid())Weak->QuitFromMenu();}));break;
             case EWardenFrontScreen::BossSelect:
-                Eyebrow=TEXT("I   /   CHALLENGE");Heading=bBellbreaker?TEXT("The\nBellbreaker"):TEXT("The Funeral\nRegent");
-                Description=bBellbreaker?TEXT("Founder of the cracked peal.\nA bell for a hammer. A floor that shakes.\nGreybox: jump or roll the quake."):TEXT("Keeper of the unquiet dead.\nAn executioner's estoc. A censer full of souls.\nTwo acts of judgment.");
+                Eyebrow=bBellbreaker?TEXT("II   /   CHALLENGE"):TEXT("I   /   CHALLENGE");Heading=bBellbreaker?TEXT("The\nBellbreaker"):TEXT("The Funeral\nRegent");
+                Description=bBellbreaker?TEXT("Founder of the Cracked Peal.\nHe cast the bell. He will decide when it falls silent.\nJump or roll as the shockwave reaches you."):TEXT("Keeper of the unquiet dead.\nAn executioner's estoc. A censer full of souls.\nTwo acts of judgment.");
                 Add(Button(TEXT("Begin challenge"),[Weak](){if(Weak.IsValid()){Weak->PlayInterfaceCue();Weak->StartRegentSession(false);}}));
+                OtherBoss(false);
                 Add(Button(TEXT("Back"),[Weak](){if(Weak.IsValid())Weak->OpenHome();}));
-                Add(Text(TEXT("II   /   COMING SOON          III   /   COMING SOON"),11,Muted),0);break;
+                Add(Text(TEXT("III   /   COMING SOON"),11,Muted),0);break;
             case EWardenFrontScreen::CreativeSetup:
                 Eyebrow=bBellbreaker?TEXT("CREATIVE   /   THE BELLBREAKER"):TEXT("CREATIVE   /   THE FUNERAL REGENT");Heading=TEXT("Practice");
                 Description=TEXT("Explore the encounter. Assists are optional.\nCreative sessions never earn challenge records.");
+                if(bTitle)OtherBoss(true);
                 Add(BuildPracticePanel());
                 if(bTitle)Add(Button(TEXT("Enter encounter"),[Weak](){if(Weak.IsValid()){Weak->PlayInterfaceCue();Weak->StartRegentSession(true);}}));
                 Add(Button(TEXT("Back"),[Weak,Go](){if(Weak.IsValid()){if(Weak->bTitle)Weak->OpenHome();else Go(EWardenFrontScreen::Pause);}}));break;
@@ -140,10 +154,10 @@ void AWardenArenaMode::SetMenuOpen(bool Open)
                 Add(Button(TEXT("Back"),[Weak,Go](){if(Weak.IsValid()){if(Weak->bTitle)Weak->OpenHome();else Go(EWardenFrontScreen::Pause);}}));break;
             case EWardenFrontScreen::Result:
             {
-                Eyebrow=bCreativeMode?TEXT("CREATIVE   /   NOT RANKED"):TEXT("THE FUNERAL REGENT");
+                Eyebrow=bCreativeMode?TEXT("CREATIVE   /   NOT RANKED"):(bBellbreaker?TEXT("THE BELLBREAKER"):TEXT("THE FUNERAL REGENT"));
                 const bool UnrankedWin=!bCreativeMode && !Run.bChallengeVictory && Player && Player->Fight.Alive() && Warden && !Warden->Fight.Alive();
-                Heading=UnrankedWin?TEXT("Encounter Complete"):(Run.bChallengeVictory?TEXT("Regent Felled"):(bCreativeMode?TEXT("Practice Complete"):TEXT("You Have Fallen")));
-                Description=UnrankedWin?TEXT("Encounter complete. No challenge record awarded."):(Run.bChallengeVictory?TEXT("Challenge complete. The unquiet court falls silent."):(bCreativeMode?TEXT("A session explored. No challenge record awarded."):TEXT("Rise again. The court awaits.")));
+                Heading=UnrankedWin?TEXT("Encounter Complete"):(Run.bChallengeVictory?(bBellbreaker?TEXT("Bellbreaker Felled"):TEXT("Regent Felled")):(bCreativeMode?TEXT("Practice Complete"):TEXT("You Have Fallen")));
+                Description=UnrankedWin?TEXT("Encounter complete. No challenge record awarded."):(Run.bChallengeVictory?(bBellbreaker?TEXT("Challenge complete. The last bell falls silent."):TEXT("Challenge complete. The unquiet court falls silent.")):(bCreativeMode?TEXT("A session explored. No challenge record awarded."):(bBellbreaker?TEXT("Rise again. The forge awaits."):TEXT("Rise again. The court awaits."))));
                 if(!bCreativeMode)
                 {
                     auto Stats=SNew(SHorizontalBox);
@@ -174,11 +188,16 @@ void AWardenArenaMode::SetMenuOpen(bool Open)
             }
             auto Backdrop=SNew(SOverlay);
             Backdrop->AddSlot()[SNew(SBorder).BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush")).BorderBackgroundColor(FLinearColor(.008f,.01f,.012f))];
-            if(const FSlateBrush* Art=bSmelteryWalkthrough?nullptr:Image(Boss?TEXT("RegentBackdrop.png"):TEXT("CrucibleBackdrop.png"),FVector2D(1536,864)))
+            const bool EncounterPreview = Boss || (bTitle && FrontScreen == EWardenFrontScreen::CreativeSetup);
+            const TCHAR* BackdropFile = EncounterPreview
+                ? (bBellbreaker ? TEXT("BellbreakerBackdrop.png") : TEXT("RegentBackdrop.png"))
+                : TEXT("CrucibleBackdrop.png");
+            if(const FSlateBrush* Art=bSmelteryWalkthrough?nullptr:Image(BackdropFile,FVector2D(1536,864)))
                 Backdrop->AddSlot()[SNew(SScaleBox).Stretch(EStretch::ScaleToFill).Clipping(EWidgetClipping::ClipToBounds)[SNew(SImage).Image(Art)]];
-            Backdrop->AddSlot()[SNew(SSimpleGradient).Orientation(Orient_Horizontal).StartColor(FLinearColor(.004f,.006f,.008f,.94f)).EndColor(FLinearColor(0,0,0,.10f)).Visibility(EVisibility::HitTestInvisible)];
+            const bool ForgePoster = EncounterPreview && bBellbreaker;
+            Backdrop->AddSlot()[SNew(SSimpleGradient).Orientation(Orient_Horizontal).StartColor(FLinearColor(.004f,.006f,.008f,ForgePoster ? .24f : .94f)).EndColor(FLinearColor(0,0,0,.10f)).Visibility(EVisibility::HitTestInvisible)];
             if(Result || Options || !bTitle)
-                Backdrop->AddSlot()[SNew(SBorder).BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush")).BorderBackgroundColor(FLinearColor(0,0,0,Result?.64f:.38f)).Visibility(EVisibility::HitTestInvisible)];
+                Backdrop->AddSlot()[SNew(SBorder).BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush")).BorderBackgroundColor(FLinearColor(0,0,0,Result ? .64f : (ForgePoster ? .15f : .38f))).Visibility(EVisibility::HitTestInvisible)];
             auto Content=SNew(SVerticalBox);
             if(Home)
             {

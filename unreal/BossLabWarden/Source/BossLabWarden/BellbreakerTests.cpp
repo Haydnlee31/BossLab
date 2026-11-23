@@ -29,7 +29,7 @@ AWardenArenaMode* BellArena(UWorld* W)
     return M;
 }
 struct FResponse { EWardenAction Action=EWardenAction::Ready; int32 At=-1; FVector Direction=FVector::RightVector; };
-struct FDuel { float Taken=0; int32 Stuns=0; int32 Avoided=0; bool Kneel=false; bool ActedWhileStunned=false; };
+struct FDuel { int32 FirstDamageWaveAge=INDEX_NONE; float Taken=0; int32 Stuns=0; int32 Avoided=0; bool Kneel=false; bool ActedWhileStunned=false; };
 // One committed Bellbreaker move. The player stands Distance from the point of impact (Quake) or from
 // the boss (melee), straight ahead. Responses fire at boss action ages (step indices from the commit).
 FDuel Duel(int32 Move,float Distance,TArray<FResponse> Responses,bool PhaseTwo=false)
@@ -49,6 +49,8 @@ FDuel Duel(int32 Move,float Distance,TArray<FResponse> Responses,bool PhaseTwo=f
         const bool WasStunned=M->Player->Fight.Stunned();
         if(WasStunned) { M->Player->PendingAction=EWardenAction::Dodge; M->Player->PendingDirection=FVector::RightVector; }   // mashing roll while stunned
         M->FixedStep();
+        if(R.FirstDamageWaveAge==INDEX_NONE && M->Bellbreaker.Waves.Num() && M->Player->Fight.Health<M->Player->Fight.MaxHealth)
+            R.FirstDamageWaveAge=M->CombatTick-M->Bellbreaker.Waves[0].Start;
         R.Kneel|=M->Player->Fight.Stunned() && M->Player->Fight.StunKneel;
         if(WasStunned && M->Player->Fight.Action==EWardenAction::Dodge) R.ActedWhileStunned=true;
         if(WasStunned && M->Player->Fight.Stunned()) M->Player->PendingAction=EWardenAction::Ready;
@@ -112,6 +114,17 @@ bool FBellbreakerStunRulesTest::RunTest(const FString&)
         TestTrue(FString::Printf(TEXT("%s telegraph >= 40 ticks (%d)"),D.Name,D.Windup),D.Windup>=40);
         TestTrue(FString::Printf(TEXT("%s recovery >= 50 ticks (punish window)"),D.Name),D.Recovery>=50);
     }
+    for(int32 Move : {WardenBellbreaker::HammerFall,WardenBellbreaker::Sweep,WardenBellbreaker::Quake})
+    {
+        FWardenFighterState B; B.IsBoss=true;
+        TestTrue(TEXT("Heavy move can commit"),B.Request(EWardenAction::Strike,Move));
+        const int32 Lock=WardenBellbreaker::RepeatLock(Move);
+        for(int32 I=1;I<Lock;++I) B.Advance();
+        TestTrue(TEXT("Boss has finished recovery before repeat lock expires"),B.Ready());
+        TestFalse(TEXT("Cannot repeat a special one tick early"),B.Request(EWardenAction::Strike,Move));
+        B.Advance();
+        TestTrue(TEXT("Can repeat on the first eligible tick"),B.Request(EWardenAction::Strike,Move));
+    }
     TestEqual(TEXT("Quake deals no swept damage"),WardenRules::Strike(WardenBellbreaker::Quake).Damage,0.f);
     TestTrue(TEXT("Crest passes a player in about 4 ticks"),2*WardenBellbreaker::CrestHalfWidth/(WardenBellbreaker::RingSpeed*Step)<=4.5f);
     return true;
@@ -135,6 +148,18 @@ bool FBellbreakerQuakeTest::RunTest(const FString&)
     TestTrue(TEXT("A timed roll clears the crest"),Roll.Stuns==0 && Roll.Taken==0 && Roll.Avoided==1);
     const FDuel EarlyJump=Duel(Quake,D,{{EWardenAction::Jump,Arrive-60}});
     TestEqual(TEXT("A jump long before the crest lands in time to be stunned"),EarlyJump.Stuns,1);
+    // At 9.8 m the old shader expired before its brightest line ever reached the player.
+    // Compare the first damaging tick at this distance to the band sent to the material.
+    const float EdgeDistance=980.f;
+    const FDuel Outer=Duel(Quake,EdgeDistance,{});
+    TestEqual(TEXT("Outer live band still chips"),Outer.Taken,WaveDamage);
+    int32 FirstEdgeTick=0;
+    while(FirstEdgeTick<120 && WaveBand(FirstEdgeTick).Y<EdgeDistance) ++FirstEdgeTick;
+    TestEqual(TEXT("First actual damage coincides with first visible-band tick at 9.8 m"),Outer.FirstDamageWaveAge,FirstEdgeTick);
+    const FVector2D Visible=WaveBand(FirstEdgeTick);
+    TestTrue(TEXT("Rendered swept band contains outer target on its first threatening tick"),
+        FirstEdgeTick>0 && WaveRadius(FirstEdgeTick)<=RingEnd && Visible.X<=EdgeDistance &&
+        Visible.Y>=EdgeDistance && WaveBand(FirstEdgeTick-1).Y<EdgeDistance);
     const FDuel Far=Duel(Quake,RingEnd+200,{});
     TestTrue(TEXT("Beyond the crest's reach: untouched"),Far.Stuns==0 && Far.Taken==0);
     const FDuel Blast=Duel(Quake,100,{});
@@ -200,11 +225,14 @@ bool FBellbreakerEncounterTest::RunTest(const FString&)
     M->bScriptedPlayer=true; M->Bellbreaker.Waiting=60;
     M->bPracticeInfiniteHealth=true;   // the practice refill (creative-only through the menu)
     TSet<int32> Seen; bool Foreign=false;
-    for(int32 T=0;T<60*90 && M->Warden->Fight.Alive();++T)
+    for(int32 T=0;T<60*260 && M->Warden->Fight.Alive();++T)
     {
         M->FixedStep();
         if(M->Warden->Fight.Action==EWardenAction::Strike) { Seen.Add(M->Warden->Fight.Move); Foreign|=!WardenBellbreaker::IsBellbreaker(M->Warden->Fight.Move); }
-        if(T==60*30) M->Warden->Fight.Health=WardenBellbreaker::PhaseTwoHealth;   // jump to the threshold
+        if(T==60*120) M->Warden->Fight.Health=WardenBellbreaker::PhaseTwoHealth;   // jump to the threshold
+        // The scripted practice player hugs the boss; step it away now and then so the ranged rows
+        // (Charge, Fling, Striding Fall) get their room, as a real player gives it.
+        if(T%(60*20)>=60*10 && T%(60*20)<60*16) { const FVector Away=(M->Player->GetActorLocation()-M->Warden->GetActorLocation()).GetSafeNormal2D(); M->Player->SetActorLocation(M->Warden->GetActorLocation()*FVector(1,1,0)+FVector(0,0,95)+(Away.IsNearlyZero()?FVector::ForwardVector:Away)*950.f); }
     }
     AddInfo(FString::Printf(TEXT("Moves seen %d, phase two %d, stuns %d, avoided %d, boss hp %.0f"),Seen.Num(),int32(M->Bellbreaker.PhaseTwo),M->Bellbreaker.Stuns,M->Bellbreaker.Avoided,M->Warden->Fight.Health));
     for(int32 Move=WardenBellbreaker::First;Move<WardenBellbreaker::End;++Move)
@@ -212,6 +240,47 @@ bool FBellbreakerEncounterTest::RunTest(const FString&)
     TestTrue(TEXT("Phase two reached"),M->Bellbreaker.PhaseTwo);
     TestFalse(TEXT("Only Bellbreaker moves"),Foreign);
     CloseWorld(W);
+    return true;
+}
+
+BELLBREAKER_TEST(FBellbreakerReadyMovesTest,"BossLab.Bellbreaker.ReadinessMoves");
+bool FBellbreakerReadyMovesTest::RunTest(const FString&)
+{
+    using namespace WardenBellbreaker;
+    // At least as many rows as a full boss: 14 Bellbreaker moves, every one with its own repeat lock.
+    TestTrue(TEXT("Fourteen Bellbreaker moves"),Count>=14);
+    for(int32 Move=First;Move<End;++Move)
+    {
+        FWardenFighterState B; B.IsBoss=true;
+        TestTrue(FString::Printf(TEXT("%s commits"),Strike(Move).Name),B.Request(EWardenAction::Strike,Move));
+        TestTrue(FString::Printf(TEXT("%s has a cooldown longer than itself"),Strike(Move).Name),B.Cooldowns[Move]>Strike(Move).Total());
+        while(!B.Ready()) B.Advance();
+        TestFalse(FString::Printf(TEXT("%s cannot repeat straight away"),Strike(Move).Name),B.Request(EWardenAction::Strike,Move));
+        // Every pose, start to end: finite and within the giant's reach (the drawn hammer is the hit path).
+        bool Sane=true;
+        for(int32 Age=0;Age<=Strike(Move).Total();++Age)
+        {
+            const FVector Bell=BellOffset(Move,Age,true), Grip=GripOffset(Move,Age,true);
+            Sane&=!Bell.ContainsNaN() && Bell.Size2D()<700 && Bell.Z>-5 && Bell.Z<800 && FMath::IsNearlyEqual(FVector::Dist(Bell,Grip),BellReach,1.f);
+        }
+        TestTrue(FString::Printf(TEXT("%s bell path stays sane"),Strike(Move).Name),Sane);
+    }
+    TestEqual(TEXT("Cyclone ends facing forward"),FMath::Fmod(CycloneSpin(Cyclone,Strike(Cyclone).Windup+Strike(Cyclone).Active)+720.f,360.f),0.f,.5f);
+    // The Toll: standing or jumping is hit; a roll through it is not.
+    const FDuel Stand=Duel(Toll,500,{});
+    TestTrue(TEXT("Toll hits a standing player"),Stand.Taken>=TollDamage);
+    const int32 Arrive=Strike(Toll).Windup+FMath::CeilToInt((500-TollStart)/(TollSpeed*WardenRules::Step));
+    const FDuel Jumped=Duel(Toll,500,{{EWardenAction::Jump,Arrive-14}});
+    TestTrue(TEXT("Jumping does not clear the toll"),Jumped.Taken>=TollDamage);
+    const FDuel Rolled=Duel(Toll,500,{{EWardenAction::Dodge,Arrive-6}});
+    TestEqual(TEXT("A roll through the toll takes nothing"),Rolled.Taken,0.f);
+    // Anvil Stamp: in reach is hit, outside is safe.
+    TestTrue(TEXT("Stamp hits a hugging player"),Duel(Stamp,150,{}).Taken>=StampDamage);
+    TestEqual(TEXT("Stamp misses outside its radius"),Duel(Stamp,StampAhead+StampRadius+120,{}).Taken,0.f);
+    // Slag Fling: three globs land on the marks; a player who walks off the mark is safe.
+    TestTrue(TEXT("Slag lands on a player who stays"),Duel(Fling,900,{}).Taken>=SlagDamage);
+    // Death Knell: three blasts on one mark, then a crest.
+    TestTrue(TEXT("Knell blasts a player on the mark"),Duel(Knell,QuakeImpactOffset().X,{},true).Taken>=KnellDamage);
     return true;
 }
 
@@ -328,16 +397,18 @@ bool FBellbreakerForgeTrial::RunTest(const FString&)
     M->DispatchBeginPlay();
     if(!M->Warden) { AddError(TEXT("No boss spawned in the forge")); CloseWorld(W); return false; }
     M->Warden->DispatchBeginPlay(); M->EnableBellbreaker(); M->ConfigureEncounter(303,true,1);
-    int32 Dressing=0, RingWalls=0;
+    int32 Dressing=0, RingWalls=0, CameraWalls=0;
     for(TActorIterator<AStaticMeshActor> It(W);It;++It)
     {
         Dressing+=It->ActorHasTag(TEXT("SmelteryDressing"));
+        if(It->ActorHasTag(TEXT("SmelteryBoundary")) && It->GetStaticMeshComponent()->GetCollisionResponseToChannel(ECC_Camera)==ECR_Block) ++CameraWalls;
         RingWalls+=It->GetActorScale3D().Equals(FVector(.55,2.8,2.6),.01);   // the default arena's ring of wall blocks
     }
     AddInfo(FString::Printf(TEXT("Forge: %d dressing actors, %d default ring walls"),Dressing,RingWalls));
     TestTrue(TEXT("Encounter mode, not the walkthrough"),M->bForgeArena && M->bBellbreaker && !M->bSmelteryWalkthrough && M->bRehearsal);
     TestTrue(TEXT("Hearth A2 art is built (40 layout instances plus fire, molten channel and steam)"),Dressing>=40);
     TestEqual(TEXT("No default ring arena"),RingWalls,0);
+    TestEqual(TEXT("Fight camera retracts at each forge work bay"),CameraWalls,4);
     TestTrue(TEXT("Player enters at the entry side"),M->Player->GetActorLocation().Y<-300);
     TestTrue(TEXT("Bellbreaker stands before the furnace"),M->Warden->GetActorLocation().Y>300);
     // The rehearsal plays in the forge: the giant reaches the player around the work islands and commits.

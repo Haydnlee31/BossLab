@@ -401,6 +401,12 @@ public:
     void EnableBellbreaker();
     void BellbreakerDecide(FVector& BossDirection);
     void BellbreakerResolve();
+    TWeakObjectPtr<class UAudioComponent> BellbreakerSpeech;
+    TWeakObjectPtr<class UAudioComponent> BellbreakerScrape;
+    bool bForgeSpeechPriority=false;
+    void SetForgeSpeechPriority(bool Active);
+    void TrackWorldEffect(class UAudioComponent* Voice);
+    void BellbreakerSpeak(const TCHAR* Line);
     void BellbreakerSound(const TCHAR* Name,const FVector& At,float Volume);
     void BuildBellbreakerView();
     void AnimateBellbreakerView(float Seconds);
@@ -408,11 +414,13 @@ public:
     TWeakObjectPtr<UStaticMeshComponent> BellbreakerHammer;
     TArray<TWeakObjectPtr<UStaticMeshComponent>> BellbreakerRings;
     TArray<TWeakObjectPtr<class UMaterialInstanceDynamic>> BellbreakerRingMids;
+    TArray<TWeakObjectPtr<UStaticMeshComponent>> BellbreakerGlobs;   // Slag Fling globs (presentation)
     TMap<FString,class UAnimSequence*> BellbreakerClips;     // kept alive by SfxKeepAlive
     TMap<FString,class USoundBase*> BellbreakerSounds;       // kept alive by SfxKeepAlive
     FWardenBellbreakerView BBView;
     // Capture-only side-on review of every Bellbreaker move (-BossLabBellbreakerStudy).
     bool bBellbreakerStudy=false;
+    bool bBellApproachStudy=false;
     int32 BellbreakerStudyIndex=0, BellbreakerStudyWait=90;
     void BellbreakerStudyStep();
     FWardenEffects Effects;
@@ -529,6 +537,8 @@ public:
     int32 Encounter = 0;
     FWardenObservation Observation;
     FWardenDecision Decision;
+    int32 EncounterMoveCounts[WardenRules::BossMoveCount]={};
+    int32 LastCountedBossInstance=0;
     int32 MoveCounts[3] = {0,0,0};
     bool bScriptedPlayer = false;
     bool bMuted = false, bReducedMotion = false;
