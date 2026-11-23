@@ -116,6 +116,7 @@ struct FWardenBellbreakerView
     bool HasPreviousFloor=false, WasGroundGait=false;
     FVector LastBell=FVector::ZeroVector;
     FVector BellAxis=FVector::ForwardVector;   // grip -> bell, this frame (spectacle hammer trail)
+    float LeftSlide=0;   // guide hand slid along the haft to stay within reach (cm, + toward the rear hand)
     FVector ClearPush=FVector::ZeroVector;   // body-clearance offset of the whole hammer (facing frame, cm)
     bool bContact=false;
     int32 ScrapeVariant=0;

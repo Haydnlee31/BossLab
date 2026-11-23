@@ -1886,6 +1886,7 @@ void AWardenArenaMode::AnimateBellbreakerView(float Seconds)
         // A modest wrist adjustment keeps the thumb on its original side;
         // reseat the wrist around the same pocket without rolling the whole arm.
         const FVector ActualSpan=(CS[Hand.Pinky].GetLocation()-CS[Hand.Index].GetLocation()).GetSafeNormal();
+        double LogBend=0;
         const double Separation=FMath::Acos(FMath::Clamp(ActualSpan|Goal,-1.,1.));
         const double Adjust=FMath::Clamp(Separation-FMath::DegreesToRadians(50.),0.,FMath::DegreesToRadians(28.));
         if(Adjust>.0001)
@@ -1903,7 +1904,7 @@ void AWardenArenaMode::AnimateBellbreakerView(float Seconds)
             const FQuat Parent=CS[Ref.GetParentIndex(Hand.Hand)].GetRotation();
             const FQuat Rest=Ref.GetRefBonePose()[Hand.Hand].GetRotation();
             const FQuat WantedLocal=Parent.Inverse()*Want;
-            const double Bend=Rest.AngularDistance(WantedLocal);
+            const double Bend=Rest.AngularDistance(WantedLocal); LogBend=FMath::RadiansToDegrees(Bend);
             const double Limit=FMath::DegreesToRadians(53.);
             FQuat Seated=Bend>Limit ? Parent*FQuat::Slerp(Rest,WantedLocal,Limit/Bend) : Want;
             if(TrackImpact && Body->BoneSpaceTransforms.IsValidIndex(Hand.Hand))
@@ -1917,9 +1918,47 @@ void AWardenArenaMode::AnimateBellbreakerView(float Seconds)
             RotateCS(Hand.Hand,Seated*CS[Hand.Hand].GetRotation().Inverse());
         }
         if(Hand.bLeft) V.WorstLeftGap=FMath::Max(V.WorstLeftGap,float(FVector::Dist(Palm(Hand),Target)*Scale));
+        if(Hand.bLeft && bBellbreakerStudy && Striking)
+            UE_LOG(LogTemp,Display,TEXT("BOSSLAB lefthand move %d age %.2f gap %.2f reach %.2f arm %.2f wristbend %.1f adjust %.1f"),F.Move,AgeF,
+                FVector::Dist(Palm(Hand),Target)*Scale,FVector::Dist(Target,Root)*Scale,(L1+L2)*Scale,LogBend,FMath::RadiansToDegrees(Adjust));
     };
     SetGrip(Right,WeaponShoulder,Idx(TEXT("lowerarm_r")),RearSocketZ);
-    SetGrip(LeftH,LeftShoulder,Idx(TEXT("lowerarm_l")),RearSocketZ-Lead);
+    // Guide-hand slide (2026-11-24): in the Backhand Toll's follow-through the bell swings out to his
+    // right and the guide grip ended up 182 cm from the left shoulder with a 170 cm arm (11.5 cm gap).
+    // The hammer is the engine hit path, so the hand moves instead: when the guide grip is out of
+    // reach it slides along the haft to the nearest reachable point (toward the rear hand first,
+    // never closer than 14 cm to it), eased in and out so the palm never jumps.
+    float LeftZ=RearSocketZ-Lead;
+    {
+        const int32 Elbow=Idx(TEXT("lowerarm_l"));
+        float Want=0;
+        if(Holding && LeftShoulder>=0 && Elbow>=0 && LeftH.Hand>=0 && LeftH.Middle>=0 && LeftH.Pinky>=0 && LeftH.Index>=0)
+        {
+            const FVector Shoulder=CS[LeftShoulder].GetLocation();
+            const double Arm=.97*(FVector::Dist(Shoulder,CS[Elbow].GetLocation())+FVector::Dist(CS[Elbow].GetLocation(),Palm(LeftH)));
+            auto Over=[&](float Z) { return FVector::Dist(CT.InverseTransformPosition(GripPoint(Z)),Shoulder)-Arm; };
+            if(Over(LeftZ)>0)
+            {
+                float Best=Over(LeftZ);
+                for(float Step=2;Step<=60;Step+=2)
+                {
+                    bool Found=false;
+                    for(const float Sign:{1.f,-1.f})
+                    {
+                        const float Z=LeftZ+Sign*Step;
+                        if(Z>RearSocketZ-14.f || Z<RearSocketZ-110.f) continue;
+                        const double O=Over(Z);
+                        if(O<Best) { Best=O; Want=Sign*Step; }
+                        if(O<=0) { Found=true; break; }
+                    }
+                    if(Found) break;
+                }
+            }
+        }
+        V.LeftSlide=FMath::FInterpTo(V.LeftSlide,Want,Dt,FMath::Abs(Want)>FMath::Abs(V.LeftSlide) ? 30.f : 8.f);
+        LeftZ+=V.LeftSlide;
+    }
+    SetGrip(LeftH,LeftShoulder,Idx(TEXT("lowerarm_l")),LeftZ);
     // With the palms seated, wrap the phalanges around the measured shaft.
     // The thumb advances around the opposite side of the same cylinder.
     auto WrapDigits=[&](const FHand& Hand,float Z)
@@ -1969,7 +2008,7 @@ void AWardenArenaMode::AnimateBellbreakerView(float Seconds)
     if(!CompareOldGrip)
     {
         WrapDigits(Right,RearSocketZ);
-        WrapDigits(LeftH,RearSocketZ-Lead);
+        WrapDigits(LeftH,LeftZ);
     }
     if(bBellbreakerStudy && Right.Hand>=0 && Right.Middle>=0)
         UE_LOG(LogTemp,Display,TEXT("BOSSLAB rear grip move %d age %.2f gap %.1f"),
