@@ -1,5 +1,6 @@
 #include "WardenPrototype.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/PoseableMeshComponent.h"
 #include "Animation/AnimSingleNodeInstance.h"
@@ -14,6 +15,7 @@
 #include "HAL/FileManager.h"
 #include "Misc/ScopeExit.h"
 #include "Camera/CameraComponent.h"
+#include "Camera/CameraActor.h"
 #include "GameFramework/SpringArmComponent.h"
 
 FVector AWardenChallenger::MoveIntent() const
@@ -226,6 +228,7 @@ void AWardenChallenger::Restart()
 {
     if (auto* Mode = GetWorld()->GetAuthGameMode<AWardenArenaMode>())
     {
+        if(Mode->bSmelteryWalkthrough) { Mode->ShowFrontPage(EWardenFrontScreen::Pause); return; }
         if(Mode->bFrontendSession) { if(Mode->bTitle) return; if(Mode->FrontScreen==EWardenFrontScreen::Pause || Mode->FrontScreen==EWardenFrontScreen::Result) Mode->RetrySession(); else if(!Mode->bPaused) Mode->ShowFrontPage(EWardenFrontScreen::Pause); return; }
         if (Mode->bTitle || Mode->bPaused || !Fight.Alive() || !Mode->Warden->Fight.Alive())
         { Mode->bDemo=false; Mode->ResetEncounter(); Mode->bTitle=false; }
@@ -288,8 +291,15 @@ void AWardenArenaMode::ResetEncounter(bool RetainEvidence)
     if (!Player || !Warden) return;
     Player->SetActorLocation(FVector(-450,0,95)); Player->SetActorRotation(FRotator::ZeroRotator);
     Warden->SetActorLocation(FVector(300,0,95*Warden->GetActorScale3D().Z)); Warden->SetActorRotation(FRotator(0,180,0));
+    if(bForgeArena)
+    {
+        // Hearth A2: the player enters from the entry side; the Bellbreaker stands before the furnace.
+        Player->SetActorLocation(FVector(0,-500,95)); Player->SetActorRotation(FRotator(0,90,0));
+        Warden->SetActorLocation(FVector(0,400,95*Warden->GetActorScale3D().Z)); Warden->SetActorRotation(FRotator(0,-90,0));
+    }
     Player->SetTarget(Warden); Warden->SetTarget(Player);
     Player->ResetFighter(false); Warden->ResetFighter(true);
+    if(!RetainEvidence) { FrameMilliseconds.Reset(); WarmupFrames=0; LastFrameTime=0; }
     CombatTick = 0; CombatAccumulator = 0; VisibleHistory.Reset(); SetMenuOpen(false);
     ++Encounter; Statistics.NewEncounter(Encounter,RetainEvidence); bReportSaved=false;
     RehearsalMove=0; RehearsalWait=100; HitStop=0; Shake=0;
@@ -301,23 +311,34 @@ void AWardenArenaMode::ResetEncounter(bool RetainEvidence)
         // Testing shortcut: open at the phase threshold, so the transition plays first.
         if(bRegentPhaseTwoStart) Warden->Fight.Health=WardenRegent::PhaseTwoHealth;
     }
+    if(bBellbreaker)
+    {
+        if (BellbreakerSpeech.IsValid()) BellbreakerSpeech->Stop();
+        Bellbreaker=FWardenBellbreakerState(); Warden->bBellbreaker=true; Warden->SetActorHiddenInGame(BellbreakerView.IsValid());
+        Warden->Fight.Health=Warden->Fight.MaxHealth=WardenBellbreaker::Health;
+        Warden->Fight.Poise=Warden->Fight.MaxPoise=WardenBellbreaker::Poise;
+        if(bRegentPhaseTwoStart) Warden->Fight.Health=WardenBellbreaker::PhaseTwoHealth;
+    }
     PlayerDamage=BossDamage=0; AcceptedTick=0; AcceptedMove=-1; bDecisionAccepted=false;
     Observation=FWardenObservation(); Decision=FWardenDecision();
     PolicyRandom.Initialize(PolicySeed);
     PlayerScript.LastRespondedInstance=-1;
+    LastCountedBossInstance=0; for(int32& Count : EncounterMoveCounts) Count=0;
     for(int32& Count : MoveCounts) Count=0;
     LastPlayerPosition=Player->GetActorLocation();
-    LastEvent = bRegent ? TEXT("The Funeral Regent. Read the censer and the skulls; roll late, punish recovery.")
+    LastEvent = bBellbreaker ? TEXT("The Bellbreaker (greybox). Roll into the hammer; jump or roll the Bell Quake's shockwave.")
+        : bRegent ? TEXT("The Funeral Regent. Read the censer and the skulls; roll late, punish recovery.")
         : TEXT("Tab target. Read the sword. Roll through contact; punish recovery.");
-    if (Player->GetController()) Player->GetController()->SetControlRotation(FRotator(-12,0,0));
+    if (Player->GetController()) Player->GetController()->SetControlRotation(FRotator(-12,bForgeArena?90.f:0.f,0));
 }
 void AWardenArenaMode::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+    if(bSmelteryWalkthrough) { TickSmelteryWalkthrough(DeltaSeconds); return; }
     if(bDungeon) AnimateDungeon(Dungeon,GetWorld()->GetTimeSeconds());
     UpdateAudio();
     // Regent visuals follow the fixed-step state below; updated after the steps run.
-    ON_SCOPE_EXIT { if(bRegent) AnimateRegentView(GetWorld()->GetTimeSeconds()); AnimateEffects(GetWorld()->GetTimeSeconds()); AnimateSpectacle(GetWorld()->GetTimeSeconds()); };
+    ON_SCOPE_EXIT { if(bBellbreaker) AnimateBellbreakerView(GetWorld()->GetTimeSeconds()); if(bRegent) AnimateRegentView(GetWorld()->GetTimeSeconds()); AnimateEffects(GetWorld()->GetTimeSeconds()); AnimateSpectacle(GetWorld()->GetTimeSeconds()); };
     const double Now=FPlatformTime::Seconds();
     if(LastFrameTime>0 && !bPaused && !bTitle && Player && Warden && Player->Fight.Alive() && Warden->Fight.Alive())
     {
@@ -333,7 +354,8 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
     if(bCaptureFrames)
     {
         ++CaptureFrame;
-        if(CaptureFrame>60 && CaptureFrame<=60+CaptureCount)
+        static const bool AuditOnly=FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_BELL_AUDIT_ONLY"))==TEXT("1");
+        if(CaptureFrame>60 && CaptureFrame<=60+CaptureCount && !(bBellbreakerStudy && AuditOnly))
         {
             const FString Directory=FPaths::Combine(FPaths::ProjectSavedDir(),TEXT("CaptureFrames"));
             IFileManager::Get().MakeDirectory(*Directory,true);
@@ -363,7 +385,13 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
     if(Player->Camera)
     {
         const float S=bReducedMotion ? 0.f : Shake, Time=GetWorld()->GetTimeSeconds();
-        Player->Camera->SetRelativeLocation(FVector(0,FMath::Sin(Time*83)*S*7,FMath::Sin(Time*71+1)*S*5));
+        // A short downward impulse and smaller rebound about the baseline, keyed
+        // to contact (not the global sine phase). Never rotate the player's aim.
+        const float T=Bellbreaker.GroundAge;
+        const float Kick=bBellbreaker && !bReducedMotion && T<.32f ? Bellbreaker.GroundAmplitude*FMath::Square(1.f-T/.32f) : 0.f;
+        Player->Camera->SetRelativeLocation(FVector(-2.f*Kick,FMath::Sin(Time*83)*S*7,
+            FMath::Sin(Time*71+1)*S*5-9.f*Kick*FMath::Cos(2.f*PI*5.5f*T)));
+        Bellbreaker.GroundAge=FMath::Min(.32f,T+DeltaSeconds);
     }
 }
 void AWardenArenaMode::FixedStep()
@@ -379,24 +407,57 @@ void AWardenArenaMode::FixedStep()
     if(!Player->Fight.Alive() || !Warden->Fight.Alive())
     {
         if(!Player->Fight.Alive()) Player->StepFighter(FVector::ZeroVector);
-        if(!Warden->Fight.Alive()) Warden->StepFighter(FVector::ZeroVector);
+        if(!Warden->Fight.Alive())
+        {
+            if(bBellbreaker && Warden->DeathAge==0) BellbreakerSpeak(TEXT("Defeat"));
+            Warden->StepFighter(FVector::ZeroVector);
+        }
         Statistics.Censor();
         if(bRegent) { Regent.Flying.Reset(); Regent.Hazards.Reset(); }
+        if(bBellbreaker) { Bellbreaker.Waves.Reset(); Bellbreaker.Slag.Reset(); }
         if(!bReportSaved) { SaveReport(); bReportSaved=true; }
         RunEnded();
+        if(bFrontendSession && Run.bResult && ((!Player->Fight.Alive() && Player->DeathAge>=72) || (!Warden->Fight.Alive() && Warden->DeathAge>=72))) ShowFrontPage(EWardenFrontScreen::Result);
         if(bDemo && ++DemoResetWait>=120) { ++DemoRounds; ResetEncounter(true); DemoResetWait=0; LastEvent=TEXT("DEMO ROUND RESET | Health restored; evidence retained"); }
         return;
     }
     ++CombatTick;
+    if (CombatTick == 1 && bBellbreaker && Warden->Fight.Health > WardenBellbreaker::PhaseTwoHealth) BellbreakerSpeak(TEXT("Challenge"));
     if(CombatTick==1) RunStarted();
     FVector BossDirection=FVector::ZeroVector;
     // Temporary rehearsal choreography: fixed 0,1,2 order, no learned policy,
     // response statistics, input reading or hidden resource-dependent selection.
+    static const bool ReviewWalk=FParse::Param(FCommandLine::Get(),TEXT("BossLabBellWalk"));
     if(bRegentStudy)
     {
         // The in-action half of RegentDecide (tracking, ash-step teleport) still runs.
         FVector Ignored; Regent.Waiting=1000000; RegentDecide(Ignored); RegentStudyStep();
     }
+    else if(bBellApproachStudy)
+    {
+        // Use the real encounter controller and lock-on camera once the video starts.
+        Player->Fight.Health=Player->Fight.MaxHealth;
+        if(CaptureFrame>=61)
+        {
+            if(!ReviewWalk) BellbreakerDecide(BossDirection);
+            else
+            {
+                const FVector Delta=Player->GetActorLocation()-Warden->GetActorLocation();
+                const int32 Beat=CaptureFrame-61;
+                const bool Hold=(Beat>=144 && Beat<175) || (Beat>=328 && Beat<361);
+                if(!Hold && Delta.Size2D()>275.f) BossDirection=Delta.GetSafeNormal2D();
+            }
+        }
+    }
+    else if(bBellbreakerStudy)
+    {
+        Player->Fight.Health=Player->Fight.MaxHealth;
+        static const bool ReleaseStudy=FParse::Param(FCommandLine::Get(),TEXT("BossLabBellReleaseStudy"));
+        if(!ReleaseStudy) BellbreakerStudyStep();
+        else if(CaptureFrame==68 && Warden->Fight.Ready()) Warden->Fight.Stun(64,false);
+        else if(CaptureFrame>=136) Warden->Fight.Health=0.f;
+    }
+    else if(bRehearsal && bBellbreaker) BellbreakerDecide(BossDirection);
     else if(bRehearsal && bRegent) RegentDecide(BossDirection);
     else if(bRehearsal && Warden->Fight.Ready())
     {
@@ -413,6 +474,60 @@ void AWardenArenaMode::FixedStep()
         }
     }
     FVector Intent = Player->MoveIntent();
+    // Camera-on-player review. These stick and button requests enter ordinary movement,
+    // stamina and action acceptance. The existing rehearsal controls the boss independently.
+    static const bool ReviewFootwork=FParse::Param(FCommandLine::Get(),TEXT("BossLabBellFootwork"));
+    if(bBellApproachStudy && ReviewWalk && RegentStudyCamera.IsValid())
+    {
+        // Orthogonal evidence of the same pursuit, with head, hips and soles visible.
+        const FVector Focus=Warden->GetActorLocation()+FVector(0,0,-24);
+        const FVector Ray=Focus-RegentStudyCamera->GetActorLocation();
+        RegentStudyCamera->SetActorRotation(Ray.Rotation());
+        RegentStudyCamera->GetCameraComponent()->SetFieldOfView(
+            FMath::Clamp(float(2.*FMath::RadiansToDegrees(FMath::Atan2(510.,Ray.Size()))),42.f,102.f));
+    }
+    if(bBellApproachStudy && ReviewWalk && CaptureFrame>=61)
+    {
+        // Isolated gait rehearsal. The player traverses the open forge floor while
+        // the smith follows. Two pauses expose settle, restart and turning plants.
+        static const FVector Stops[]={{-420,-230,0},{-415,430,0},{280,370,0},
+                                      {270,-440,0},{-300,-460,0},{0,105,0}};
+        const int32 Beat=CaptureFrame-61;
+        const int32 Leg=Beat<72 ? 0 : Beat<162 ? 1 : Beat<245 ? 2 : Beat<336 ? 3 : Beat<406 ? 4 : 5;
+        const FVector Delta=Stops[Leg]-Player->GetActorLocation();
+        Intent=Delta.Size2D()>24.f ? Delta.GetSafeNormal2D()*.85f : FVector::ZeroVector;
+    }
+    if(bBellApproachStudy && ReviewFootwork && CaptureFrame>=61)
+    {
+        const int32 Beat=CaptureFrame-61;
+        const FVector Forward=(Warden->GetActorLocation()-Player->GetActorLocation()).GetSafeNormal2D();
+        const FVector Side=FVector::CrossProduct(FVector::UpVector,Forward);
+        // Arc across his lead foot, reverse, close to punish, then draw him out again.
+        if(Beat<76) Intent=Side*.72f;
+        else if(Beat<138) Intent=(-Side-Forward*.35f).GetSafeNormal();
+        else if(Beat<196) Intent=Forward;
+        else if(Beat<246) Intent=FVector::ZeroVector;
+        else if(Beat<335) Intent=(Side*.75f-Forward).GetSafeNormal();
+        else if(Beat<411) Intent=(-Side+Forward*.7f).GetSafeNormal();
+        else Intent=Forward*.7f;
+        // Two combat steps can share a capture frame. Issue each press once.
+        if((CombatTick&1)==0)
+        {
+            if(Beat==95 || Beat==285)
+            {
+                Player->PendingDirection=Intent;
+                Player->PendingAction=EWardenAction::Dodge;
+            }
+            else if(Beat==195 || Beat==220 || Beat==445) Player->PendingAction=EWardenAction::Strike;
+        }
+    }
+    if(bBellApproachStudy && (ReviewFootwork || ReviewWalk) && CaptureFrame>=61 && CombatTick%12==0)
+    {
+        UE_LOG(LogTemp,Display,TEXT("BOSSLAB footwork frame=%d boss=(%.1f,%.1f) yaw=%.1f speed=%.1f action=%d player=%d range=%.1f"),
+                CaptureFrame-61,Warden->GetActorLocation().X,Warden->GetActorLocation().Y,Warden->GetActorRotation().Yaw,
+                Warden->MoveVelocity.Size2D(),int32(Warden->Fight.Action),int32(Player->Fight.Action),
+                FVector::Dist2D(Player->GetActorLocation(),Warden->GetActorLocation()));
+    }
     if(bGaitStudy) GaitStudyStep(Intent,BossDirection);
     if(bFeelStudy) FeelStudyStep(Intent);
     if(TestPilot) TestPilot(*this,Intent);
@@ -484,7 +599,44 @@ void AWardenArenaMode::FixedStep()
             Player->FollowAction=EWardenAction::Ready;
         }
     }
+    const FVector PlayerBefore=Player->GetActorLocation();
     Player->StepFighter(Intent,!bScriptedPlayer && !bMotionStudy && Player->SprintHeld);
+    // Stuck guard (owner report 2026-11-18: "after a stun I can roll but not walk"; not reproducible in tests).
+    // Free to walk, holding the stick, yet not moving for 20 ticks: log exactly what blocks the capsule and,
+    // if it starts inside something (the boss's capsule, a prop box), push it out along the contact normal.
+    if(Intent.SizeSquared2D()>.04f && Player->Fight.Alive())
+    {
+        StuckTicks=FVector::Dist2D(PlayerBefore,Player->GetActorLocation())<.5f ? StuckTicks+1 : 0;
+        if(StuckTicks==30 || (StuckTicks>30 && StuckTicks%120==0))
+            UE_LOG(LogTemp,Display,TEXT("BOSSLAB STUCK-STATE ticks %d action %d age %d stunTicks %d gap %d hitstop %d pending %d held %d sprint %d timescale %.2f locked %d"),
+                StuckTicks,int32(Player->Fight.Action),Player->Fight.Age,Player->Fight.StunTicks,Player->Fight.Gap,HitStop,int32(Player->PendingAction),Player->PendingHeld,
+                int32(Player->Fight.Sprinting),Spectacle.TimeScale(GetWorld()->GetTimeSeconds()),int32(Player->IsLocked()));
+        if(StuckTicks==20 && Player->Fight.Action==EWardenAction::Ready)
+        {
+            FHitResult Hit; FCollisionQueryParams Q(SCENE_QUERY_STAT(WardenStuck),false,Player);
+            const FVector From=Player->GetActorLocation(), To=From+Intent.GetSafeNormal2D()*20;
+            const bool Blocked=GetWorld()->SweepSingleByChannel(Hit,From,To,FQuat::Identity,ECC_Pawn,Player->Capsule->GetCollisionShape(),Q);
+            UE_LOG(LogTemp,Display,TEXT("BOSSLAB STUCK player at %s intent %s vel %s gap %d pending %d stunImm %d | blocked %d by %s/%s startPen %d depth %.1f normal %s"),
+                *From.ToString(),*Intent.ToString(),*Player->MoveVelocity.ToString(),Player->Fight.Gap,int32(Player->PendingAction),Player->Fight.StunImmunity,
+                int32(Blocked),Hit.GetActor()?*Hit.GetActor()->GetName():TEXT("-"),Hit.GetComponent()?*Hit.GetComponent()->GetName():TEXT("-"),
+                int32(Hit.bStartPenetrating),Hit.PenetrationDepth,*Hit.Normal.ToString());
+            if(Blocked && Hit.bStartPenetrating && Hit.GetActor())
+            {
+                // Whatever it is, the player's capsule ignores it from now on (fighting floors are the hidden
+                // boxes; nothing else should ever hold a fighter), and a horizontal overlap is pushed out.
+                Player->Capsule->IgnoreActorWhenMoving(Hit.GetActor(),Hit.GetActor()!=Warden.Get());
+                FVector Out=Hit.Normal; Out.Z=0;
+                if(!Out.IsNearlyZero()) Player->SetActorLocation(From+Out.GetSafeNormal()*(Hit.PenetrationDepth+2.f),false);
+                ++StuckFixes; LastEvent=TEXT("Freed from overlapping geometry.");
+            }
+        }
+    }
+    else StuckTicks=0;
+    if(Warden->Fight.AttackInstance!=LastCountedBossInstance)
+    {
+        LastCountedBossInstance=Warden->Fight.AttackInstance;
+        if(Warden->Fight.Move>=0 && Warden->Fight.Move<WardenRules::BossMoveCount) ++EncounterMoveCounts[Warden->Fight.Move];
+    }
     Warden->StepFighter(BossDirection);
     if(bMotionStudy)
     {
@@ -500,6 +652,7 @@ void AWardenArenaMode::FixedStep()
     if (Warden->ResolveStrike(Player,bDebugGeometry)) { BossDamage+=PriorPlayerHealth-Player->Fight.Health; LastEvent = TEXT("You were hit. Recover before committing again."); }
     if (Player->ResolveStrike(Warden,bDebugGeometry)) { PlayerDamage+=PriorBossHealth-Warden->Fight.Health; LastEvent = TEXT("Greatsword connected."); }
     if(bRegent && bRehearsal) RegentResolve();
+    if(bBellbreaker && bRehearsal) BellbreakerResolve();
     if(bFrontendSession && bCreativeMode && bPracticeInfiniteHealth)
     {
         Player->Fight.Health=Player->Fight.MaxHealth;

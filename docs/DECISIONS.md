@@ -248,3 +248,51 @@ Use fullbleed HF-generated environment/keyart and licensed Cinzel; keep navigati
 ##2026-11-14 — Interface sound owns a separate mix
 
 Owner rejects menu buzzing. Suppress battle music/room/fire beds and cancel tracked spell tails on menus. Dedicated original sparse struck-string score on title pages; short dry confirm/adjust sounds,90ms retrigger guard, no hover sound. Pause/results remain quiet. Respect saved master/music/effects/mute from startup. Missing interface assets remain silent rather than falling back to fight sounds. Preserve initial too-quiet recording and calibrate source gain from measured output. No combat-rule/AI changes.
+
+## 2026-11-16 — Bellbreaker chosen; arena first
+
+Owner selects Bellbreaker concept from two original generated boss sheets and authorizes HF-assisted arena modelling. Develop The Last Casting as separate measured 3D studio environment; preserve current playable game. Use modular HF bell/cradle and furnace assets within deliberately measured architectural assembly, not generated whole-room collision. Expand initial3m reserve to6m after camera audit; proposed28×36m floor remains. Boss/AI implementation and cloud migration remain deferred. No token persisted.
+
+## 2026-11-16 — Foundry studio freeze
+
+Canonical final-v3 uses realHF bell/cradle plus4copiesofonegeneratedfurnace within measured Blenderarchitecture.28×36/r4 centralarea and6mreserve areplanningguides, not gameplaycolliders. Mainhall46×58 differsfromfull50×60.35 staticfootprintincludingrecessfloorpatches. Reararch-bearing andfloorsupport errors corrected; earlierimages explicitlyretainedasrejected/probe evidence. Save editableblendandGLB; retainonlyinitialblockout andfinal-v3scenecheckpoints.8finalviews,readback andscopedclearance/preservation audits do not certifyproductionmesh orUnrealgameplay. NoAI.
+
+## 2026-11-16 — Medieval smeltery replaces rejected modern hall
+
+Owner authorizes new HF modelling and a human walkthrough in Unreal without boss. Replace scenic bell/cathedral-foundry with stone furnace, hand-forged tools, oak/leather bellows and contained molten channels. Preserve old studio as rejected historical direction. Implement opt-in 28×36m rectangular exploration floor, distinct from old rounded studio guide and default circular combat arena; no boss AI/fairness claim. Keep hotwork outside walking bounds and existing gameplay unchanged. Original input images plus small remote-generated output meshes only, no local model weights or paid endpoint.
+
+## 2026-11-16 — Smeltery walkthrough freeze
+
+Use the existing human knight on an isolated rectangular28×36m floor; keep no-boss mode opt-in and play-only. Decorative work bays remain outside the coping so unvalidated generated mesh collision cannot snag the player. The former six-metre reserve/rounded studio guide is superseded for this inspection layout; this is not a future combat fairness approval. Raise contained molten surfaces to0.32m under0.5m coping for visibility, and put the furnace light outside solid geometry. Keep actual failed Y-reflection, texture and editor-teardown evidence. Five generated prop outputs are art assets, not runtime AI. Stop cosmetic iterations at this inspected human-review build; next changes should follow the owner's in-game judgement.
+
+## 2026-11-16 — Arena composition before more modelling
+
+Owner rejects empty/out-of-place presentation and asks concept review first. Pause implementation; produce three distinct imagegen compositions using existing actual furnace/anvil/bellows references. Remedy spatial grouping, enclosure, functional floor wear and light hierarchy rather than scattering clutter. A grounded workshop recommended; selection remains owner-owned. Generated dimensions and bell inset are proposals, not approved implementation. Preserve current walkthrough unchanged.
+
+## 2026-11-16 — A selected for detailed construction
+
+Owner approves Master Smith’s Hearth and requests all meaningful objects, motivated furnace/window lighting and invisible prop barriers. Authorize revised28×30m level floor for the more intimate A composition. Remove visible rectangular perimeter coping entirely; retain only local molten containment. Preserve original scene/assets and BOSSLAB_SMELTERY_VARIANT=original fallback. Model meaningful object families, not generated board typography; exclude incidental giant bell inset from arena. Separate new HF props from reused meshes/authored architecture in inventory. No boss/AI, package/publication, paid services or machine-wide changes. Verify actual player-height composition, collision and screenshot-free timing before delivery.
+
+## 2026-11-16 — A runtime composition and review freeze
+
+Actual draft01/02 were too empty; reduce the clear walking field from schematic28×30 to20×24 m and bring the workshop architecture closer. Maintain level combat space for later validation, no boss implementation. Keep decorative work bays outside invisible boundaries; only local molten containment is visible.
+
+Preserve canonical Blender draft04 and correct handedness in derived exports: author(x,y,z) becomes runtime(−x,y,z), with positive actor scales and reflected placement/light/camera data. Recompute derived geometry normals after fitting; record imported bound/count differences. Keep old failed composition, importer shutdown crashes and warmup-roll study evidence.
+
+Use full1280×720 internal resolution for the review helper with low-cost shadows. Earlier75% and100% runs differed with system/cache load, so no causal optimization claim. Furnace and lantern points plus cool window and low shadowless bounce establish hierarchy; rear-bay darkness remains an explicit review limitation. Freeze this substantial implementation for actual owner review rather than call it reference-level finished art. Original variant/package preserved; no boss AI, package or publication.
+
+## 2026-11-16 — Owner rejects A; reference-driven A2 rebuild
+
+The prior A technical delivery is artistically rejected for room shape and props. Owner authorizes full creative direction and further free HF modelling, explicitly requesting inputs refined from the approved sketch. New built-in imagegen inputs directly reference the actual A board for stepped furnace, oak bellows, anvil workstation and stock workbay. New output GLBs are separate and preserved with prompts/seeds/raw assets. Two image-generated material swatches are artistic colour sources, not calibrated PBR.
+
+Rebuild spatial structure as asymmetric deep forge hood plus lower bellows recess, angled pointed window, close timber bays and real shallow flagstone geometry. Provisional16×18m clear court requires coordinated runtime camera/boundary tests; it is not boss combat approval. Preserve old A as fallback and do not replace default before actual new runtime review. DCC clay and physical mesh probes precede materials/integration; no passing test or object count substitutes for matching the concept. One local heavy writer; remote generation finite and no paid endpoints. Boss/AI still deferred.
+
+### A2 foreground and final-structure correction
+
+A completely empty rectangle again hid the meaningful workstations outside the gameplay view. Permit two side-corner prop islands inside the16×18m outer envelope, protected by explicit rotated Pawn/Camera boxes and a validated actual-pawn tour route. Keep the central route usable; this is not boss fairness approval. Correct the stockbay uniform-fit dimensions after source rotation rather than stretch its mesh. Add reference-derived lantern/window meshes, reuse ore storage, and close entrance/window alcove surfaces visible from reverse views. Freeze art after these construction corrections; assess subsequent material/light issues in actual Unreal rather than repeating isolated cosmetic DCC trials.
+
+## 2026-11-16 — A2 review freeze and performance limit
+
+Promote the separately verifiedA2 walkthrough to the smeltery helper default after actual native, route, visual and desktopmenu/quit checks; preserve explicitoldA/original fallbacks and originalfight/package. KeepAO1 for inspectedcontactreadability, not because its noisybenchmark happened to be faster. The isolatedvisibility-scheduling trial did not improve tailtimes convincingly; retaindefaultasync. Document28–33FPSA2 andcurrentoldA45FPS honestly, withsharedsystempressure andscenecomplexity bothunresolved. Stop further cosmetic/model expansion at thisreviewcandidate; nextwork is ownerform review and targetedrender/memory/camera investigation. Do not equate this milestone with referencefidelity, bossreadiness or AIauthorization.
+
+2026-11-20. The prior hand-to-shaft contact test passed poses the owner correctly identified as visibly twisted. Use the fitted finger-base span and dorsal orientation relative to the moving weapon, plus local wrist and forearm rotations, in addition to contact. Exercise the actual lock-on camera through retreat, roll, reversal and closing distance. Use an additional pursuit-only rehearsal to observe sustained walking. The forge fight now retracts the camera boom at the work bays. This reuses the existing invisible perimeter boxes and changes camera query response only.

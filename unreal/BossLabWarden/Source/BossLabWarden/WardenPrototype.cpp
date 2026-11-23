@@ -26,6 +26,11 @@
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
 #include "Camera/CameraActor.h"
+#if WITH_EDITOR
+#include "TimerManager.h"
+#include "UnrealClient.h"
+#include "Misc/Paths.h"
+#endif
 
 AWardenChallenger::AWardenChallenger()
 {
@@ -102,15 +107,26 @@ void AWardenChallenger::BeginPlay()
     // Cuts I-III: authored body (BOSSLAB_ANIM_CUTS=off keeps the keyed body).
     if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_CUTS")).ToLower()!=TEXT("off"))
     {
-        ClipCut0=Hy(TEXT("cut_a_s0")); ClipCut1=Hy(TEXT("cut_b_s1")); ClipCut2=Hy(TEXT("cut_heavy_s1"));
-        ClipCutPeak[0]=.433f; ClipCutPeak[1]=.2f; ClipCutPeak[2]=.933f;   // retarget report: peak hand speed
+        ClipCut0=Hy(TEXT("cut_a_s0")); ClipCut1=Hy(TEXT("cut_b2_s2")); ClipCut2=Hy(TEXT("cut_heavy_s1"));
+        ClipCutPeak[0]=.433f; ClipCutPeak[1]=.3f; ClipCutPeak[2]=.933f;   // retarget report: peak hand speed
         ClipJumpAttack=Hy(TEXT("jump_attack_s1")); ClipRunCut=Hy(TEXT("cut_a_s1"));
     }
     // Hit reaction and locomotion overlays (BOSSLAB_ANIM_OVERLAYS=off keeps them out).
     if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_OVERLAYS")).ToLower()!=TEXT("off"))
     {
         ClipHurt=Hy(TEXT("hit_heavy_s0")); ClipRunStart=Hy(TEXT("run_start_s0")); ClipRunStop=Hy(TEXT("run_stop_s0")); ClipPivot=Hy(TEXT("pivot_s0"));
+        ClipStagger=Hy(TEXT("stagger_s0")); ClipDrink=Hy(TEXT("heal_s0")); ClipLand=Hy(TEXT("land_s0"));
     }
+    // Death collapse (BOSSLAB_ANIM_DEATH=off keeps the keyed fall) and the backward roll (with the
+    // HY forward roll; BOSSLAB_ANIM_ROLL=ual|procedural leaves backward rolls procedural).
+    if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_DEATH")).ToLower()!=TEXT("off"))
+    { ClipDeath=Hy(TEXT("death_s0")); ClipDeathFrom=0.f; ClipDeathTo=2.9f; }
+    // Regent stalk walk: opt-in (BOSSLAB_ANIM_STALK=on); its foot locks do not engage yet (slip 0.58).
+    if(FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_ANIM_STALK")).ToLower()==TEXT("on")) ClipStalk=Hy(TEXT("stalk_s1"));   // used only when bRegent
+    if(RollMode.IsEmpty() || RollMode==TEXT("hy")) { ClipBackRoll=Hy(TEXT("back_roll_s1")); ClipBackFrom=.1f; ClipBackTo=1.f; }
+    // Stun (Bellbreaker shockwave): HY stun clips imported with the Bellbreaker batch (local).
+    ClipStun=LoadObject<UAnimSequence>(nullptr,TEXT("/Game/BossLab/Bellbreaker/HYSource/HY_Anims_root_HY_stun_s0"),nullptr,LOAD_Quiet|LOAD_NoWarn);
+    ClipStunKneel=LoadObject<UAnimSequence>(nullptr,TEXT("/Game/BossLab/Bellbreaker/HYSource/HY_Anims_root_HY_stun_kneel_s0"),nullptr,LOAD_Quiet|LOAD_NoWarn);
     OverlayBody->SetComponentTickEnabled(false);
     OverlayBody->VisibilityBasedAnimTickOption=EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
     Body->SetComponentTickEnabled(false);
@@ -164,9 +180,9 @@ void AWardenChallenger::SetupPlayerInputComponent(UInputComponent* Input)
 
     Input->BindAction(TEXT("Export"),IE_Pressed,this,&AWardenChallenger::ExportReport);
 }
-void AWardenChallenger::Turn(float Value) { if(FMath::Abs(Value)>.01f) LookIdle=0; if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerYawInput(Value*Sensitivity); else LockYawOffset=FMath::Clamp(LockYawOffset+Value*Sensitivity*.8f,-40.f,40.f); }
-void AWardenChallenger::Look(float Value) { if(FMath::Abs(Value)>.01f) LookIdle=0; if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerPitchInput(-Value*Sensitivity*(bInvertLook?-1.f:1.f)); else LockPitchOffset=FMath::Clamp(LockPitchOffset-Value*Sensitivity*.8f*(bInvertLook?-1.f:1.f),-18.f,14.f); }
-void AWardenChallenger::ToggleLock() { if(!AllowsGameplayInput()) return; bLocked = !bLocked && Target.IsValid(); LockYawOffset=LockPitchOffset=0; }
+void AWardenChallenger::Turn(float Value) { if(FMath::Abs(Value)>.0001f) if(auto* M=GetWorld()->GetAuthGameMode<AWardenArenaMode>(); M && M->bStartupCameraDiagnostic && M->Player==this) M->RecordStartupCamera(TEXT("raw_turn"),Value); if(FMath::Abs(Value)>.01f) LookIdle=0; if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerYawInput(Value*Sensitivity); else LockYawOffset=FMath::Clamp(LockYawOffset+Value*Sensitivity*.8f,-40.f,40.f); }
+void AWardenChallenger::Look(float Value) { if(FMath::Abs(Value)>.0001f) if(auto* M=GetWorld()->GetAuthGameMode<AWardenArenaMode>(); M && M->bStartupCameraDiagnostic && M->Player==this) M->RecordStartupCamera(TEXT("raw_look"),Value); if(FMath::Abs(Value)>.01f) LookIdle=0; if(!AllowsGameplayInput()) return; if (!IsLocked()) AddControllerPitchInput(-Value*Sensitivity*(bInvertLook?-1.f:1.f)); else LockPitchOffset=FMath::Clamp(LockPitchOffset-Value*Sensitivity*.8f*(bInvertLook?-1.f:1.f),-18.f,14.f); }
+void AWardenChallenger::ToggleLock() { if(!AllowsGameplayInput()) return; bLocked = !bLocked && Target.IsValid(); LockYawOffset=0; }   // the elevation you set is kept across lock toggles
 FVector AWardenChallenger::GetTargetPosition() const { return Target.IsValid() ? Target->GetActorLocation()+FVector(0,0,45) : FVector::ZeroVector; }
 
 void AWardenChallenger::Tick(float DeltaSeconds)
@@ -207,14 +223,63 @@ void AWardenChallenger::Tick(float DeltaSeconds)
     // player's feet below the viewport with an increasingly high shoulder socket.
     FVector PairOffset=FVector::ZeroVector;
     if(IsLocked()) { PairOffset=(Target->GetActorLocation()-GetActorLocation())*.5f; PairOffset.Z=30; }
-    Arm->TargetOffset=FMath::VInterpTo(Arm->TargetOffset,PairOffset*Separation,DeltaSeconds,5.f);
+    if(!((CameraMode && CameraMode->bBellbreaker) || (Target.IsValid() && Cast<AWardenChallenger>(Target.Get()) && Cast<AWardenChallenger>(Target.Get())->bBellbreaker))) Arm->TargetOffset=FMath::VInterpTo(Arm->TargetOffset,PairOffset*Separation,DeltaSeconds,5.f);
     // Locked on (Elden Ring style): a raised camera looking down over the shoulder at the boss,
     // a little further back from the towering Regent so the pair stays in frame.
     const bool Towering=IsLocked() && CameraMode && CameraMode->bRegent;
+    // The Bellbreaker stands 4.6 m: higher and further again so his hammer stays in frame.
+    const bool Giant=(CameraMode && CameraMode->bBellbreaker) || (Target.IsValid() && Cast<AWardenChallenger>(Target.Get()) && Cast<AWardenChallenger>(Target.Get())->bBellbreaker);
     const float SocketZ=IsLocked() ? (Towering ? 150.f : 125.f) : 100.f;
-    Arm->SocketOffset=FMath::VInterpTo(Arm->SocketOffset,FVector(0,45,SocketZ)*(1-Separation),DeltaSeconds,4.f);
-    Arm->TargetArmLength=FMath::FInterpTo(Arm->TargetArmLength,((Towering ? 560.f : 500.f)+120*Separation)*CameraDistanceScale,DeltaSeconds,4.f);
-    if (IsLocked())
+    // Giant framing (Bellbreaker, 2026-11-18): the human-scale rules collapsed the camera onto the player at
+    // contact and pitched it down, so a 4.6 m boss filled the screen with his head cropped. Here the camera
+    // backs off and rises as you close in, keeps both fighters in frame with a partial midpoint offset, aims
+    // at his chest and may tilt up when you are under him.
+    const float Close=Giant && IsLocked() ? FMath::Clamp((950-FVector::Dist2D(GetActorLocation(),Target->GetActorLocation()))/700.f,0.f,1.f) : 0.f;
+    if(Giant)
+    {
+        // Souls-style giant framing (owner 2026-11-18: "too high and too rigid; medium height, let me adjust the
+        // elevation"). The camera sits at medium height just above the player's shoulder at a comfortable
+        // distance, backing off a little as you close in; both fighters stay in frame via a small midpoint offset.
+        FVector Mid=IsLocked() ? (Target->GetActorLocation()-GetActorLocation())*.22f*Close : FVector::ZeroVector; Mid.Z=0;
+        Arm->TargetOffset=FMath::VInterpTo(Arm->TargetOffset,Mid,DeltaSeconds,3.f);
+        Arm->SocketOffset=FMath::VInterpTo(Arm->SocketOffset,FVector(0,55,IsLocked() ? 120.f+25*Close : 110.f),DeltaSeconds,3.f);
+        Arm->TargetArmLength=FMath::FInterpTo(Arm->TargetArmLength,(IsLocked() ? 620.f+160*Close : 560.f)*CameraDistanceScale,DeltaSeconds,2.5f);
+    }
+    else
+    {
+        Arm->SocketOffset=FMath::VInterpTo(Arm->SocketOffset,FVector(0,45,SocketZ)*(1-Separation),DeltaSeconds,4.f);
+        Arm->TargetArmLength=FMath::FInterpTo(Arm->TargetArmLength,((Towering ? 560.f : 500.f)+120*Separation)*CameraDistanceScale,DeltaSeconds,4.f);
+    }
+    float LensLift=0.f;
+    if (IsLocked() && Giant)
+    {
+        // Look at his lower chest (~2.4 m up a 4.6 m giant) blended toward the player's own chest when close, so the
+        // natural pitch is gentle; mouse/stick Y sets an elevation offset (-20..+15 deg) that STAYS where you put
+        // it (the human-scale lock relaxes it back, which felt rigid). Soft follow so it trails his sidesteps.
+        const FVector Him=Target->GetActorLocation()+FVector(0,0,0), Me=GetActorLocation()+FVector(0,0,60);
+        const FVector Look=FMath::Lerp(Him,Me,.3f*Close);
+        FRotator Desired=(Look-(GetActorLocation()+FVector(0,0,165))).Rotation();
+        const float NaturalPitch=Desired.Pitch*.6f-6.f;
+        if(Arm->IsCollisionFixApplied())
+        {
+            // Near a work bay the shortened boom lowers the optical centre.
+            // Keep the smith's raised arms in view from that actual position.
+            const FVector Eye=Camera->GetComponentLocation();
+            const float Retracted=FVector::Dist(Eye,Arm->GetUnfixedCameraPosition());
+            const float WallBlend=FMath::Clamp(Retracted/200.f,0.f,1.f);
+            const FVector Sternum=Him+FVector(0,0,55);
+            const float ChestPitch=FMath::Clamp((Sternum-Eye).Rotation().Pitch,-8.f,18.f);
+            // Tilt only the lens. Pitching the boom here lowers the eye again,
+            // turning a momentary wall retraction into a ground-level feedback loop.
+            LensLift=WallBlend*FMath::Clamp(ChestPitch-NaturalPitch,0.f,14.f);
+        }
+        Desired.Pitch=FMath::Clamp(NaturalPitch+LockPitchOffset,-32.f,12.f);
+        Desired.Yaw+=12*Close+LockYawOffset;
+        LockPitchOffset=FMath::Clamp(LockPitchOffset,-20.f,15.f);
+        if(LookIdle>.8f) LockYawOffset=FMath::FInterpTo(LockYawOffset,0.f,DeltaSeconds,1.2f);
+        View = FMath::RInterpTo(View,Desired,DeltaSeconds,3.2f);
+    }
+    else if (IsLocked())
     {
         // Aim at the boss's body (not its head, which towers over the camera) and always look down
         // a little, so the floor between the two reads and attacks are seen coming.
@@ -232,6 +297,9 @@ void AWardenChallenger::Tick(float DeltaSeconds)
         // Softer follow than a snap: the camera trails the boss's sidesteps slightly.
         View = FMath::RInterpTo(View,Desired,DeltaSeconds,4.5f);
     }
+    const float CurrentLift=Camera->GetRelativeRotation().Pitch;
+    if(LensLift>0.f || !FMath::IsNearlyZero(CurrentLift))
+        Camera->SetRelativeRotation(FRotator(FMath::FInterpTo(CurrentLift,LensLift,DeltaSeconds,6.f),0,0));
     // Option (default on): after ~1 s without look input, an unlocked moving camera eases back
     // behind the player's heading. Never swings round when running toward the camera.
     LookIdle+=DeltaSeconds;
@@ -269,51 +337,69 @@ AWardenArenaMode::AWardenArenaMode()
 void AWardenArenaMode::BeginPlay()
 {
     Super::BeginPlay();
+    if(bSmelteryWalkthrough || FParse::Param(FCommandLine::Get(),TEXT("BossLabSmeltery"))) { BeginSmelteryWalkthrough(); return; }
     UWorld* World = GetWorld();
-    auto* Cube = LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Cube"));
-    auto* Cylinder = LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Cylinder"));
-    auto Shape = [&](UStaticMesh* Mesh, FVector Position, FVector Scale, FRotator Rotation = FRotator::ZeroRotator)
+    // Bellbreaker forge fight (-BossLabForgeFight, 2026-11-18): the Hearth A2 forge is built by the walkthrough
+    // builder (art, collision, lights, fog, grade); the walkthrough state is then switched off and the normal
+    // encounter setup below runs in it, without the default ring arena.
+    const FString RosterBoss=FParse::Param(FCommandLine::Get(),TEXT("BossLabLocalRoster")) ? UGameplayStatics::ParseOption(OptionsString,TEXT("RosterBoss")) : FString();
+    const bool RosterRegent=RosterBoss==TEXT("regent"), RosterBell=RosterBoss==TEXT("bellbreaker");
+    bForgeArena=RosterBell || (!RosterRegent && (bForgeArena || FParse::Param(FCommandLine::Get(),TEXT("BossLabForgeFight"))));
+    if(bForgeArena)
     {
-        auto* Actor = World->SpawnActor<AStaticMeshActor>(Position,Rotation);
-        Actor->GetStaticMeshComponent()->SetStaticMesh(Mesh);
-        Actor->SetActorScale3D(Scale);
-        Actor->GetStaticMeshComponent()->SetCollisionProfileName(TEXT("BlockAll"));
-        return Actor;
-    };
-    Shape(Cylinder,FVector(0,0,-50),FVector(28,28,1));
-    for(int32 Index=0;Index<32;++Index)
-    {
-        float Angle=Index*2.f*PI/32.f;
-        FVector Position(FMath::Cos(Angle)*1360,FMath::Sin(Angle)*1360,130);
-        Shape(Cube,Position,FVector(.55,2.8,2.6),FRotator(0,FMath::RadiansToDegrees(Angle),0));
-        if (Index%4==0) Shape(Cylinder,Position+FVector(0,0,140),FVector(1.1,1.1,5.4));
+        bHearthA2=true; BeginSmelteryWalkthrough();
+        if(bPaused || !Player) return;   // the A2 layout or meshes were rejected (logged, exit requested)
+        bSmelteryWalkthrough=false; bFrontendSession=false; bPaused=false; bRehearsal=true; bScriptedPlayer=false;
+        // The forge's art never blocks the fight (the hidden field/prop boxes do that).
+        for(TActorIterator<AActor> It(World);It;++It) if(It->ActorHasTag(TEXT("SmelteryDressing"))) WardenNeverCollide(*It);
     }
-    auto* Sun = World->SpawnActor<ADirectionalLight>(FVector(0,0,700),FRotator(-45,-30,0));
-    Sun->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-    Sun->GetLightComponent()->SetIntensity(3.f);
-    Sun->GetLightComponent()->SetLightColor(FLinearColor(1,.78,.55));
-    CastChecked<UDirectionalLightComponent>(Sun->GetLightComponent())->SetForwardShadingPriority(1);
-    auto* Sky = World->SpawnActor<ASkyLight>();
-    Sky->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-    // Original tiny ambient environment supplies broad reflections for the steel.
-    // A captured empty sky supplied almost no fill with GI/reflection tracing off.
-    auto* Ambient=UTextureCube::CreateTransient(16,16,PF_B8G8R8A8);
-    Ambient->SRGB=true; Ambient->NeverStream=true;
-    auto& Mip=Ambient->GetPlatformData()->Mips[0];
-    auto* Pixels=static_cast<FColor*>(Mip.BulkData.Lock(LOCK_READ_WRITE));
-    for(int32 Face=0;Face<6;++Face) for(int32 I=0;I<256;++I)
-        Pixels[Face*256+I]=Face==4?FColor(140,148,160):Face==5?FColor(45,40,35):FColor(94,100,110);
-    Mip.BulkData.Unlock(); Ambient->UpdateResource();
-    Sky->GetLightComponent()->SourceType=SLS_SpecifiedCubemap;
-    Sky->GetLightComponent()->bLowerHemisphereIsBlack=false;
-    Sky->GetLightComponent()->SetCubemap(Ambient);
-    Sky->GetLightComponent()->SetIntensity(.65f);
-    Sky->GetLightComponent()->SetLightColor(FLinearColor(1,1,1));
-    auto* Fill = World->SpawnActor<ADirectionalLight>(FVector(0,0,700),FRotator(-35,150,0));
-    Fill->GetLightComponent()->SetMobility(EComponentMobility::Movable);
-    Fill->GetLightComponent()->SetIntensity(2.f);
-    Fill->GetLightComponent()->SetLightColor(FLinearColor(.55,.7,1));
-    Fill->GetLightComponent()->SetCastShadows(false);
+    else
+    {
+        auto* Cube = LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Cube"));
+        auto* Cylinder = LoadObject<UStaticMesh>(nullptr,TEXT("/Engine/BasicShapes/Cylinder"));
+        auto Shape = [&](UStaticMesh* Mesh, FVector Position, FVector Scale, FRotator Rotation = FRotator::ZeroRotator)
+        {
+            auto* Actor = World->SpawnActor<AStaticMeshActor>(Position,Rotation);
+            Actor->GetStaticMeshComponent()->SetStaticMesh(Mesh);
+            Actor->SetActorScale3D(Scale);
+            Actor->GetStaticMeshComponent()->SetCollisionProfileName(TEXT("BlockAll"));
+            return Actor;
+        };
+        Shape(Cylinder,FVector(0,0,-50),FVector(28,28,1));
+        for(int32 Index=0;Index<32;++Index)
+        {
+            float Angle=Index*2.f*PI/32.f;
+            FVector Position(FMath::Cos(Angle)*1360,FMath::Sin(Angle)*1360,130);
+            Shape(Cube,Position,FVector(.55,2.8,2.6),FRotator(0,FMath::RadiansToDegrees(Angle),0));
+            if (Index%4==0) Shape(Cylinder,Position+FVector(0,0,140),FVector(1.1,1.1,5.4));
+        }
+        auto* Sun = World->SpawnActor<ADirectionalLight>(FVector(0,0,700),FRotator(-45,-30,0));
+        Sun->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        Sun->GetLightComponent()->SetIntensity(3.f);
+        Sun->GetLightComponent()->SetLightColor(FLinearColor(1,.78,.55));
+        CastChecked<UDirectionalLightComponent>(Sun->GetLightComponent())->SetForwardShadingPriority(1);
+        auto* Sky = World->SpawnActor<ASkyLight>();
+        Sky->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        // Original tiny ambient environment supplies broad reflections for the steel.
+        // A captured empty sky supplied almost no fill with GI/reflection tracing off.
+        auto* Ambient=UTextureCube::CreateTransient(16,16,PF_B8G8R8A8);
+        Ambient->SRGB=true; Ambient->NeverStream=true;
+        auto& Mip=Ambient->GetPlatformData()->Mips[0];
+        auto* Pixels=static_cast<FColor*>(Mip.BulkData.Lock(LOCK_READ_WRITE));
+        for(int32 Face=0;Face<6;++Face) for(int32 I=0;I<256;++I)
+            Pixels[Face*256+I]=Face==4?FColor(140,148,160):Face==5?FColor(45,40,35):FColor(94,100,110);
+        Mip.BulkData.Unlock(); Ambient->UpdateResource();
+        Sky->GetLightComponent()->SourceType=SLS_SpecifiedCubemap;
+        Sky->GetLightComponent()->bLowerHemisphereIsBlack=false;
+        Sky->GetLightComponent()->SetCubemap(Ambient);
+        Sky->GetLightComponent()->SetIntensity(.65f);
+        Sky->GetLightComponent()->SetLightColor(FLinearColor(1,1,1));
+        auto* Fill = World->SpawnActor<ADirectionalLight>(FVector(0,0,700),FRotator(-35,150,0));
+        Fill->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        Fill->GetLightComponent()->SetIntensity(2.f);
+        Fill->GetLightComponent()->SetLightColor(FLinearColor(.55,.7,1));
+        Fill->GetLightComponent()->SetCastShadows(false);
+    }
     Warden = World->SpawnActor<AWardenChallenger>(FVector(300,0,128),FRotator(0,180,0));
     Warden->SetActorScale3D(FVector(1.35));
     Warden->Tags.Add(TEXT("BossLabTarget"));
@@ -323,11 +409,15 @@ void AWardenArenaMode::BeginPlay()
         PC->SetInputMode(FInputModeGameOnly());
         PC->bShowMouseCursor = false;
     }
-    DressArena();
+    if(RosterRegent) bDungeon=true;
+    if(!bForgeArena) DressArena();
     BuildEffects();
     BuildSpectacle();
-    if(FParse::Param(FCommandLine::Get(),TEXT("BossLabRegent"))) EnableRegent();
+    if(RosterRegent || (!RosterBell && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegent")))) EnableRegent();
     bRegentPhaseTwoStart=bRegent && FParse::Param(FCommandLine::Get(),TEXT("BossLabRegentPhaseTwo"));
+    // Bellbreaker greybox (opt-in; the Regent flag wins if both are given). Phase-two start reuses the flag.
+    if(!bRegent && (bForgeArena || FParse::Param(FCommandLine::Get(),TEXT("BossLabBellbreaker")))) EnableBellbreaker();
+    if(bBellbreaker) bRegentPhaseTwoStart=FParse::Param(FCommandLine::Get(),TEXT("BossLabBellbreakerPhaseTwo"));
     LoadSettings();
     SetupAudio();
     ResetEncounter();
@@ -351,6 +441,34 @@ void AWardenArenaMode::BeginPlay()
         int32 From=0;
         if(FParse::Value(FCommandLine::Get(),TEXT("BossLabRegentStudyFrom="),From) && WardenRegent::IsRegent(From)) RegentStudyMove=From;
         auto* Camera=World->SpawnActor<ACameraActor>(FVector(150,-820,240),FRotator(-8,90,0));
+        RegentStudyCamera=Camera;
+        if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
+    }
+    if(bCaptureFrames && bBellbreaker && FParse::Param(FCommandLine::Get(),TEXT("BossLabBellApproachStudy")))
+    {
+        bBellApproachStudy=true;
+        if(FParse::Param(FCommandLine::Get(),TEXT("BossLabBellWalkSide")))
+        {
+            auto* Camera=World->SpawnActor<ACameraActor>(FVector(510,665,275),FRotator::ZeroRotator);
+            RegentStudyCamera=Camera;
+            if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
+        }
+        bScriptedPlayer=false;
+        Player->SetLocked(true);
+    }
+    if(bCaptureFrames && bBellbreaker && FParse::Param(FCommandLine::Get(),TEXT("BossLabBellbreakerStudy")))
+    {
+        // Side-on review of each Bellbreaker move (BellbreakerStudyStep): fixed camera square to his swing plane.
+        bBellbreakerStudy=true; bScriptedPlayer=false; Player->SetLocked(false);
+        const FVector B=Warden->GetActorLocation(), Fwd=Warden->GetActorForwardVector().GetSafeNormal2D(), Side=FVector::CrossProduct(FVector::UpVector,Fwd);
+        const FVector Look=FVector(B.X,B.Y,0)+Fwd*230+FVector(0,0,240);
+        const FString Near=FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_BB_STUDY_DIST"));
+        const float Dist=Near.IsEmpty() ? 820.f : FMath::Clamp(FCString::Atof(*Near),300.f,1500.f);
+        const bool ThreeQuarter=FPlatformMisc::GetEnvironmentVariable(TEXT("BOSSLAB_BB_STUDY_ANGLE"))==TEXT("three-quarter");
+        const FVector ViewSide=ThreeQuarter ? (Side*.82f+Fwd*.57f).GetSafeNormal() : Side;
+        const FVector Aim=Look+FVector::UpVector*(ThreeQuarter ? 55.f : 0.f);
+        const FVector Eye=Aim+ViewSide*Dist+FVector(0,0,ThreeQuarter ? 155.f : 40.f);
+        auto* Camera=World->SpawnActor<ACameraActor>(Eye,(Aim-Eye).Rotation());
         RegentStudyCamera=Camera;
         if(auto* PC=World->GetFirstPlayerController()) PC->SetViewTarget(Camera);
     }
@@ -385,6 +503,25 @@ void AWardenArenaMode::BeginPlay()
     {
         bFrontendSession=true;
         OpenHome();
+#if WITH_EDITOR
+        // Render the real encounter selection screen for repeatable poster review.
+        if (FParse::Param(FCommandLine::Get(), TEXT("BossLabPosterStudy")))
+        {
+            OpenBossSelect();
+            FTimerHandle CaptureTimer, ExitTimer;
+            World->GetTimerManager().SetTimer(CaptureTimer, FTimerDelegate::CreateWeakLambda(this, [this]()
+            {
+                const TCHAR* File = bBellbreaker ? TEXT("BellbreakerPreview.png") : TEXT("RegentPreview.png");
+                FScreenshotRequest::RequestScreenshot(FPaths::Combine(FPaths::ProjectSavedDir(), File), true, false);
+            }), 2.f, false);
+            World->GetTimerManager().SetTimer(ExitTimer, FTimerDelegate::CreateWeakLambda(this, [this]()
+            {
+                if (auto* PC = GetWorld()->GetFirstPlayerController()) PC->ConsoleCommand(TEXT("quit"));
+            }), 4.f, false);
+        }
+#endif
+        if(RosterBell || RosterRegent)
+            ShowFrontPage(UGameplayStatics::ParseOption(OptionsString,TEXT("RosterPage"))==TEXT("creative") ? EWardenFrontScreen::CreativeSetup : EWardenFrontScreen::BossSelect);
     }
 }
 
@@ -398,6 +535,14 @@ void AWardenPrototypeHUD::DrawHUD()
     const auto& P = Mode->Player->Fight;
     const auto& B = Mode->Warden->Fight;
     const float W = Canvas->SizeX, H = Canvas->SizeY;
+    if(Mode->bBellbreakerStudy || Mode->bBellApproachStudy)
+    {
+        // Keep both wrists, weapon and floor visible throughout the inspection shot.
+        const TCHAR* Pose=!B.Alive() ? TEXT("FALLEN") : B.Action==EWardenAction::Strike ? B.Definition().Name :
+            B.Action==EWardenAction::Hurt ? TEXT("STAGGER") : Mode->Warden->MoveVelocity.Size2D()>40 ? TEXT("APPROACH") : TEXT("CARRY");
+        DrawText(FString::Printf(TEXT("%s    |    30 fps motion study"),Pose),FColor(225,202,165),24,H-38);
+        return;
+    }
     auto Bar = [&](float X,float Y,float Width,float Value,FLinearColor Color)
     {
         DrawRect(FLinearColor(.025,.03,.035,.9),X-2,Y-2,Width+4,15);
@@ -430,7 +575,9 @@ void AWardenPrototypeHUD::DrawHUD()
         // Damage dealt by the latest flurry, beside the bar.
         if(Mode->Settings.bDamageNumbers && GetWorld()->GetTimeSeconds()-Fx.LastBossHit<2.5f && Fx.RecentDamage>0)
             DrawText(FString::Printf(TEXT("%.0f"),Fx.RecentDamage),FColor(240,225,200),W*.75f+12,H-114,nullptr,1.15f);
-        DrawText(Mode->bRegent?TEXT("THE FUNERAL REGENT"):TEXT("THE WARDEN"),FColor(230,192,125),W*.25f,H-137,nullptr,1.2f);
+        DrawText(Mode->bBellbreaker?TEXT("THE BELLBREAKER"):Mode->bRegent?TEXT("THE FUNERAL REGENT"):TEXT("THE WARDEN"),FColor(230,192,125),W*.25f,H-137,nullptr,1.2f);
+        if(Mode->bBellbreaker) DrawText(Mode->Bellbreaker.PhaseTwo?TEXT("GREYBOX   |   SECOND PHASE: TWIN QUAKE"):TEXT("GREYBOX"),FColor(220,170,110),W*.25f,H-158);
+        if(Mode->bBellbreaker && P.Stunned()) DrawText(P.StunKneel?TEXT("KNOCKED DOWN"):TEXT("STUNNED"),FColor(255,215,120),W*.5f-40,H*.62f,nullptr,1.6f);
         DrawText(FString::Printf(TEXT("STANCE %d / %d%s"),B.Poise,B.MaxPoise,B.Action==EWardenAction::Hurt?TEXT(" / BROKEN"):TEXT("")),FColor(190,205,210),W*.65f,H-137);
         if(Mode->bRegent) DrawText(FString::Printf(TEXT("SKULLS %d / 3%s"),Mode->Regent.ReadySkulls(),Mode->Regent.PhaseTwo?TEXT("   |   SECOND PHASE"):TEXT("")),FColor(150,190,255),W*.48f,H-137);
     }
@@ -475,7 +622,7 @@ void AWardenPrototypeHUD::DrawHUD()
     if(!Mode->bMotionStudy && !Mode->bOutfitStudy && !Mode->bRegentStudy && !Mode->bGaitStudy && !Mode->bFeelStudy && B.Alive() && P.Alive())
     {
         const float T=Mode->CombatTick/60.f;
-        Banner(Mode->bRegent?TEXT("THE FUNERAL REGENT"):TEXT("THE WARDEN"),Mode->bRegent?TEXT("Keeper of the Last Rites"):TEXT("Gaoler of the Ring"),FMath::Clamp(T/.6f,0.f,1.f)*FMath::Clamp((4-T)/.8f,0.f,1.f),FColor(230,200,140),.42f);
+        Banner(Mode->bBellbreaker?TEXT("THE BELLBREAKER"):Mode->bRegent?TEXT("THE FUNERAL REGENT"):TEXT("THE WARDEN"),Mode->bBellbreaker?TEXT("Founder of the Cracked Peal"):Mode->bRegent?TEXT("Keeper of the Last Rites"):TEXT("Gaoler of the Ring"),FMath::Clamp(T/.6f,0.f,1.f)*FMath::Clamp((4-T)/.8f,0.f,1.f),FColor(230,200,140),.42f);
     }
     // Above the results panel, which opens in the middle of the screen.
     if(!B.Alive() && P.Alive()) Banner(TEXT("GREAT ENEMY FELLED"),nullptr,FMath::Clamp(Mode->Warden->DeathAge/24.f,0.f,1.f),FColor(235,190,95),.14f);

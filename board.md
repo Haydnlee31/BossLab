@@ -1,3 +1,25 @@
+## Hearth A2 — delivered as playable review candidate, 2026-11-16
+
+Root: six refined-reference HF generations, actual DCC/game review, normal desktop movement/menu/quit complete. Techart: frozen final scene,21modules, full material export, scopednormaldiagnosis and latest2scene retention complete. Builder: isolatedA2, collision/camera validators, native45/45 plus final4/4+1/1, realroute, cleanpoorFPS measurements and normalexit complete. QA: final preservation and credential-pattern audits complete. Allheavyjobs ended/lockunassigned. Owner art/physicalcamera acceptance and performance optimization remain open. No boss/AI/package/push. See currentSTATUS and HearthA2 report.
+
+## Hearth A — delivered for review, 2026-11-16
+
+Root: source provenance, generated props, runtime visual review and final handoff. Techart: frozen draft04, exports and derived normals/coordinates complete. Builder: isolated walkthrough, invisible boundaries, tests and final59.65FPS timing complete. Root: normal pause/settings/resume/menu Quit observed; steep camera pitch and synthetic shortcuts remain qualified. QA: preservation/visual/timing complete; normal launch exited0, extra CUA-relaunched bare editor stopped, exclusive lock released. No new art scope or boss/AI. All delivery remains for owner review, not artistic acceptance.
+
+## Medieval smeltery walkthrough — delivered for review, 2026-11-16
+
+- Root: five HF prop generations/provenance, actual runtime inspection, desktop pause/quit, handoff complete.
+- Art director: medieval furnace/workshop direction complete.
+- Techart: separate scene, corrected materials/axes and visible molten channels complete.
+- Unreal builder: human-only walkthrough, launcher, native43/43 + focused1/1, final study complete.
+- QA: independent source/isolation/preservation and final graphical audit in `docs/art/BELLBREAKER_SMELTERY_QA.md`.
+- Open: owner artistic acceptance and physical mouse/Shift/camera-range review. No boss/AI, package or push.
+- Launch: `./scripts/bosslab-smeltery`. All exclusive heavy slots released; no owned jobs left running.
+
+## 2026-11-16 Bellbreaker arena — studio draft delivered
+
+Root: twooriginal imageinputs,2actualHF TRELLIS.2 meshgenerations, rawmeshchecks andhandoff. Technicalart: measuredBlenderarchitecture+derivedprops,8finalrenders,GLBexport/readback; final-v3canonical. Art direction: foundryidentity/material/layoutbrief andhonestdraftcritique. QA:49protectedfiles match,289staticclearances verified. Scene/checkpointcleanupinprojectonly; noUnrealwriter. Existinggamepreserved, bossAI andcloudmigrationdeferred. Next ownerlayout/artreview; runtimeintegrationandproductionfinishnotcertified.
+
 ##2026-11-14 Interface audio — complete for listening review
 Root: audio routing/import/build/runtime capture. Unreal builder: original menu score/cues/importer. QA: routing review; gain-restoration defect corrected. Native41/41; final44.16s mix recorded, no clipping. Next owner listening; no bossAI.
 

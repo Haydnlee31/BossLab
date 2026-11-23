@@ -130,7 +130,7 @@ void AWardenArenaMode::AnimateSpectacle(float Seconds)
     const WardenRegent::EKind Kind=IsRegentMove ? WardenRegent::Kind(B.Move) : WardenRegent::EKind::Blade;
 
     // --- Boss weapon trails ------------------------------------------------------------
-    const bool BladeSwing=BossStriking && (Kind==WardenRegent::EKind::Blade || Kind==WardenRegent::EKind::Vanish || !IsRegentMove)
+    const bool BladeSwing=!bBellbreaker && BossStriking && (Kind==WardenRegent::EKind::Blade || Kind==WardenRegent::EKind::Vanish || !IsRegentMove)
         && Since>=-2 && Since<BD.Active+2 && !(IsRegentMove && WardenRegent::Vanished(B.Move,B.Age));
     // A fast blade can jump half a metre between frames (the Sentence covers its arc in three
     // ticks): fill in chord samples so the ribbon follows the sweep instead of one wide slab.

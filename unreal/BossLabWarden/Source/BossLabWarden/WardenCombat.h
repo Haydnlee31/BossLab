@@ -46,8 +46,15 @@ namespace WardenRules
     // The flask costs no stamina (as in Elden Ring); only the drinking time commits you.
     inline constexpr float StrikeCost = 22, DodgeCost = 14, HealCost = 0;
     inline constexpr float StaminaRegen = 45, BossStaminaRegen = 26;
-    // Rehearsal moves 0-2 plus the opt-in Funeral Regent moves 3-16 (WardenRegent.h).
-    inline constexpr int32 BossMoveCount = 20;
+    // Rehearsal moves 0-2, the opt-in Funeral Regent moves 3-19 (WardenRegent.h) and the opt-in
+    // Bellbreaker moves 20-33 (WardenBellbreaker.h).
+    inline constexpr int32 BossMoveCount = 34;
+    // Stun (Bellbreaker shockwave, 2026-11-18): a long committed hurt. Any flinching blow breaks it into
+    // the ordinary short hurt (no guaranteed combos), and afterwards the fighter cannot be stunned again
+    // for StunImmunityTicks (no stunlock). Identical for every controller.
+    inline constexpr int32 StunImmunityTicks = 300;
+    // The last StunWalkOut ticks of a stun can be walked out of (movement input ends it, like late recovery).
+    inline constexpr int32 StunWalkOut = 15;
     enum EPlayerMove : int32 { CutOne, CutTwo, CutThree, JumpAttack, RollAttack, RunAttack, PlayerMoveCount };
     inline constexpr float WalkSpeed=420, SprintSpeed=630, SprintCostPerSecond=12, SprintStartStamina=10;
     const FWardenStrike& Strike(int32 Index, bool Boss = true);
@@ -62,9 +69,16 @@ namespace WardenRules
 struct FWardenFighterState
 {
     EWardenAction Action = EWardenAction::Ready;
+    int32 DamageEvents = 0; // Accepted damaging blows; independent of blood VFX.
     int32 Age = 0, Move = 0, Gap = 0, RegenDelay = 0, Heals = 3, AttackInstance = 0;
     float Health = 100, MaxHealth = 100, Stamina = 100;
     bool HitConsumed = false;
+    // Stun: StunTicks>0 while the current Hurt is a stun of that length (StunKneel: the knockdown).
+    int32 StunTicks = 0, StunImmunity = 0;
+    bool StunKneel = false;
+    bool Stunned() const { return Action == EWardenAction::Hurt && StunTicks > 0; }
+    // Refused when dead, invulnerable (roll i-frames), already stunned or still immune from the last stun.
+    bool Stun(int32 Ticks, bool Kneel = false);
     bool Sprinting=false, SprintExhausted=false;
     void UpdateSprint(bool Requested, bool Moving);
     bool IsBoss = false;

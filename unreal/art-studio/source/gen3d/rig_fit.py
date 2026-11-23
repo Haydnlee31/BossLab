@@ -13,6 +13,16 @@ fit.json keys:
                    generated limbs. Only rotations change, so every bone's local
                    translation stays identical to the mannequin and the game's
                    index-copied poses remain valid.
+  joint_offsets    optional [[bone, [dx, dy, dz]], ...] metres, world axes, applied in order after
+                   `pose`: moves that bone's head and every descendant bone, and re-attaches the parent's
+                   tail. This CHANGES bone translations, so the result is a custom-proportion skeleton
+                   (not index-compatible with SK_Mannequin; import it on its own skeleton and retarget).
+                   Used for the Bellbreaker, whose arms are ~1.6x the mannequin's.
+  hard_split       optional [{"side": "l"|"r", "x": m, "z": [lo, hi], "y": [lo, hi], "arm_z": m}, ...]: where a hand
+                   was generated fused to the body (the Bellbreaker's left hand and hip holster), inside
+                   the box everything beyond |x| = x belongs only to that arm and everything inside it
+                   only to the body; the edges/faces bridging the two are deleted before weight
+                   smoothing, so the hand separates cleanly instead of stretching a flap.
   target_tris      decimation target for the runtime mesh
   voxel            voxel size (m) of the watertight weighting proxy
   cut_islands      optional [[min xyz], [max xyz]] boxes: welded islands whose
@@ -176,6 +186,31 @@ bpy.ops.object.mode_set(mode='POSE')
 apply_pose(arm, cfg.get('pose', []))
 bpy.ops.pose.armature_apply(selected=False)
 bpy.ops.object.mode_set(mode='OBJECT')
+if cfg.get('joint_offsets'):
+    bpy.ops.object.mode_set(mode='EDIT')
+    inv = arm.matrix_world.inverted().to_3x3()
+    for name, delta in cfg['joint_offsets']:
+        eb = arm.data.edit_bones[name]
+        d = inv @ Vector(delta)
+        moved = [eb] + list(eb.children_recursive)
+        for b in moved:
+            b.head += d; b.tail += d
+        if eb.parent is not None and eb.use_connect:
+            eb.parent.tail = eb.head.copy()
+    bpy.ops.object.mode_set(mode='OBJECT')
+    report['joint_offsets'] = cfg['joint_offsets']
+
+# Optional bone_scale: [[bone, factor], ...] scales that bone's subtree about its head (edit mode), e.g. the
+# Bellbreaker's hands (factor 1.3), so the mannequin finger chain fills a much larger generated hand.
+if cfg.get('bone_scale'):
+    bpy.ops.object.mode_set(mode='EDIT')
+    for name, factor in cfg['bone_scale']:
+        eb = arm.data.edit_bones[name]
+        root = eb.head.copy()
+        for b in [eb] + list(eb.children_recursive):
+            b.head = root + (b.head - root) * factor; b.tail = root + (b.tail - root) * factor
+    bpy.ops.object.mode_set(mode='OBJECT')
+    report['bone_scale'] = cfg['bone_scale']
 
 V = np.array([tuple(mesh.matrix_world @ v.co) for v in mesh.data.vertices])
 smooth01 = lambda x: np.clip(x, 0, 1) ** 2 * (3 - 2 * np.clip(x, 0, 1))
@@ -232,6 +267,7 @@ report['bone_heads'] = {b.name: list(arm.matrix_world @ b.head_local) for b in a
 # the weights are smoothed over the mesh and limited to four influences.
 RADIUS = {'pelvis': .16, 'spine': .16, 'neck': .07, 'head': .12, 'clavicle': .08, 'upperarm': .07,
           'lowerarm': .06, 'hand': .05, 'thigh': .10, 'calf': .07, 'foot': .06, 'ball': .05}
+RADIUS.update(cfg.get('radius', {}))   # per-rig bone thickness overrides
 CHILD = {'pelvis': 'spine_01', 'spine_05': 'neck_01', 'hand_l': 'middle_metacarpal_l', 'hand_r': 'middle_metacarpal_r'}
 bones = {b.name: b for b in arm.data.bones}
 skip = ('ik_', 'interaction', 'center_of_mass', 'root', 'cape_')
@@ -250,7 +286,7 @@ for b in body:
     else:
         d = a - head(b.parent); e = a + d * 0.7
     key = next((k for k in RADIUS if b.name.startswith(k)), None)
-    r = RADIUS[key] if key else .02  # fingers
+    r = RADIUS[key] if key else cfg.get('finger_radius', .02)  # fingers
     segs.append((a, e)); rads.append(r); names.append(b.name)
 A = np.array([s[0] for s in segs]); E = np.array([s[1] for s in segs]); R = np.array(rads)
 AB = E - A
@@ -263,6 +299,7 @@ W = 1.0 / np.maximum(D, 0.05) ** 6 + 1e-12
 # more than 15 cm in front of or behind the leg (cape behind, stoles in front), so
 # loose cloth falls back to the spine and pelvis and clips rather than tearing.
 CORE = {'thigh': .17, 'calf': .14, 'foot': .13, 'ball': .12, 'upperarm': .15, 'lowerarm': .13, 'hand': .12}
+CORE.update(cfg.get('core', {}))   # per-rig reach overrides (the Bellbreaker's bulky sleeves)
 dist = D * R[None]
 dy = V[:, None, 1] - (A[None, :, 1] + t * AB[None, :, 1])
 for bi, name in enumerate(names):
@@ -273,6 +310,63 @@ for bi, name in enumerate(names):
         continue
     W[:, bi] *= np.exp(-(np.maximum(0, dist[:, bi] - CORE.get(key, .06)) / cfg.get('fade', .05)) ** 2)
     W[(np.abs(dy[:, bi]) if leg else dy[:, bi]) > (cfg.get('leg_depth', .15) if leg else cfg.get('arm_behind', .09)), bi] = 0
+    # Optional (arm_inner_x, arm_inner_below_z): below the elbows, geometry inside the body's
+    # half-width never follows the arms (hands hanging beside a belt/holster dragged it along).
+    if is_arm and cfg.get('arm_inner_x'):
+        W[(np.abs(V[:, 0]) < cfg['arm_inner_x']) & (V[:, 2] < cfg.get('arm_inner_below_z', 1.0)), bi] = 0
+    if is_arm and cfg.get('arm_min_z') is not None:   # nothing below the fingertips follows the hands
+        W[V[:, 2] < cfg['arm_min_z'], bi] = 0
+# Optional wrist_cut: past each wrist plane (along the forearm, within 0.3 m of the wrist) nothing follows the
+# forearm or upper arm, so the hand and finger bones own the hand. Without it the Bellbreaker's bulky-forearm
+# reach (core 0.22) gave the forearm ~40% of his hands, which then could not grip.
+if cfg.get('wrist_cut'):
+    for side in ('l', 'r'):
+        wrist = np.array(arm.matrix_world @ bones['hand_' + side].head_local)
+        elbow = np.array(arm.matrix_world @ bones['lowerarm_' + side].head_local)
+        along = (wrist - elbow) / np.linalg.norm(wrist - elbow)
+        past = (((V - wrist) @ along) > cfg.get('wrist_cut_offset', 0.0)) & (np.linalg.norm(V - wrist, axis=1) < .3)
+        upper = [bi for bi, n in enumerate(names) if n in ('lowerarm_' + side, 'upperarm_' + side) or (n.startswith(('lowerarm', 'upperarm')) and n.endswith('_' + side))]
+        W[np.ix_(past, upper)] = 0
+        hand = names.index('hand_' + side)
+        W[past & (W.sum(1) < 1e-9), hand] = 1
+        report.setdefault('wrist_cut_vertices', {})[side] = int(past.sum())
+# Optional head_own: {"z_head": m, "z_neck": m, "half_width": m, "front": m, "back": m}. In that box around the head bone,
+# everything above z_head belongs to the head; between z_neck and z_head it blends spine_05 -> neck_01 -> neck_02 ->
+# head. Distance weighting gave the Bellbreaker v3's face and beard 21-55% chest (spine_05), so any head turn
+# squashed the face against the torso (owner photo 2026-11-18).
+if cfg.get('head_own'):
+    ho = cfg['head_own']
+    hp = np.array(arm.matrix_world @ bones['head'].head_local)
+    # A box around the head bone: narrow sideways (keeps the shoulders out), deep front/back for the face and beard.
+    near = (np.abs(V[:, 0] - hp[0]) < ho.get('half_width', .17)) & (V[:, 1] - hp[1] > -ho.get('front', .17)) & (V[:, 1] - hp[1] < ho.get('back', .17))
+    armish = [bi for bi, n in enumerate(names) if n.startswith(('upperarm', 'lowerarm', 'hand', 'clavicle')) or n.endswith(('_l', '_r')) and not n.startswith(('thigh', 'calf', 'foot', 'ball'))]
+    zh, zn = ho['z_head'], ho['z_neck']
+    u = np.clip((V[:, 2] - zn) / (zh - zn), 0, 1)
+    # In front of the neck (the beard hanging below the chin) moves with the jaw: fully head.
+    u[(V[:, 1] - hp[1]) < -ho.get('beard_front', .07)] = 1.0
+    sel = near & (V[:, 2] > zn) & (W[:, armish].sum(1) < .5 * np.maximum(W.sum(1), 1e-9))
+    chain = [names.index(n) for n in ('spine_05', 'neck_01', 'neck_02', 'head')]
+    keys = np.array([0, .33, .66, 1.0])
+    for k in np.where(sel)[0]:
+        W[k, :] = 0
+        x = u[k]; j = min(int(x * 3), 2); f = (x - keys[j]) / (keys[j + 1] - keys[j])
+        W[k, chain[j]] = 1 - f; W[k, chain[j + 1]] = f
+    report['head_own_vertices'] = int(sel.sum())
+split_cuts = []
+for sp in cfg.get('hard_split', []):
+    side, sgn = sp['side'], (1 if sp['side'] == 'l' else -1)
+    box = (V[:, 2] >= sp['z'][0]) & (V[:, 2] <= sp['z'][1]) & (V[:, 1] >= sp['y'][0]) & (V[:, 1] <= sp['y'][1]) & (sgn * V[:, 0] > .1)
+    # Beyond the split plane and above `arm_z` (default: the box bottom) follows the arm; the rest of
+    # the box stays on the body. Edges between the two groups are cut below.
+    outer = box & (sgn * V[:, 0] >= sp['x']) & (V[:, 2] >= sp.get('arm_z', sp['z'][0])); inner = box & ~outer
+    armcols = [bi for bi, n in enumerate(names) if n.endswith('_' + side) and not n.startswith(('clavicle', 'thigh', 'calf', 'foot', 'ball'))]
+    other = [bi for bi in range(len(names)) if bi not in armcols]
+    W[np.ix_(inner, armcols)] = 0
+    W[np.ix_(outer, other)] = 0
+    hand = names.index('hand_' + side)
+    empty = outer & (W[:, armcols].sum(1) < 1e-9); W[empty, hand] = 1
+    split_cuts.append((outer, inner))
+    report.setdefault('hard_split', []).append({'side': side, 'outer': int(outer.sum()), 'inner': int(inner.sum())})
 W /= W.sum(1, keepdims=True)
 # Loose cloth blends from the body bones onto the nearest swing chain: fully free a
 # few centimetres beyond the body surface, pinned near the top of the chain.
@@ -306,6 +400,14 @@ for bi, name in enumerate(names):
     g = groups[name]
     for vi in sel:
         g.add([int(vi)], float(Wt[vi][list(top[vi]).index(bi)]), 'REPLACE')
+if split_cuts:
+    bm_ = bmesh.new(); bm_.from_mesh(mesh.data); bm_.verts.ensure_lookup_table()
+    cut = []
+    for outer, inner in split_cuts:
+        cut += [e for e in bm_.edges if (outer[e.verts[0].index] and inner[e.verts[1].index]) or (inner[e.verts[0].index] and outer[e.verts[1].index])]
+    bmesh.ops.delete(bm_, geom=list(set(cut)), context='EDGES')
+    bm_.to_mesh(mesh.data); bm_.free(); mesh.data.update()
+    report['hard_split_edges_cut'] = len(set(cut))
 select_only(mesh)
 bpy.ops.object.mode_set(mode='WEIGHT_PAINT')
 bpy.ops.object.vertex_group_smooth(group_select_mode='ALL', factor=0.5, repeat=cfg.get('smooth', 3))
@@ -342,6 +444,74 @@ for node in solid.node_tree.nodes:
     if node.type == 'TEX_IMAGE' and node.image:
         out = node.outputs['Color'].links[0].to_node if node.outputs['Color'].links else None
         node.image.name = 'BaseColor' if out is not None and out.type == 'BSDF_PRINCIPLED' else 'MetalRough'
+
+# Optional headband: {"z_front": m, "z_back": m, "height": m, "thickness": m, "gap": m, "rivets": n}. A modelled iron
+# brow band (the concept's; image-to-3D kept turning it into a helmet), fitted to the measured skull: for each of
+# 64 angles the band sits `gap` outside the farthest skull vertex at that height, tilted from z_front (brow) to
+# z_back. Box section with rounded edges, domed rivets. Joined into the mesh as material slot "Band", 100% head.
+if cfg.get('headband'):
+    hb = cfg['headband']
+    hp = np.array(arm.matrix_world @ bones['head'].head_local)
+    MV = np.array([tuple(mesh.matrix_world @ v.co) for v in mesh.data.vertices])
+    rel = MV[:, :2] - hp[:2]
+    ang = np.arctan2(rel[:, 1], rel[:, 0]); rad = np.hypot(rel[:, 0], rel[:, 1])
+    N = 64; H = hb.get('height', .034); T = hb.get('thickness', .011); gap = hb.get('gap', .004)
+    zf, zb = hb['z_front'], hb['z_back']
+    def zc(a):   # front of the head is -Y (rig faces -Y in Blender)
+        return zb + (zf - zb) * (0.5 - 0.5 * np.sin(a))
+    def sector_radius(dz, win):
+        out = []
+        for k in range(N):
+            a = -np.pi + 2 * np.pi * k / N
+            d = np.angle(np.exp(1j * (ang - a)))
+            m = (np.abs(d) < np.pi / N * 1.6) & (np.abs(MV[:, 2] - (zc(a) + dz)) < win) & (rad < .2)
+            out.append(rad[m].max() + gap if m.any() else np.nan)
+        out = np.array(out); good = ~np.isnan(out)
+        out = np.interp(np.arange(N), np.where(good)[0], out[good], period=N)
+        return np.convolve(np.r_[out[-4:], out, out[:4]], np.ones(9) / 9, 'valid')
+    # The skull narrows upward: fit the band's bottom and top edges separately so it sits flush, not as a ring.
+    rb, rt = sector_radius(-H / 2, H * .2), sector_radius(H / 2, H * .2)
+    rb = np.clip(rb, rt - .002, rt + .008)   # ignore ear tops and the brow ridge under the bottom edge
+    radii = (rb + rt) / 2
+    report['headband_radius_cm'] = [round(float(radii.min()) * 100, 1), round(float(radii.max()) * 100, 1)]
+    bm = bmesh.new()
+    ring = []
+    prof = [(0, -H / 2), (T * .7, -H / 2), (T, -H / 2 + T * .3), (T, H / 2 - T * .3), (T * .7, H / 2), (0, H / 2)]
+    for k in range(N):
+        a = -np.pi + 2 * np.pi * k / N; c, sn = np.cos(a), np.sin(a)
+        col = []
+        for (o, z) in prof:
+            r = rb[k] + (rt[k] - rb[k]) * (z / H + .5) + o
+            col.append(bm.verts.new((hp[0] + c * r, hp[1] + sn * r, zc(a) + z)))
+        ring.append(col)
+    for k in range(N):
+        A, B = ring[k], ring[(k + 1) % N]
+        for j in range(len(prof)):
+            j2 = (j + 1) % len(prof)
+            bm.faces.new((A[j], B[j], B[j2], A[j2]))
+    # Domed rivets, front half denser.
+    for k in range(hb.get('rivets', 14)):
+        a = -np.pi + 2 * np.pi * (k + .5) / hb.get('rivets', 14); c, sn = np.cos(a), np.sin(a)
+        kk = int(round((a + np.pi) / (2 * np.pi) * N)) % N
+        centre = Vector((hp[0] + c * (radii[kk] + T), hp[1] + sn * (radii[kk] + T), zc(a)))
+        res = bmesh.ops.create_uvsphere(bm, u_segments=8, v_segments=5, radius=T * .55)
+        for v in res['verts']:
+            v.co = centre + Vector((v.co.x, v.co.y, v.co.z * .9))
+    me_band = bpy.data.meshes.new('Headband'); bm.to_mesh(me_band); bm.free()
+    band = bpy.data.objects.new('Headband', me_band); scene.collection.objects.link(band)
+    for poly in me_band.polygons: poly.use_smooth = True
+    iron = bpy.data.materials.new('Band'); iron.use_nodes = True
+    bsdf = iron.node_tree.nodes['Principled BSDF']
+    bsdf.inputs['Base Color'].default_value = (.045, .04, .036, 1); bsdf.inputs['Metallic'].default_value = .85
+    bsdf.inputs['Roughness'].default_value = .42
+    me_band.materials.append(iron)
+    me_band.uv_layers.new(name=mesh.data.uv_layers.active.name)
+    g = band.vertex_groups.new(name='head'); g.add(range(len(me_band.vertices)), 1.0, 'REPLACE')
+    band.modifiers.new('Armature', 'ARMATURE').object = arm
+    band_faces = len(me_band.polygons)
+    select_only(mesh, band); bpy.context.view_layer.objects.active = mesh; bpy.ops.object.join()
+    slot = mesh.data.materials.find('Band')
+    report['headband_faces'] = band_faces; report['headband_slot'] = slot
 
 Path(cfg['out_fbx']).parent.mkdir(parents=True, exist_ok=True)
 bpy.ops.wm.save_as_mainfile(filepath=cfg['out_blend'])

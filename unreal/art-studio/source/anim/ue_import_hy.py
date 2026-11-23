@@ -1,8 +1,9 @@
 """Import the retargeted HY-Motion clips (retarget_motion.py) as AnimSequences on SK_Mannequin.
 
-Run in the editor: ./scripts/bosslab-unreal editor unreal/art-studio/source/anim/ue_import_ual.py
-(the script quits the editor, so the launcher's exit 1 is expected). Input:
-artifacts/art/hy-motion-2026-11-14/HY_Anims.fbx (one take per clip). Writes
+Run in the editor: ./scripts/bosslab-unreal editor unreal/art-studio/source/anim/ue_import_hy.py
+(the script quits the editor, so the launcher's exit 1 is expected). Input: HY_Anims.fbx (one
+take per clip) from each batch folder present: artifacts/art/hy-motion-2026-11-14 and -11-15.
+Both are named HY_Anims.fbx, so every clip lands as HY_Anims_root_HY_<take>. Writes
 /Game/BossLab/Anim/HY (local, not committed: Tencent Hunyuan licence, outputs stay local).
 """
 import json, os
@@ -23,10 +24,13 @@ ad = ui.anim_sequence_import_data
 ad.set_editor_property('animation_length', unreal.FBXAnimationLengthImportType.FBXALIT_EXPORTED_TIME)
 ad.set_editor_property('import_bone_tracks', True)
 ad.set_editor_property('remove_redundant_keys', False)
-t = unreal.AssetImportTask()
-t.filename = os.path.join(ART, 'HY_Anims.fbx'); t.destination_path = DEST
-t.automated = True; t.replace_existing = True; t.save = False; t.options = ui
-unreal.AssetToolsHelpers.get_asset_tools().import_asset_tasks([t])
+for batch in (ART, os.path.join(ROOT, 'artifacts/art/hy-motion-2026-11-15')):
+    if not os.path.exists(os.path.join(batch, 'HY_Anims.fbx')):
+        continue
+    t = unreal.AssetImportTask()
+    t.filename = os.path.join(batch, 'HY_Anims.fbx'); t.destination_path = DEST
+    t.automated = True; t.replace_existing = True; t.save = False; t.options = ui
+    unreal.AssetToolsHelpers.get_asset_tools().import_asset_tasks([t])
 report = {}
 for path in eal.list_assets(DEST, recursive=True):
     a = unreal.load_asset(path)

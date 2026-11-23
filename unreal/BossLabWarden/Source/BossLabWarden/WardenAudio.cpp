@@ -25,6 +25,11 @@ namespace
 
 const TArray<TWeakObjectPtr<USoundBase>>& AWardenArenaMode::SfxVariations(const FString& Name,const TCHAR* Legacy)
 {
+    // Encounter-owned sounds cannot cross the roster boundary, even via a legacy fallback.
+    static const TArray<TWeakObjectPtr<USoundBase>> Silence;
+    if(bBellbreaker && (Name.StartsWith(TEXT("Regent")) || Name.StartsWith(TEXT("Skeleton")) ||
+        Name.StartsWith(TEXT("Censer")) || Name==TEXT("MusicBoss") || Name==TEXT("AmbDungeon") ||
+        Name==TEXT("AmbFire") || Name==TEXT("StepHeavy"))) return Silence;
     if(const auto* Found=SfxBank.Find(Name)) return *Found;
     auto& List=SfxBank.Add(Name);
     for(int32 I=0;I<12;++I)
@@ -35,6 +40,7 @@ const TArray<TWeakObjectPtr<USoundBase>>& AWardenArenaMode::SfxVariations(const 
     }
     if(List.IsEmpty())
         for(const TCHAR* Folder:LegacyFolders)
+            if(!bBellbreaker || !FCString::Strstr(Folder,TEXT("/Regent/")))
             if(auto* Sound=LoadObject<USoundBase>(nullptr,*(FString(Folder)+(Legacy?Legacy:*Name)),nullptr,LOAD_Quiet|LOAD_NoWarn))
             { List.Add(Sound); SfxKeepAlive.Add(Sound); break; }
     return List;
@@ -83,7 +89,28 @@ void AWardenArenaMode::PlaySfx(const FString& Name,const FVector& At,float Volum
     // Effects master (+8 dB): the first recorded mix sat near -36 dBFS integrated.
     const float Gain=Volume*SfxMaster*FMath::FRandRange(.88f,1.f);
     if(auto* Voice=UGameplayStatics::SpawnSoundAtLocation(this,Sound,At,FRotator::ZeroRotator,Gain,Pitch,0.f,Attenuation,Limit,true))
-        WorldAudioVoices.Add(Voice);
+        TrackWorldEffect(Voice);
+}
+
+void AWardenArenaMode::TrackWorldEffect(UAudioComponent* Voice)
+{
+    WorldAudioVoices.Add(Voice);
+    if(bForgeSpeechPriority) Voice->AdjustVolume(0.f,.22f);
+}
+
+void AWardenArenaMode::SetForgeSpeechPriority(bool Active)
+{
+    if(bForgeSpeechPriority==Active) return;
+    bForgeSpeechPriority=Active;
+    const float Ramp=Active ? .035f : .38f;
+    if(Active && BellbreakerScrape.IsValid()) BellbreakerScrape->FadeOut(.035f,0.f);
+    for(const auto& Voice:WorldAudioVoices)
+        if(auto* C=Voice.Get(); C && C!=BellbreakerSpeech.Get() && C!=BellbreakerScrape.Get() && C->IsPlaying())
+            C->AdjustVolume(Ramp,Active ? .22f : 1.f);
+    for(const auto& Bed:Ambience)
+        if(auto* C=Bed.Get()) C->AdjustVolume(Ramp,Active ? .17f : 1.f);
+    if(bRecordingAudio)
+        UE_LOG(LogTemp,Display,TEXT("BOSSLAB forge speech priority: %s"),Active ? TEXT("on") : TEXT("off"));
 }
 
 void AWardenArenaMode::SetupAudio()
@@ -110,10 +137,11 @@ void AWardenArenaMode::SetupAudio()
     UGameplayStatics::ActivateReverbEffect(this,Reverb,TEXT("BossLabRoom"),1,.8f,.5f);
     // Ambience beds: room tone everywhere; brazier crackle at the dungeon's nearest fires.
     auto Bed=[&](const FString& Name)->USoundBase* { const auto& L=SfxVariations(Name,nullptr); return L.IsEmpty()?nullptr:L[0].Get(); };
-    if(USoundBase* Room=Bed(TEXT("AmbDungeon")))
+    USoundBase* Room=bBellbreaker ? LoadObject<USoundBase>(nullptr,TEXT("/Game/BossLab/Bellbreaker/Voice/S_BB_forge_breath_v0"),nullptr,LOAD_Quiet|LOAD_NoWarn) : Bed(TEXT("AmbDungeon"));
+    if(Room)
         if(auto* C=UGameplayStatics::SpawnSound2D(this,Room,.0001f,1,0,nullptr,false,false))
-        { C->SetPaused(true); AmbienceVolume.Add(bDungeon ? .6f : .35f); Ambience.Add(C); }
-    if(bDungeon)
+        { C->SetPaused(true); AmbienceVolume.Add(bBellbreaker ? .56f : bDungeon ? .6f : .35f); Ambience.Add(C); }
+    if(bDungeon && !bBellbreaker)
         if(USoundBase* Fire=Bed(TEXT("AmbFire")))
         {
             TArray<FVector> Fires;
@@ -130,9 +158,11 @@ void AWardenArenaMode::SetupAudio()
         }
     // Boss music: the Scattered Ghost bed loops under the fight (MusicBoss), deeper and louder
     // in the Regent's second phase, and fades out when the boss falls (UpdateAudio).
-    if(USoundBase* Music=Bed(TEXT("MusicBoss")))
+    if(USoundBase* Music=bBellbreaker ? LoadObject<USoundBase>(nullptr,TEXT("/Game/BossLab/Bellbreaker/Score/S_BB_AnvilMeasure"),nullptr,LOAD_Quiet|LOAD_NoWarn) : Bed(TEXT("MusicBoss")))
         if(auto* C=UGameplayStatics::SpawnSound2D(this,Music,.0001f,1,0,nullptr,false,false))
         { C->SetPaused(true); MusicComponent=C; MusicTarget=-1; }
+    if(bBellbreaker)
+        UE_LOG(LogTemp,Display,TEXT("BOSSLAB forge soundscape: furnace=%s, AnvilMeasure=%s, undead score=off"),Room?TEXT("loaded"):TEXT("unavailable"),MusicComponent.IsValid()?TEXT("loaded"):TEXT("unavailable"));
     // Separate dry stereo title music; absent assets leave a quiet menu, never battle fallback.
     if(auto* Menu=LoadObject<USoundBase>(nullptr,TEXT("/Game/BossLab/InterfaceAudio/MenuMusic_0"),nullptr,LOAD_Quiet|LOAD_NoWarn))
     {
@@ -143,7 +173,7 @@ void AWardenArenaMode::SetupAudio()
     // Benchmark-only: record the final mix so its loudness can be measured offline
     // (./scripts/bosslab-unreal benchmark record-audio).
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabRecordAudio"))) { UAudioMixerBlueprintLibrary::StartRecordingOutput(this,90.f); bRecordingAudio=true; }
-    UE_LOG(LogTemp,Display,TEXT("BOSSLAB audio: reverb %s, %d ambience beds, music %s, %d variations across 5 sample events"),bDungeon?TEXT("hall"):TEXT("court"),Ambience.Num(),MusicComponent.IsValid()?TEXT("on"):TEXT("absent"),Loaded);
+    UE_LOG(LogTemp,Display,TEXT("BOSSLAB audio: reverb %s, %d ambience beds, music %s, %d variations across 5 sample events"),bBellbreaker?TEXT("forge"):bDungeon?TEXT("hall"):TEXT("court"),Ambience.Num(),MusicComponent.IsValid()?TEXT("on"):TEXT("absent"),Loaded);
 }
 
 void AWardenArenaMode::StopAudioRecording()
@@ -160,7 +190,7 @@ float AWardenArenaMode::MusicLevel() const
 {
     const bool Living=Warden && Warden->Fight.Alive();
     if(!WorldAudioEnabled() || !Living || (Player && !Player->Fight.Alive())) return 0;
-    return (bRegent ? (Regent.PhaseTwo ? 1.f : .8f) : .6f)*MusicVolumeScale;
+    return (bBellbreaker ? (Bellbreaker.PhaseTwo ? .82f : .68f)*(bForgeSpeechPriority ? .13f : 1.f) : bRegent ? (Regent.PhaseTwo ? 1.f : .8f) : .6f)*MusicVolumeScale;
 }
 
 bool AWardenArenaMode::WorldAudioEnabled() const
@@ -187,6 +217,7 @@ void AWardenArenaMode::PlayInterfaceCue(bool Adjust)
 void AWardenArenaMode::UpdateAudio()
 {
     const bool WorldEnabled=WorldAudioEnabled();
+    SetForgeSpeechPriority(bBellbreaker && WorldEnabled && BellbreakerSpeech.IsValid() && BellbreakerSpeech->IsPlaying());
     if(bAmbienceMuted!=!WorldEnabled)
     { bAmbienceMuted=!WorldEnabled; UE_LOG(LogTemp,Display,TEXT("BOSSLAB audio routing: world=%s menu=%.3f boss=%.3f"),WorldEnabled?TEXT("on"):TEXT("off"),MenuMusicLevel(),MusicLevel()); }
     // Cancel existing long spell/choir tails when a menu opens. These components are owned
@@ -208,7 +239,7 @@ void AWardenArenaMode::UpdateAudio()
             C->SetPaused(false);
             C->SetVolumeMultiplier(1.f); // AdjustVolume controls a separate fader; restore the base gain after menus.
             if(!FMath::IsNearlyEqual(Level,MusicTarget) || !FMath::IsNearlyEqual(Pitch,MusicPitch))
-            { C->AdjustVolume(MusicTarget<0?.65f:2.5f,Level); C->SetPitchMultiplier(Pitch); MusicTarget=Level; MusicPitch=Pitch; }
+            { C->AdjustVolume(bForgeSpeechPriority ? .035f : bBellbreaker ? .38f : MusicTarget<0 ? .65f : 2.5f,Level); C->SetPitchMultiplier(Pitch); MusicTarget=Level; MusicPitch=Pitch; }
         }
     }
     for(int32 I=0;I<Ambience.Num();++I)

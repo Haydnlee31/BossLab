@@ -17,6 +17,9 @@ EVIDENCE = ROOT / 'artifacts/unreal'
 CACHE = ROOT / 'unreal/.cache'
 GIB = 1024 ** 3
 RESERVE = 15 * GIB  # Owner lowered from 24 GiB on 2026-11-11
+# Per-run override (owner allowed 13 GiB for the 2026-11-18 Bellbreaker retarget pass); never below 13.
+if os.environ.get('BOSSLAB_RESERVE_GIB'):
+    RESERVE = max(13, float(os.environ['BOSSLAB_RESERVE_GIB'])) * GIB
 LIMIT = 10_000_000_000  # Owner-approved total work budget, decimal 10 GB
 
 def storage():
@@ -33,6 +36,7 @@ def guard():
 
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else 'doctor'
+    native_1080 = mode in ('play', 'benchmark') and '1080p' in sys.argv[2:]
     EVIDENCE.mkdir(parents=True, exist_ok=True)
     editor = ENGINE / 'Engine/Binaries/Mac/UnrealEditor.app/Contents/MacOS/UnrealEditor'
     if mode == 'doctor':
@@ -45,12 +49,32 @@ def main():
         raise RuntimeError('Usage: scripts/bosslab-unreal doctor|build|editor|python <script.py>|test|play|evaluate|benchmark|capture|package|package-play|package-benchmark|package-test|package-capture')
     if mode == 'evaluate':
         raise RuntimeError('Adaptive evaluation is deferred in the fundamentals revision; historical unarmed reports remain in artifacts/unreal.')
+    if os.environ.get('BOSSLAB_ARENA') == 'smeltery' and mode == 'play':
+        variant = os.environ.get('BOSSLAB_SMELTERY_VARIANT', 'original')
+        if variant not in ('original', 'hearth-a', 'hearth-a2'):
+            raise RuntimeError('BOSSLAB_SMELTERY_VARIANT must be original, hearth-a or hearth-a2')
+        folder = {'hearth-a2': 'HearthA2', 'hearth-a': 'HearthA', 'original': 'Smeltery'}[variant]
+        manifest = PROJECT.parent / ('Content/BossLab/' + folder + '/layout.json')
+        if not manifest.is_file():
+            raise RuntimeError('Smeltery assets are not imported. Run the dedicated smeltery Unreal importer before launching the walkthrough; existing game remains available via scripts/bosslab-game.')
+        instances = json.loads(manifest.read_text()).get('instances', [])
+        if not instances:
+            raise RuntimeError('Smeltery layout contains no instances; finish the asset import first.')
+        for item in instances:
+            asset = item.get('asset', '')
+            if not asset.startswith('/Game/BossLab/' + folder + '/') or '..' in asset:
+                raise RuntimeError('Invalid smeltery asset path in layout: ' + asset)
+            package = asset.split('.')[0].removeprefix('/Game/')
+            if not (PROJECT.parent / 'Content' / (package + '.uasset')).is_file():
+                raise RuntimeError('Smeltery mesh is not imported: ' + asset + '. Run the dedicated smeltery importer first.')
+    if os.environ.get('BOSSLAB_ARENA') == 'smeltery' and mode.startswith('package'):
+        raise RuntimeError('Smeltery walkthrough is editor-game only; the original packaged app is unchanged.')
     if os.environ.get('BOSSLAB_OUTFIT', 'original') == 'revamp' and mode.startswith('package'):
         raise RuntimeError('Revamp characters are editor-game only; the original packaged app is unchanged.')
     if os.environ.get('BOSSLAB_ARENA', 'original') == 'dungeon' and mode.startswith('package'):
         raise RuntimeError('The dungeon arena is editor-game only; the original packaged app is unchanged.')
-    if os.environ.get('BOSSLAB_BOSS', 'warden') == 'regent' and mode.startswith('package'):
-        raise RuntimeError('The Funeral Regent moveset is an editor-game greybox; the original packaged app is unchanged.')
+    if os.environ.get('BOSSLAB_BOSS', 'warden') in ('regent', 'bellbreaker') and mode.startswith('package'):
+        raise RuntimeError('The Funeral Regent and Bellbreaker movesets are editor-game greyboxes; the original packaged app is unchanged.')
     if os.environ.get('BOSSLAB_OUTFIT', 'original') == 'v13' and mode.startswith('package'):
         raise RuntimeError('V13 trial uses editor play/capture/benchmark (or dedicated native tests). The original packaged app is unchanged; do not use BOSSLAB_OUTFIT=v13 with package modes.')
     guard()
@@ -138,8 +162,11 @@ def main():
                     '-TestExit=Automation Test Queue Empty',
                     '-ReportExportPath=' + str(EVIDENCE / ('evaluation-automation' if mode == 'evaluate' else 'automation'))]
         else:
-            cmd += ['-game', '-windowed', '-ResX=' + ('1920' if mode == 'benchmark' and '720p' not in sys.argv[2:] else '1280'), '-ResY=' + ('1080' if mode == 'benchmark' and '720p' not in sys.argv[2:] else '720'),
+            large_viewport = native_1080 or (mode == 'benchmark' and '720p' not in sys.argv[2:])
+            cmd += ['-game', '-windowed', '-ResX=' + ('1920' if large_viewport else '1280'), '-ResY=' + ('1080' if large_viewport else '720'),
                     '-DisablePlugins=ModelContextProtocol,EditorToolset,AutomationTestToolset,PythonScriptPlugin']
+            if native_1080 and mode == 'play':
+                cmd += ['-ForceRes']
         if mode == 'capture':
             cmd += ['-BossLabCapture', '-UseFixedTimeStep', '-FPS=30', '-NoSound']
             if 'exchange' in sys.argv[2:]:
@@ -159,6 +186,19 @@ def main():
             if 'feel' in sys.argv[2:]:
                 # Side-on player feel review: run, turn, sprint, stop, roll, cut chain, jump.
                 cmd += ['-BossLabFeelStudy', '-BossLabCaptureSeconds=24']
+            if 'bellbreaker-approach' in sys.argv[2:]:
+                cmd += ['-BossLabBellApproachStudy', '-BossLabCaptureSeconds=9']
+            if 'bellbreaker-walk' in sys.argv[2:]:
+                cmd += ['-BossLabBellApproachStudy', '-BossLabBellWalk', '-BossLabCaptureSeconds=16']
+                if 'side' in sys.argv[2:]:
+                    cmd += ['-BossLabBellWalkSide']
+            if 'bellbreaker-footwork' in sys.argv[2:]:
+                cmd += ['-BossLabBellApproachStudy', '-BossLabBellFootwork', '-BossLabCaptureSeconds=16']
+            if 'bellbreaker-study' in sys.argv[2:]:
+                # Side-on review of every Bellbreaker move; needs BOSSLAB_BOSS=bellbreaker.
+                cmd += ['-BossLabBellbreakerStudy', '-BossLabCaptureSeconds=6' if 'release' in sys.argv[2:] else '-BossLabCaptureSeconds=20']
+                if 'release' in sys.argv[2:]:
+                    cmd += ['-BossLabBellReleaseStudy']
             if 'regent-study' in sys.argv[2:]:
                 # Side-on review of every Regent move; needs BOSSLAB_BOSS=regent.
                 cmd += ['-BossLabRegentStudy', '-BossLabCaptureSeconds=30']
@@ -167,6 +207,8 @@ def main():
             for name, group in [('rolls-cardinal', 0), ('rolls-diagonal', 1)]:
                 if name in sys.argv[2:]:
                     cmd += ['-BossLabRollStudy=' + str(group)]
+        if mode == 'play' and 'poster-study' in sys.argv[2:]:
+            cmd += ['-BossLabPosterStudy']
         if mode == 'play' and 'record-audio' in sys.argv[2:]:
             cmd += ['-BossLabRecordAudio']
         if mode == 'benchmark':
@@ -188,13 +230,68 @@ def main():
     if outfit == 'v13' and mode not in ('build', 'package', 'editor'):
         cmd += ['-BossLabV13=' + os.environ.get('BOSSLAB_V13_DATA', str(PROJECT.parent / 'Content/BossLab/V13/v13-runtime.json'))]
     arena = os.environ.get('BOSSLAB_ARENA', 'original')
-    if arena not in ('original', 'dungeon'):
-        raise RuntimeError('BOSSLAB_ARENA must be original or dungeon')
+    if arena not in ('original', 'dungeon', 'smeltery', 'forge'):
+        raise RuntimeError('BOSSLAB_ARENA must be original, dungeon, smeltery or forge')
+    # Enable encounter travel only in editor-game when both local installations exist.
+    if mode == 'play' and arena != 'smeltery':
+        content = PROJECT.parent / 'Content'
+        bb = content / 'BossLab/Bellbreaker'
+        try:
+            instances = json.loads((content / 'BossLab/HearthA2/layout.json').read_text())['instances']
+            forge_ready = bool(instances) and all(i['asset'].startswith('/Game/BossLab/HearthA2/') and
+                (content / (i['asset'][6:].split('.')[0] + '.uasset')).is_file() for i in instances)
+        except (OSError, ValueError, TypeError, KeyError):
+            forge_ready = False
+        clips = 'idle_hammer_s0 walk_hammer_s0 stun_s1 stun_kneel_s0 hammer_overhead_s0 sweep_rl_s1 bell_quake_s0 hammer_overhead_s1'.split()
+        if (forge_ready and all((bb / ('Anim/BB_HY_Anims_root_HY_' + c + '.uasset')).is_file() for c in clips)
+            and all((bb / f).is_file() for f in ('Rig/SKM_BellbreakerRig.uasset','SM_BellHammerGen.uasset','FX/M_BB_Shockwave.uasset'))
+            and all((content / 'BossLab' / f).is_file() for f in ('Regent/M_RegentFlame.uasset','Dungeon/M_DungeonFloor.uasset'))):
+            cmd += ['-BossLabLocalRoster']
+    # Bellbreaker fight in the Hearth A2 forge (2026-11-18): editor-game only, needs BOSSLAB_BOSS=bellbreaker
+    # and the imported A2 scene (the same manifest check as the walkthrough).
+    if arena == 'forge':
+        if mode not in ('play', 'capture', 'benchmark'):
+            raise RuntimeError('The forge fight supports editor play, capture and benchmark only.')
+        if os.environ.get('BOSSLAB_BOSS') != 'bellbreaker':
+            raise RuntimeError('BOSSLAB_ARENA=forge is the Bellbreaker fight: set BOSSLAB_BOSS=bellbreaker.')
+        manifest = PROJECT.parent / 'Content/BossLab/HearthA2/layout.json'
+        instances = json.loads(manifest.read_text()).get('instances', []) if manifest.is_file() else []
+        missing = [i.get('asset', '') for i in instances if not (PROJECT.parent / ('Content' + i.get('asset', '')[len('/Game'):].split('.')[0] + '.uasset')).is_file()]
+        if not instances or missing:
+            raise RuntimeError('Hearth A2 assets are not fully imported; run the A2 importer first. Missing: ' + ', '.join(missing[:3]))
+        cmd += ['-BossLabForgeFight', '-BossLabHearthA2']
+    if arena == 'smeltery':
+        if mode != 'play':
+            raise RuntimeError('Smeltery environment opt-in supports editor play only. Run native tests with BOSSLAB_ARENA unset; the dedicated test configures its own walkthrough fixture.')
+        cmd += ['-BossLabSmeltery']
+        if os.environ.get('BOSSLAB_SMELTERY_VARIANT', 'original') == 'hearth-a':
+            cmd += ['-BossLabHearthA']
+        elif os.environ.get('BOSSLAB_SMELTERY_VARIANT') == 'hearth-a2':
+            cmd += ['-BossLabHearthA2']
+        if os.environ.get('BOSSLAB_HEARTH_PROFILE') == '1':
+            if os.environ.get('BOSSLAB_SMELTERY_VARIANT') != 'hearth-a2' or 'timing' not in sys.argv[2:]:
+                raise RuntimeError('A2 CSV diagnostic requires hearth-a2 timing mode.')
+            cmd += ['-csvCaptureFrames=1200', '-csvGpuStats', '-csvCategories=Basic,Rendering,GPU', '-csvCompression=0']
+        if os.environ.get('BOSSLAB_CAMERA_DIAGNOSTIC') == '1':
+            cmd += ['-BossLabCameraDiagnostic']
+        if os.environ.get('BOSSLAB_ENTRY_CAPTURE') == '1':
+            if 'study' in sys.argv[2:] or 'timing' in sys.argv[2:]:
+                raise RuntimeError('Normal entry capture cannot be combined with scripted study/timing.')
+            cmd += ['-BossLabEntryCapture']
+        if 'timing' in sys.argv[2:]:
+            cmd += ['-BossLabSmelteryTiming']
+        if 'study' in sys.argv[2:]:
+            cmd += ['-BossLabSmelteryStudy']
     if arena == 'dungeon' and mode in ('play', 'benchmark', 'capture', 'test'):
         cmd += ['-BossLabArena=dungeon']
     boss = os.environ.get('BOSSLAB_BOSS', 'warden')
-    if boss not in ('warden', 'regent'):
-        raise RuntimeError('BOSSLAB_BOSS must be warden or regent')
+    if boss not in ('warden', 'regent', 'bellbreaker'):
+        raise RuntimeError('BOSSLAB_BOSS must be warden, regent or bellbreaker')
+    # Bellbreaker greybox (2026-11-18): editor-game only, like the Regent; BOSSLAB_BB_PHASE=2 starts at the threshold.
+    if boss == 'bellbreaker' and mode in ('play', 'benchmark', 'capture'):
+        cmd += ['-BossLabBellbreaker']
+        if os.environ.get('BOSSLAB_BB_PHASE', '1') == '2':
+            cmd += ['-BossLabBellbreakerPhaseTwo']
     # Native tests enable the Regent explicitly, so the default suite runs unchanged.
     if boss == 'regent' and mode in ('play', 'benchmark', 'capture'):
         cmd += ['-BossLabRegent']
@@ -211,7 +308,27 @@ def main():
         if quality == 'minimal':
             # Diagnostic fallback to separate raster/shadow cost from frame stalls.
             preset = 'r.ShadowQuality 0,r.ScreenPercentage 50,r.AmbientOcclusionLevels 0,r.PostProcessAAQuality 0,r.BloomQuality 0,t.MaxFPS 60'
+        if arena == 'smeltery' and os.environ.get('BOSSLAB_SMELTERY_VARIANT') in ('hearth-a', 'hearth-a2') and 'BOSSLAB_HEARTH_SCREEN_PERCENTAGE' in os.environ:
+            value = os.environ['BOSSLAB_HEARTH_SCREEN_PERCENTAGE']
+            if not value.isdigit() or not 50 <= int(value) <= 100:
+                raise RuntimeError('BOSSLAB_HEARTH_SCREEN_PERCENTAGE must be an integer50–100')
+            preset += ',r.ScreenPercentage ' + value
+        if (arena == 'forge' or (arena == 'smeltery' and os.environ.get('BOSSLAB_SMELTERY_VARIANT') == 'hearth-a2')) and 'BOSSLAB_HEARTH_AO' in os.environ:
+            ao = os.environ['BOSSLAB_HEARTH_AO']
+            if ao not in ('0', '1'):
+                raise RuntimeError('BOSSLAB_HEARTH_AO must be 0 or 1')
+            # Explicit A2-only visual/cost trial. Existing rooms/config unchanged.
+            preset += ',r.AmbientOcclusionLevels ' + ao + ',r.AmbientOcclusionMaxQuality 50'
+        if arena == 'smeltery' and os.environ.get('BOSSLAB_SMELTERY_VARIANT') == 'hearth-a2' and 'BOSSLAB_HEARTH_VISIBILITY' in os.environ:
+            schedule = os.environ['BOSSLAB_HEARTH_VISIBILITY']
+            if schedule not in ('0', '1'):
+                raise RuntimeError('BOSSLAB_HEARTH_VISIBILITY must be 0 or 1')
+            preset += ',r.Visibility.TaskSchedule ' + schedule
+        if native_1080:
+            preset += ',r.ScreenPercentage 100'
         cmd += ['-ExecCmds=' + preset]
+    elif native_1080:
+        cmd += ['-ExecCmds=r.ScreenPercentage 100']
     if mode in ('capture', 'package-capture'):
         # Fixed-time capture can outrun asynchronous PSO warm-up. Always create
         # proxies so rendering waits for their PSOs instead of recording empty world frames.

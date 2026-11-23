@@ -1,5 +1,6 @@
 #include "WardenCombat.h"
 #include "WardenRegent.h"
+#include "WardenBellbreaker.h"
 
 float WardenRules::DodgeDistance(float Age)
 {
@@ -44,6 +45,7 @@ const FWardenStrike& WardenRules::Strike(int32 Index, bool Boss)
         {TEXT("RUNNING CUT"),TEXT("AuthoredSword"),TEXT("hand_r"),16,16,34,0.f,0.f,1.f,36,6,120,20,1}};
     if (!Boss) { check(Index >= 0 && Index < PlayerMoveCount); return Player[Index]; }
     if (WardenRegent::IsRegent(Index)) return WardenRegent::Strike(Index);
+    if (WardenBellbreaker::IsBellbreaker(Index)) return WardenBellbreaker::Strike(Index);
     // Engine-owned rehearsal timings; authored sword poses use these same phases.
     static const FWardenStrike Moves[] = {
         {TEXT("BROAD SWEEP"), TEXT("AuthoredSword"), TEXT("hand_r"), 44,24,54, 0,0,1, 24,7,55},
@@ -118,6 +120,7 @@ bool FWardenFighterState::MoveCancelOpen() const
 {
     using namespace WardenRules;
     if(IsBoss || !Alive()) return false;
+    if(Stunned()) return Age>=StunTicks-StunWalkOut;
     if(Action==EWardenAction::Dodge) return Age>=RollMoveCancel;
     if(Action!=EWardenAction::Strike) return false;
     const auto& D=Definition();
@@ -126,6 +129,7 @@ bool FWardenFighterState::MoveCancelOpen() const
 bool FWardenFighterState::CancelIntoMove()
 {
     if(!MoveCancelOpen()) return false;
+    if(Stunned()) { StunTicks=0; StunKneel=false; StunImmunity=WardenRules::StunImmunityTicks; }
     Action=EWardenAction::Ready; Age=0; Gap=WardenRules::RecoveryGap/2;
     return true;
 }
@@ -152,7 +156,7 @@ bool FWardenFighterState::Request(EWardenAction Requested, int32 MoveIndex)
     if (Stamina < Cost) return false;
     Sprinting=false;
     Stamina -= Cost; RegenDelay = IsBoss ? WardenRules::BossRegenDelayTicks : WardenRules::RegenDelayTicks; Action = Requested; Age = 0; Gap = 0;
-    if (Requested == EWardenAction::Strike) { Move = MoveIndex; ++AttackInstance; HitConsumed = false; Cooldowns[Move] = Definition().Total()+(IsBoss ? 60 : 8); }
+    if (Requested == EWardenAction::Strike) { Move = MoveIndex; ++AttackInstance; HitConsumed = false; Cooldowns[Move] = IsBoss && WardenBellbreaker::IsBellbreaker(Move) ? WardenBellbreaker::RepeatLock(Move) : Definition().Total()+(IsBoss ? 60 : 8); }
     if (Requested == EWardenAction::Heal) --Heals;
     return true;
 }
@@ -160,6 +164,7 @@ void FWardenFighterState::Advance()
 {
     if (!Alive()) return;
     if(ImpactTicks>0) --ImpactTicks;
+    if(StunImmunity>0) --StunImmunity;
     if(PoiseReset>0 && --PoiseReset==0) Poise=MaxPoise;
     for(int32& Cooldown : Cooldowns) if(Cooldown > 0) --Cooldown;
     if (Gap > 0) --Gap;
@@ -169,14 +174,18 @@ void FWardenFighterState::Advance()
     ++Age;
     if (Action == EWardenAction::Strike && WardenRegent::Rearm(Move,Age)) HitConsumed = false;
     if (Action == EWardenAction::Heal && Age == WardenRules::HealCommit) Health = FMath::Min(MaxHealth,Health+45.f);
-    const int32 Duration = Action == EWardenAction::Strike ? Definition().Total() : Action == EWardenAction::Dodge ? WardenRules::DodgeTicks : Action==EWardenAction::Hurt ? (IsBoss?WardenRules::BossHurtTicks:WardenRules::HurtTicks) : Action==EWardenAction::Jump ? WardenRules::JumpTicks : WardenRules::HealTicks;
-    if (Age >= Duration) { Action = EWardenAction::Ready; Age = 0; Gap = WardenRules::RecoveryGap; }
+    const int32 Duration = Action == EWardenAction::Strike ? Definition().Total() : Action == EWardenAction::Dodge ? WardenRules::DodgeTicks : Action==EWardenAction::Hurt ? (StunTicks>0 ? StunTicks : IsBoss?WardenRules::BossHurtTicks:WardenRules::HurtTicks) : Action==EWardenAction::Jump ? WardenRules::JumpTicks : WardenRules::HealTicks;
+    if (Age >= Duration)
+    {
+        if (Action == EWardenAction::Hurt && StunTicks > 0) { StunTicks = 0; StunKneel = false; StunImmunity = WardenRules::StunImmunityTicks; }
+        Action = EWardenAction::Ready; Age = 0; Gap = WardenRules::RecoveryGap;
+    }
 }
 bool FWardenFighterState::Damage(float Amount, bool Flinch, int32 Stance)
 {
     if (!Alive() || Invulnerable() || Amount <= 0 || !FMath::IsFinite(Amount)) return false;
     if (Flinch) Sprinting=false;
-    Health = FMath::Max(0.f,Health-Amount);
+    Health = FMath::Max(0.f,Health-Amount); ++DamageEvents;
     if (Health == 0) { Action = EWardenAction::Dead; Age = 0; }
     else if (Flinch)
     {
@@ -187,6 +196,8 @@ bool FWardenFighterState::Damage(float Amount, bool Flinch, int32 Stance)
         // This rule is identical for every controller.
         if(!IsBoss || Poise<=0)
         {
+            // A blow during a stun breaks it into this ordinary hurt; the immunity still follows.
+            if(StunTicks>0) { StunTicks=0; StunKneel=false; StunImmunity=WardenRules::StunImmunityTicks; }
             Action=EWardenAction::Hurt; Age=0; Gap=0; HitConsumed=true;
             if(IsBoss) { Poise=MaxPoise; PoiseReset=0; }
         }
@@ -199,4 +210,12 @@ float FWardenFighterState::AnimationTime() const
     if (Age < D.Windup) return D.AnimationContactStart * Age / D.Windup;
     if (Age < D.Windup+D.Active) return FMath::Lerp(D.AnimationContactStart,D.AnimationContactEnd,float(Age-D.Windup)/D.Active);
     return FMath::Lerp(D.AnimationContactEnd,D.AnimationEnd,FMath::Clamp(float(Age-D.Windup-D.Active)/D.Recovery,0.f,1.f));
+}
+bool FWardenFighterState::Stun(int32 Ticks, bool Kneel)
+{
+    // Never extends or restarts a stun already running (a second crest only chips).
+    if (!Alive() || Invulnerable() || StunImmunity > 0 || Stunned() || Ticks <= 0) return false;
+    Sprinting = false;
+    Action = EWardenAction::Hurt; Age = 0; Gap = 0; StunTicks = Ticks; StunKneel = Kneel;
+    return true;
 }

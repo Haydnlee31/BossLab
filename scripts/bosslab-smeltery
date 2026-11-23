@@ -1,0 +1,13 @@
+#!/bin/sh
+# Isolated human environment walkthrough; no boss or combat session.
+cd "$(dirname "$0")/.." || exit 1
+export BOSSLAB_ARENA=smeltery
+export BOSSLAB_SMELTERY_VARIANT="${BOSSLAB_SMELTERY_VARIANT:-hearth-a2}"
+export BOSSLAB_BOSS=warden
+export BOSSLAB_OUTFIT="${BOSSLAB_OUTFIT:-revamp}"
+export BOSSLAB_QUALITY="${BOSSLAB_QUALITY:-performance}"
+if [ "$BOSSLAB_SMELTERY_VARIANT" = "hearth-a2" ]; then
+    export BOSSLAB_HEARTH_AO="${BOSSLAB_HEARTH_AO:-1}"
+fi
+export BOSSLAB_HEARTH_SCREEN_PERCENTAGE="${BOSSLAB_HEARTH_SCREEN_PERCENTAGE:-100}"
+exec ./scripts/bosslab-unreal play "$@"
