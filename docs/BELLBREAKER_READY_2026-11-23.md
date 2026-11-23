@@ -72,3 +72,23 @@ Two 720p performance-preset forge benchmarks: 24.04 ms mean / 48.87 ms p95 (2,32
 * The new moves reuse existing HY takes for the body; Charge and Cyclone slide the planted feet with the capsule (no stepping) and the Fling/Toll takes are not bespoke.
 * Generated sounds were not listened to by a person.
 * Performance numbers below are single local runs on a loaded Mac.
+
+## Clipping fix and effects pass (same day)
+
+**Clipping.** The Anvil Stamp (3.8 cm) and Death Knell (6.1 cm, at contact and on the return to the carry) intrusions came from their body clips crouching into an authored haft. `AnimateBellbreakerView` now has a body-clearance step before the hand solvers: the whole hammer (bell, haft, pommel, sampled every 10 cm with the bell's radius) is tested against the posed hips, chest, thighs and calves (the study's ellipsoid hull), and moved rigidly out along the deepest contact's normal (never downward, at most 30 cm, up to four passes). It engages only on overlap, rises at once and eases away in about 0.25 s; the grips follow because the hands are solved afterwards. Engine hits still use the authored bell path (Stamp and Knell deal damage through their blasts, not the bell). Study after the change: **0.0 cm body intrusion on every move** (Stamp 3.8 → 0, Knell 6.1 → 0, Striding Fall 0.7 → 0), floor 0 cm; left-hand gaps unchanged (Backhand Toll 11.5 cm, as before). Logs: `artifacts/unreal/bellbreaker-fx-20261123/study-*.log`.
+
+**Effects** (presentation only, `BellbreakerFx`/`BellbreakerBurst`/`UpdateBellbreakerFx`): four instanced-plane layers with a per-instance fade (PerInstanceCustomData 0), all pooled (10 cracks, 64 dust, 56 fire, 8 puddles):
+
+| Event | Effect |
+|---|---|
+| Hammer Fall, Held Note, Striding Fall, Quake, Bell Breaks, every Knell slam, Anvil Stamp | glowing crack that cools over 4.5 s, a ring of dust rolling out, a fire flash, sparks; rubble-settle sound on the blasts |
+| Bell Breaks | extra column of fire bursts and an ignition whoosh |
+| Slag Fling | flash and sparks at the bell on release, ember trail behind each glob, cooling molten puddle + flash + sparks + sizzle where it lands |
+| The Toll | ring of dust driven outward with the sound ring |
+| Shoulder Charge | dust kicked behind the run, heavy footfalls |
+| Forge Cyclone | dust thrown off where the bell skims the floor |
+| Phase two | embers rising off the smith for the rest of the fight |
+
+Textures: FLUX.1-schnell (free Space, 8 images; chosen crack s7, dust s9, fire s4, puddle s5), keyed in the material (stone/black removed, radial mask) — `flux_fx_textures.py`, `ue_import_bellbreaker_fx_pass.py`, records in `artifacts/art/bellbreaker-fx-2026-11-23`. Sounds: Stable Audio Open (8 files: slag sizzle, rubble settle, ember whoosh, giant footstep), trimmed/normalised by `unreal/art-studio/source/audio/trim_sfx.py`, prompts in `artifacts/audio-bellbreaker-fx-2026-11-23`. Assets under `/Game/BossLab/Bellbreaker/FX` and `/Sound` stay local.
+
+Verification: native 55/55, forge trials 2/2, close study in the default arena and the forge (`forge-stamp-toll-fx.jpg`, `default-knell-heldnote-fx.jpg`; capture frames deleted). On the pale default floor the additive crack glow reads paler than in the forge. Not owner-played; the new sounds were not listened to; no new performance measurement.

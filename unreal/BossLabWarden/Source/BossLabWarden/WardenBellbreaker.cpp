@@ -324,6 +324,42 @@ void AWardenArenaMode::BellbreakerSound(const TCHAR* Name,const FVector& At,floa
         }
     }
 }
+void AWardenArenaMode::BellbreakerFx(uint8 Kind,const FVector& At,float Size0,float Size1,float Life,const FVector& Velocity,float Rise)
+{
+    auto& V=BBView;
+    if(Kind>=FWardenBellbreakerView::FxKinds || V.Fx[Kind].Num()==0 || !V.FxLayer[Kind].IsValid()) return;
+    auto& P=V.Fx[Kind][V.FxNext[Kind]]; V.FxNext[Kind]=(V.FxNext[Kind]+1)%V.Fx[Kind].Num();
+    P.Start=V.FxClock; P.Life=Life; P.At=At; P.Velocity=Velocity; P.Size0=Size0; P.Size1=Size1; P.Rise=Rise;
+    P.Spin=FMath::FRandRange(0.f,360.f);
+}
+void AWardenArenaMode::BellbreakerSparks(const FVector& At,int32 Count,float Speed)
+{
+    auto& V=BBView;
+    for(int32 K=0;K<Count;++K)
+    {
+        auto& P=V.Buffer[V.Next]; V.Next=(V.Next+1)%FWardenBellbreakerView::MaxSparks;
+        const float A=FMath::FRandRange(0.f,2*PI);
+        P.Start=V.FxClock; P.At=At+FVector(FMath::FRandRange(-15.f,15.f),FMath::FRandRange(-15.f,15.f),4);
+        P.Velocity=FVector(FMath::Cos(A),FMath::Sin(A),0)*Speed*FMath::FRandRange(.35f,1.f)+FVector(0,0,FMath::FRandRange(.5f,1.2f)*Speed);
+    }
+}
+void AWardenArenaMode::BellbreakerBurst(const FVector& At,float Strength,bool Crack)
+{
+    // A heavy blow on stone: a glowing crack that cools over a few seconds, a ring of dust rolling out low,
+    // a short fire flash and sparks.
+    using V=FWardenBellbreakerView;
+    const FVector Ground(At.X,At.Y,0);
+    if(Crack) BellbreakerFx(V::FxCrack,Ground,260*Strength,300*Strength,4.5f);
+    const int32 Puffs=FMath::RoundToInt(8*Strength);
+    for(int32 K=0;K<Puffs;++K)
+    {
+        const float A=2*PI*(K+FMath::FRandRange(-.3f,.3f))/Puffs;
+        const FVector Out(FMath::Cos(A),FMath::Sin(A),0);
+        BellbreakerFx(V::FxDust,Ground+Out*60*Strength+FVector(0,0,30),70*Strength,240*Strength,FMath::FRandRange(1.1f,1.7f),Out*FMath::FRandRange(260.f,420.f)*Strength,40);
+    }
+    BellbreakerFx(V::FxFire,Ground+FVector(0,0,45),90*Strength,230*Strength,.38f,FVector::ZeroVector,90);
+    BellbreakerSparks(Ground,FMath::RoundToInt(22*Strength),520);
+}
 void AWardenArenaMode::BellbreakerSpeak(const TCHAR* Line)
 {
     if (GIsAutomationTesting || !WorldAudioEnabled() || Settings.SfxVolume <= 0.f) return;
@@ -367,7 +403,20 @@ void AWardenArenaMode::BellbreakerResolve()
             R.GroundAmplitude=Strength*FMath::Clamp(1.f-FVector::Dist2D(Source,Player->GetActorLocation())/1600.f,.12f,1.f);
             R.GroundAge=0;
         };
-        if((F.Move==HammerFall || F.Move==HeldNote || F.Move==StridingFall) && Since==D.Active-1) { GroundPulse(Bell,.82f); BellbreakerSound(TEXT("bell_slam_ground_v1"),Bell,.9f); Impact(3,0.f); }
+        if((F.Move==HammerFall || F.Move==HeldNote || F.Move==StridingFall) && Since==D.Active-1)
+        {
+            GroundPulse(Bell,.82f); BellbreakerSound(TEXT("bell_slam_ground_v1"),Bell,.9f); Impact(3,0.f);
+            BellbreakerBurst(Bell,.75f,true);
+        }
+        // Effects pass: dust kicked up by the run and by the bell skimming the floor in the Cyclone.
+        if(F.Move==Charge && Since>=-6 && Since<D.Active && A%6==0)
+        {
+            const FVector Back=Yaw.RotateVector(FVector(-40,FMath::FRandRange(-70.f,70.f),30));
+            BellbreakerFx(FWardenBellbreakerView::FxDust,Floor+Back,90,260,1.3f,Yaw.RotateVector(FVector(-160,0,0)),50);
+            if(A%12==0) BellbreakerSound(A%24 ? TEXT("giant_footstep_v0") : TEXT("giant_footstep_v1"),Floor,.75f);
+        }
+        if(F.Move==Cyclone && Since>=0 && Since<D.Active && A%4==0)
+            BellbreakerFx(FWardenBellbreakerView::FxDust,FVector(Bell.X,Bell.Y,30),80,220,1.0f,(Bell-Floor).GetSafeNormal2D()*300,30);
         // Readiness-pass rows (2026-11-23). A blast flinches whoever is inside its radius on that tick unless
         // they are airborne or inside roll i-frames (Damage refuses while invulnerable).
         auto Blast=[&](const FVector& Centre,float Radius,float Amount,const TCHAR* Event)
@@ -383,6 +432,7 @@ void AWardenArenaMode::BellbreakerResolve()
             const FVector Centre=Floor+Yaw.RotateVector(FVector(StampAhead,0,0));
             BellbreakerSound(TEXT("stamp_quake_v0"),Centre,1.f); GroundPulse(Centre,.7f); Impact(3,0.f);
             Blast(Centre,StampRadius,StampDamage,TEXT("ANVIL STAMP | Too close: step out or roll."));
+            BellbreakerBurst(Centre,1.15f,true); BellbreakerSound(TEXT("rubble_settle_v0"),Centre,.7f);
         }
         if(F.Move==Charge && Since==-8) BellbreakerSound(TEXT("charge_rumble_v0"),BossAt,.95f);
         if(F.Move==Uppercut && A==8) BellbreakerSound(TEXT("upswing_scrape_v0"),Bell,.8f);
@@ -391,10 +441,16 @@ void AWardenArenaMode::BellbreakerResolve()
         {
             BellbreakerSound(TEXT("toll_ring_v0"),BossAt,1.f); GroundPulse(BossAt,.55f);
             FBellbreakerWave Wave; Wave.Center=Floor; Wave.Start=T; Wave.bToll=true; R.Waves.Add(Wave);
+            for(int32 K=0;K<14;++K)
+            {
+                const float Ang=2*PI*K/14.f; const FVector Out(FMath::Cos(Ang),FMath::Sin(Ang),0);
+                BellbreakerFx(FWardenBellbreakerView::FxDust,Floor+Out*120+FVector(0,0,60),80,300,1.0f,Out*700,20);
+            }
         }
         if(F.Move==Fling && Since==0)
         {
-            BellbreakerSound(TEXT("slag_fling_v0"),Bell,.9f);
+            BellbreakerSound(TEXT("slag_fling_v0"),Bell,.9f); BellbreakerSound(TEXT("ember_whoosh_v0"),Bell,.7f);
+            BellbreakerFx(FWardenBellbreakerView::FxFire,Bell,70,190,.4f,FVector::ZeroVector,60); BellbreakerSparks(Bell,18,420);
             // Three marks: on the player and either side of them, across the line from the boss.
             const FVector Target=Player->GetActorLocation(), Across=FVector::CrossProduct((Target-BossAt).GetSafeNormal2D(),FVector::UpVector);
             for(int32 K=0;K<SlagCount;++K)
@@ -411,6 +467,8 @@ void AWardenArenaMode::BellbreakerResolve()
             if(K==0) BellbreakerSound(TEXT("knell_triple_v0"),Centre,.8f);
             GroundPulse(Centre,.7f+.15f*K); Impact(3+K,0.f);
             Blast(Centre,KnellRadius+40.f*K,KnellDamage,TEXT("DEATH KNELL | Three slams; the last sends a crest."));
+            BellbreakerBurst(Centre,.8f+.2f*K,K!=1);
+            if(K==2) BellbreakerSound(TEXT("rubble_settle_v1"),Centre,.7f);
             if(K==2) { FBellbreakerWave Wave; Wave.Center=Centre; Wave.Start=T; R.Waves.Add(Wave); BellbreakerSound(TEXT("shockwave_v0"),Centre,.9f); }
         }
         if((F.Move==Quake || F.Move==BellBreaks) && Since==0)
@@ -420,6 +478,15 @@ void AWardenArenaMode::BellbreakerResolve()
             BellbreakerSound(F.Move==Quake ? TEXT("bell_slam_ground_v0") : TEXT("bell_crack_v0"),Centre,1.f);
             BellbreakerSound(TEXT("shockwave_v0"),Centre,.9f);
             GroundPulse(Centre,F.Move==Quake ? 1.f : 1.10f);
+            BellbreakerBurst(Centre,F.Move==Quake ? 1.35f : 1.6f,true);
+            BellbreakerSound(TEXT("rubble_settle_v0"),Centre,.75f);
+            if(F.Move==BellBreaks)
+            {
+                BellbreakerSound(TEXT("ember_whoosh_v1"),Centre,.9f);
+                for(int32 K=0;K<6;++K)
+                    BellbreakerFx(FWardenBellbreakerView::FxFire,Centre+FVector(FMath::FRandRange(-90.f,90.f),FMath::FRandRange(-90.f,90.f),60+40*K),
+                                  80,200,.6f+.06f*K,FVector(0,0,120),160);
+            }
             Impact(5,0.f);
             const float Reach=F.Move==Quake ? BlastRadius : 400.f;
             bool Blasted=false;
@@ -492,6 +559,10 @@ void AWardenArenaMode::BellbreakerResolve()
         if(T==S.Land)
         {
             BellbreakerSound(S.Land%2 ? TEXT("slag_land_v0") : TEXT("slag_land_v1"),S.At,.8f);
+            BellbreakerSound(S.Land%2 ? TEXT("slag_sizzle_v0") : TEXT("slag_sizzle_v1"),S.At,.6f);
+            BellbreakerFx(FWardenBellbreakerView::FxPuddle,FVector(S.At.X,S.At.Y,0),SlagRadius*1.6f,SlagRadius*2.1f,3.2f);
+            BellbreakerFx(FWardenBellbreakerView::FxFire,FVector(S.At.X,S.At.Y,40),60,170,.45f,FVector::ZeroVector,80);
+            BellbreakerSparks(FVector(S.At.X,S.At.Y,0),14,380);
             if(P.Alive() && FVector::Dist2D(Player->GetActorLocation(),S.At)<=SlagRadius)
             {
                 const float Before=P.Health;
@@ -613,6 +684,24 @@ void AWardenArenaMode::BuildBellbreakerView()
         for(int32 I=0;I<FWardenBellbreakerView::MaxSparks;++I) S->AddInstance(FTransform(FQuat::Identity,FVector(0,0,-10000),FVector(0)),true);
         BBView.Sparks=S;
     }
+    // Effects pass (2026-11-23): one instanced plane layer per effect kind with a per-instance fade
+    // (PerInstanceCustomData 0). Materials and FLUX textures from ue_import_bellbreaker_fx_pass.py; absent ones are skipped.
+    {
+        static const TCHAR* const FxMats[FWardenBellbreakerView::FxKinds]={TEXT("M_BB_FxCrack"),TEXT("M_BB_FxDust"),TEXT("M_BB_FxFire"),TEXT("M_BB_FxPuddle")};
+        static const int32 FxCap[FWardenBellbreakerView::FxKinds]={10,64,56,8};
+        for(int32 K=0;K<FWardenBellbreakerView::FxKinds && Plane;++K)
+        {
+            auto* Mat=LoadObject<UMaterialInterface>(nullptr,*FString::Printf(TEXT("/Game/BossLab/Bellbreaker/FX/%s"),FxMats[K]),nullptr,LOAD_Quiet|LOAD_NoWarn);
+            if(!Mat) continue;
+            auto* L=NewObject<UInstancedStaticMeshComponent>(View,*FString::Printf(TEXT("BellbreakerFx%d"),K));
+            L->SetStaticMesh(Plane); L->SetMaterial(0,Mat); L->SetCollisionEnabled(ECollisionEnabled::NoCollision); L->SetCastShadow(false);
+            L->SetNumCustomDataFloats(1);
+            L->SetupAttachment(C); L->RegisterComponent(); L->SetUsingAbsoluteLocation(true); L->SetUsingAbsoluteRotation(true); L->SetUsingAbsoluteScale(true);
+            L->SetWorldTransform(FTransform::Identity); View->AddInstanceComponent(L);
+            for(int32 I=0;I<FxCap[K];++I) L->AddInstance(FTransform(FQuat::Identity,FVector(0,0,-10000),FVector(0)),true);
+            BBView.Fx[K].SetNum(FxCap[K]); BBView.FxLayer[K]=L;
+        }
+    }
     for(const TCHAR* N:{TEXT("idle_hammer_s0"),TEXT("walk_hammer_s0"),TEXT("stun_s1"),TEXT("stun_kneel_s0"),TEXT("hammer_overhead_s0"),TEXT("sweep_rl_s1"),TEXT("bell_quake_s0"),TEXT("hammer_overhead_s1"),
                         TEXT("sweep_lr_s1"),TEXT("stamp_s0"),TEXT("shoulder_charge_s0"),TEXT("cut_heavy_s0"),TEXT("toll_s0"),TEXT("fling_s0")})
         if(UAnimSequence* A=BBClip(N)) { BellbreakerClips.Add(N,A); SfxKeepAlive.Add(A); }
@@ -629,7 +718,9 @@ void AWardenArenaMode::BuildBellbreakerView()
     for(const TCHAR* N:{TEXT("clapper_tell_v0"),TEXT("bell_whoosh_v0"),TEXT("bell_scrape_v0"),TEXT("bell_scrape_v1"),TEXT("bell_slam_ground_v0"),TEXT("bell_slam_ground_v1"),TEXT("shockwave_v0"),
                         TEXT("bell_crack_v0"),TEXT("bell_crack_v1"),TEXT("stun_ring_v0"),TEXT("stun_ring_v1"),TEXT("bell_hit_body_v0"),TEXT("bell_hit_anvil_v0"),TEXT("bell_hit_anvil_v1"),
                         TEXT("toll_ring_v0"),TEXT("toll_ring_v1"),TEXT("stamp_quake_v0"),TEXT("stamp_quake_v1"),TEXT("slag_fling_v0"),TEXT("slag_land_v0"),TEXT("slag_land_v1"),
-                        TEXT("cyclone_whoosh_v0"),TEXT("charge_rumble_v0"),TEXT("upswing_scrape_v0"),TEXT("knell_triple_v0")})
+                        TEXT("cyclone_whoosh_v0"),TEXT("charge_rumble_v0"),TEXT("upswing_scrape_v0"),TEXT("knell_triple_v0"),
+                        TEXT("slag_sizzle_v0"),TEXT("slag_sizzle_v1"),TEXT("rubble_settle_v0"),TEXT("rubble_settle_v1"),TEXT("ember_whoosh_v0"),
+                        TEXT("ember_whoosh_v1"),TEXT("giant_footstep_v0"),TEXT("giant_footstep_v1")})
         if(USoundBase* S=LoadObject<USoundBase>(nullptr,*FString::Printf(TEXT("/Game/BossLab/Bellbreaker/Sound/S_%s"),N),nullptr,LOAD_Quiet|LOAD_NoWarn)) { BellbreakerSounds.Add(N,S); SfxKeepAlive.Add(S); }
     const int32 WeaponSounds=BellbreakerSounds.Num();
     for(const TCHAR* N:{TEXT("Challenge"),TEXT("PhaseBreak"),TEXT("Defeat")})
@@ -805,6 +896,7 @@ void AWardenArenaMode::AnimateBellbreakerView(float Seconds)
     if(!View || !Warden || !Body) return;
     auto& V=BBView;
     const float Dt=V.LastTime<0 ? 0.f : FMath::Clamp(Seconds-V.LastTime,0.f,.1f); V.LastTime=Seconds;
+    V.FxClock=Seconds;
     const float PreviousWalkPelvisZ=Body->GetSocketLocation(TEXT("pelvis")).Z;
     const FVector At=Warden->GetActorLocation();
     const FVector Floor(At.X,At.Y,0);
@@ -1566,6 +1658,60 @@ void AWardenArenaMode::AnimateBellbreakerView(float Seconds)
         const FVector FinalMouth=Floor+WYaw.RotateVector(FVector(210,112,2.f+BellRim*GroundDir.Size2D()));
         G=FMath::Lerp(G,FinalMouth-GroundDir*BellReach,Fall);
     }
+    // Body clearance (2026-11-23, after the readiness study found Anvil Stamp 3.8 cm and Death Knell 6.1 cm
+    // inside the torso/thighs as their clips crouch into a fixed haft). Test the whole hammer (bell, haft,
+    // pommel) against the posed hips, chest and legs (the study's ellipsoid hull) and move it rigidly out along
+    // the deepest contact's normal before the hands are solved, so the grips follow. It engages only when
+    // the hammer would enter the body; release is eased so it never pops. Presentation only: engine hits
+    // use the authored bell path, which this changes by the few centimetres of the overlap at most.
+    if(F.Alive())
+    {
+        struct FHull { FVector A,B,Radius; };
+        TArray<FHull,TInlineAllocator<8>> Hull;
+        auto AddHull=[&](const TCHAR* Start,const TCHAR* End,FVector Radii)
+        {
+            const int32 A=Idx(Start),B=Idx(End);
+            if(A>=0 && B>=0) Hull.Add({WYaw.UnrotateVector(CT.TransformPosition(CS[A].GetLocation())-Floor),
+                                       WYaw.UnrotateVector(CT.TransformPosition(CS[B].GetLocation())-Floor),Radii});
+        };
+        AddHull(TEXT("pelvis"),TEXT("spine_03"),{55,61,39});
+        AddHull(TEXT("spine_03"),TEXT("spine_05"),{57,67,42});
+        for(const TCHAR* S:{TEXT("_l"),TEXT("_r")})
+        {
+            AddHull(*(FString(TEXT("thigh"))+S),*(FString(TEXT("calf"))+S),{31,33,29});
+            AddHull(*(FString(TEXT("calf"))+S),*(FString(TEXT("foot"))+S),{23,24,22});
+        }
+        FVector Push=FVector::ZeroVector;   // facing frame
+        for(int32 Pass=0;Pass<4;++Pass)
+        {
+            float Deepest=0; FVector Normal=FVector::ZeroVector;
+            for(float Along=BellReach-320;Along<=BellReach;Along+=10)
+            {
+                const float MeshZ=BellReach-Along;
+                const float Pad=(MeshZ>BellLength ? 10.f : FMath::Lerp(BellRim,14.f,MeshZ/BellLength))+2.f;
+                const FVector P=WYaw.UnrotateVector(G+D*Along+ShaftCentre(MeshZ)-Floor)+Push;
+                for(const auto& Shape:Hull)
+                {
+                    const FVector R=Shape.Radius+FVector(Pad);
+                    const FVector Offset=P/R-FMath::ClosestPointOnSegment(P/R,Shape.A/R,Shape.B/R);
+                    const float Depth=float((1-Offset.Size())*R.GetMin());
+                    if(Depth>Deepest) { Deepest=Depth; Normal=(Offset/R).GetSafeNormal(); }
+                }
+            }
+            if(Deepest<=0 || Normal.IsNearlyZero()) break;
+            Normal.Z=FMath::Max(Normal.Z,0.f);   // never push the hammer down into the floor
+            Push+=Normal.GetSafeNormal()*(Deepest+.5f);
+        }
+        Push=Push.GetClampedToMaxSize(30.f);
+        // Instant where it is needed, eased away (about 0.25 s) where it is not.
+        FVector& Held=V.ClearPush;
+        for(int32 Axis=0;Axis<3;++Axis)
+        {
+            const float Want=Push[Axis];
+            Held[Axis]=FMath::Abs(Want)>=FMath::Abs(Held[Axis]) || Want*Held[Axis]<0 ? Want : FMath::FInterpTo(Held[Axis],Want,Dt,10.f);
+        }
+        G+=WYaw.RotateVector(Held);
+    }
     // Each palm keeps its thumb on the same side of the haft as the arms load and recover.
     struct FHand { int32 Hand=-1, Index=-1, Middle=-1, Pinky=-1, Thumb=-1; bool bLeft=false; };
     auto HandOf=[&](bool Left){ FHand H; H.bLeft=Left; const TCHAR* S=Left?TEXT("_l"):TEXT("_r");
@@ -2066,6 +2212,72 @@ void AWardenArenaMode::AnimateBellbreakerView(float Seconds)
     }
     for(int32 K=Bellbreaker.Slag.Num();K<BellbreakerGlobs.Num();++K) if(auto* Gl=BellbreakerGlobs[K].Get()) Gl->SetVisibility(false);
     for(int32 I=Used;I<BellbreakerRings.Num();++I) if(UStaticMeshComponent* R=BellbreakerRings[I].Get()) R->SetVisibility(false);
+    UpdateBellbreakerFx(Seconds);
+}
+
+void AWardenArenaMode::UpdateBellbreakerFx(float Seconds)
+{
+    using namespace WardenBellbreaker;
+    using FV=FWardenBellbreakerView;
+    auto& V=BBView;
+    if(!Warden) return;
+    // Continuous emitters: embers off the smith once the bell has broken, ember trails behind slag globs.
+    const FVector At=Warden->GetActorLocation();
+    if(Bellbreaker.PhaseTwo && Warden->Fight.Alive() && Seconds>=V.EmberDue)
+    {
+        V.EmberDue=Seconds+.07f;
+        const float A=FMath::FRandRange(0.f,2*PI), R=FMath::FRandRange(30.f,95.f);
+        BellbreakerFx(FV::FxFire,FVector(At.X+FMath::Cos(A)*R,At.Y+FMath::Sin(A)*R,FMath::FRandRange(40.f,330.f)),14,4,FMath::FRandRange(1.f,1.6f),
+                      FVector(FMath::FRandRange(-30.f,30.f),FMath::FRandRange(-30.f,30.f),0),FMath::FRandRange(90.f,170.f));
+    }
+    if(Seconds>=V.TrailDue)
+    {
+        V.TrailDue=Seconds+.035f;
+        for(const auto& Gl:BellbreakerGlobs)
+            if(const UStaticMeshComponent* G=Gl.Get(); G && G->IsVisible())
+                BellbreakerFx(FV::FxFire,G->GetComponentLocation(),38,10,.32f,FVector::ZeroVector,40);
+    }
+    FVector Eye=At+FVector(0,0,300);
+    if(auto* PC=GetWorld()->GetFirstPlayerController()) if(PC->PlayerCameraManager) Eye=PC->PlayerCameraManager->GetCameraLocation();
+    TArray<FTransform> Xf;
+    for(int32 K=0;K<FV::FxKinds;++K)
+    {
+        UInstancedStaticMeshComponent* L=V.FxLayer[K].Get();
+        if(!L || V.Fx[K].Num()==0) continue;
+        const bool Flat=K==FV::FxCrack || K==FV::FxPuddle;
+        Xf.Reset(V.Fx[K].Num());
+        for(int32 I=0;I<V.Fx[K].Num();++I)
+        {
+            const auto& P=V.Fx[K][I];
+            const float T=(Seconds-P.Start)/FMath::Max(.01f,P.Life);
+            if(T<0 || T>=1) { Xf.Add(FTransform(FQuat::Identity,FVector(0,0,-10000),FVector(0))); L->SetCustomDataValue(I,0,0.f,false); continue; }
+            const float Age=Seconds-P.Start;
+            const float Ease=1-FMath::Square(1-T);
+            const float Size=FMath::Lerp(P.Size0,P.Size1,Ease)/100.f;
+            float Fade;
+            if(K==FV::FxCrack || K==FV::FxPuddle) Fade=1-T;                                  // heat: cools to dark
+            else if(K==FV::FxDust) Fade=FMath::Min(1.f,T/.12f)*FMath::Pow(1-T,1.3f);           // billow in, settle out
+            else Fade=FMath::Min(1.f,T/.06f)*FMath::Pow(1-T,1.6f);                           // flash, burn out
+            FVector Where;
+            FQuat Rot;
+            if(Flat)
+            {
+                Where=FVector(P.At.X,P.At.Y,2.f+.3f*I+(K==FV::FxPuddle ? 3.f : 0.f));
+                Rot=FRotator(0,P.Spin,0).Quaternion();
+            }
+            else
+            {
+                // Drag-damped drift (velocity halves every ~0.3 s) plus a steady rise.
+                const float Drift=(1-FMath::Exp(-2.3f*Age))/2.3f;
+                Where=P.At+P.Velocity*Drift+FVector(0,0,P.Rise*Age);
+                const FVector ToEye=(Eye-Where).GetSafeNormal();
+                Rot=FQuat(ToEye,FMath::DegreesToRadians(P.Spin+40*Age))*FRotationMatrix::MakeFromZ(ToEye).ToQuat();
+            }
+            Xf.Add(FTransform(Rot,Where,FVector(Size,Size,1)));
+            L->SetCustomDataValue(I,0,Fade,false);
+        }
+        L->BatchUpdateInstancesTransforms(0,Xf,true,true);
+    }
 }
 
 // Capture-only side-on review (-BossLabBellbreakerStudy): each move once, the player standing still in reach.

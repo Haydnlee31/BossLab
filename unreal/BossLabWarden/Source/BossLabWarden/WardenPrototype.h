@@ -408,6 +408,11 @@ public:
     void TrackWorldEffect(class UAudioComponent* Voice);
     void BellbreakerSpeak(const TCHAR* Line);
     void BellbreakerSound(const TCHAR* Name,const FVector& At,float Volume);
+    // Effects pass (2026-11-23), presentation only: one pooled sprite/decal, an impact burst, a spark spray.
+    void BellbreakerFx(uint8 Kind,const FVector& At,float Size0,float Size1,float Life,const FVector& Velocity=FVector::ZeroVector,float Rise=0.f);
+    void BellbreakerBurst(const FVector& At,float Strength,bool Crack);
+    void BellbreakerSparks(const FVector& At,int32 Count,float Speed);
+    void UpdateBellbreakerFx(float Seconds);
     void BuildBellbreakerView();
     void AnimateBellbreakerView(float Seconds);
     TWeakObjectPtr<class ASkeletalMeshActor> BellbreakerView;

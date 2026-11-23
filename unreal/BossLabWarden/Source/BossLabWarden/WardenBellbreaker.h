@@ -115,12 +115,22 @@ struct FWardenBellbreakerView
     float WalkPhase=0, WalkEntryTime=-100, WalkYaw=0, WalkTurnRate=0, WalkSpeed=0;
     bool HasPreviousFloor=false, WasGroundGait=false;
     FVector LastBell=FVector::ZeroVector;
+    FVector ClearPush=FVector::ZeroVector;   // body-clearance offset of the whole hammer (facing frame, cm)
     bool bContact=false;
     int32 ScrapeVariant=0;
     struct FSpark { float Start=-100; FVector At=FVector::ZeroVector, Velocity=FVector::ZeroVector; };
     static constexpr int32 MaxSparks=128;
     FSpark Buffer[MaxSparks];
     int32 Next=0;
+    // Effects pass (2026-11-23): glowing floor cracks, dust, fire bursts/embers and cooling slag puddles on
+    // instanced planes with a per-instance fade (FLUX textures, /Game/BossLab/Bellbreaker/FX). Presentation only.
+    enum EFx : uint8 { FxCrack, FxDust, FxFire, FxPuddle, FxKinds };
+    struct FFx { float Start=-100, Life=1, Size0=50, Size1=100, Rise=0, Spin=0; FVector At=FVector::ZeroVector, Velocity=FVector::ZeroVector; };
+    TArray<FFx> Fx[FxKinds];
+    int32 FxNext[FxKinds]={0,0,0,0};
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> FxLayer[FxKinds];
+    float FxClock=0, EmberDue=0, TrailDue=0;
+    int32 FxTick=-1;
     // Evidence for the study capture: worst intrusions seen after the corrections (world cm).
     float WorstFloor=0, WorstBody=0, WorstLeftGap=0;   // + left palm to its haft point (world cm)
     struct FArmGrip
