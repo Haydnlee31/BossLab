@@ -2016,6 +2016,7 @@ void AWardenArenaMode::AnimateBellbreakerView(float Seconds)
                Striking?F.Move:-1,AgeF,*V.PreviousGrip.ToCompactString(),*V.PreviousShaft.ToCompactString(),Intrusion);
     }
     const FVector BellAt=G+D*BellReach;
+    V.BellAxis=D.GetSafeNormal();
     const float BellLow=BellAt.Z-BellRim*D.Size2D();
     const FVector RimContact=BellAt-FVector::VectorPlaneProject(FVector::UpVector,D).GetSafeNormal()*BellRim;
     if(bBellbreakerStudy && Slam && F.Age>=F.Definition().Windup && F.Age<F.Definition().Windup+F.Definition().Active)

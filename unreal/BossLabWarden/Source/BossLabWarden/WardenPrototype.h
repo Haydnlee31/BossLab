@@ -307,7 +307,7 @@ struct FWardenSpectacle
 {
     static constexpr int32 TrailSamples=24, Embers=200, Grit=120, Puffs=28;
     TWeakObjectPtr<AActor> Owner;
-    TWeakObjectPtr<class UInstancedStaticMeshComponent> BladeTrail, CenserTrail, Ember, Grit_, Puff;
+    TWeakObjectPtr<class UInstancedStaticMeshComponent> BladeTrail, CenserTrail, Ember, Grit_, Puff, Glint;
     TWeakObjectPtr<class UPointLightComponent> Charge, Flash;
     FVector BladeBase[TrailSamples], BladeTip[TrailSamples], CenserA[TrailSamples], CenserB[TrailSamples];
     float BladeTime[TrailSamples]={}, CenserTime[TrailSamples]={};
@@ -322,6 +322,7 @@ struct FWardenSpectacle
     int32 SeenCritical=0, SeenDodge=-1, SeenRelease=-1, LastPlayerAction=0;
     // Hit-stop body shudder: who was struck last, and the mesh rest it shakes around.
     TWeakObjectPtr<class AWardenChallenger> Struck; int32 SeenBleed[2]={0,0}; FVector ShakeRest=FVector::ZeroVector; bool bShaking=false; float StruckAt=-100;
+    bool bForge=false;   // Bellbreaker: forge-fire materials and light colours swapped in (once)
     bool bStudy=false;   // capture-only: -BossLabSpectacleStudy drives phase two, a critical and the fall
     float TimeScale(float Seconds) const { return Seconds<SlowUntil ? SlowScale : 1.f; }
 };

@@ -115,6 +115,7 @@ struct FWardenBellbreakerView
     float WalkPhase=0, WalkEntryTime=-100, WalkYaw=0, WalkTurnRate=0, WalkSpeed=0;
     bool HasPreviousFloor=false, WasGroundGait=false;
     FVector LastBell=FVector::ZeroVector;
+    FVector BellAxis=FVector::ForwardVector;   // grip -> bell, this frame (spectacle hammer trail)
     FVector ClearPush=FVector::ZeroVector;   // body-clearance offset of the whole hammer (facing frame, cm)
     bool bContact=false;
     int32 ScrapeVariant=0;

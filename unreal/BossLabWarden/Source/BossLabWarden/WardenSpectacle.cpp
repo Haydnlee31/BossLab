@@ -11,6 +11,9 @@
 //  - floor debris: grit and dust kicked up by rolls, landings, boss lunges, slams and the
 //    censer dragging on the floor;
 //  - critical blows: a quick camera punch-in and a brief slow-down.
+//  - the Bellbreaker (2026-11-23): forge-fire materials, a molten trail behind the bell, the
+//    bell heating through long wind-ups, a forge flare on the bell 15 ticks before contact,
+//    and the phase-two eruption off the broken bell (M_BB_HammerTrail/M_BB_ForgeEmber, local).
 // Slow motion only scales how fast real time feeds the fixed step (WardenEncounter.cpp); the
 // combat step is unchanged and it is off in automation and with reduced motion.
 // BOSSLAB_GRAPHICS=-spectacle (or off) turns the whole pass off.
@@ -63,6 +66,7 @@ void AWardenArenaMode::BuildSpectacle()
     V.Ember=Set(Mat(TEXT("M_SoulEmber"),TEXT("M_HealMote")),FWardenSpectacle::Embers);
     V.Grit_=Set(Mat(TEXT("M_ImpactDust"),TEXT("M_ImpactDust")),FWardenSpectacle::Grit);
     V.Puff=Set(Mat(TEXT("M_ImpactDust"),TEXT("M_ImpactDust")),FWardenSpectacle::Puffs);
+    V.Glint=Set(Mat(TEXT("M_SoulEmber"),TEXT("M_HealMote")),2);   // Bellbreaker pre-contact flare
     auto Light=[&](float Radius)
     {
         auto* L=NewObject<UPointLightComponent>(Owner);
@@ -174,8 +178,52 @@ void AWardenArenaMode::AnimateSpectacle(float Seconds)
         }
         C->BatchUpdateInstancesTransforms(0,Out,true,true);
     };
+
+    // --- The Bellbreaker (2026-11-23): forge fire instead of soul fire ----------------------
+    // Hammer trail behind the bell, the bell heating through long wind-ups (embers + light), and
+    // a forge flare on the bell just before contact: the giant's answer to the Regent's glint.
+    // Presentation only: read from the fight and the drawn hammer (= the engine hit path).
+    const bool ForgeBoss=bBellbreaker && WardenBellbreaker::IsBellbreaker(B.Move);
+    if(bBellbreaker && !V.bForge)
+    {
+        V.bForge=true;
+        auto Forge=[](const TCHAR* Name) { return LoadObject<UMaterialInterface>(nullptr,*(FString(TEXT("/Game/BossLab/Bellbreaker/FX/"))+Name),nullptr,LOAD_Quiet|LOAD_NoWarn); };
+        if(auto* M=Forge(TEXT("M_BB_HammerTrail"))) V.CenserTrail->SetMaterial(0,M);
+        if(auto* M=Forge(TEXT("M_BB_ForgeEmber"))) { V.Ember->SetMaterial(0,M); V.Glint->SetMaterial(0,M); }
+        for(auto* L:{V.Charge.Get(),V.Flash.Get()}) if(L) L->SetLightColor(FLinearColor(1.f,.42f,.12f));
+    }
+    float ForgeHeat=0; int32 FlareAt=-1;
+    const FVector Bell=BBView.LastBell, Axis=BBView.BellAxis;
+    if(ForgeBoss && BossStriking && B.Alive())
+    {
+        if(Since>=-3 && Since<BD.Active+3) Sample(V.CenserA,V.CenserB,V.CenserTime,V.CenserNext,Bell-Axis*45,Bell+Axis*75);
+        if(Since<0 && BD.Windup>=30)
+        {
+            const int32 Span=FMath::Min(BD.Windup,70);
+            ForgeHeat=Smooth01((B.Age-(BD.Windup-Span))/float(Span-6));
+            V.EmberCarry+=Dt*(6+60*ForgeHeat);
+            while(V.EmberCarry>=1)
+            {
+                V.EmberCarry-=1;
+                Ember(Bell+FVector(Rand(-55,55),Rand(-55,55),Rand(-40,40)),FVector(Rand(-40,40),Rand(-40,40),Rand(70,190)),Rand(.5f,1.f),Rand(4,7)+5*ForgeHeat);
+            }
+        }
+        const int32 Into=B.Age-(BD.Windup-15);
+        if(Into>=0 && Into<12) FlareAt=Into;
+    }
+    for(int32 K=0;K<2;++K)
+    {
+        FTransform T=Hidden;
+        if(FlareAt>=0)
+        {
+            const FVector At=Bell+(Eye-Bell).GetSafeNormal()*80;
+            const float Pulse=FMath::Sin(PI*FlareAt/12.f);
+            T=FTransform(FRotationMatrix::MakeFromZ((Eye-At).GetSafeNormal()).ToQuat()*FQuat(FVector::UpVector,FMath::DegreesToRadians(45+90*K+FlareAt*5)),At,FVector(1.7f*Pulse,.1f*Pulse,1));
+        }
+        V.Glint->UpdateInstanceTransform(K,T,true,K==1,true);
+    }
     Ribbon(V.BladeTrail.Get(),V.BladeBase,V.BladeTip,V.BladeTime,V.BladeNext,.16f,.4f);
-    Ribbon(V.CenserTrail.Get(),V.CenserA,V.CenserB,V.CenserTime,V.CenserNext,.22f,.6f);
+    Ribbon(V.CenserTrail.Get(),V.CenserA,V.CenserB,V.CenserTime,V.CenserNext,bBellbreaker ? .26f : .22f,bBellbreaker ? .6f : .6f);
 
     // --- The Sentence: soul fire gathers on the raised estoc, bursts on release -----------
     float ChargeLight=0;
@@ -204,8 +252,15 @@ void AWardenArenaMode::AnimateSpectacle(float Seconds)
     }
     if(auto* L=V.Charge.Get())
     {
-        L->SetVisibility(ChargeLight>0);
+        const bool Heat=ForgeHeat>0 || FlareAt>=0;
+        L->SetVisibility(ChargeLight>0 || Heat);
         if(ChargeLight>0) { L->SetWorldLocation(Warden->BladePoint(.75f)); L->SetIntensity(9000*ChargeLight*(.85f+.15f*FMath::Sin(Seconds*31))); }
+        else if(Heat)
+        {
+            const float Flare=FlareAt>=0 ? FMath::Sin(PI*FlareAt/12.f) : 0.f;
+            L->SetWorldLocation(Bell+FVector(0,0,40)); L->SetAttenuationRadius(700);
+            L->SetIntensity((7000*ForgeHeat+16000*Flare)*(.85f+.15f*FMath::Sin(Seconds*23)));
+        }
     }
 
     // --- Floor debris -------------------------------------------------------------------
@@ -264,14 +319,16 @@ void AWardenArenaMode::AnimateSpectacle(float Seconds)
     }
 
     // --- Phase two: eruption, shockwave, flash, slow-down, wider view -------------------
-    if(bRegent && Regent.PhaseTwo && !V.bWasPhaseTwo)
+    const bool PhaseTwo=(bRegent && Regent.PhaseTwo) || (bBellbreaker && Bellbreaker.PhaseTwo);
+    const float Giant=bBellbreaker ? 1.7f : 1.f;   // the smith stands 4.6 m and his eruption comes off the broken bell
+    if(PhaseTwo && !V.bWasPhaseTwo)
     {
         V.PhaseAt=Seconds;
-        const FVector At=Warden->GetActorLocation();
+        const FVector At=bBellbreaker ? FVector(Bell.X,Bell.Y,FloorZ+60) : Warden->GetActorLocation();
         for(int32 I=0;I<120;++I)
         {
             const float A=Rand(0,2*PI), Up=Rand(.2f,1);
-            Ember(At+FVector(0,0,Rand(-60,80)),FVector(FMath::Cos(A),FMath::Sin(A),0)*Rand(250,900)*(1.2f-Up)+FVector(0,0,Up*Rand(300,1100)),Rand(.8f,1.8f),Rand(5,12));
+            Ember(At+FVector(0,0,Rand(-60,80)),(FVector(FMath::Cos(A),FMath::Sin(A),0)*Rand(250,900)*(1.2f-Up)+FVector(0,0,Up*Rand(300,1100)))*Giant,Rand(.8f,1.8f),Rand(5,12)*Giant);
         }
         for(int32 I=0;I<40;++I)
         {
@@ -289,7 +346,7 @@ void AWardenArenaMode::AnimateSpectacle(float Seconds)
         V.SlowUntil=Seconds+.7f; V.SlowScale=.35f; V.PunchAt=Seconds; V.PunchDepth=-9;
         Impact(0,1.f);
     }
-    V.bWasPhaseTwo=bRegent && Regent.PhaseTwo;
+    V.bWasPhaseTwo=PhaseTwo;
 
     // --- Felled: slow motion, flash, the boss's soul streams away -----------------------
     if(!B.Alive() && V.bBossWasAlive && P.Alive())
@@ -300,7 +357,8 @@ void AWardenArenaMode::AnimateSpectacle(float Seconds)
     }
     if(B.Alive()) V.FelledAt=-100;
     V.bBossWasAlive=B.Alive();
-    if(V.FelledAt>0 && Seconds-V.FelledAt<4.5f && Warden->VisualBody)
+    UPoseableMeshComponent* Fallen=bBellbreaker && BBView.Body.IsValid() ? BBView.Body.Get() : Warden->VisualBody.Get();
+    if(V.FelledAt>0 && Seconds-V.FelledAt<4.5f && Fallen)
     {
         static const TCHAR* Bones[]={TEXT("pelvis"),TEXT("spine_03"),TEXT("spine_05"),TEXT("head"),TEXT("hand_l"),TEXT("hand_r"),TEXT("calf_l"),TEXT("calf_r")};
         const float Rate=Seconds-V.FelledAt<3.2f ? 90.f : 30.f;
@@ -308,8 +366,8 @@ void AWardenArenaMode::AnimateSpectacle(float Seconds)
         while(V.EmberCarry>=1)
         {
             V.EmberCarry-=1;
-            const FVector From=Warden->VisualBody->GetBoneLocationByName(Bones[int32(Rand(0,7.99f))],EBoneSpaces::WorldSpace);
-            Ember(From+FVector(Rand(-15,15),Rand(-15,15),Rand(-10,10)),FVector(Rand(-40,40),Rand(-40,40),Rand(90,260)),Rand(1.2f,2.4f),Rand(4,9));
+            const FVector From=Fallen->GetBoneLocationByName(Bones[int32(Rand(0,7.99f))],EBoneSpaces::WorldSpace);
+            Ember(From+FVector(Rand(-15,15),Rand(-15,15),Rand(-10,10))*Giant,FVector(Rand(-40,40),Rand(-40,40),Rand(90,260))*Giant,Rand(1.2f,2.4f),Rand(4,9)*Giant);
         }
     }
 

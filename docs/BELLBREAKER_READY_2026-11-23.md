@@ -92,3 +92,19 @@ Two 720p performance-preset forge benchmarks: 24.04 ms mean / 48.87 ms p95 (2,32
 Textures: FLUX.1-schnell (free Space, 8 images; chosen crack s7, dust s9, fire s4, puddle s5), keyed in the material (stone/black removed, radial mask) — `flux_fx_textures.py`, `ue_import_bellbreaker_fx_pass.py`, records in `artifacts/art/bellbreaker-fx-2026-11-23`. Sounds: Stable Audio Open (8 files: slag sizzle, rubble settle, ember whoosh, giant footstep), trimmed/normalised by `unreal/art-studio/source/audio/trim_sfx.py`, prompts in `artifacts/audio-bellbreaker-fx-2026-11-23`. Assets under `/Game/BossLab/Bellbreaker/FX` and `/Sound` stay local.
 
 Verification: native 55/55, forge trials 2/2, close study in the default arena and the forge (`forge-stamp-toll-fx.jpg`, `default-knell-heldnote-fx.jpg`; capture frames deleted). On the pale default floor the additive crack glow reads paler than in the forge. Not owner-played; the new sounds were not listened to; no new performance measurement.
+
+## Spectacle parity with the Regent (same day, on main)
+
+Goal: give the Bellbreaker the presentation layer the Regent already had (WardenSpectacle.cpp), in forge fire instead of soul fire. Presentation only; no combat rule, timing or hit path changed.
+
+| Regent had | Bellbreaker now |
+|---|---|
+| soul-fire ribbon behind estoc/censer | molten ribbon behind the bell from 3 ticks before contact to 3 after the active window (`BBView.BellAxis`, M_BB_HammerTrail) |
+| estoc glint before thrusts | forge flare star on the bell 15 ticks before contact on every move, plus a flare of the orange charge light |
+| the Sentence's gathering soul fire | the bell heats through every wind-up of 30+ ticks: embers off the bell and a rising orange light |
+| phase-two eruption, flash, slow-down, wider view | same, triggered by the Bell Breaks (`Bellbreaker.PhaseTwo`), centred on the broken bell and scaled for a 4.6 m giant |
+| felled: soul embers stream off the body | embers stream off the rendered Bellbreaker body (the combat mannequin is hidden), scaled up |
+
+Materials: `ue_import_bellbreaker_spectacle.py` (editor mode) writes M_BB_HammerTrail and M_BB_ForgeEmber to /Game/BossLab/Bellbreaker/FX (local). Without them the spectacle keeps the soul-fire materials. The first trail faded along each segment's quad and drew a beaded chain (`forge-hammerfall-beaded-trail-rejected.jpg`); the second was a solid striped slab; the final one is a thinner streak, 0.26 s long (`forge-backhand-flare-trail-final.jpg`). Evidence: `artifacts/unreal/bellbreaker-spectacle-20261123/`.
+
+Verification: native 55/55 (the engine's HTTP connectivity warning appeared in two tests), forge trials 2/2, forge study from the Bell Breaks onward: body/floor intrusion 0.0 cm on every move, Backhand left-hand gap still 11.5 cm. Each editor-mode import crashed inside Slate during editor shutdown, after it had saved; the hung editor and its crash reporter had to be killed. No performance measurement; not owner-played.
