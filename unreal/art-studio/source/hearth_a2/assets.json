@@ -1,0 +1,168 @@
+{
+  "SteppedFurnace": {
+    "path": "artifacts/art/hearth-a2-2026-11-16/generated/stepped-furnace/model.glb",
+    "bounds_m": [
+      8,
+      8,
+      8
+    ],
+    "triangles": 120000,
+    "position_m": [
+      -4.2,
+      14.8,
+      0
+    ],
+    "front_orientation": "actual four-angle probe: repeated radial mouths; -Y usable front",
+    "rotate_source_z_deg": 0
+  },
+  "OakBellows": {
+    "path": "artifacts/art/hearth-a2-2026-11-16/generated/oak-bellows/model.glb",
+    "bounds_m": [
+      3.6,
+      2.2,
+      2.1
+    ],
+    "triangles": 65000,
+    "position_m": [
+      3.3,
+      11.9,
+      0
+    ],
+    "front_orientation": "actual source nozzle -Y; rotate -90 so nozzle points toward furnace -X",
+    "rotate_source_z_deg": -90
+  },
+  "AnvilWorkstation": {
+    "path": "artifacts/art/hearth-a2-2026-11-16/generated/anvil-workstation/model.glb",
+    "bounds_m": [
+      2.8,
+      2.3,
+      1.6
+    ],
+    "triangles": 65000,
+    "position_m": [
+      -5.8,
+      -2.5,
+      0
+    ],
+    "front_orientation": "actual nozzle-like horn projects source -Y; +90 points horn toward court +X",
+    "rotate_source_z_deg": 90
+  },
+  "StockWorkbay": {
+    "path": "artifacts/art/hearth-a2-2026-11-16/generated/stock-workbay/model.glb",
+    "bounds_m": [
+      2.3,
+      4,
+      4.3
+    ],
+    "triangles": 80000,
+    "position_m": [
+      7.2,
+      0.5,
+      0
+    ],
+    "front_orientation": "actual source front -Y; -90 points working face inward -X",
+    "rotate_source_z_deg": -90
+  },
+  "QuenchCistern": {
+    "path": "artifacts/art/hearth-a-2026-11-16/generated/quench-cistern/model.glb",
+    "bounds_m": [
+      3.6,
+      2.6,
+      1.4
+    ],
+    "triangles": 40000,
+    "position_m": [
+      10.7,
+      7.5,
+      0
+    ],
+    "rotate_source_z_deg": -90,
+    "yaw_deg": -45,
+    "front_orientation": "prior actual probe verified source +X/front; A2 fit still pending"
+  },
+  "LanternBellows": {
+    "path": "artifacts/art/hearth-a2-2026-11-16/generated/forge-lantern/model.glb",
+    "bounds_m": [
+      0.6,
+      0.6,
+      0.65
+    ],
+    "triangles": 18000,
+    "position_m": [
+      3.3,
+      10.7,
+      2.35
+    ],
+    "rotate_source_z_deg": 0,
+    "front_orientation": "actual radial opaque amber panels; selective emission only",
+    "amber_emission": true
+  },
+  "LanternAnvil": {
+    "path": "artifacts/art/hearth-a2-2026-11-16/generated/forge-lantern/model.glb",
+    "bounds_m": [
+      0.6,
+      0.6,
+      0.65
+    ],
+    "triangles": 18000,
+    "position_m": [
+      -6.7,
+      -2.5,
+      2.6
+    ],
+    "rotate_source_z_deg": 0,
+    "front_orientation": "actual radial opaque amber panels; selective emission only",
+    "amber_emission": true
+  },
+  "LanternStock": {
+    "path": "artifacts/art/hearth-a2-2026-11-16/generated/forge-lantern/model.glb",
+    "bounds_m": [
+      0.6,
+      0.6,
+      0.65
+    ],
+    "triangles": 18000,
+    "position_m": [
+      6.2,
+      0.5,
+      2.7
+    ],
+    "rotate_source_z_deg": 0,
+    "front_orientation": "actual radial opaque amber panels; selective emission only",
+    "amber_emission": true
+  },
+  "GothicWindow": {
+    "path": "artifacts/art/hearth-a2-2026-11-16/generated/gothic-window/model.glb",
+    "bounds_m": [
+      3,
+      1.1,
+      5.5
+    ],
+    "triangles": 90000,
+    "position_m": [
+      11.4,
+      8.2,
+      2.0
+    ],
+    "rotate_source_z_deg": 0,
+    "yaw_deg": -45,
+    "front_orientation": "actual -Y front, open lancets and thick rear return"
+  },
+  "OreStorage": {
+    "path": "artifacts/art/hearth-a-2026-11-16/generated/ore-storage-rack/model.glb",
+    "bounds_m": [
+      2,
+      3.2,
+      2.8
+    ],
+    "triangles": 35000,
+    "position_m": [
+      -9,
+      6,
+      0
+    ],
+    "rotate_source_z_deg": -90,
+    "yaw_deg": 90,
+    "front_orientation": "prior actual probe; derived -90 source plus +90 placement faces -Y into entry view"
+  }
+}

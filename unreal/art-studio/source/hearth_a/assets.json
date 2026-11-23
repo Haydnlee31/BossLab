@@ -1,0 +1,206 @@
+{
+  "GreatFurnace": {
+    "path": "artifacts/art/bellbreaker-smeltery-2026-11-16/generated/great-furnace/model.glb",
+    "bounds_m": [
+      6,
+      6,
+      7
+    ],
+    "triangles": 60000,
+    "instances": [
+      {
+        "location_m": [
+          -4.5,
+          15.51,
+          0
+        ],
+        "yaw_deg": 0
+      }
+    ],
+    "rotate_z_deg": -90
+  },
+  "AnvilStation": {
+    "path": "artifacts/art/bellbreaker-smeltery-2026-11-16/generated/anvil-station/model.glb",
+    "bounds_m": [
+      2.2,
+      1.6,
+      1.2
+    ],
+    "triangles": 35000,
+    "instances": [
+      {
+        "location_m": [
+          -11,
+          -2,
+          0
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "location_m": [
+          11.3,
+          2.8,
+          0
+        ],
+        "yaw_deg": -90
+      },
+      {
+        "location_m": [
+          11.2,
+          8.8,
+          0
+        ],
+        "yaw_deg": -90
+      }
+    ]
+  },
+  "Bellows": {
+    "path": "artifacts/art/bellbreaker-smeltery-2026-11-16/generated/bellows/model.glb",
+    "bounds_m": [
+      3,
+      2,
+      1.8
+    ],
+    "triangles": 30000,
+    "instances": [
+      {
+        "location_m": [
+          1.2,
+          15.3,
+          0
+        ],
+        "yaw_deg": 0
+      }
+    ]
+  },
+  "Toolbench": {
+    "path": "artifacts/art/bellbreaker-smeltery-2026-11-16/generated/forge-toolbench/model.glb",
+    "bounds_m": [
+      2.6,
+      1.7,
+      1.8
+    ],
+    "triangles": 35000,
+    "instances": [
+      {
+        "location_m": [
+          11.8,
+          -4,
+          0
+        ],
+        "yaw_deg": -90
+      },
+      {
+        "location_m": [
+          -11.8,
+          3,
+          0
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "location_m": [
+          10.8,
+          14.7,
+          0
+        ],
+        "yaw_deg": 0
+      }
+    ],
+    "rotate_z_deg": 90
+  },
+  "StoneArch": {
+    "path": "artifacts/art/bellbreaker-smeltery-2026-11-16/generated/stone-arch/model.glb",
+    "bounds_m": [
+      5.0,
+      2.7,
+      5.5
+    ],
+    "triangles": 40000,
+    "instances": [
+      {
+        "location_m": [
+          12.1,
+          -4,
+          0
+        ],
+        "yaw_deg": -90
+      },
+      {
+        "location_m": [
+          -12.1,
+          3,
+          0
+        ],
+        "yaw_deg": 90
+      }
+    ]
+  },
+  "QuenchCistern": {
+    "path": "artifacts/art/hearth-a-2026-11-16/generated/quench-cistern/model.glb",
+    "bounds_m": [
+      4.2,
+      3.0,
+      1.6
+    ],
+    "triangles": 30000,
+    "instances": [
+      {
+        "location_m": [
+          7.5,
+          14.5,
+          0
+        ],
+        "yaw_deg": 0
+      }
+    ],
+    "rotate_z_deg": -90
+  },
+  "OreStorage": {
+    "path": "artifacts/art/hearth-a-2026-11-16/generated/ore-storage-rack/model.glb",
+    "bounds_m": [
+      3.2,
+      2.0,
+      2.8
+    ],
+    "triangles": 30000,
+    "instances": [
+      {
+        "location_m": [
+          -11.8,
+          8.4,
+          0
+        ],
+        "yaw_deg": 90
+      }
+    ],
+    "rotate_z_deg": -90
+  },
+  "HangingTools": {
+    "path": "artifacts/art/hearth-a-2026-11-16/generated/smith-tool-rack/model.glb",
+    "bounds_m": [
+      2.6,
+      1,
+      2
+    ],
+    "triangles": 30000,
+    "instances": [
+      {
+        "location_m": [
+          12.55,
+          -4,
+          0
+        ],
+        "yaw_deg": -90
+      },
+      {
+        "location_m": [
+          10.8,
+          15.65,
+          1.2
+        ],
+        "yaw_deg": 0
+      }
+    ]
+  }
+}

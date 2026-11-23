@@ -1,0 +1,147 @@
+{
+  "GreatFurnace": {
+    "path": "artifacts/art/bellbreaker-smeltery-2026-11-16/generated/great-furnace/model.glb",
+    "bounds_m": [
+      10,
+      10,
+      12
+    ],
+    "triangles": 60000,
+    "instances": [
+      {
+        "location_m": [
+          0,
+          27,
+          0
+        ],
+        "yaw_deg": 0
+      }
+    ],
+    "rotate_z_deg": -90
+  },
+  "AnvilStation": {
+    "path": "artifacts/art/bellbreaker-smeltery-2026-11-16/generated/anvil-station/model.glb",
+    "bounds_m": [
+      2.2,
+      1.6,
+      1.2
+    ],
+    "triangles": 35000,
+    "instances": [
+      {
+        "location_m": [
+          -16,
+          -8,
+          0
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "location_m": [
+          16,
+          8,
+          0
+        ],
+        "yaw_deg": -90
+      }
+    ]
+  },
+  "Bellows": {
+    "path": "artifacts/art/bellbreaker-smeltery-2026-11-16/generated/bellows/model.glb",
+    "bounds_m": [
+      3,
+      2,
+      1.8
+    ],
+    "triangles": 30000,
+    "instances": [
+      {
+        "location_m": [
+          -18,
+          14,
+          0
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "location_m": [
+          18,
+          14,
+          0
+        ],
+        "yaw_deg": -90
+      }
+    ]
+  },
+  "Toolbench": {
+    "path": "artifacts/art/bellbreaker-smeltery-2026-11-16/generated/forge-toolbench/model.glb",
+    "bounds_m": [
+      2.6,
+      1.7,
+      1.8
+    ],
+    "triangles": 35000,
+    "instances": [
+      {
+        "location_m": [
+          -16.5,
+          4,
+          0
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "location_m": [
+          16.5,
+          -10,
+          0
+        ],
+        "yaw_deg": -90
+      }
+    ],
+    "rotate_z_deg": 90
+  },
+  "StoneArch": {
+    "path": "artifacts/art/bellbreaker-smeltery-2026-11-16/generated/stone-arch/model.glb",
+    "bounds_m": [
+      6.5,
+      3.5,
+      7.0
+    ],
+    "triangles": 40000,
+    "instances": [
+      {
+        "location_m": [
+          -19.2,
+          -12,
+          0
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "location_m": [
+          19.2,
+          -12,
+          0
+        ],
+        "yaw_deg": -90
+      },
+      {
+        "location_m": [
+          -19.2,
+          4,
+          0
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "location_m": [
+          19.2,
+          4,
+          0
+        ],
+        "yaw_deg": -90
+      }
+    ]
+  }
+}
