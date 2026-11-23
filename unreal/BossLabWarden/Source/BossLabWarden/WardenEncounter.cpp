@@ -338,7 +338,11 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
     if(bDungeon) AnimateDungeon(Dungeon,GetWorld()->GetTimeSeconds());
     UpdateAudio();
     // Regent visuals follow the fixed-step state below; updated after the steps run.
-    ON_SCOPE_EXIT { if(bBellbreaker) AnimateBellbreakerView(GetWorld()->GetTimeSeconds()); if(bRegent) AnimateRegentView(GetWorld()->GetTimeSeconds()); AnimateEffects(GetWorld()->GetTimeSeconds()); AnimateSpectacle(GetWorld()->GetTimeSeconds()); };
+    ON_SCOPE_EXIT {
+        const double ViewClock=FPlatformTime::Seconds();
+        if(bBellbreaker) AnimateBellbreakerView(GetWorld()->GetTimeSeconds()); if(bRegent) AnimateRegentView(GetWorld()->GetTimeSeconds()); AnimateEffects(GetWorld()->GetTimeSeconds()); AnimateSpectacle(GetWorld()->GetTimeSeconds());
+        const double ViewMs=(FPlatformTime::Seconds()-ViewClock)*1000.; PerfViewMs+=ViewMs; PerfWorstViewMs=FMath::Max(PerfWorstViewMs,ViewMs);
+    };
     const double Now=FPlatformTime::Seconds();
     if(LastFrameTime>0 && !bPaused && !bTitle && Player && Warden && Player->Fight.Alive() && Warden->Fight.Alive())
     {
@@ -373,10 +377,35 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
     // the fixed step more slowly; the step itself is unchanged. Off in automation and with
     // reduced motion, so tests and determinism checks never see it.
     CombatAccumulator += DeltaSeconds*(GIsAutomationTesting || bReducedMotion ? 1.f : Spectacle.TimeScale(GetWorld()->GetTimeSeconds()));
+    // Catch-up cap (2026-11-24): an owner play session froze ~16 s into the Bellbreaker's phase two
+    // (frames 1 per ~10 s after a burst of shader/PSO hitches). With an uncapped catch-up one long
+    // frame queues hundreds of steps, which makes the next frame longer still. At most 8 steps
+    // (133 ms of fight) run per rendered frame; the rest is dropped, so a stall slows the fight
+    // for a moment instead of spiralling. Each step is unchanged. Automation keeps the old loop.
+    constexpr int32 MaxCatchUp=8;
+    int32 StepsThisFrame=0;
+    const double StepClock=FPlatformTime::Seconds();
     while (CombatAccumulator >= WardenRules::Step)
     {
+        if(!GIsAutomationTesting && StepsThisFrame>=MaxCatchUp) { DroppedStepTime+=CombatAccumulator; CombatAccumulator=FMath::Fmod(CombatAccumulator,double(WardenRules::Step)); break; }
         CombatAccumulator -= WardenRules::Step;
         FixedStep();
+        ++StepsThisFrame;
+    }
+    // Frame budget witness for play sessions: every 2 s, frame time, step count and step cost.
+    if(!GIsAutomationTesting)
+    {
+        const double StepMs=(FPlatformTime::Seconds()-StepClock)*1000.;
+        PerfFrames++; PerfSteps+=StepsThisFrame; PerfStepMs+=StepMs; PerfWorstStepMs=FMath::Max(PerfWorstStepMs,StepsThisFrame>0 ? StepMs/StepsThisFrame : 0.);
+        PerfWorstFrame=FMath::Max(PerfWorstFrame,double(DeltaSeconds)); PerfSpan+=DeltaSeconds;
+        if(PerfSpan>=2.)
+        {
+            UE_LOG(LogTemp,Display,TEXT("BOSSLAB frame budget: %.1f fps, worst frame %.0f ms, %.2f steps/frame, step %.2f ms avg %.2f ms worst, view %.2f ms avg %.2f ms worst, dropped %.2f s, phase2 %d"),
+                PerfFrames/PerfSpan,PerfWorstFrame*1000.,PerfSteps/double(FMath::Max(1,PerfFrames)),PerfStepMs/FMath::Max(1,PerfSteps),PerfWorstStepMs,
+                PerfViewMs/FMath::Max(1,PerfFrames),PerfWorstViewMs,DroppedStepTime,
+                int32(bBellbreaker ? Bellbreaker.PhaseTwo : bRegent ? Regent.PhaseTwo : false));
+            PerfFrames=PerfSteps=0; PerfStepMs=PerfWorstStepMs=PerfWorstFrame=PerfSpan=PerfViewMs=PerfWorstViewMs=0; DroppedStepTime=0;
+        }
     }
     const float Alpha=float(CombatAccumulator/WardenRules::Step);
     Player->BlendRenderState(Alpha); Warden->BlendRenderState(Alpha);

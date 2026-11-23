@@ -1304,7 +1304,27 @@ void AWardenArenaMode::AnimateBellbreakerView(float Seconds)
             }
             else
             {
-                if(!FootState.Planted) { FootState.Anchor.Z=FootState.SwingFrom.Z; Desired=FootState.Anchor; FootState.GroundRotation=SourceWorld; }
+                if(!FootState.Planted)
+                {
+                    FootState.Anchor.Z=FootState.SwingFrom.Z; Desired=FootState.Anchor; FootState.GroundRotation=SourceWorld;
+                    // Footfall (2026-11-24): a 4.6 m smith lands every step with a boom, a dust puff
+                    // and, close by, a faint floor kick (never over a bigger pulse). Presentation only.
+                    if(GaitEnter>.5f && F.Alive() && Dt>0)
+                    {
+                        const FVector Sole(Desired.X,Desired.Y,Floor.Z);
+                        BellbreakerSound(Left ? TEXT("giant_footstep_v0") : TEXT("giant_footstep_v1"),Sole,.5f);
+                        for(int32 K=0;K<4;++K)
+                        {
+                            const float Ang=2*PI*(K+FMath::FRand()*.6f)/4;
+                            BellbreakerFx(FWardenBellbreakerView::FxDust,Sole+FVector(FMath::Cos(Ang),FMath::Sin(Ang),0)*60+FVector(0,0,20),80,210,1.3f,FVector(FMath::Cos(Ang),FMath::Sin(Ang),0)*120,18);
+                        }
+                        if(Bellbreaker.GroundAge>=.32f && Player)
+                        {
+                            Bellbreaker.GroundAmplitude=.16f*FMath::Clamp(1.f-FVector::Dist2D(Sole,Player->GetActorLocation())/1100.f,0.f,1.f);
+                            Bellbreaker.GroundAge=0;
+                        }
+                    }
+                }
                 FootQ=MeshFrame.GetRotation().Inverse()*FootState.GroundRotation;
             }
             FootState.Planted=Stance;
@@ -1469,6 +1489,30 @@ void AWardenArenaMode::AnimateBellbreakerView(float Seconds)
     }
     if(F.Alive())
         GovernBellbreakerAnatomy(Local,CS,Ref,Idx,RotateCS,!GroundGait,V.GovernorStats);
+    // Hit flinch (2026-11-24): the combat mannequin that used to recoil is hidden, so a landed cut
+    // showed nothing on the giant. Lean the upper spine and snap the head away from the blow for
+    // ~0.45 s (small: he is 4.6 m and keeps his footing), and shudder through the hit-stop. Skipped
+    // while staggered (that has its own clip). Presentation only; the hammer path is unchanged.
+    if(Warden->BleedCount!=V.HitSeen)
+    {
+        V.HitSeen=Warden->BleedCount; V.HitAt=Seconds; V.HitAway=Warden->ImpactDir;
+        if(bCaptureFrames) UE_LOG(LogTemp,Display,TEXT("BOSSLAB bellbreaker flinch at %.2f s, action %d, away %s"),Seconds,int32(F.Action),*V.HitAway.ToCompactString());
+    }
+    {
+        const float HitAge=Seconds-V.HitAt;
+        const int32 S3=Idx(TEXT("spine_03")), S5=Idx(TEXT("spine_05")), Head=Idx(TEXT("head"));
+        if(F.Alive() && F.Action!=EWardenAction::Hurt && HitAge>=0 && HitAge<.45f && !V.HitAway.IsNearlyZero() && S3>=0 && S5>=0 && Head>=0 && !bReducedMotion)
+        {
+            const float Env=Smooth(HitAge/.06f)*(1-Smooth((HitAge-.08f)/.37f));
+            const FVector Away=MeshFrame.InverseTransformVectorNoScale(V.HitAway).GetSafeNormal();
+            const FVector UpC=MeshFrame.InverseTransformVectorNoScale(FVector::UpVector).GetSafeNormal();
+            const FVector Axis=FVector::CrossProduct(UpC,Away).GetSafeNormal();
+            const float Shudder=HitStop>0 && HitAge<.2f ? 1.2f*FMath::Sin(Seconds*190.f) : 0.f;
+            RotateCS(S3,FQuat(Axis,FMath::DegreesToRadians(4.f*Env)));
+            RotateCS(S5,FQuat(Axis,FMath::DegreesToRadians(3.f*Env+Shudder)));
+            RotateCS(Head,FQuat(Axis,FMath::DegreesToRadians(9.f*Env)));
+        }
+    }
     // ---- 4. Floor: nothing of him below the stones (kneels, crouches, the death fall) --------------------
     {
         struct FProbe { const TCHAR* Bone; float Clear; };   // mannequin cm above the floor

@@ -561,6 +561,7 @@ public:
 private:
     TSharedPtr<class SWidget> PauseMenuWidget;
     double CombatAccumulator = 0;
+    double DroppedStepTime = 0, PerfStepMs = 0, PerfWorstStepMs = 0, PerfWorstFrame = 0, PerfSpan = 0, PerfViewMs = 0, PerfWorstViewMs = 0; int32 PerfFrames = 0, PerfSteps = 0;   // frame budget witness (WardenEncounter.cpp)
     TArray<FWardenObservation> VisibleHistory;
     FRandomStream PolicyRandom{101};
     int32 PolicySeed = 101;
