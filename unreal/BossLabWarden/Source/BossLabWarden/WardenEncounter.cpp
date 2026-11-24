@@ -337,6 +337,7 @@ void AWardenArenaMode::Tick(float DeltaSeconds)
     if(bSmelteryWalkthrough) { TickSmelteryWalkthrough(DeltaSeconds); return; }
     if(bDungeon) AnimateDungeon(Dungeon,GetWorld()->GetTimeSeconds());
     UpdateAudio();
+    TickShaderWarmup();
     // Regent visuals follow the fixed-step state below; updated after the steps run.
     ON_SCOPE_EXIT {
         const double ViewClock=FPlatformTime::Seconds();

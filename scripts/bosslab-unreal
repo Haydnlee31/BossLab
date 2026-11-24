@@ -333,6 +333,9 @@ def main():
         # Fixed-time capture can outrun asynchronous PSO warm-up. Always create
         # proxies so rendering waits for their PSOs instead of recording empty world frames.
         cmd += ['-ini:Engine:[ConsoleVariables]:r.PSOPrecache.ProxyCreationStrategy=0']
+    if os.environ.get('BOSSLAB_PSO_LOG') == '1' and mode in ('play', 'benchmark', 'capture'):
+        # Diagnostic: name every runtime PSO creation hitch (> 20 ms) with its resource and pass.
+        cmd += ['-LogCmds=LogPSOHitching Verbose']
     print('Starting bounded', mode, '— Ctrl-C stops this owned process group.', flush=True)
     start = time.monotonic()
     started_epoch = time.time()

@@ -420,8 +420,10 @@ void AWardenArenaMode::BeginPlay()
     if(bBellbreaker) bRegentPhaseTwoStart=FParse::Param(FCommandLine::Get(),TEXT("BossLabBellbreakerPhaseTwo"));
     LoadSettings();
     SetupAudio();
+    if(!GIsAutomationTesting) PreloadSoundBank();
     ResetEncounter();
     bTitle=true;
+    BeginShaderWarmup();
     if(FParse::Param(FCommandLine::Get(),TEXT("BossLabCapture")))
     {
         ConfigureEncounter(202,true,1); bAdaptive=false; bCaptureFrames=true; bInspector=false; Player->SetLocked(true);
@@ -531,6 +533,15 @@ void AWardenPrototypeHUD::DrawHUD()
     if (!Canvas) return;
     auto* Mode = GetWorld()->GetAuthGameMode<AWardenArenaMode>();
     if (!Mode || !Mode->Player || !Mode->Warden) return;
+    if(Mode->IsShaderWarmup())
+    {
+        // Canvas PSO warm-up (WardenWarmup.cpp): one near-invisible sample of every canvas element the
+        // fight HUD uses (translucent rects, text at each scale, thin and thick lines), drawn behind the
+        // menu so the first lock-on, stun or damage number does not build its pipeline mid-fight.
+        DrawRect(FLinearColor(0,0,0,.004f),0,0,Canvas->SizeX,Canvas->SizeY);
+        DrawLine(0,0,3,0,FLinearColor(0,0,0,.004f),2); DrawLine(0,1,3,1,FLinearColor(0,0,0,.004f),1);
+        for(const float Scale:{1.f,1.1f,1.15f,1.2f,1.3f,1.6f,2.f}) DrawText(TEXT("0"),FColor(0,0,0,1),-60,-60,nullptr,Scale);
+    }
     if(Mode->bFrontendSession && (Mode->bTitle || Mode->bPaused)) return;
     const auto& P = Mode->Player->Fight;
     const auto& B = Mode->Warden->Fight;

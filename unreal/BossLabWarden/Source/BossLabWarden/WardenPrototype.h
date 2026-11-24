@@ -367,6 +367,7 @@ class BOSSLABWARDEN_API AWardenArenaMode : public AGameModeBase
 {
     GENERATED_BODY()
 public:
+    bool IsShaderWarmup() const { return bShaderWarmup; }   // canvas warm-up in the HUD (WardenWarmup.cpp)
     AWardenArenaMode();
     static void BuildDungeon(UWorld* World,FWardenDungeon& Out);
     static void AnimateDungeon(FWardenDungeon& Dungeon,float Seconds);
@@ -561,6 +562,17 @@ public:
 private:
     TSharedPtr<class SWidget> PauseMenuWidget;
     double CombatAccumulator = 0;
+    // Shader/PSO warm-up before the fight (WardenWarmup.cpp): one copy of every mesh/material kind, behind the menu.
+    void PreloadSoundBank();
+    void BeginShaderWarmup();
+    void GatherShaderWarmupSources();
+    void AddShaderWarmupCopy(UPrimitiveComponent* Src);
+    void TickShaderWarmup();
+    void EndShaderWarmup(const TCHAR* Why);
+    UPROPERTY() TObjectPtr<AActor> ShaderWarmupActor;
+    UPROPERTY() TArray<TObjectPtr<UPrimitiveComponent>> ShaderWarmupCopies;
+    TArray<TWeakObjectPtr<UPrimitiveComponent>> ShaderWarmupSources;
+    bool bShaderWarmup=false; int32 ShaderWarmupFrame=0, ShaderWarmupIdle=0; double ShaderWarmupStart=0;
     double DroppedStepTime = 0, PerfStepMs = 0, PerfWorstStepMs = 0, PerfWorstFrame = 0, PerfSpan = 0, PerfViewMs = 0, PerfWorstViewMs = 0; int32 PerfFrames = 0, PerfSteps = 0;   // frame budget witness (WardenEncounter.cpp)
     TArray<FWardenObservation> VisibleHistory;
     FRandomStream PolicyRandom{101};
